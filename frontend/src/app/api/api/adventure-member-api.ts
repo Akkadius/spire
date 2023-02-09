@@ -145,6 +145,58 @@ export const AdventureMemberApiAxiosParamCreator = function (configuration?: Con
                 options: localVarRequestOptions,
             };
         },
+        getAdventureMembersCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/adventure_members/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listAdventureMembers: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/adventure_members`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const AdventureMemberApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getAdventureMembersCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureMember>>> {
+            const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).getAdventureMembersCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listAdventureMembers(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureMember>>> {
             const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).listAdventureMembers(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const AdventureMemberApiFactory = function (configuration?: Configuration
         getAdventureMembersBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
             return AdventureMemberApiFp(configuration).getAdventureMembersBulk(body, options).then((request) => request(axios, basePath));
         },
+        getAdventureMembersCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
+            return AdventureMemberApiFp(configuration).getAdventureMembersCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listAdventureMembers(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
             return AdventureMemberApiFp(configuration).listAdventureMembers(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface AdventureMemberApiGetAdventureMemberRequest {
 }
 export interface AdventureMemberApiGetAdventureMembersBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface AdventureMemberApiGetAdventureMembersCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface AdventureMemberApiListAdventureMembersRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class AdventureMemberApi extends BaseAPI {
     }
     public getAdventureMembersBulk(requestParameters: AdventureMemberApiGetAdventureMembersBulkRequest, options?: any) {
         return AdventureMemberApiFp(this.configuration).getAdventureMembersBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getAdventureMembersCount(requestParameters: AdventureMemberApiGetAdventureMembersCountRequest = {}, options?: any) {
+        return AdventureMemberApiFp(this.configuration).getAdventureMembersCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listAdventureMembers(requestParameters: AdventureMemberApiListAdventureMembersRequest = {}, options?: any) {
         return AdventureMemberApiFp(this.configuration).listAdventureMembers(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

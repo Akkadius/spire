@@ -145,6 +145,58 @@ export const GmIpApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        getGmIpsCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/gm_ips/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listGmIps: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/gm_ips`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const GmIpApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getGmIpsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGmIp>>> {
+            const localVarAxiosArgs = await GmIpApiAxiosParamCreator(configuration).getGmIpsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listGmIps(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGmIp>>> {
             const localVarAxiosArgs = await GmIpApiAxiosParamCreator(configuration).listGmIps(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const GmIpApiFactory = function (configuration?: Configuration, basePath?
         getGmIpsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsGmIp>> {
             return GmIpApiFp(configuration).getGmIpsBulk(body, options).then((request) => request(axios, basePath));
         },
+        getGmIpsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGmIp>> {
+            return GmIpApiFp(configuration).getGmIpsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listGmIps(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGmIp>> {
             return GmIpApiFp(configuration).listGmIps(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface GmIpApiGetGmIpRequest {
 }
 export interface GmIpApiGetGmIpsBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface GmIpApiGetGmIpsCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface GmIpApiListGmIpsRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class GmIpApi extends BaseAPI {
     }
     public getGmIpsBulk(requestParameters: GmIpApiGetGmIpsBulkRequest, options?: any) {
         return GmIpApiFp(this.configuration).getGmIpsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getGmIpsCount(requestParameters: GmIpApiGetGmIpsCountRequest = {}, options?: any) {
+        return GmIpApiFp(this.configuration).getGmIpsCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listGmIps(requestParameters: GmIpApiListGmIpsRequest = {}, options?: any) {
         return GmIpApiFp(this.configuration).listGmIps(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

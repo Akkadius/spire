@@ -39,6 +39,8 @@
 
 <script>
 import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {RuleValueApi}  from "@/app/api/api/rule-value-api";
+import {SpireApi}      from "@/app/api/spire-api";
 
 export default {
   data() {
@@ -54,6 +56,11 @@ export default {
   },
   methods: {
     submit: async function () {
+      let r = await (new Variable(...SpireApi.cfg())).listRuleValues()
+      if (r.status === 200) {
+        this.rules = r.data
+      }
+
       const result = await OcculusClient.postServerMotd({ motd: this.motd })
 
       if (result.success) {

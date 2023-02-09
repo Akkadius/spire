@@ -110,6 +110,58 @@ export const InventoryApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        getInventoriesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/inventories/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         getInventory: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getInventory.');
@@ -262,6 +314,13 @@ export const InventoryApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getInventoriesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsInventory>>> {
+            const localVarAxiosArgs = await InventoryApiAxiosParamCreator(configuration).getInventoriesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async getInventory(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsInventory>>> {
             const localVarAxiosArgs = await InventoryApiAxiosParamCreator(configuration).getInventory(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -296,6 +355,9 @@ export const InventoryApiFactory = function (configuration?: Configuration, base
         getInventoriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsInventory>> {
             return InventoryApiFp(configuration).getInventoriesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getInventoriesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsInventory>> {
+            return InventoryApiFp(configuration).getInventoriesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         getInventory(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsInventory>> {
             return InventoryApiFp(configuration).getInventory(id, includes, select, options).then((request) => request(axios, basePath));
         },
@@ -315,6 +377,17 @@ export interface InventoryApiDeleteInventoryRequest {
 }
 export interface InventoryApiGetInventoriesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface InventoryApiGetInventoriesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface InventoryApiGetInventoryRequest {
     readonly id: number
@@ -345,6 +418,9 @@ export class InventoryApi extends BaseAPI {
     }
     public getInventoriesBulk(requestParameters: InventoryApiGetInventoriesBulkRequest, options?: any) {
         return InventoryApiFp(this.configuration).getInventoriesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getInventoriesCount(requestParameters: InventoryApiGetInventoriesCountRequest = {}, options?: any) {
+        return InventoryApiFp(this.configuration).getInventoriesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public getInventory(requestParameters: InventoryApiGetInventoryRequest, options?: any) {
         return InventoryApiFp(this.configuration).getInventory(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

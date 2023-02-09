@@ -1,5 +1,7 @@
+import { ModelsAaAbility } from './models-aa-ability';
 import { ModelsSpellsNew } from './models-spells-new';
 export interface ModelsAaRank {
+    aa_ability?: ModelsAaAbility;
     cost?: number;
     desc_sid?: number;
     expansion?: number;

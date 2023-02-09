@@ -110,6 +110,58 @@ export const BaseDatumApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        getBaseDataCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/base_data/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         getBaseDatum: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getBaseDatum.');
@@ -262,6 +314,13 @@ export const BaseDatumApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getBaseDataCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBaseDatum>>> {
+            const localVarAxiosArgs = await BaseDatumApiAxiosParamCreator(configuration).getBaseDataCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async getBaseDatum(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBaseDatum>>> {
             const localVarAxiosArgs = await BaseDatumApiAxiosParamCreator(configuration).getBaseDatum(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -296,6 +355,9 @@ export const BaseDatumApiFactory = function (configuration?: Configuration, base
         getBaseDataBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsBaseDatum>> {
             return BaseDatumApiFp(configuration).getBaseDataBulk(body, options).then((request) => request(axios, basePath));
         },
+        getBaseDataCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBaseDatum>> {
+            return BaseDatumApiFp(configuration).getBaseDataCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         getBaseDatum(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBaseDatum>> {
             return BaseDatumApiFp(configuration).getBaseDatum(id, includes, select, options).then((request) => request(axios, basePath));
         },
@@ -315,6 +377,17 @@ export interface BaseDatumApiDeleteBaseDatumRequest {
 }
 export interface BaseDatumApiGetBaseDataBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface BaseDatumApiGetBaseDataCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface BaseDatumApiGetBaseDatumRequest {
     readonly id: number
@@ -345,6 +418,9 @@ export class BaseDatumApi extends BaseAPI {
     }
     public getBaseDataBulk(requestParameters: BaseDatumApiGetBaseDataBulkRequest, options?: any) {
         return BaseDatumApiFp(this.configuration).getBaseDataBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getBaseDataCount(requestParameters: BaseDatumApiGetBaseDataCountRequest = {}, options?: any) {
+        return BaseDatumApiFp(this.configuration).getBaseDataCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public getBaseDatum(requestParameters: BaseDatumApiGetBaseDatumRequest, options?: any) {
         return BaseDatumApiFp(this.configuration).getBaseDatum(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

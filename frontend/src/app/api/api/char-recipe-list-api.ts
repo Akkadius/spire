@@ -145,6 +145,58 @@ export const CharRecipeListApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        getCharRecipeListsCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/char_recipe_lists/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listCharRecipeLists: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/char_recipe_lists`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const CharRecipeListApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getCharRecipeListsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharRecipeList>>> {
+            const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).getCharRecipeListsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listCharRecipeLists(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharRecipeList>>> {
             const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).listCharRecipeLists(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const CharRecipeListApiFactory = function (configuration?: Configuration,
         getCharRecipeListsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
             return CharRecipeListApiFp(configuration).getCharRecipeListsBulk(body, options).then((request) => request(axios, basePath));
         },
+        getCharRecipeListsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
+            return CharRecipeListApiFp(configuration).getCharRecipeListsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listCharRecipeLists(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
             return CharRecipeListApiFp(configuration).listCharRecipeLists(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface CharRecipeListApiGetCharRecipeListRequest {
 }
 export interface CharRecipeListApiGetCharRecipeListsBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface CharRecipeListApiGetCharRecipeListsCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface CharRecipeListApiListCharRecipeListsRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class CharRecipeListApi extends BaseAPI {
     }
     public getCharRecipeListsBulk(requestParameters: CharRecipeListApiGetCharRecipeListsBulkRequest, options?: any) {
         return CharRecipeListApiFp(this.configuration).getCharRecipeListsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getCharRecipeListsCount(requestParameters: CharRecipeListApiGetCharRecipeListsCountRequest = {}, options?: any) {
+        return CharRecipeListApiFp(this.configuration).getCharRecipeListsCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listCharRecipeLists(requestParameters: CharRecipeListApiListCharRecipeListsRequest = {}, options?: any) {
         return CharRecipeListApiFp(this.configuration).listCharRecipeLists(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

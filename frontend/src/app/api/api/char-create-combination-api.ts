@@ -145,6 +145,58 @@ export const CharCreateCombinationApiAxiosParamCreator = function (configuration
                 options: localVarRequestOptions,
             };
         },
+        getCharCreateCombinationsCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/char_create_combinations/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listCharCreateCombinations: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/char_create_combinations`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const CharCreateCombinationApiFp = function(configuration?: Configuration
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getCharCreateCombinationsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharCreateCombination>>> {
+            const localVarAxiosArgs = await CharCreateCombinationApiAxiosParamCreator(configuration).getCharCreateCombinationsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listCharCreateCombinations(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharCreateCombination>>> {
             const localVarAxiosArgs = await CharCreateCombinationApiAxiosParamCreator(configuration).listCharCreateCombinations(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const CharCreateCombinationApiFactory = function (configuration?: Configu
         getCharCreateCombinationsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsCharCreateCombination>> {
             return CharCreateCombinationApiFp(configuration).getCharCreateCombinationsBulk(body, options).then((request) => request(axios, basePath));
         },
+        getCharCreateCombinationsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharCreateCombination>> {
+            return CharCreateCombinationApiFp(configuration).getCharCreateCombinationsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listCharCreateCombinations(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharCreateCombination>> {
             return CharCreateCombinationApiFp(configuration).listCharCreateCombinations(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface CharCreateCombinationApiGetCharCreateCombinationRequest {
 }
 export interface CharCreateCombinationApiGetCharCreateCombinationsBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface CharCreateCombinationApiGetCharCreateCombinationsCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface CharCreateCombinationApiListCharCreateCombinationsRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class CharCreateCombinationApi extends BaseAPI {
     }
     public getCharCreateCombinationsBulk(requestParameters: CharCreateCombinationApiGetCharCreateCombinationsBulkRequest, options?: any) {
         return CharCreateCombinationApiFp(this.configuration).getCharCreateCombinationsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getCharCreateCombinationsCount(requestParameters: CharCreateCombinationApiGetCharCreateCombinationsCountRequest = {}, options?: any) {
+        return CharCreateCombinationApiFp(this.configuration).getCharCreateCombinationsCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listCharCreateCombinations(requestParameters: CharCreateCombinationApiListCharCreateCombinationsRequest = {}, options?: any) {
         return CharCreateCombinationApiFp(this.configuration).listCharCreateCombinations(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

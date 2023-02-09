@@ -145,6 +145,58 @@ export const BotSpellCastingChanceApiAxiosParamCreator = function (configuration
                 options: localVarRequestOptions,
             };
         },
+        getBotSpellCastingChancesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/bot_spell_casting_chances/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listBotSpellCastingChances: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/bot_spell_casting_chances`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const BotSpellCastingChanceApiFp = function(configuration?: Configuration
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getBotSpellCastingChancesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotSpellCastingChance>>> {
+            const localVarAxiosArgs = await BotSpellCastingChanceApiAxiosParamCreator(configuration).getBotSpellCastingChancesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listBotSpellCastingChances(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotSpellCastingChance>>> {
             const localVarAxiosArgs = await BotSpellCastingChanceApiAxiosParamCreator(configuration).listBotSpellCastingChances(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const BotSpellCastingChanceApiFactory = function (configuration?: Configu
         getBotSpellCastingChancesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsBotSpellCastingChance>> {
             return BotSpellCastingChanceApiFp(configuration).getBotSpellCastingChancesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getBotSpellCastingChancesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBotSpellCastingChance>> {
+            return BotSpellCastingChanceApiFp(configuration).getBotSpellCastingChancesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listBotSpellCastingChances(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBotSpellCastingChance>> {
             return BotSpellCastingChanceApiFp(configuration).listBotSpellCastingChances(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface BotSpellCastingChanceApiGetBotSpellCastingChanceRequest {
 }
 export interface BotSpellCastingChanceApiGetBotSpellCastingChancesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface BotSpellCastingChanceApiGetBotSpellCastingChancesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface BotSpellCastingChanceApiListBotSpellCastingChancesRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class BotSpellCastingChanceApi extends BaseAPI {
     }
     public getBotSpellCastingChancesBulk(requestParameters: BotSpellCastingChanceApiGetBotSpellCastingChancesBulkRequest, options?: any) {
         return BotSpellCastingChanceApiFp(this.configuration).getBotSpellCastingChancesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getBotSpellCastingChancesCount(requestParameters: BotSpellCastingChanceApiGetBotSpellCastingChancesCountRequest = {}, options?: any) {
+        return BotSpellCastingChanceApiFp(this.configuration).getBotSpellCastingChancesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listBotSpellCastingChances(requestParameters: BotSpellCastingChanceApiListBotSpellCastingChancesRequest = {}, options?: any) {
         return BotSpellCastingChanceApiFp(this.configuration).listBotSpellCastingChances(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

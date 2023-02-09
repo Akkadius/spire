@@ -77,6 +77,7 @@ api/character-skill-api.ts
 api/character-spell-api.ts
 api/character-task-api.ts
 api/character-task-timer-api.ts
+api/chatchannel-reserved-name-api.ts
 api/completed-shared-task-activity-state-api.ts
 api/completed-shared-task-api.ts
 api/completed-shared-task-member-api.ts
@@ -199,6 +200,7 @@ api/tradeskill-recipe-entry-api.ts
 api/trap-api.ts
 api/tribute-api.ts
 api/tribute-level-api.ts
+api/variable-api.ts
 api/veteran-reward-template-api.ts
 api/zone-api.ts
 api/zone-flag-api.ts
@@ -286,6 +288,7 @@ models/models-character-spell.ts
 models/models-character-task-timer.ts
 models/models-character-task.ts
 models/models-character-tribute.ts
+models/models-chatchannel-reserved-name.ts
 models/models-completed-shared-task-activity-state.ts
 models/models-completed-shared-task-member.ts
 models/models-completed-shared-task.ts
@@ -414,6 +417,7 @@ models/models-tribute-level.ts
 models/models-tribute.ts
 models/models-user-server-database-connection.ts
 models/models-user.ts
+models/models-variable.ts
 models/models-veteran-reward-template.ts
 models/models-zone-flag.ts
 models/models-zone-point.ts

@@ -43,6 +43,7 @@ type CharacterDatum struct {
 	AbilityTimeMinutes           uint8                        `json:"ability_time_minutes" gorm:"Column:ability_time_minutes"`
 	AbilityTimeHours             uint8                        `json:"ability_time_hours" gorm:"Column:ability_time_hours"`
 	Exp                          uint                         `json:"exp" gorm:"Column:exp"`
+	ExpEnabled                   uint8                        `json:"exp_enabled" gorm:"Column:exp_enabled"`
 	AaPointsSpent                uint                         `json:"aa_points_spent" gorm:"Column:aa_points_spent"`
 	AaExp                        uint                         `json:"aa_exp" gorm:"Column:aa_exp"`
 	AaPoints                     uint                         `json:"aa_points" gorm:"Column:aa_points"`

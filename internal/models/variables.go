@@ -5,6 +5,7 @@ import (
 )
 
 type Variable struct {
+	ID          int       `json:"id" gorm:"Column:id"`
 	Varname     string    `json:"varname" gorm:"Column:varname"`
 	Value       string    `json:"value" gorm:"Column:value"`
 	Information string    `json:"information" gorm:"Column:information"`

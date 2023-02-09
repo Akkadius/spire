@@ -145,6 +145,58 @@ export const CharacterInspectMessageApiAxiosParamCreator = function (configurati
                 options: localVarRequestOptions,
             };
         },
+        getCharacterInspectMessagesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/character_inspect_messages/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listCharacterInspectMessages: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/character_inspect_messages`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const CharacterInspectMessageApiFp = function(configuration?: Configurati
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getCharacterInspectMessagesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterInspectMessage>>> {
+            const localVarAxiosArgs = await CharacterInspectMessageApiAxiosParamCreator(configuration).getCharacterInspectMessagesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listCharacterInspectMessages(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterInspectMessage>>> {
             const localVarAxiosArgs = await CharacterInspectMessageApiAxiosParamCreator(configuration).listCharacterInspectMessages(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const CharacterInspectMessageApiFactory = function (configuration?: Confi
         getCharacterInspectMessagesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsCharacterInspectMessage>> {
             return CharacterInspectMessageApiFp(configuration).getCharacterInspectMessagesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getCharacterInspectMessagesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterInspectMessage>> {
+            return CharacterInspectMessageApiFp(configuration).getCharacterInspectMessagesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listCharacterInspectMessages(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterInspectMessage>> {
             return CharacterInspectMessageApiFp(configuration).listCharacterInspectMessages(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface CharacterInspectMessageApiGetCharacterInspectMessageRequest {
 }
 export interface CharacterInspectMessageApiGetCharacterInspectMessagesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface CharacterInspectMessageApiGetCharacterInspectMessagesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface CharacterInspectMessageApiListCharacterInspectMessagesRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class CharacterInspectMessageApi extends BaseAPI {
     }
     public getCharacterInspectMessagesBulk(requestParameters: CharacterInspectMessageApiGetCharacterInspectMessagesBulkRequest, options?: any) {
         return CharacterInspectMessageApiFp(this.configuration).getCharacterInspectMessagesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getCharacterInspectMessagesCount(requestParameters: CharacterInspectMessageApiGetCharacterInspectMessagesCountRequest = {}, options?: any) {
+        return CharacterInspectMessageApiFp(this.configuration).getCharacterInspectMessagesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listCharacterInspectMessages(requestParameters: CharacterInspectMessageApiListCharacterInspectMessagesRequest = {}, options?: any) {
         return CharacterInspectMessageApiFp(this.configuration).listCharacterInspectMessages(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

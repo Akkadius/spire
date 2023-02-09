@@ -16,6 +16,7 @@ type Zone struct {
 	SafeHeading               float32     `json:"safe_heading" gorm:"Column:safe_heading"`
 	GraveyardId               float32     `json:"graveyard_id" gorm:"Column:graveyard_id"`
 	MinLevel                  uint8       `json:"min_level" gorm:"Column:min_level"`
+	MaxLevel                  uint8       `json:"max_level" gorm:"Column:max_level"`
 	MinStatus                 uint8       `json:"min_status" gorm:"Column:min_status"`
 	Zoneidnumber              int         `json:"zoneidnumber" gorm:"Column:zoneidnumber"`
 	Version                   uint8       `json:"version" gorm:"Column:version"`

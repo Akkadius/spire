@@ -110,6 +110,58 @@ export const PetsEquipmentsetEntryApiAxiosParamCreator = function (configuration
                 options: localVarRequestOptions,
             };
         },
+        getPetsEquipmentsetEntriesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/pets_equipmentset_entries/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         getPetsEquipmentsetEntry: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getPetsEquipmentsetEntry.');
@@ -262,6 +314,13 @@ export const PetsEquipmentsetEntryApiFp = function(configuration?: Configuration
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getPetsEquipmentsetEntriesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentsetEntry>>> {
+            const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).getPetsEquipmentsetEntriesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async getPetsEquipmentsetEntry(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentsetEntry>>> {
             const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).getPetsEquipmentsetEntry(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -296,6 +355,9 @@ export const PetsEquipmentsetEntryApiFactory = function (configuration?: Configu
         getPetsEquipmentsetEntriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
             return PetsEquipmentsetEntryApiFp(configuration).getPetsEquipmentsetEntriesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getPetsEquipmentsetEntriesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
+            return PetsEquipmentsetEntryApiFp(configuration).getPetsEquipmentsetEntriesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         getPetsEquipmentsetEntry(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
             return PetsEquipmentsetEntryApiFp(configuration).getPetsEquipmentsetEntry(id, includes, select, options).then((request) => request(axios, basePath));
         },
@@ -315,6 +377,17 @@ export interface PetsEquipmentsetEntryApiDeletePetsEquipmentsetEntryRequest {
 }
 export interface PetsEquipmentsetEntryApiGetPetsEquipmentsetEntriesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface PetsEquipmentsetEntryApiGetPetsEquipmentsetEntriesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface PetsEquipmentsetEntryApiGetPetsEquipmentsetEntryRequest {
     readonly id: number
@@ -345,6 +418,9 @@ export class PetsEquipmentsetEntryApi extends BaseAPI {
     }
     public getPetsEquipmentsetEntriesBulk(requestParameters: PetsEquipmentsetEntryApiGetPetsEquipmentsetEntriesBulkRequest, options?: any) {
         return PetsEquipmentsetEntryApiFp(this.configuration).getPetsEquipmentsetEntriesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getPetsEquipmentsetEntriesCount(requestParameters: PetsEquipmentsetEntryApiGetPetsEquipmentsetEntriesCountRequest = {}, options?: any) {
+        return PetsEquipmentsetEntryApiFp(this.configuration).getPetsEquipmentsetEntriesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public getPetsEquipmentsetEntry(requestParameters: PetsEquipmentsetEntryApiGetPetsEquipmentsetEntryRequest, options?: any) {
         return PetsEquipmentsetEntryApiFp(this.configuration).getPetsEquipmentsetEntry(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

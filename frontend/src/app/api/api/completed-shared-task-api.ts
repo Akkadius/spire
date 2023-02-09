@@ -145,6 +145,58 @@ export const CompletedSharedTaskApiAxiosParamCreator = function (configuration?:
                 options: localVarRequestOptions,
             };
         },
+        getCompletedSharedTasksCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/completed_shared_tasks/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listCompletedSharedTasks: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/completed_shared_tasks`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const CompletedSharedTaskApiFp = function(configuration?: Configuration) 
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getCompletedSharedTasksCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCompletedSharedTask>>> {
+            const localVarAxiosArgs = await CompletedSharedTaskApiAxiosParamCreator(configuration).getCompletedSharedTasksCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listCompletedSharedTasks(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCompletedSharedTask>>> {
             const localVarAxiosArgs = await CompletedSharedTaskApiAxiosParamCreator(configuration).listCompletedSharedTasks(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const CompletedSharedTaskApiFactory = function (configuration?: Configura
         getCompletedSharedTasksBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsCompletedSharedTask>> {
             return CompletedSharedTaskApiFp(configuration).getCompletedSharedTasksBulk(body, options).then((request) => request(axios, basePath));
         },
+        getCompletedSharedTasksCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCompletedSharedTask>> {
+            return CompletedSharedTaskApiFp(configuration).getCompletedSharedTasksCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listCompletedSharedTasks(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCompletedSharedTask>> {
             return CompletedSharedTaskApiFp(configuration).listCompletedSharedTasks(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface CompletedSharedTaskApiGetCompletedSharedTaskRequest {
 }
 export interface CompletedSharedTaskApiGetCompletedSharedTasksBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface CompletedSharedTaskApiGetCompletedSharedTasksCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface CompletedSharedTaskApiListCompletedSharedTasksRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class CompletedSharedTaskApi extends BaseAPI {
     }
     public getCompletedSharedTasksBulk(requestParameters: CompletedSharedTaskApiGetCompletedSharedTasksBulkRequest, options?: any) {
         return CompletedSharedTaskApiFp(this.configuration).getCompletedSharedTasksBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getCompletedSharedTasksCount(requestParameters: CompletedSharedTaskApiGetCompletedSharedTasksCountRequest = {}, options?: any) {
+        return CompletedSharedTaskApiFp(this.configuration).getCompletedSharedTasksCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listCompletedSharedTasks(requestParameters: CompletedSharedTaskApiListCompletedSharedTasksRequest = {}, options?: any) {
         return CompletedSharedTaskApiFp(this.configuration).listCompletedSharedTasks(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

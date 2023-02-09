@@ -98,7 +98,7 @@ func (e *CharacterItemRecastController) getCharacterItemRecast(c echo.Context) e
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [recast_type] position [2] type [smallint]
+	// key param [recast_type] position [2] type [int]
 	if len(c.QueryParam("recast_type")) > 0 {
 		recastTypeParam, err := strconv.Atoi(c.QueryParam("recast_type"))
 		if err != nil {
@@ -163,7 +163,7 @@ func (e *CharacterItemRecastController) updateCharacterItemRecast(c echo.Context
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [recast_type] position [2] type [smallint]
+	// key param [recast_type] position [2] type [int]
 	if len(c.QueryParam("recast_type")) > 0 {
 		recastTypeParam, err := strconv.Atoi(c.QueryParam("recast_type"))
 		if err != nil {
@@ -284,7 +284,7 @@ func (e *CharacterItemRecastController) deleteCharacterItemRecast(c echo.Context
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [recast_type] position [2] type [smallint]
+	// key param [recast_type] position [2] type [int]
 	if len(c.QueryParam("recast_type")) > 0 {
 		recastTypeParam, err := strconv.Atoi(c.QueryParam("recast_type"))
 		if err != nil {

@@ -13,8 +13,10 @@ export interface ModelsMerchantlist {
     items?: Array<ModelsItem>;
     level_required?: number;
     max_expansion?: number;
+    max_status?: number;
     merchantid?: number;
     min_expansion?: number;
+    min_status?: number;
     npc_types?: Array<ModelsNpcType>;
     probability?: number;
     slot?: number;

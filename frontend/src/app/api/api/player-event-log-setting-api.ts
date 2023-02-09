@@ -145,6 +145,58 @@ export const PlayerEventLogSettingApiAxiosParamCreator = function (configuration
                 options: localVarRequestOptions,
             };
         },
+        getPlayerEventLogSettingsCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/player_event_log_settings/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listPlayerEventLogSettings: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/player_event_log_settings`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const PlayerEventLogSettingApiFp = function(configuration?: Configuration
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getPlayerEventLogSettingsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPlayerEventLogSetting>>> {
+            const localVarAxiosArgs = await PlayerEventLogSettingApiAxiosParamCreator(configuration).getPlayerEventLogSettingsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listPlayerEventLogSettings(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPlayerEventLogSetting>>> {
             const localVarAxiosArgs = await PlayerEventLogSettingApiAxiosParamCreator(configuration).listPlayerEventLogSettings(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const PlayerEventLogSettingApiFactory = function (configuration?: Configu
         getPlayerEventLogSettingsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsPlayerEventLogSetting>> {
             return PlayerEventLogSettingApiFp(configuration).getPlayerEventLogSettingsBulk(body, options).then((request) => request(axios, basePath));
         },
+        getPlayerEventLogSettingsCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPlayerEventLogSetting>> {
+            return PlayerEventLogSettingApiFp(configuration).getPlayerEventLogSettingsCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listPlayerEventLogSettings(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPlayerEventLogSetting>> {
             return PlayerEventLogSettingApiFp(configuration).listPlayerEventLogSettings(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface PlayerEventLogSettingApiGetPlayerEventLogSettingRequest {
 }
 export interface PlayerEventLogSettingApiGetPlayerEventLogSettingsBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface PlayerEventLogSettingApiGetPlayerEventLogSettingsCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface PlayerEventLogSettingApiListPlayerEventLogSettingsRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class PlayerEventLogSettingApi extends BaseAPI {
     }
     public getPlayerEventLogSettingsBulk(requestParameters: PlayerEventLogSettingApiGetPlayerEventLogSettingsBulkRequest, options?: any) {
         return PlayerEventLogSettingApiFp(this.configuration).getPlayerEventLogSettingsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getPlayerEventLogSettingsCount(requestParameters: PlayerEventLogSettingApiGetPlayerEventLogSettingsCountRequest = {}, options?: any) {
+        return PlayerEventLogSettingApiFp(this.configuration).getPlayerEventLogSettingsCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listPlayerEventLogSettings(requestParameters: PlayerEventLogSettingApiListPlayerEventLogSettingsRequest = {}, options?: any) {
         return PlayerEventLogSettingApiFp(this.configuration).listPlayerEventLogSettings(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

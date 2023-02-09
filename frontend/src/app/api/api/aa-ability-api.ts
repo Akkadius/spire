@@ -110,6 +110,58 @@ export const AaAbilityApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
+        getAaAbilitiesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/aa_abilities/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         getAaAbility: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getAaAbility.');
@@ -262,6 +314,13 @@ export const AaAbilityApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getAaAbilitiesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAaAbility>>> {
+            const localVarAxiosArgs = await AaAbilityApiAxiosParamCreator(configuration).getAaAbilitiesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async getAaAbility(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAaAbility>>> {
             const localVarAxiosArgs = await AaAbilityApiAxiosParamCreator(configuration).getAaAbility(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -296,6 +355,9 @@ export const AaAbilityApiFactory = function (configuration?: Configuration, base
         getAaAbilitiesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsAaAbility>> {
             return AaAbilityApiFp(configuration).getAaAbilitiesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getAaAbilitiesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAaAbility>> {
+            return AaAbilityApiFp(configuration).getAaAbilitiesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         getAaAbility(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAaAbility>> {
             return AaAbilityApiFp(configuration).getAaAbility(id, includes, select, options).then((request) => request(axios, basePath));
         },
@@ -315,6 +377,17 @@ export interface AaAbilityApiDeleteAaAbilityRequest {
 }
 export interface AaAbilityApiGetAaAbilitiesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface AaAbilityApiGetAaAbilitiesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface AaAbilityApiGetAaAbilityRequest {
     readonly id: number
@@ -345,6 +418,9 @@ export class AaAbilityApi extends BaseAPI {
     }
     public getAaAbilitiesBulk(requestParameters: AaAbilityApiGetAaAbilitiesBulkRequest, options?: any) {
         return AaAbilityApiFp(this.configuration).getAaAbilitiesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getAaAbilitiesCount(requestParameters: AaAbilityApiGetAaAbilitiesCountRequest = {}, options?: any) {
+        return AaAbilityApiFp(this.configuration).getAaAbilitiesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public getAaAbility(requestParameters: AaAbilityApiGetAaAbilityRequest, options?: any) {
         return AaAbilityApiFp(this.configuration).getAaAbility(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

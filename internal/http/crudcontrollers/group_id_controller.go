@@ -109,17 +109,6 @@ func (e *GroupIdController) getGroupId(c echo.Context) error {
 		keys = append(keys, "charid = ?")
 	}
 
-	// key param [name] position [3] type [varchar]
-	if len(c.QueryParam("name")) > 0 {
-		nameParam, err := strconv.Atoi(c.QueryParam("name"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [name] err [%s]", err.Error())})
-		}
-
-		params = append(params, nameParam)
-		keys = append(keys, "name = ?")
-	}
-
 	// key param [ismerc] position [4] type [tinyint]
 	if len(c.QueryParam("ismerc")) > 0 {
 		ismercParam, err := strconv.Atoi(c.QueryParam("ismerc"))
@@ -194,17 +183,6 @@ func (e *GroupIdController) updateGroupId(c echo.Context) error {
 
 		params = append(params, charidParam)
 		keys = append(keys, "charid = ?")
-	}
-
-	// key param [name] position [3] type [varchar]
-	if len(c.QueryParam("name")) > 0 {
-		nameParam, err := strconv.Atoi(c.QueryParam("name"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [name] err [%s]", err.Error())})
-		}
-
-		params = append(params, nameParam)
-		keys = append(keys, "name = ?")
 	}
 
 	// key param [ismerc] position [4] type [tinyint]
@@ -337,17 +315,6 @@ func (e *GroupIdController) deleteGroupId(c echo.Context) error {
 
 		params = append(params, charidParam)
 		keys = append(keys, "charid = ?")
-	}
-
-	// key param [name] position [3] type [varchar]
-	if len(c.QueryParam("name")) > 0 {
-		nameParam, err := strconv.Atoi(c.QueryParam("name"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [name] err [%s]", err.Error())})
-		}
-
-		params = append(params, nameParam)
-		keys = append(keys, "name = ?")
 	}
 
 	// key param [ismerc] position [4] type [tinyint]

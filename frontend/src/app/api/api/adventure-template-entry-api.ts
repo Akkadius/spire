@@ -110,6 +110,58 @@ export const AdventureTemplateEntryApiAxiosParamCreator = function (configuratio
                 options: localVarRequestOptions,
             };
         },
+        getAdventureTemplateEntriesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/adventure_template_entries/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         getAdventureTemplateEntry: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getAdventureTemplateEntry.');
@@ -262,6 +314,13 @@ export const AdventureTemplateEntryApiFp = function(configuration?: Configuratio
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getAdventureTemplateEntriesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureTemplateEntry>>> {
+            const localVarAxiosArgs = await AdventureTemplateEntryApiAxiosParamCreator(configuration).getAdventureTemplateEntriesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async getAdventureTemplateEntry(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureTemplateEntry>>> {
             const localVarAxiosArgs = await AdventureTemplateEntryApiAxiosParamCreator(configuration).getAdventureTemplateEntry(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -296,6 +355,9 @@ export const AdventureTemplateEntryApiFactory = function (configuration?: Config
         getAdventureTemplateEntriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsAdventureTemplateEntry>> {
             return AdventureTemplateEntryApiFp(configuration).getAdventureTemplateEntriesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getAdventureTemplateEntriesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAdventureTemplateEntry>> {
+            return AdventureTemplateEntryApiFp(configuration).getAdventureTemplateEntriesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         getAdventureTemplateEntry(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAdventureTemplateEntry>> {
             return AdventureTemplateEntryApiFp(configuration).getAdventureTemplateEntry(id, includes, select, options).then((request) => request(axios, basePath));
         },
@@ -315,6 +377,17 @@ export interface AdventureTemplateEntryApiDeleteAdventureTemplateEntryRequest {
 }
 export interface AdventureTemplateEntryApiGetAdventureTemplateEntriesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface AdventureTemplateEntryApiGetAdventureTemplateEntriesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface AdventureTemplateEntryApiGetAdventureTemplateEntryRequest {
     readonly id: number
@@ -345,6 +418,9 @@ export class AdventureTemplateEntryApi extends BaseAPI {
     }
     public getAdventureTemplateEntriesBulk(requestParameters: AdventureTemplateEntryApiGetAdventureTemplateEntriesBulkRequest, options?: any) {
         return AdventureTemplateEntryApiFp(this.configuration).getAdventureTemplateEntriesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getAdventureTemplateEntriesCount(requestParameters: AdventureTemplateEntryApiGetAdventureTemplateEntriesCountRequest = {}, options?: any) {
+        return AdventureTemplateEntryApiFp(this.configuration).getAdventureTemplateEntriesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public getAdventureTemplateEntry(requestParameters: AdventureTemplateEntryApiGetAdventureTemplateEntryRequest, options?: any) {
         return AdventureTemplateEntryApiFp(this.configuration).getAdventureTemplateEntry(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
