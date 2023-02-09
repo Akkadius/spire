@@ -288,21 +288,6 @@ const router = new Router({
           meta: {title: "Zone Logs (Streamed)", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_CONFIG_WORLDSERVER,
-          component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
-          meta: {title: "World Server Settings", occulus: true},
-        },
-        {
-          path: ROUTE.ADMIN_CONFIG_ZONESERVER,
-          component: () => import('./views/admin/configuration/ZoneServerSettings.vue'),
-          meta: {title: "Zone Server Settings", occulus: true},
-        },
-        {
-          path: ROUTE.ADMIN_CONFIG_UCS,
-          component: () => import('./views/admin/configuration/UcsSettings.vue'),
-          meta: {title: "UCS Config", occulus: true},
-        },
-        {
           path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
           component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
           meta: {title: "Discord Crash Webhook", occulus: true},
@@ -311,11 +296,6 @@ const router = new Router({
           path: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS,
           component: () => import('./views/admin/configuration/DiscordWebhooks.vue'),
           meta: {title: "Discord Webhook Settings"},
-        },
-        {
-          path: ROUTE.ADMIN_DATABASE_CONFIG,
-          component: () => import('./views/admin/configuration/Database.vue'),
-          meta: {title: "Database Config", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_SERVER_RULES,
