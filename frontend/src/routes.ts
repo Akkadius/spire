@@ -6,6 +6,7 @@ export const ROUTE = {
   ADMIN_CONFIGURATION: "/admin/configuration",
   ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK: "/admin/configuration/settings/discord-crash-webhook",
   ADMIN_DISCORD_WEBHOOK_SETTINGS: "/admin/discord-webhook-settings",
+  ADMIN_SERVER_CONFIG: "/admin/configuration/server",
   ADMIN_CONFIG_MOTD: "/admin/configuration/motd",
   ADMIN_CONFIG_SERVER_RULES: "/admin/configuration/server-rules",
   ADMIN_CONFIG_QUEST_HOT_RELOAD: "/admin/configuration/quest-hot-reload",

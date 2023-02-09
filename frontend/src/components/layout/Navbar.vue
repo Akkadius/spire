@@ -60,7 +60,7 @@
             Admin
           </h6>
 
-          <ul class="navbar-nav mb-md-4">
+          <ul class="navbar-nav mb-md-3">
             <li class="nav-item">
               <router-link class="nav-link" :to="ROUTE.ADMIN_ROOT" exact>
                 <i class="ra ra-eye-shield mr-1"></i> Server Admin
@@ -100,11 +100,11 @@
         </div>
 
         <div v-if="!isInAdmin()">
-          <h6 class="navbar-heading mt-3">
+          <h6 class="navbar-heading">
             Content Tools
           </h6>
 
-          <ul class="navbar-nav mb-md-4">
+          <ul class="navbar-nav mb-md-3">
             <nav-section-component :config="botNav" v-if="alphaEnabled"/>
             <nav-section-component :config="calculatorNav"/>
 
@@ -167,7 +167,7 @@
           </h6>
 
           <!-- Navigation -->
-          <ul class="navbar-nav mb-md-4">
+          <ul class="navbar-nav mb-md-3">
 
             <nav-section-component :config="spireApiNav"/>
 
@@ -343,19 +343,20 @@ export default {
           labelIcon: "fa fa-cog mr-1",
           routePrefixMatch: "admin/configuration",
           navs: [
+            { title: "Server Config", to: ROUTE.ADMIN_SERVER_CONFIG, icon: "fa fa-cog mr-1" },
             { title: "Crash Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK, icon: "ra ra-fire mr-1", isOcculus: true },
             { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
             { title: "Quest Hot Reload", to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD, icon: "ra ra-alien-fire mr-1", isOcculus: true },
             { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
             { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
-            { title: "World Server", to: ROUTE.ADMIN_CONFIG_WORLDSERVER, icon: "ra ra-double-team mr-1", isOcculus: true },
-            { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER, icon: "ra ra-player mr-1", isOcculus: true },
+            { title: "World Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=World+Server', icon: "ra ra-double-team mr-1" },
+            { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER + '?s=Zone+Server', icon: "ra ra-player mr-1" },
           ]
         },
         {
           label: "Database", labelIcon: "fa fa-database mr-1", routePrefixMatch: "admin/database",
           navs: [
-            { title: "Database Config", to: ROUTE.ADMIN_DATABASE_CONFIG, icon: "fa fa-cog mr-1", isOcculus: true },
+            { title: "Database Config", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Database', icon: "fa fa-cog mr-1"},
             { title: "Database Backups", to: ROUTE.ADMIN_DATABASE_BACKUP, icon: "fa fa-download mr-1" },
           ]
         },

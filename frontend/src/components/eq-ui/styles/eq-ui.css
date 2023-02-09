@@ -1023,3 +1023,13 @@ h6.eq-header {
     font-weight: none;
     color: white;
 }
+
+.eq-alert {
+    background-image: url(../images/super_fancy_bg.png);
+    outline-offset: -20px;
+    border: 2px #40434e solid;
+    background-position-x: left, right, left, right, left;
+    background-position-y: top, top, bottom, bottom, top;
+    background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
+    padding: 15px;
+}

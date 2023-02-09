@@ -168,7 +168,7 @@ func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
 		c.Server.ContentDatabase = nil
 	}
 
-	if c.WebAdmin.Discord.CrashLogWebhook == "" {
+	if c.WebAdmin.Discord == nil {
 		c.WebAdmin.Discord = nil
 	}
 

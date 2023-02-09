@@ -349,8 +349,13 @@ const router = new Router({
         },
         {
           path: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS,
-          component: () => import('./views/admin/configuration/PlayerEventLogSettings.vue'),
+          component: () => import('./views/admin/player-event-logs/PlayerEventLogSettings.vue'),
           meta: {title: "Player Event Log Settings" },
+        },
+        {
+          path: ROUTE.ADMIN_SERVER_CONFIG,
+          component: () => import('./views/admin/configuration/ServerConfig.vue'),
+          meta: {title: "Server Configuration" },
         },
 
         // tools

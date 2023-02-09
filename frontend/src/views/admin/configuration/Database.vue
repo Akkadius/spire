@@ -229,8 +229,6 @@ export default {
   methods: {
     submitServerConfig: async function () {
       const result = await OcculusClient.postServerConfig(this.serverConfig)
-
-
       try {
         const r = await SpireApi.v1().post("admin/serverconfig", this.serverConfig)
         if (r.status === 200) {

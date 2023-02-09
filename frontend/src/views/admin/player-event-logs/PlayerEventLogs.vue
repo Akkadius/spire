@@ -560,7 +560,7 @@ export default {
 
       this.$router.push(
         {
-          path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
+          path: this.$route.path,
           query: q
         }
       ).catch(() => {
