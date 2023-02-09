@@ -315,6 +315,36 @@
         </eq-tabs>
       </eq-tab>
 
+      <eq-tab class="fade-in" name="Zone Server">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label class="form-label">Default Player Account Status</label>
+            <input type="text" class="form-control" v-model="config.server.zones.defaultstatus"/>
+            <small class="form-text text-muted mt-3">This is the default status that new accounts are created
+              with, this most likely should be 0
+            </small>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label class="form-label">Zone Port Range Start</label>
+            <input
+              type="number" class="form-control" v-model="config.server.zones.ports.low"
+              min="7000" max="7500"
+            />
+            <small class="form-text text-muted mt-3">Port range start for zone assignment (7000-7500)</small>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label class="form-label">Zone Port Range End</label>
+            <input
+              type="number" class="form-control" v-model="config.server.zones.ports.high"
+              min="7000" max="7500"
+            />
+            <small class="form-text text-muted mt-3">Port range start for zone assignment (7000-7500)</small>
+          </div>
+        </div>
+      </eq-tab>
+
       <eq-tab class="fade-in" name="UCS">
         <div class="form-row">
           <div class="form-group col-md-6">
