@@ -62,6 +62,13 @@ export default {
   async created() {
     this.serverConfig = await OcculusClient.getServerConfig()
 
+    if (!this.serverConfig['web-admin'].discord) {
+      this.serverConfig['web-admin'].discord = {};
+      if (!this.serverConfig['web-admin'].discord.crash_log_webhook) {
+        this.serverConfig['web-admin'].discord.crash_log_webhook = "";
+      }
+    }
+
     this.loaded = true
   },
   methods: {
