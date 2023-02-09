@@ -78,7 +78,7 @@ func (a *AnalyticsController) serverCrashReport(c echo.Context) error {
 	if len(r.CrashReport) > 100000 || len(r.CrashReport) < 500 {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
-	if !strings.Contains(r.CrashReport, "stack trace for") &&
+	if !strings.Contains(r.CrashReport, "print_trace") &&
 		!strings.Contains(r.CrashReport, "Windows") {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
