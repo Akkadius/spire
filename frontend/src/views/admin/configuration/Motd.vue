@@ -1,79 +1,91 @@
 <template>
   <div>
-    <div class="card">
-      <div class="card-body">
-        <div class="row justify-content-between align-items-center">
-          <div class="col-12 col-md-9 col-xl-7">
-            <h2 class="mb-2">
-              Message of the Day
-            </h2>
-            <p class="text-muted mb-md-0">
-              Message of the day is what your players see when they first log in
-            </p>
-          </div>
-
-          <div class="col-12 col-md-auto">
-            <button type="submit" class="btn btn-primary ml-auto" @click="submit()">
-              <i class="fe fe-save"></i>
-              Save
-            </button>
-          </div>
+    <eq-window title="Message of the Day">
+      <div class="eq-alert">
+        <div>
+          <i class="fa fa-info-circle"></i>
+          Message of the day is what your players see when they first log in
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-body">
-        <div class="row justify-content-between align-items-center">
-          <div class="col-lg-12">
-            <div class="form-group">
-              <textarea class="form-control" rows="7" v-model="motd"></textarea>
-            </div>
-          </div>
+      <div class="mt-3">
+        <textarea class="form-control" rows="7" v-model="motd.value"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-outline-warning btn-sm ml-auto mt-3" @click="submit()">
+        <i class="fe fe-save"></i>
+        Save
+      </button>
+
+
+      <div
+        class="row justify-content-center"
+        style="position: absolute; bottom: 5%; z-index: 9999999; width: 100%"
+      >
+        <div class="col-4">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mt-3"
+          />
         </div>
       </div>
-    </div>
-
+    </eq-window>
   </div>
 </template>
 
 <script>
 import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-import {RuleValueApi}  from "@/app/api/api/rule-value-api";
 import {SpireApi}      from "@/app/api/spire-api";
+import {VariableApi}   from "@/app/api/api/variable-api";
+import EqWindow        from "@/components/eq-ui/EQWindow.vue";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
+  components: { InfoErrorBanner, EqWindow },
   data() {
     return {
-      motd: '',
-      loaded: false
+      motd: {},
+      loaded: false,
+
+      // notification / errors
+      notification: "",
+      error: "",
     }
   },
   async created() {
     const response = await OcculusClient.getServerMotd()
     this.motd      = response.value
     this.loaded    = true
+
+    let r = await (new VariableApi(...SpireApi.cfg())).listVariables()
+    if (r.status === 200) {
+      this.motd = r.data.find((e) => {
+        return e.varname === 'MOTD'
+      })
+    }
   },
   methods: {
     submit: async function () {
-      let r = await (new Variable(...SpireApi.cfg())).listRuleValues()
-      if (r.status === 200) {
-        this.rules = r.data
-      }
-
-      const result = await OcculusClient.postServerMotd({ motd: this.motd })
-
-      if (result.success) {
-        this.$bvToast.toast(
-          result.success,
+      try {
+        let r = await (new VariableApi(...SpireApi.cfg())).updateVariable(
           {
-            title: "Configuration saved!",
-            toaster: 'b-toaster-bottom-center',
-            autoHideDelay: 3000,
-            solid: true,
-            appendToast: false
+            id: this.motd.id,
+            variable: this.motd
           }
         )
+        if (r.status === 200) {
+          this.notification = "Message of the day updated!"
+        }
+      } catch (e) {
+        // error notify
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
       }
     }
   }
