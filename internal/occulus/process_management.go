@@ -154,16 +154,15 @@ func (m *ProcessManagement) Run() error {
 			if err != nil {
 				m.logger.Fatalf("[Occulus.ProcessManagement] could not get stdout pipe: %v", err)
 			}
-			stderr, err := cmd.StderrPipe()
-			if err != nil {
-				m.logger.Fatalf("[Occulus.ProcessManagement] could not get stdout pipe: %v", err)
-			}
+
+			cmd.Stderr = cmd.Stdout
+
 			err = cmd.Start()
 			if err != nil {
 				m.logger.Error(err)
 			}
 
-			merged := io.MultiReader(stdout, stderr)
+			merged := io.MultiReader(stdout)
 			scanner := bufio.NewScanner(merged)
 			for scanner.Scan() {
 				m.logger.Printf("[Occulus] %v\n", scanner.Text())
