@@ -374,6 +374,7 @@ export default {
         },
         { label: "Quests", labelIcon: "fa fa-code-fork mr-1", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, isOcculus: true },
         { label: "Reloading (Global)", labelIcon: "fa fa-refresh mr-1", routePrefixMatch: "admin/tools/player", to: ROUTE.ADMIN_RELOAD },
+        { label: "Server Update", labelIcon: "fa fa-upload mr-1", to: ROUTE.ADMIN_SERVER_UPDATE },
 
       ],
       viewerNav: {

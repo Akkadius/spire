@@ -80,6 +80,7 @@ func (o *Settings) EnableSetting(setting string) {
 		s.Value = "true"
 		o.connections.SpireDbNoLog().Save(&s)
 	}
+	o.LoadSettings()
 }
 
 // DisableSetting will enable settings that have true/false value
@@ -95,6 +96,7 @@ func (o *Settings) DisableSetting(setting string) {
 		s.Value = "false"
 		o.connections.SpireDbNoLog().Save(&s)
 	}
+	o.LoadSettings()
 }
 
 func (o *Settings) GetSettings() []models.Setting {
@@ -123,4 +125,30 @@ func (o *Settings) IsSettingDisabled(setting string) bool {
 	}
 
 	return false
+}
+
+func (o *Settings) SetSetting(setting string, value string) {
+	var s models.Setting
+	o.connections.SpireDbNoLog().First(&s, "setting = ?", setting)
+	if s.ID == 0 {
+		s.Setting = setting
+		s.Value = value
+		o.connections.SpireDbNoLog().Create(&s)
+	}
+	if s.ID > 0 {
+		s.Value = value
+		o.connections.SpireDbNoLog().Save(&s)
+	}
+
+	o.LoadSettings()
+}
+
+func (o *Settings) GetSetting(setting string) string {
+	for _, s := range o.settings {
+		if s.Setting == setting {
+			return s.Value
+		}
+	}
+
+	return ""
 }

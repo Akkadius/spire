@@ -41,6 +41,7 @@ type SpireWebsocketMessage struct {
 
 func (a *Controller) websocketHandler(c echo.Context) error {
 	user := request.GetUser(c)
+
 	websocket.Handler(func(ws *websocket.Conn) {
 
 		// if no user authorized, kill connection

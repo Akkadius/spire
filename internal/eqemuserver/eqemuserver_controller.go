@@ -17,6 +17,7 @@ type Controller struct {
 	logger         *logrus.Logger
 	eqemuserverapi *Client
 	serverconfig   *serverconfig.EQEmuServerConfig
+	updater        *Updater
 }
 
 func NewController(
@@ -24,12 +25,14 @@ func NewController(
 	logger *logrus.Logger,
 	api *Client,
 	serverconfig *serverconfig.EQEmuServerConfig,
+	updater *Updater,
 ) *Controller {
 	return &Controller{
 		db:             db,
 		logger:         logger,
 		eqemuserverapi: api,
 		serverconfig:   serverconfig,
+		updater:        updater,
 	}
 }
 
@@ -40,6 +43,9 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/server-stats", a.getServerStats, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/reload-types", a.getReloadTypes, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/reload/:type", a.reload, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/update-type", a.getUpdateType, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/update-type/:update-type", a.setUpdateType, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/version", a.serverVersion, nil),
 	}
 }
 
@@ -142,4 +148,46 @@ func (a *Controller) getZoneList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, types)
+}
+
+// setUpdateType sets the update type for the server
+// options are release or self-compiled
+func (a *Controller) setUpdateType(c echo.Context) error {
+	updateType := c.Param("update-type")
+	updateTypes := []string{updateTypeRelease, updateTypeSelfCompiled}
+	if !contains(updateTypes, updateType) {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Update must be of type(s) [%v]", strings.Join(updateTypes, ", "))},
+		)
+	}
+
+	a.updater.SetUpdateType(updateType)
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": fmt.Sprintf("Successfully set update type to [%v]", updateType)},
+	)
+}
+
+func (a *Controller) getUpdateType(c echo.Context) error {
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"updateType": a.updater.GetUpdateType()},
+	)
+}
+
+func (a *Controller) serverVersion(c echo.Context) error {
+	v, err := a.updater.GetVersionInfo()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		v,
+	)
 }

@@ -27,6 +27,7 @@
     "moment": "^2.29.1",
     "qs": "^6.5.2",
     "rpg-awesome": "^0.2.0",
+    "semver": "^5.7.0",
     "slugify": "^1.6.3",
     "superagent": "^6.1.0",
     "v-runtime-template": "^1.10.0",

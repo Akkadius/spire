@@ -13,6 +13,7 @@ export const ROUTE = {
   ADMIN_LOG_SETTINGS: "/admin/log-settings",
   ADMIN_CONFIG_PLAYER_EVENT_LOGS: "/admin/player-event-logs/settings",
   ADMIN_FILE_LOGS: "/admin/file-logs",
+  ADMIN_SERVER_UPDATE: "/admin/server-update",
   ADMIN_TOOL_SERVER_CODE: "/admin/tools/server-code",
   ADMIN_TOOL_SERVER_QUESTS: "/admin/tools/server-quests",
   ADMIN_DATABASE_BACKUP: "/admin/database-backup",

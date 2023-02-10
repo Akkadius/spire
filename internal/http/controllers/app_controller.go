@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
+	"runtime"
 )
 
 type AppController struct {
@@ -58,6 +59,7 @@ type Features struct {
 type EnvResponse struct {
 	Env              string           `json:"env"`
 	Version          string           `json:"version"`
+	OS               string           `json:"os"`
 	Features         Features         `json:"features"`
 	Settings         []models.Setting `json:"settings"`
 	SpireInitialized bool             `json:"is_spire_initialized"`
@@ -84,6 +86,7 @@ func (d *AppController) env(c echo.Context) error {
 
 		response := EnvResponse{
 			Env:     env.Get("APP_ENV", "local"),
+			OS:      runtime.GOOS,
 			Version: pkg.Version,
 			Features: Features{
 				GithubAuthEnabled: len(os.Getenv("GITHUB_CLIENT_ID")) > 0,

@@ -38,6 +38,14 @@ export class AppEnv {
     this._settings = value;
   }
 
+  static setOS(value) {
+    this._os = value;
+  }
+
+  static getOS() {
+    return this._os;
+  }
+
   static getEnv() {
     return this._env;
   }
@@ -80,6 +88,7 @@ export class AppEnv {
     return false
   }
 
+  private static _os;
   private static _env;
   private static _version;
   private static _features;
@@ -90,6 +99,7 @@ export class AppEnv {
     const r = await SpireApi.v1().get("/app/env")
     if (r.data && r.data.data) {
       const data = r.data.data
+      this.setOS(data.os)
       this.setEnv(data.env)
       this.setVersion(data.version)
       this.setFeatures(data.features)

@@ -355,6 +355,11 @@ const router = new Router({
           meta: {title: "Code Management", occulus: true },
         },
         {
+          path: ROUTE.ADMIN_SERVER_UPDATE,
+          component: () => import('./views/admin/server-update/ServerUpdate.vue'),
+          meta: {title: "Server Update"},
+        },
+        {
           path: ROUTE.ADMIN_TOOL_SERVER_QUESTS,
           component: () => import('./views/admin/tools/ServerQuests.vue'),
           meta: {title: "Quests Management", occulus: true},

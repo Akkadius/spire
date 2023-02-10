@@ -51,4 +51,5 @@ var serviceSet = wire.NewSet(
 	eqemuserver.NewClient,
 	backup.NewMysql,
 	websocket.NewSpireHandler,
+	eqemuserver.NewUpdater,
 )
