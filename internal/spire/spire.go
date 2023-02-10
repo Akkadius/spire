@@ -9,7 +9,6 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/serverconfig"
-	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/go-sql-driver/mysql"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -27,7 +26,7 @@ type Init struct {
 	cache                     *gocache.Cache
 	settings                  *Settings
 	crypt                     *encryption.Encrypter
-	spireuser                 *spireuser.UserService
+	spireuser                 *UserService
 }
 
 func NewInit(
@@ -38,7 +37,7 @@ func NewInit(
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
 	dbConnectionCreateService *connection.DbConnectionCreateService,
-	spireuser *spireuser.UserService,
+	spireuser *UserService,
 ) *Init {
 	i := &Init{
 		connections:               connections,

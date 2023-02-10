@@ -18,7 +18,6 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
-	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/Akkadius/spire/internal/telnet"
 	"github.com/gertd/go-pluralize"
 	"github.com/google/wire"
@@ -42,7 +41,7 @@ var serviceSet = wire.NewSet(
 	assets.NewSpireAssets,
 	eqemuchangelog.NewChangelog,
 	eqemuanalytics.NewReleases,
-	spireuser.NewUserService,
+	spire.NewUserService,
 	spire.NewSettings,
 	spire.NewInit,
 	occulus.NewProxy,

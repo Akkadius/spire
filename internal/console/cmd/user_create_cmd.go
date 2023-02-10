@@ -5,7 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/Akkadius/spire/internal/spireuser"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -15,14 +15,14 @@ type UserCreateCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
-	user    *spireuser.UserService
+	user    *spire.UserService
 }
 
 func (c *UserCreateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewUserCreateCommand(db *database.DatabaseResolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *spireuser.UserService) *UserCreateCommand {
+func NewUserCreateCommand(db *database.DatabaseResolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *spire.UserService) *UserCreateCommand {
 	i := &UserCreateCommand{
 		db:     db,
 		logger: logger,
@@ -54,7 +54,7 @@ func (c *UserCreateCommand) Handle(_ *cobra.Command, args []string) {
 		UserName: username,
 		FullName: username,
 		Password: password,
-		Provider: spireuser.LoginProviderLocal,
+		Provider: spire.LoginProviderLocal,
 	}
 
 	// new user

@@ -5,7 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/Akkadius/spire/internal/spireuser"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/danilopolani/gocialite"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -19,13 +19,13 @@ type AuthController struct {
 	db     *database.DatabaseResolver
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
-	user   *spireuser.UserService
+	user   *spire.UserService
 }
 
 func NewAuthController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
-	user *spireuser.UserService,
+	user *spire.UserService,
 ) *AuthController {
 	return &AuthController{
 		db:     db,
@@ -97,7 +97,7 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	//spew.Dump(token)
 
 	var user models.User
-	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, spireuser.LoginProviderGithub).First(&user)
+	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, spire.LoginProviderGithub).First(&user)
 
 	if user.ID == 0 {
 		u := models.User{
@@ -107,7 +107,7 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 			LastName:  github.LastName,
 			Email:     github.Email,
 			Avatar:    github.Avatar,
-			Provider:  spireuser.LoginProviderGithub,
+			Provider:  spire.LoginProviderGithub,
 		}
 
 		// new github
