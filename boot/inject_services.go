@@ -9,7 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
-	"github.com/Akkadius/spire/internal/eqemuserverapi"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/occulus"
@@ -48,6 +48,6 @@ var serviceSet = wire.NewSet(
 	occulus.NewProxy,
 	occulus.NewProcessManagement,
 	telnet.NewClient,
-	eqemuserverapi.NewClient,
+	eqemuserver.NewClient,
 	backup.NewMysql,
 )

@@ -19,7 +19,7 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
-	"github.com/Akkadius/spire/internal/eqemuserverapi"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
@@ -102,8 +102,8 @@ func InitializeApplication() (App, error) {
 	usersController := spireuser.NewUsersController(databaseResolver, logger, userService, encrypter)
 	controller := occulus.NewController(logger, databaseResolver, proxy)
 	telnetClient := telnet.NewClient(logger)
-	eqemuserverapiClient := eqemuserverapi.NewClient(telnetClient)
-	eqemuserverapiController := eqemuserverapi.NewController(databaseResolver, logger, eqemuserverapiClient, eqEmuServerConfig)
+	eqemuserverapiClient := eqemuserver.NewClient(telnetClient)
+	eqemuserverapiController := eqemuserver.NewController(databaseResolver, logger, eqemuserverapiClient, eqEmuServerConfig)
 	serverconfigController := serverconfig.NewController(logger, eqEmuServerConfig)
 	backupController := backup.NewController(logger, mysql, pathManagement)
 	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, controller, eqemuserverapiController, serverconfigController, backupController)

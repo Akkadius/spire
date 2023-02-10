@@ -1,4 +1,4 @@
-package eqemuserverapi
+package eqemuserver
 
 import (
 	"encoding/json"
