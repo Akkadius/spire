@@ -1,4 +1,4 @@
-package websocketserver
+package websocket
 
 import (
 	"bufio"

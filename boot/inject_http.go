@@ -19,7 +19,7 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
-	"github.com/Akkadius/spire/internal/websocketserver"
+	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -54,7 +54,7 @@ var httpSet = wire.NewSet(
 	deploy.NewDeployController,
 	eqemuserver.NewController,
 	serverconfig.NewController,
-	websocketserver.NewController,
+	websocket.NewController,
 	backup.NewController,
 	provideControllers,
 	NewRouter,
@@ -76,7 +76,7 @@ func NewRouter(
 	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
 	localUserAuthMiddleware *appmiddleware.LocalUserAuthMiddleware,
-	websocketController *websocketserver.Controller,
+	websocketController *websocket.Controller,
 	assets *assets.SpireAssets,
 ) *routes.Router {
 	return routes.NewHttpRouter(
