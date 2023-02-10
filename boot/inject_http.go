@@ -76,7 +76,6 @@ func NewRouter(
 	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
 	localUserAuthMiddleware *appmiddleware.LocalUserAuthMiddleware,
-	websocketController *websocket.Controller,
 	assets *assets.SpireAssets,
 ) *routes.Router {
 	return routes.NewHttpRouter(
@@ -110,11 +109,6 @@ func NewRouter(
 
 		// controller groups
 		[]*routes.ControllerGroup{
-			routes.NewControllerGroup(
-				"/",
-				[]routes.Controller{websocketController},
-				[]echo.MiddlewareFunc{}...,
-			),
 			routes.NewControllerGroup(
 				"/auth/",
 				cg.authControllers,
@@ -177,6 +171,7 @@ func provideControllers(
 	eqemuserverapiController *eqemuserver.Controller,
 	serverconfigController *serverconfig.Controller,
 	backupController *backup.Controller,
+	websocketController *websocket.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -196,6 +191,7 @@ func provideControllers(
 			eqemuserverapiController,
 			serverconfigController,
 			backupController,
+			websocketController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,

@@ -58,17 +58,10 @@
 </template>
 
 <script>
-import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApi} from "@/app/api/spire-api";
-import util from "util";
-import {debounce} from "@/app/utility/debounce";
+import EqWindow               from "@/components/eq-ui/EQWindow.vue";
+import {debounce}             from "@/app/utility/debounce";
+import {SpireWebsocketClient} from "@/app/api/spire-websocket-client";
 
-const uri = util.format(
-  "ws:%s/websocket",
-  SpireApi.getBasePath().replaceAll("http://", "")
-)
-
-let ws = new WebSocket(uri)
 
 const Convert = require('ansi-to-html');
 const convert = new Convert();
@@ -81,7 +74,6 @@ export default {
   data() {
     return {
       // output: "",
-
       outputContainer: null,
       ansiRegex: null,
     }
@@ -90,7 +82,7 @@ export default {
     this.output = ""
   },
   mounted() {
-    this.connect()
+    this.init()
 
     setTimeout(() => {
       this.outputContainer = document.getElementById("output");
@@ -106,13 +98,13 @@ export default {
   methods: {
 
     hello() {
-      ws.send(JSON.stringify({
+      SpireWebsocketClient.websocket().send(JSON.stringify({
         "action": "hello"
       }));
     },
 
     exec(command, args = []) {
-      ws.send(JSON.stringify({
+      SpireWebsocketClient.websocket().send(JSON.stringify({
         "action": "exec_server_bin",
         "command": command,
         "args": args
@@ -123,7 +115,7 @@ export default {
       this.exec(process)
     },
 
-    renderOutput: debounce(function() {
+    renderOutput: debounce(function () {
       this.$forceUpdate()
 
       setTimeout(() => {
@@ -134,23 +126,9 @@ export default {
 
     }, 10),
 
-    connect() {
-      ws.onopen = () => {
-        console.log('Connected')
-        // this.hello()
-      }
-
-      ws.onerror = (e) => {
-        console.log("error", e)
-        ws.close();
-      }
-      ws.onclose = (e) => {
-        console.log("socket closed", e)
-      }
-
+    init() {
+      let ws = SpireWebsocketClient.connect()
       ws.onmessage = (evt) => {
-        // console.log("message", evt.data)
-
         if (this.ansiRegex.test(evt.data)) {
           this.output += convert.toHtml(evt.data) + "\n"
 
@@ -164,9 +142,6 @@ export default {
         this.renderOutput()
       }
 
-      // setInterval(function() {
-      //   ws.send('Hello, Server!');
-      // }, 100);
     }
   }
 }

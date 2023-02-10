@@ -19,6 +19,7 @@ import (
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/gertd/go-pluralize"
 	"github.com/google/wire"
 )
@@ -49,4 +50,5 @@ var serviceSet = wire.NewSet(
 	telnet.NewClient,
 	eqemuserver.NewClient,
 	backup.NewMysql,
+	websocket.NewSpireHandler,
 )

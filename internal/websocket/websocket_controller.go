@@ -1,35 +1,31 @@
 package websocket
 
 import (
-	"bufio"
 	"encoding/json"
-	"fmt"
+	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/websocket"
-	"io"
-	"log"
 	"net/http"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"runtime"
 )
 
 type Controller struct {
 	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
+	handler  *SpireHandler
 }
 
 func NewController(
 	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
+	handler *SpireHandler,
 ) *Controller {
 	return &Controller{
 		logger:   logger,
 		pathmgmt: pathmgmt,
+		handler:  handler,
 	}
 }
 
@@ -40,22 +36,30 @@ func (a *Controller) Routes() []*routes.Route {
 }
 
 type SpireWebsocketMessage struct {
-	Action    string   `json:"action"`
-	Command   string   `json:"command"`
-	Arguments []string `json:"args"`
+	Action string `json:"action"`
 }
 
 func (a *Controller) websocketHandler(c echo.Context) error {
+	user := request.GetUser(c)
 	websocket.Handler(func(ws *websocket.Conn) {
+
+		// if no user authorized, kill connection
+		if user.ID == 0 {
+			_ = a.handler.HandleUnauthorized(ws)
+			_ = ws.Close()
+		}
 
 		defer ws.Close()
 		for {
 
-			// Read
+			// Read from client
 			msg := ""
 			err := websocket.Message.Receive(ws, &msg)
 			if err != nil {
-				c.Logger().Error(err)
+				// close if error
+				if err := ws.Close(); err != nil {
+					break
+				}
 			}
 
 			// just close empty messages
@@ -68,85 +72,26 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 
 			// Write
 			if len(msg) > 0 {
+				var err error
 				var m SpireWebsocketMessage
-				err := json.Unmarshal([]byte(msg), &m)
+				err = json.Unmarshal([]byte(msg), &m)
 				if err != nil {
-					log.Println(err)
+					a.logger.Println(err)
 				}
 
 				if m.Action == "hello" {
-					err = websocket.Message.Send(ws, "Hello, Client!")
-					if err != nil {
-						// close if error
-						if err := ws.Close(); err != nil {
-							break
-						}
-						c.Logger().Error(err)
-					}
+					err = a.handler.HandleHello(ws, msg)
 				}
-
 				if m.Action == "exec_server_bin" {
-					// execute and get a pipe
+					err = a.handler.HandleExecServerBin(ws, msg)
+				}
+			}
 
-					basePath := filepath.Join(a.pathmgmt.GetEQEmuServerPath(), "bin")
-					startCmd := ""
-					if _, err := os.Stat(filepath.Join(basePath, m.Command)); err == nil {
-						startCmd = filepath.Join(basePath, m.Command)
-					} else if _, err := os.Stat(filepath.Join(startCmd, fmt.Sprintf("%v.exe", m.Command))); err == nil {
-						startCmd = filepath.Join(basePath, fmt.Sprintf("%v.exe", m.Command))
-					}
-
-					if len(startCmd) == 0 {
-						err = websocket.Message.Send(ws, fmt.Sprintf("Error: Unable to find exec binary [%v]", startCmd))
-						if err != nil {
-							// close if error
-							if err := ws.Close(); err != nil {
-								break
-							}
-							c.Logger().Error(err)
-						}
-					}
-
-					go func() {
-						cmd := exec.Command(startCmd, m.Arguments...)
-						cmd.Dir = a.pathmgmt.GetEQEmuServerPath()
-						cmd.Env = os.Environ()
-						if runtime.GOOS == "linux" {
-							cmd.Env = append(cmd.Env, "IS_TTY=true")
-						}
-						//pp.Println(cmd.Env)
-						stdout, err := cmd.StdoutPipe()
-						if err != nil {
-							log.Println(err)
-							return
-						}
-						stderr, err := cmd.StderrPipe()
-						if err != nil {
-							log.Println(err)
-							return
-						}
-
-						if err := cmd.Start(); err != nil {
-							log.Println(err)
-							return
-						}
-
-						s := bufio.NewScanner(io.MultiReader(stdout, stderr))
-						for s.Scan() {
-							err = websocket.Message.Send(ws, s.Text())
-							if err != nil {
-								// close if error
-								if err := ws.Close(); err != nil {
-									break
-								}
-							}
-						}
-
-						if err := cmd.Wait(); err != nil {
-							log.Println(err)
-							return
-						}
-					}()
+			// close connection on error
+			// improve this later but this works well enough for now
+			if err != nil {
+				if err := ws.Close(); err != nil {
+					break
 				}
 			}
 		}
