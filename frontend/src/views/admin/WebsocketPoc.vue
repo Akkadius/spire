@@ -18,14 +18,24 @@
           </div>
 
           <div class="mt-3">
-            <button class="btn btn-outline-warning" @click="runProcess('world')">
+            <button class="btn btn-outline-warning btn-sm" @click="runProcess('world')">
               <i class="fa fa-crosshairs"></i>
               Run World
             </button>
 
-            <button class="btn btn-outline-warning ml-3" @click="runProcess('zone')">
+            <button class="btn btn-outline-warning btn-sm ml-3" @click="runProcess('zone')">
               <i class="fa fa-crosshairs"></i>
               Run Zone
+            </button>
+
+            <button class="btn btn-outline-warning btn-sm ml-3" @click="runProcess('loginserver')">
+              <i class="fa fa-crosshairs"></i>
+              Run Loginsever
+            </button>
+
+            <button class="btn btn-outline-warning btn-sm ml-3" @click="runProcess('ucs')">
+              <i class="fa fa-crosshairs"></i>
+              Run UCS
             </button>
           </div>
 
@@ -95,15 +105,22 @@ export default {
   },
   methods: {
 
-    send(command, args = []) {
+    hello() {
       ws.send(JSON.stringify({
+        "action": "hello"
+      }));
+    },
+
+    exec(command, args = []) {
+      ws.send(JSON.stringify({
+        "action": "exec_server_bin",
         "command": command,
         "args": args
       }));
     },
 
     runProcess(process) {
-      this.send("command_test", [process])
+      this.exec(process)
     },
 
     renderOutput: debounce(function() {
@@ -120,7 +137,7 @@ export default {
     connect() {
       ws.onopen = () => {
         console.log('Connected')
-        this.send("hello")
+        // this.hello()
       }
 
       ws.onerror = (e) => {

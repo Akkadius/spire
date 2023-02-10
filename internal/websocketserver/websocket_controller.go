@@ -14,6 +14,8 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 )
 
 type Controller struct {
@@ -38,6 +40,7 @@ func (a *Controller) Routes() []*routes.Route {
 }
 
 type SpireWebsocketMessage struct {
+	Action    string   `json:"action"`
 	Command   string   `json:"command"`
 	Arguments []string `json:"args"`
 }
@@ -71,7 +74,7 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 					log.Println(err)
 				}
 
-				if m.Command == "hello" {
+				if m.Action == "hello" {
 					err = websocket.Message.Send(ws, "Hello, Client!")
 					if err != nil {
 						// close if error
@@ -82,19 +85,35 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 					}
 				}
 
-				if m.Command == "command_test" {
+				if m.Action == "exec_server_bin" {
 					// execute and get a pipe
 
-					go func() {
-						execCmd := fmt.Sprintf(
-							"cd %v && ./bin/%v",
-							a.pathmgmt.GetEQEmuServerPath(),
-							m.Arguments[0],
-						)
+					basePath := filepath.Join(a.pathmgmt.GetEQEmuServerPath(), "bin")
+					startCmd := ""
+					if _, err := os.Stat(filepath.Join(basePath, m.Command)); err == nil {
+						startCmd = filepath.Join(basePath, m.Command)
+					} else if _, err := os.Stat(filepath.Join(startCmd, fmt.Sprintf("%v.exe", m.Command))); err == nil {
+						startCmd = filepath.Join(basePath, fmt.Sprintf("%v.exe", m.Command))
+					}
 
-						cmd := exec.Command("bash", "-c", execCmd)
+					if len(startCmd) == 0 {
+						err = websocket.Message.Send(ws, fmt.Sprintf("Error: Unable to find exec binary [%v]", startCmd))
+						if err != nil {
+							// close if error
+							if err := ws.Close(); err != nil {
+								break
+							}
+							c.Logger().Error(err)
+						}
+					}
+
+					go func() {
+						cmd := exec.Command(startCmd, m.Arguments...)
+						cmd.Dir = a.pathmgmt.GetEQEmuServerPath()
 						cmd.Env = os.Environ()
-						cmd.Env = append(cmd.Env, "IS_TTY=true")
+						if runtime.GOOS == "linux" {
+							cmd.Env = append(cmd.Env, "IS_TTY=true")
+						}
 						//pp.Println(cmd.Env)
 						stdout, err := cmd.StdoutPipe()
 						if err != nil {
@@ -129,7 +148,6 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 						}
 					}()
 				}
-
 			}
 		}
 	}).ServeHTTP(c.Response(), c.Request())
