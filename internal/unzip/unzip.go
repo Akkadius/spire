@@ -94,7 +94,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	fmt.Printf("[Zip] Extracted (%v) files in [%v]!\n\n", len(r.File), uz.Src)
+	fmt.Printf("[Zip] Extracted (%v) files in [%v] to [%v]!\n\n", len(r.File), uz.Src, uz.Dest)
 
 	return nil
 }

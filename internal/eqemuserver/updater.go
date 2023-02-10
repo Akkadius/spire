@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
-	"github.com/k0kubun/pp/v3"
+	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 )
 
@@ -84,7 +86,22 @@ func (u *Updater) GetVersionInfo() (ServerVersionInfo, error) {
 		return ServerVersionInfo{}, err
 	}
 
-	pp.Println(v)
-
 	return v, err
+}
+
+func (u *Updater) InstallRelease(release string) error {
+	file := path.Base(release)
+	downloadPath := filepath.Join(os.TempDir(), file)
+	err := download.WithProgress(downloadPath, release)
+	if err != nil {
+		return err
+	}
+
+	uz := unzip.New(downloadPath, u.pathmgmt.GetEQEmuServerBinPath())
+	err = uz.Extract()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

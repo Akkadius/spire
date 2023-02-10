@@ -119,25 +119,45 @@
         </table>
       </div>
 
+      <div
+        class="row justify-content-center"
+        style="position: absolute; bottom: -5%; z-index: 9999999; width: 100%"
+      >
+        <div class="col-6">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mt-3"
+          />
+        </div>
+      </div>
+
     </eq-window>
   </div>
 
 </template>
 
 <script>
-import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import util     from "util";
-import {ROUTE}  from "@/routes";
-import moment   from "moment";
-import EqTabs   from "@/components/eq-ui/EQTabs.vue";
-import EqTab    from "@/components/eq-ui/EQTab.vue";
-import axios    from "axios";
-import semver   from "semver";
-import {AppEnv} from "@/app/env/app-env";
+import EqWindow        from "@/components/eq-ui/EQWindow.vue";
+import util            from "util";
+import {ROUTE}         from "@/routes";
+import moment          from "moment";
+import EqTabs          from "@/components/eq-ui/EQTabs.vue";
+import EqTab           from "@/components/eq-ui/EQTab.vue";
+import axios           from "axios";
+import semver          from "semver";
+import {AppEnv}        from "@/app/env/app-env";
+import {SpireApi}      from "@/app/api/spire-api";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
   name: "UpdateReleases",
   components: {
+    InfoErrorBanner,
     EqTab,
     EqTabs,
     "v-runtime-template": () => import("v-runtime-template"),
@@ -160,7 +180,11 @@ export default {
       releases: [],
 
       counts: [],
-      selfBuilt: []
+      selfBuilt: [],
+
+      // notification / errors
+      notification: "",
+      error: "",
     }
   },
   watch: {
@@ -170,15 +194,26 @@ export default {
     }
   },
   methods: {
-    installRelease(r) {
+    async installRelease(r) {
       let release = this.getWindowsDownloadLink(r)
       if (AppEnv.getOS().includes("linux")) {
         release = this.getLinuxDownloadLink(r)
       }
 
       if (confirm(`Install this release?\n\nThis will replace your current binaries \n\n[${r.name}] ${release}`)) {
+        try {
+          const r = await SpireApi.v1().post(`eqemuserver/install-release/` + release)
+          if (r.status === 200) {
+            this.notification = r.data.message
 
-
+            this.$emit("refresh-version", true)
+          }
+        } catch (err) {
+          // error notify
+          if (err.response && err.response.data && err.response.data.error) {
+            this.error = err.response.data.error
+          }
+        }
       }
 
       console.log(release)

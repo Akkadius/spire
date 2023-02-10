@@ -46,6 +46,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/update-type", a.getUpdateType, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/update-type/:update-type", a.setUpdateType, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/version", a.serverVersion, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/install-release/:release", a.installRelease, nil),
 	}
 }
 
@@ -189,5 +190,22 @@ func (a *Controller) serverVersion(c echo.Context) error {
 	return c.JSON(
 		http.StatusOK,
 		v,
+	)
+}
+
+func (a *Controller) installRelease(c echo.Context) error {
+	release := c.Param("release")
+
+	err := a.updater.InstallRelease(release)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Installed successfully"},
 	)
 }

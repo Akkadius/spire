@@ -7,27 +7,27 @@
 
           <table class="eq-table eq-highlight-rows bordered m-0 mt-3" v-if="version">
             <tbody>
-            <tr>
+            <tr class="fade-in" v-if="version.os">
               <td class="text-right font-weight-bold">Operating System</td>
               <td>{{ version.os }}</td>
             </tr>
-            <tr>
+            <tr class="fade-in" v-if="version.server_version">
               <td class="text-right font-weight-bold">Server Version</td>
               <td>{{ version.server_version }}</td>
             </tr>
-            <tr>
+            <tr class="fade-in" v-if="version.compile_date">
               <td class="text-right font-weight-bold">Compile Date</td>
               <td>{{ version.compile_date }}</td>
             </tr>
-            <tr>
+            <tr class="fade-in" v-if="version.compile_time">
               <td class="text-right font-weight-bold">Compile Time</td>
               <td>{{ version.compile_time }}</td>
             </tr>
-            <tr>
+            <tr class="fade-in" v-if="version.database_version">
               <td class="text-right font-weight-bold">Database Version</td>
               <td>{{ version.database_version }}</td>
             </tr>
-            <tr v-if="version.bots_database_version">
+            <tr class="fade-in" v-if="version.bots_database_version">
               <td class="text-right font-weight-bold">Bots Database Version</td>
               <td>{{ version.bots_database_version }}</td>
             </tr>
@@ -103,6 +103,7 @@
     <update-releases
       class="mt-5"
       :version="version.server_version"
+      @refresh-version="getVersions()"
       v-if="updateType === 'release' && version"
     />
 
@@ -138,22 +139,20 @@ export default {
   },
   methods: {
     async init() {
-      const v = await SpireApi.v1().get(`eqemuserver/version`)
-      if (v.status === 200) {
-        this.version = v.data
-        this.version.os = AppEnv.getOS()
-      }
+      await this.getVersions()
 
       const r = await SpireApi.v1().get(`eqemuserver/update-type`)
       if (r.status === 200) {
         this.updateType = r.data.updateType
       }
+    },
 
-
-
-      // if (this.updateType === "release") {
-      //   this.loadReleaseData()
-      // }
+    async getVersions() {
+      const v = await SpireApi.v1().get(`eqemuserver/version`)
+      if (v.status === 200) {
+        this.version    = v.data
+        this.version.os = AppEnv.getOS()
+      }
     },
 
     async setUpdateOption(option) {

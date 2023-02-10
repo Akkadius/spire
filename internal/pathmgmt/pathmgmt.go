@@ -69,3 +69,7 @@ func (m *PathManagement) debug(msg string, a ...interface{}) {
 		m.logger.Debug("[pathmgmt.go] " + fmt.Sprintf(msg) + "\n")
 	}
 }
+
+func (m *PathManagement) GetEQEmuServerBinPath() string {
+	return filepath.Join(m.GetEQEmuServerPath(), "bin")
+}
