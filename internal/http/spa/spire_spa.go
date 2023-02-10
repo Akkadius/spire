@@ -36,7 +36,7 @@ func NewSpirePackagedSpaService(logger *logrus.Logger) *SpirePackagedSpaService 
 				BasePath:      SpireBasePath,
 				LocalBasePath: SpireLocalBasePath,
 				SpaIndex:      SpireSpaIndex,
-				SkipPaths:     strings.Split(env.Get("SPA_SKIP_PATH_PREFIXES", "/auth,/api,/swagger"), ","),
+				SkipPaths:     strings.Split(env.Get("SPA_SKIP_PATH_PREFIXES", "/auth,/api,/swagger,/websocket"), ","),
 			},
 		),
 	}

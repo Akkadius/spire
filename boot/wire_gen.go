@@ -35,6 +35,7 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/websocketserver"
 	"github.com/gertd/go-pluralize"
 )
 
@@ -316,8 +317,9 @@ func InitializeApplication() (App, error) {
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(databaseResolver, logger, cache, service)
 	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(databaseResolver, logger, cache, settings, init)
+	websocketserverController := websocketserver.NewController(logger, pathManagement)
 	spireAssets := assets.NewSpireAssets(logger, cache, githubSourceDownloader)
-	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
+	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, websocketserverController, spireAssets)
 	server := http.NewServer(logger, router, processManagement)
 	httpServeCommand := cmd.NewHttpServeCommand(logger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router, logger)
