@@ -1,6 +1,7 @@
 package eqemuserver
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
@@ -14,6 +15,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 type Updater struct {
@@ -104,4 +106,58 @@ func (u *Updater) InstallRelease(release string) error {
 	}
 
 	return nil
+}
+
+type BuildInfo struct {
+	SourceDirectory string `json:"source_directory"`
+	BuildTool       string `json:"build_tool"`
+}
+
+// GetBuildInfo tries to auto discovery source directory and returns build tool
+func (u *Updater) GetBuildInfo() (BuildInfo, error) {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return BuildInfo{}, err
+	}
+
+	foundPath := ""
+	err = filepath.Walk(
+		dirname,
+		func(path string, info os.FileInfo, err error) error {
+			if strings.Contains(path, "build/CMakeCache.txt") {
+				foundPath = path
+			}
+
+			return nil
+		},
+	)
+	if err != nil {
+		return BuildInfo{}, err
+	}
+
+	buildTool := ""
+	if len(foundPath) > 0 {
+		file, err := os.Open(foundPath)
+		if err != nil {
+			return BuildInfo{}, err
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		// optionally, resize scanner's capacity for lines over 64K, see next example
+		for scanner.Scan() {
+			if strings.Contains(scanner.Text(), "CMAKE_MAKE_PROGRAM:FILEPATH=") {
+				buildTool = strings.ReplaceAll(scanner.Text(), "CMAKE_MAKE_PROGRAM:FILEPATH=", "")
+			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			return BuildInfo{}, err
+		}
+	}
+
+	return BuildInfo{
+		SourceDirectory: filepath.Dir(foundPath),
+		BuildTool:       buildTool,
+	}, nil
 }

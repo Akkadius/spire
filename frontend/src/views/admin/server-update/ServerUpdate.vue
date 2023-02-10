@@ -54,12 +54,13 @@
                 Uses official release binaries from
                 <a href="https://github.com/EQEmu/Server/releases" target="releases">EverQuest Emulator Server</a>
               </small>
-              <div class="mt-3">
+              <div class="mt-1">
                 Use this when you are not developing server or making code changes to server code
               </div>
             </div>
           </div>
-          <div class="row mt-4">
+
+          <div class="row mt-3">
             <div class="col-3 text-right mt-3">
               <eq-checkbox
                 label="Self-Compiled Binaries"
@@ -74,9 +75,29 @@
               <small class="text-muted">
                 Compiles binaries locally
               </small>
-              <div class="mt-3">
+              <div class="mt-1">
                 Use this if you are a developer or intend on making modifications to your server
               </div>
+            </div>
+          </div>
+
+          <div class="row mt-4" v-if="updateType === 'self-compiled'">
+            <div class="col-3 text-right">
+              <button class="btn btn-outline-warning mt-4 btn-sm" @click="buildSource()">
+                <i class="fa fa-wrench"></i> Build
+              </button>
+            </div>
+            <div class="col-3 text-center">
+              <span class="font-weight-bold">Source Location</span>
+              <input type="text" class="form-control" v-model="sourceLocation">
+            </div>
+            <div class="col-2 text-center">
+              <span class="font-weight-bold">Make Tool</span>
+              <input type="text" class="form-control" disabled v-model="makeTool">
+            </div>
+            <div class="col-1 text-center">
+              <span class="font-weight-bold">Cores</span>
+              <input type="text" class="form-control" v-model.number="cores">
             </div>
           </div>
 
@@ -107,6 +128,15 @@
       v-if="updateType === 'release' && version"
     />
 
+    <eq-window title="Build Output" class="mt-5 p-1" v-show="output">
+      <pre
+        class="mt-3 fade-in"
+        id="output"
+        style="width: 100%; height: 50vh; word-wrap: break-word; white-space: pre-wrap; overflow-x: hidden"
+        v-html="output"
+      ></pre>
+    </eq-window>
+
   </div>
 </template>
 
@@ -117,6 +147,22 @@ import {SpireApi}      from "@/app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import UpdateReleases  from "@/views/admin/server-update/UpdateReleases.vue";
 import {AppEnv}        from "@/app/env/app-env";
+import UserContext     from "@/app/user/UserContext";
+import {debounce}      from "@/app/utility/debounce";
+const Convert = require('ansi-to-html');
+const convert = new Convert();
+
+function readChunks(reader) {
+  return {
+    async* [Symbol.asyncIterator]() {
+      let readResult = await reader.read();
+      while (!readResult.done) {
+        yield readResult.value;
+        readResult = await reader.read();
+      }
+    },
+  };
+}
 
 export default {
   name: "ServerUpdate",
@@ -129,6 +175,11 @@ export default {
 
       releases: [],
 
+      // self-compilation
+      sourceLocation: "",
+      makeTool: "",
+      cores: 4,
+
       // notification / errors
       notification: "",
       error: "",
@@ -136,8 +187,71 @@ export default {
   },
   created() {
     this.init()
+
+    this.output = ""
+
+    setTimeout(() => {
+      this.outputContainer = document.getElementById("output");
+    }, 1000)
+
+    const pattern = [
+      '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+      '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))'
+    ].join('|');
+
+    this.ansiRegex = new RegExp(pattern);
   },
   methods: {
+    renderOutput: debounce(function () {
+      this.$forceUpdate()
+
+      setTimeout(() => {
+        if (this.outputContainer) {
+          this.outputContainer.scrollTop = this.outputContainer.scrollHeight + 100;
+        }
+      }, 1)
+
+    }, 10),
+
+    async buildSource() {
+
+      this.output = "Sending job to build\n"
+      this.$forceUpdate()
+
+      fetch(SpireApi.getBasePath() + '/api/v1/eqemuserver/build', {
+        method: 'post',
+        body: JSON.stringify({
+          "source_directory": this.sourceLocation,
+          "build_tool": this.makeTool,
+          "cores": this.cores,
+        }),
+        headers: {
+          Authorization: `Bearer ` + UserContext.getAccessToken(),
+          'Content-Type': "application/json",
+        },
+      }).then(async (response) => {
+        const textDecoder = new TextDecoder();
+        const reader      = response.body.getReader();
+        for await (const chunk of readChunks(reader)) {
+          const chunkText = textDecoder.decode(chunk);
+          console.log(chunkText)
+
+          // if (this.ansiRegex.test(chunkText)) {
+          //   this.output += convert.toHtml(chunkText) + "\n"
+          //
+          // } else {
+            this.output += chunkText + "\n"
+          // }
+
+          if (this.outputContainer) {
+            this.outputContainer.scrollTop = this.outputContainer.scrollHeight;
+          }
+          this.renderOutput()
+        }
+      });
+
+    },
+
     async init() {
       await this.getVersions()
 
@@ -145,13 +259,25 @@ export default {
       if (r.status === 200) {
         this.updateType = r.data.updateType
       }
-    },
+
+      if (this.updateType === 'self-compiled') {
+        await this.getBuildInfo()
+      }
+    }
+    ,
 
     async getVersions() {
+      try {
       const v = await SpireApi.v1().get(`eqemuserver/version`)
       if (v.status === 200) {
         this.version    = v.data
         this.version.os = AppEnv.getOS()
+      }
+      } catch (err) {
+        // error notify
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
       }
     },
 
@@ -166,6 +292,14 @@ export default {
         if (err.response && err.response.data && err.response.data.error) {
           this.error = err.response.data.error
         }
+      }
+    }
+    ,
+    async getBuildInfo() {
+      const r = await SpireApi.v1().get(`eqemuserver/get-build-info`)
+      if (r.status === 200) {
+        this.sourceLocation = r.data.source_directory
+        this.makeTool       = r.data.build_tool
       }
     }
   }
