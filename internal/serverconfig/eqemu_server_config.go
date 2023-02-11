@@ -164,12 +164,10 @@ func (e EQEmuServerConfig) Exists() bool {
 }
 
 func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
-	if c.Server.ContentDatabase.Db == "" {
-		c.Server.ContentDatabase = nil
-	}
-
-	if c.WebAdmin.Discord == nil {
-		c.WebAdmin.Discord = nil
+	if c.WebAdmin.Discord != nil {
+		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
+			c.WebAdmin.Discord = nil
+		}
 	}
 
 	file, err := json.MarshalIndent(c, "", " ")

@@ -7,11 +7,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/ziutek/telnet"
 	"io"
-	"net"
 	"path/filepath"
 	"runtime"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -55,38 +53,15 @@ func sendln(t *telnet.Conn, s string) error {
 	return err
 }
 
-func connCheck(conn net.Conn) error {
-	var sysErr error = nil
-	rc, err := conn.(syscall.Conn).SyscallConn()
-	if err != nil {
-		return err
-	}
-	err = rc.Read(func(fd uintptr) bool {
-		var buf []byte = []byte{0}
-		n, _, err := syscall.Recvfrom(int(fd), buf, syscall.MSG_PEEK|syscall.MSG_DONTWAIT)
-		switch {
-		case n == 0 && err == nil:
-			sysErr = io.EOF
-		case err == syscall.EAGAIN || err == syscall.EWOULDBLOCK:
-			sysErr = nil
-		default:
-			sysErr = err
-		}
-		return true
-	})
-	if err != nil {
-		return err
-	}
-
-	return sysErr
-}
-
 func (c *Client) Connect() error {
 	var err error
 
+	// connection check
 	if c.t != nil {
-		err := connCheck(c.t.Conn)
-		if err != nil {
+		one := make([]byte, 1)
+		_ = c.t.SetReadDeadline(time.Now())
+		if _, err := c.t.Read(one); err == io.EOF {
+			pp.Println("Could not talk to telnet server, closing")
 			c.Close()
 			c.t = nil
 		}

@@ -12,7 +12,7 @@
 
           <div class="ml-5 mt-3">
             <i class="fe fe-info"></i>
-            All links below can be used publicly for download without login
+            All links below can be used publicly for download without login. If you link from an SSL site, the file downloads will be blocked by browser - so you will need to proxy the request
           </div>
 
 
