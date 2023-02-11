@@ -79,22 +79,31 @@
             </div>
           </div>
 
-          <div class="row mt-4" v-if="updateType === 'self-compiled'">
-            <div class="col-2 text-right">
-              <button class="btn btn-outline-warning mt-4 btn-sm" @click="buildSource()">
+          <div
+            class="row mt-4"
+            v-if="updateType === 'self-compiled'"
+          >
+            <div class="col-3 text-center">
+              <button class="btn btn-outline-warning mt-4 btn-sm" @click="buildSource()" :disabled="buildRunning">
                 <i class="fa fa-wrench"></i> Build
               </button>
-              <button class="btn btn-outline-primary mt-4 btn-sm ml-3" @click="buildClean()">
+              <button class="btn btn-outline-primary mt-4 btn-sm ml-3" @click="buildClean()" :disabled="buildRunning">
                 <i class="fa fa-refresh"></i> Clean
               </button>
+              <button class="btn btn-outline-warning mt-4 btn-sm ml-3" @click="buildCancel()">
+                <i class="fa fa-remove"></i> Cancel
+              </button>
             </div>
-            <div class="col-3 text-center">
+            <div
+              :style="(buildRunning ? 'opacity: .5' : 'opacity: 1')"
+              class="col-3 text-center"
+            >
               <span class="font-weight-bold">Branch</span>
               <b-input-group>
-                <b-select v-model="currentBranch" :options="branches"/>
+                <b-select v-model="currentBranch" :options="branches" :disabled="buildRunning"/>
                 <b-input-group-append>
 
-                  <b-button variant="white" class="btn-sm" @click="setBranch">
+                  <b-button variant="white" class="btn-sm" @click="setBranch" :disabled="buildRunning">
                     <i class="fa fa-dot-circle-o mr-2"></i>
                     Set
                   </b-button>
@@ -102,17 +111,42 @@
                 </b-input-group-append>
               </b-input-group>
             </div>
-            <div class="col-3 text-center">
+            <div
+              :style="(buildRunning ? 'opacity: .5' : 'opacity: 1')"
+              class="col-3 text-center"
+            >
               <span class="font-weight-bold">Source Location</span>
-              <input type="text" class="form-control" v-model="sourceLocation" @change="updateSourceLocation()">
+              <input
+                type="text"
+                class="form-control"
+                v-model="sourceLocation"
+                @change="updateSourceLocation()"
+                :disabled="buildRunning"
+              >
             </div>
             <div class="col-2 text-center">
               <span class="font-weight-bold">Make Tool</span>
-              <input type="text" class="form-control" disabled v-model="makeTool" style="opacity: .5">
+              <input
+                type="text"
+                class="form-control"
+                disabled
+                v-model="makeTool"
+                style="opacity: .5"
+                :disabled="buildRunning"
+              >
             </div>
-            <div class="col-1 text-center">
+            <div
+              :style="(buildRunning ? 'opacity: .5' : 'opacity: 1')"
+              class="col-1 text-center"
+            >
               <span class="font-weight-bold">Cores</span>
-              <input type="text" class="form-control" v-model.number="cores" @change="updateBuildCores()">
+              <input
+                type="text"
+                class="form-control"
+                v-model.number="cores"
+                @change="updateBuildCores()"
+                :disabled="buildRunning"
+              >
               <span class="text-muted">(Jobs)</span>
             </div>
           </div>
@@ -237,6 +271,14 @@ export default {
       },
 
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.buildRunning) {
+      if (!window.confirm("You have a build running, are you sure you want to leave?")) {
+        return;
+      }
+    }
+    next();
   },
   created() {
     this.init()
@@ -380,6 +422,37 @@ export default {
       });
     },
 
+    async buildCancel() {
+      this.output = "Sending cancel to system\n"
+      this.$forceUpdate()
+
+      fetch(SpireApi.getBasePath() + '/api/v1/eqemuserver/build-cancel', {
+        method: 'post',
+        body: JSON.stringify({
+          "source_directory": this.sourceLocation,
+          "build_tool": this.makeTool,
+        }),
+        headers: {
+          Authorization: `Bearer ` + UserContext.getAccessToken(),
+          'Content-Type': "application/json",
+        },
+      }).then(async (response) => {
+        const textDecoder = new TextDecoder();
+        const reader      = response.body.getReader();
+        for await (const chunk of readChunks(reader)) {
+          const chunkText = textDecoder.decode(chunk);
+          this.output += chunkText + "\n"
+
+          if (this.outputContainer) {
+            this.outputContainer.scrollTop = this.outputContainer.scrollHeight;
+          }
+          this.renderOutput()
+        }
+      }).finally(() => {
+        this.buildNotification = "Cancel complete!"
+      });
+    },
+
     async init() {
       await this.getVersions()
 
@@ -446,7 +519,7 @@ export default {
       }
     },
     async getBranchInfo() {
-      this.branches = []
+      this.branches      = []
       this.currentBranch = ""
 
       SpireApi.v1().get(`eqemuserver/build/branches`).then((r) => {
@@ -464,6 +537,7 @@ export default {
       if (confirm(`Are you sure you want to switch to this branch? Any pending changes on current branch will be lost`)) {
         SpireApi.v1().post(`eqemuserver/build/branch/${this.currentBranch}`).then((r) => {
           if (r.status === 200) {
+            this.notification = `Branch has been set to [${this.currentBranch}]`
             this.init()
           }
         })

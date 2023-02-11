@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 )
@@ -63,6 +64,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-build-info", a.getBuildInfo, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build", a.build, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build-clean", a.buildClean, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/build-cancel", a.buildCancel, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/current-branch", a.getBuildCurrentBranch, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/branches", a.getBuildBranches, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build/branch/:branch", a.setBuildBranch, nil),
@@ -319,6 +321,53 @@ func (a *Controller) buildClean(c echo.Context) error {
 
 	cmd.Stderr = cmd.Stdout
 
+	err = cmd.Start()
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	merged := io.MultiReader(stdout)
+	scanner := bufio.NewScanner(merged)
+	for scanner.Scan() {
+		c.String(http.StatusOK, scanner.Text())
+		c.Response().Flush()
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	c.Response().Flush()
+
+	return nil
+}
+
+type CancelBuildContext struct {
+	SourceDirectory string `json:"source_directory"`
+	BuildTool       string `json:"build_tool"`
+}
+
+func (a *Controller) buildCancel(c echo.Context) error {
+	r := new(CancelBuildContext)
+	if err := c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	c.Response().WriteHeader(http.StatusOK)
+
+	cmd := exec.Command("pkill", "-9", filepath.Base(r.BuildTool))
+	cmd.Env = os.Environ()
+	if runtime.GOOS == "linux" {
+		cmd.Env = append(cmd.Env, "TERM=xterm")
+	}
+	cmd.Dir = r.SourceDirectory
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	cmd.Stderr = cmd.Stdout
 	err = cmd.Start()
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())

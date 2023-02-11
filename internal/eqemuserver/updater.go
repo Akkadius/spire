@@ -3,6 +3,7 @@ package eqemuserver
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/download"
@@ -73,6 +74,8 @@ func (u *Updater) GetVersionInfo() (ServerVersionInfo, error) {
 		startCmd = filepath.Join(binPath, bin)
 	} else if _, err := os.Stat(filepath.Join(startCmd, fmt.Sprintf("%v.exe", bin))); err == nil {
 		startCmd = filepath.Join(binPath, fmt.Sprintf("%v.exe", bin))
+	} else {
+		return ServerVersionInfo{}, errors.New("Failed to find World binary to fetch version")
 	}
 
 	cmd := exec.Command(startCmd, "world:version")
