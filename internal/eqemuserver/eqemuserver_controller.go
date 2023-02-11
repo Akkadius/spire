@@ -364,6 +364,8 @@ func (a *Controller) getBuildBranches(c echo.Context) error {
 	}
 
 	cmd = exec.Command("git", "branch", "-a")
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
 	output, err = cmd.Output()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
@@ -407,12 +409,16 @@ func (a *Controller) setBuildBranch(c echo.Context) error {
 	}
 
 	cmd = exec.Command("git", "checkout", "-f", c.Param("branch"))
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
 	_, err = cmd.Output()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	cmd = exec.Command("git", "pull")
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
 	output, err = cmd.Output()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
@@ -440,6 +446,8 @@ func (a *Controller) getBuildCurrentBranch(c echo.Context) error {
 	}
 
 	cmd = exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
 	output, err = cmd.Output()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
