@@ -15,6 +15,9 @@ import router                   from "@/router";
 
 export default {
   name: "App",
+  async beforeMount() {
+    await AppEnv.init()
+  },
   async mounted() {
 
     this.loadKeypressBindings();
@@ -22,13 +25,15 @@ export default {
     this.loadSpellIconSettings();
 
     this.user  = await UserContext.getUser()
-    const init = await AppEnv.init()
-    if (init) {
-      EventBus.$emit('APP_ENV_LOADED', true);
-      AppEnv.routeCheckOcculus(this.$route, this.$router)
-      AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
-      this.checkIfUserNeedsToAuth()
+    if (typeof AppEnv.getOS() === "undefined") {
+      await AppEnv.init()
     }
+
+    EventBus.$emit('APP_ENV_LOADED', true);
+    AppEnv.routeCheckOcculus(this.$route, this.$router)
+    AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
+    this.checkIfUserNeedsToAuth()
+
     setTimeout(() => {
       AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
     }, 1)

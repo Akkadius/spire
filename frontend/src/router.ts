@@ -350,11 +350,6 @@ const router = new Router({
           meta: {title: "Backups", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_TOOL_SERVER_CODE,
-          component: () => import('./views/admin/tools/ServerCode.vue'),
-          meta: {title: "Code Management", occulus: true },
-        },
-        {
           path: ROUTE.ADMIN_SERVER_UPDATE,
           component: () => import('./views/admin/server-update/ServerUpdate.vue'),
           meta: {title: "Server Update"},
