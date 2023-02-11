@@ -63,7 +63,6 @@ func (c *Client) Connect() error {
 		if _, err := c.t.Read(one); err == io.EOF {
 			pp.Println("Could not talk to telnet server, closing")
 			c.Close()
-			c.t = nil
 		}
 	}
 
@@ -110,6 +109,7 @@ func (c *Client) Command(cmd string) (string, error) {
 
 	err = c.Connect()
 	if err != nil {
+		c.Close()
 		return "", err
 	}
 
@@ -139,6 +139,7 @@ func (c *Client) Command(cmd string) (string, error) {
 		c.debug("Read operation took %v", time.Since(start))
 		if err != nil {
 			c.logger.Warnf("[telnet] read failed: %s", err)
+			c.Close()
 			return "", err
 		}
 
@@ -158,6 +159,7 @@ func (c *Client) Close() {
 		if err != nil {
 			c.logger.Error(err)
 		}
+		c.t = nil
 	}
 }
 

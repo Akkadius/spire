@@ -190,20 +190,22 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 	}
 
 	// If any content params are set
-	if len(cfg.Server.ContentDatabase.Db) > 0 {
-		ctx.SetContentDbName(cfg.Server.ContentDatabase.Db)
-	}
-	if len(cfg.Server.ContentDatabase.Host) > 0 {
-		ctx.SetContentDbHost(cfg.Server.ContentDatabase.Host)
-	}
-	if len(cfg.Server.ContentDatabase.Username) > 0 {
-		ctx.SetContentDbUsername(cfg.Server.ContentDatabase.Username)
-	}
-	if len(cfg.Server.ContentDatabase.Password) > 0 {
-		ctx.SetContentDbPassword(cfg.Server.ContentDatabase.Password)
-	}
-	if len(cfg.Server.ContentDatabase.Port) > 0 {
-		ctx.SetContentDbPort(cfg.Server.ContentDatabase.Port)
+	if cfg.Server.ContentDatabase != nil {
+		if len(cfg.Server.ContentDatabase.Db) > 0 {
+			ctx.SetContentDbName(cfg.Server.ContentDatabase.Db)
+		}
+		if len(cfg.Server.ContentDatabase.Host) > 0 {
+			ctx.SetContentDbHost(cfg.Server.ContentDatabase.Host)
+		}
+		if len(cfg.Server.ContentDatabase.Username) > 0 {
+			ctx.SetContentDbUsername(cfg.Server.ContentDatabase.Username)
+		}
+		if len(cfg.Server.ContentDatabase.Password) > 0 {
+			ctx.SetContentDbPassword(cfg.Server.ContentDatabase.Password)
+		}
+		if len(cfg.Server.ContentDatabase.Port) > 0 {
+			ctx.SetContentDbPort(cfg.Server.ContentDatabase.Port)
+		}
 	}
 
 	// created address
@@ -220,7 +222,7 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 }
 
 func (o *Init) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", o.crypt.GetEncryptionKey(), userId)
 }
 
 func (o *Init) IsAuthEnabled() bool {

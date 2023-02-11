@@ -34,7 +34,7 @@
 
         </eq-window>
       </div>
-      <div class="col-9" v-if="os === 'linux'">
+      <div class="col-9">
         <eq-window title="Update Settings" style="height: 100%">
           <div class="row">
             <div class="col-3 text-right mt-3">
@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <div class="row mt-3">
+          <div class="row mt-3" v-if="os === 'linux'">
             <div class="col-3 text-right mt-3">
               <eq-checkbox
                 label="Self-Compiled Binaries"
@@ -281,16 +281,18 @@ export default {
     next();
   },
   created() {
+    this.updateType = this.BUILD_TYPE.RELEASE
+
     this.init()
 
     this.output = ""
 
+    // windows default
     if (this.os !== 'linux') {
       if (AppEnv.getSettingValue('SERVER_UPDATE_TYPE') !== this.BUILD_TYPE.RELEASE) {
-        AppEnv.setSetting('SERVER_UPDATE_TYPE', BUILD_TYPE.SELF_COMPILED)
+        AppEnv.setSetting('SERVER_UPDATE_TYPE', this.BUILD_TYPE.RELEASE)
       }
     }
-
 
     setTimeout(() => {
       this.outputContainer = document.getElementById("output");

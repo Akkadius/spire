@@ -221,6 +221,14 @@ export default {
     },
 
     versionGreater(v1, v2) {
+      if (!v1.includes(".") || !v2.includes(".")) {
+        return false;
+      }
+
+      if (v1.split(".").length !== 3 || v2.split(".").length !== 3) {
+        return false;
+      }
+
       return semver.gt(v1, v2)
     },
 

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -16,6 +15,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -69,11 +69,14 @@ type ServerVersionInfo struct {
 func (u *Updater) GetVersionInfo() (ServerVersionInfo, error) {
 	binPath := filepath.Join(u.pathmgmt.GetEQEmuServerPath(), "bin")
 	bin := "world"
+	if runtime.GOOS == "windows" {
+		bin = "world.exe"
+	}
 	startCmd := ""
-	if _, err := os.Stat(filepath.Join(binPath, bin)); err == nil {
+
+	finalPath := filepath.Join(binPath, bin)
+	if _, err := os.Stat(finalPath); !errors.Is(err, os.ErrNotExist) {
 		startCmd = filepath.Join(binPath, bin)
-	} else if _, err := os.Stat(filepath.Join(startCmd, fmt.Sprintf("%v.exe", bin))); err == nil {
-		startCmd = filepath.Join(binPath, fmt.Sprintf("%v.exe", bin))
 	} else {
 		return ServerVersionInfo{}, errors.New("Failed to find World binary to fetch version")
 	}
@@ -85,8 +88,22 @@ func (u *Updater) GetVersionInfo() (ServerVersionInfo, error) {
 		return ServerVersionInfo{}, err
 	}
 
+	// not all binaries simply output json alone
+	// there was an output bug
+	o := string(output)
+	var n string
+	startWatch := false
+	for _, s := range strings.Split(o, "\n") {
+		if strings.Contains(s, "{") {
+			startWatch = true
+		}
+		if startWatch {
+			n += s
+		}
+	}
+
 	var v ServerVersionInfo
-	err = json.Unmarshal(output, &v)
+	err = json.Unmarshal([]byte(n), &v)
 	if err != nil {
 		return ServerVersionInfo{}, err
 	}

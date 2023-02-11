@@ -13,7 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/argon2"
 	"io"
-	"math/big"
 	"strings"
 )
 
@@ -32,7 +31,7 @@ type Encrypter struct {
 }
 
 func (e *Encrypter) GetEncryptionKey() string {
-	return fmt.Sprintf("%x", e.encryptionKey)
+	return fmt.Sprintf("%s", e.encryptionKey)
 }
 
 func (e *Encrypter) SetEncryptionKey(encryptionKey string) {
@@ -138,7 +137,7 @@ func (e *Encrypter) initializeEncryption() {
 	if e.serverconfig.Exists() {
 		c := e.serverconfig.Get()
 		if len(c.Spire.EncryptionKey) == 0 {
-			c.Spire.EncryptionKey = e.generateRandomHash()
+			c.Spire.EncryptionKey = e.generateAesKey()
 			e.logger.Infoln("[encryption] Initialized encryption key in EQEmu server config [spire:encryption_key]")
 			_ = e.serverconfig.Save(c)
 		}
@@ -147,27 +146,15 @@ func (e *Encrypter) initializeEncryption() {
 	}
 }
 
-func (e *Encrypter) generateRandomHash() string {
-	hash, err := GenerateRandomString(32)
-	if err != nil {
-		e.logger.Error(err)
+func (e *Encrypter) generateAesKey() string {
+	bytes := make([]byte, 32) //generate a random 32 byte key for AES-256
+	if _, err := rand.Read(bytes); err != nil {
+		panic(err.Error())
 	}
 
-	return hash
-}
+	key := hex.EncodeToString(bytes)
 
-func GenerateRandomString(n int) (string, error) {
-	const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-"
-	ret := make([]byte, n)
-	for i := 0; i < n; i++ {
-		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(letters))))
-		if err != nil {
-			return "", err
-		}
-		ret[i] = letters[num.Int64()]
-	}
-
-	return string(ret), nil
+	return key
 }
 
 // ComparePassword is used to compare a user-inputted password to a hash to see

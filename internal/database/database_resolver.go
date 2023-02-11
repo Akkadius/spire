@@ -71,7 +71,7 @@ func (d *DatabaseResolver) GetEqemuDb() *gorm.DB {
 }
 
 func (d *DatabaseResolver) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", d.crypt.GetEncryptionKey(), userId)
 }
 
 func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
