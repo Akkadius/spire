@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/serverconfig"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
@@ -55,6 +54,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/install-release/:release", a.installRelease, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-build-info", a.getBuildInfo, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build", a.build, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/build-clean", a.buildClean, nil),
 	}
 }
 
@@ -239,33 +239,12 @@ type BuildContext struct {
 	BuildCores      int    `json:"cores"`
 }
 
-type (
-	Geolocation struct {
-		Altitude  float64
-		Latitude  float64
-		Longitude float64
-	}
-)
-
-var (
-	locations = []Geolocation{
-		{-97, 37.819929, -122.478255},
-		{1899, 39.096849, -120.032351},
-		{2619, 37.865101, -119.538329},
-		{42, 33.812092, -117.918974},
-		{15, 37.77493, -122.419416},
-	}
-)
-
 func (a *Controller) build(c echo.Context) error {
 	r := new(BuildContext)
 	if err := c.Bind(r); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	pp.Println(r)
-
-	//c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	c.Response().WriteHeader(http.StatusOK)
 
 	cmd := exec.Command(r.BuildTool, fmt.Sprintf("-j%v", r.BuildCores))
@@ -283,7 +262,7 @@ func (a *Controller) build(c echo.Context) error {
 
 	err = cmd.Start()
 	if err != nil {
-		a.logger.Error(err)
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	merged := io.MultiReader(stdout)
@@ -291,12 +270,59 @@ func (a *Controller) build(c echo.Context) error {
 	for scanner.Scan() {
 		c.String(http.StatusOK, scanner.Text())
 		c.Response().Flush()
-		pp.Println(scanner.Text())
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		a.logger.Error(err)
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	c.Response().Flush()
+
+	return nil
+}
+
+type CleanBuildContext struct {
+	SourceDirectory string `json:"source_directory"`
+	BuildTool       string `json:"build_tool"`
+}
+
+func (a *Controller) buildClean(c echo.Context) error {
+	r := new(CleanBuildContext)
+	if err := c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	c.Response().WriteHeader(http.StatusOK)
+
+	cmd := exec.Command(r.BuildTool, "clean")
+	cmd.Env = os.Environ()
+	if runtime.GOOS == "linux" {
+		cmd.Env = append(cmd.Env, "TERM=xterm")
+	}
+	cmd.Dir = r.SourceDirectory
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		a.logger.Fatalf("could not get stdout pipe: %v", err)
+	}
+
+	cmd.Stderr = cmd.Stdout
+
+	err = cmd.Start()
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	merged := io.MultiReader(stdout)
+	scanner := bufio.NewScanner(merged)
+	for scanner.Scan() {
+		c.String(http.StatusOK, scanner.Text())
+		c.Response().Flush()
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	c.Response().Flush()

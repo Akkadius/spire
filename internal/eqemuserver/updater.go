@@ -54,7 +54,7 @@ func (u *Updater) SetUpdateType(updateType string) {
 }
 
 func (u *Updater) GetUpdateType() string {
-	return u.settings.GetSetting(updateTypeSetting)
+	return u.settings.GetSetting(updateTypeSetting).Value
 }
 
 type ServerVersionInfo struct {
@@ -115,9 +115,18 @@ type BuildInfo struct {
 
 // GetBuildInfo tries to auto discovery source directory and returns build tool
 func (u *Updater) GetBuildInfo() (BuildInfo, error) {
-	dirname, err := os.UserHomeDir()
-	if err != nil {
-		return BuildInfo{}, err
+	var dirname string
+	var err error
+	s := u.settings.GetSetting("BUILD_LOCATION")
+	if s.ID != 0 {
+		dirname = s.Value
+	}
+
+	if len(dirname) == 0 {
+		dirname, err = os.UserHomeDir()
+		if err != nil {
+			return BuildInfo{}, err
+		}
 	}
 
 	foundPath := ""

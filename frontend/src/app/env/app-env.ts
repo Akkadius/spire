@@ -3,7 +3,6 @@
 import {SpireApi} from "../api/spire-api";
 import VueRouter, {Route} from "vue-router";
 import {ROUTE} from "@/routes";
-import router from "@/router";
 
 // these should be mirrored with env/app.go
 const AppEnvTesting    = "testing"
@@ -28,6 +27,31 @@ export class AppEnv {
 
   static setFeatures(value) {
     this._features = value;
+  }
+
+  static getSetting(name) {
+    for (let s of this.getSettings()) {
+      if (s.setting === name) {
+        return s
+      }
+    }
+  }
+
+  static getSettingValue(name, fallback = "") {
+    for (let s of this.getSettings()) {
+      if (s.setting === name) {
+        return s.value
+      }
+    }
+
+    return fallback
+  }
+
+  static async setSetting(name, value) {
+    const r = await SpireApi.v1().post(`spire/setting/${name}/value/${value}`)
+    if (r.status === 200) {
+      await this.reload() // reload settings into memory
+    }
   }
 
   static getSettings() {
@@ -109,6 +133,10 @@ export class AppEnv {
       return true;
     }
     return false;
+  }
+
+  static async reload() {
+    await this.init()
   }
 
   // a check that happens during routing if within an Occulus-based

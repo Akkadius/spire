@@ -36,17 +36,17 @@
 
         </eq-window>
       </div>
-      <div class="col-9">
+      <div class="col-9" v-if="os === 'linux'">
         <eq-window title="Update Settings" style="height: 100%">
           <div class="row">
             <div class="col-3 text-right mt-3">
               <eq-checkbox
                 label="Use Release Binaries"
                 class="d-inline-block"
-                true-value="release"
-                false-value="self-compiled"
+                :true-value="BUILD_TYPE.RELEASE"
+                :false-value="BUILD_TYPE.SELF_COMPILED"
                 v-model="updateType"
-                @input="setUpdateOption('release')"
+                @input="setUpdateOption(BUILD_TYPE.RELEASE)"
               />
             </div>
             <div class="col-9">
@@ -65,15 +65,15 @@
               <eq-checkbox
                 label="Self-Compiled Binaries"
                 class="d-inline-block"
-                false-value="release"
-                true-value="self-compiled"
+                :false-value="BUILD_TYPE.RELEASE"
+                :true-value="BUILD_TYPE.SELF_COMPILED"
                 v-model="updateType"
-                @input="setUpdateOption('self-compiled')"
+                @input="setUpdateOption(BUILD_TYPE.SELF_COMPILED)"
               />
             </div>
             <div class="col-9">
               <small class="text-muted">
-                Compiles binaries locally
+                Compiles binaries locally <i class="fa fa-linux"></i> (Linux only)
               </small>
               <div class="mt-1">
                 Use this if you are a developer or intend on making modifications to your server
@@ -86,18 +86,22 @@
               <button class="btn btn-outline-warning mt-4 btn-sm" @click="buildSource()">
                 <i class="fa fa-wrench"></i> Build
               </button>
+              <button class="btn btn-outline-primary mt-4 btn-sm ml-3" @click="buildClean()">
+                <i class="fa fa-refresh"></i> Clean
+              </button>
             </div>
             <div class="col-3 text-center">
               <span class="font-weight-bold">Source Location</span>
-              <input type="text" class="form-control" v-model="sourceLocation">
+              <input type="text" class="form-control" v-model="sourceLocation" @change="updateSourceLocation()">
             </div>
             <div class="col-2 text-center">
               <span class="font-weight-bold">Make Tool</span>
-              <input type="text" class="form-control" disabled v-model="makeTool">
+              <input type="text" class="form-control" disabled v-model="makeTool" style="opacity: .5">
             </div>
             <div class="col-1 text-center">
               <span class="font-weight-bold">Cores</span>
-              <input type="text" class="form-control" v-model.number="cores">
+              <input type="text" class="form-control" v-model.number="cores" @change="updateBuildCores()">
+              <span class="text-muted">(Jobs)</span>
             </div>
           </div>
 
@@ -125,30 +129,52 @@
       class="mt-5"
       :version="version.server_version"
       @refresh-version="getVersions()"
-      v-if="updateType === 'release' && version"
+      v-if="updateType === BUILD_TYPE.RELEASE && version"
     />
 
-    <eq-window title="Build Output" class="mt-5 p-1" v-show="output">
+    <eq-window title="Build Output" class="mt-5 p-1" v-show="output && updateType === BUILD_TYPE.SELF_COMPILED">
       <pre
-        class="mt-3 fade-in"
+        class="mt-3 fade-in mb-1"
         id="output"
         style="width: 100%; height: 50vh; word-wrap: break-word; white-space: pre-wrap; overflow-x: hidden"
         v-html="output"
       ></pre>
+
+      <eq-progress-bar :percent="buildPercent" v-if="buildRunning"/>
+
+      <div
+        class="row justify-content-center"
+        style="position: absolute; bottom: -5%; z-index: 9999999; width: 100%"
+      >
+        <div class="col-6">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="buildNotification"
+            :error="buildError"
+            @dismiss-error="buildError = ''"
+            @dismiss-notification="buildNotification = ''"
+            class="mt-3"
+          />
+        </div>
+      </div>
     </eq-window>
 
   </div>
 </template>
 
 <script>
-import EqWindow        from "@/components/eq-ui/EQWindow.vue";
-import EqCheckbox      from "@/components/eq-ui/EQCheckbox.vue";
-import {SpireApi}      from "@/app/api/spire-api";
-import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
-import UpdateReleases  from "@/views/admin/server-update/UpdateReleases.vue";
-import {AppEnv}        from "@/app/env/app-env";
-import UserContext     from "@/app/user/UserContext";
-import {debounce}      from "@/app/utility/debounce";
+import EqWindow           from "@/components/eq-ui/EQWindow.vue";
+import EqCheckbox         from "@/components/eq-ui/EQCheckbox.vue";
+import {SpireApi}         from "@/app/api/spire-api";
+import InfoErrorBanner    from "@/components/InfoErrorBanner.vue";
+import UpdateReleases     from "@/views/admin/server-update/UpdateReleases.vue";
+import {AppEnv}           from "@/app/env/app-env";
+import UserContext        from "@/app/user/UserContext";
+import {debounce}         from "@/app/utility/debounce";
+import LoaderFakeProgress from "@/components/LoaderFakeProgress.vue";
+import EqProgressBar      from "@/components/eq-ui/EQProgressBar.vue";
+
 const Convert = require('ansi-to-html');
 const convert = new Convert();
 
@@ -164,9 +190,10 @@ function readChunks(reader) {
   };
 }
 
+
 export default {
   name: "ServerUpdate",
-  components: { UpdateReleases, InfoErrorBanner, EqCheckbox, EqWindow },
+  components: { EqProgressBar, LoaderFakeProgress, UpdateReleases, InfoErrorBanner, EqCheckbox, EqWindow },
   data() {
     return {
       updateType: "",
@@ -175,20 +202,42 @@ export default {
 
       releases: [],
 
+      os: AppEnv.getOS(),
+
       // self-compilation
       sourceLocation: "",
       makeTool: "",
-      cores: 4,
+      cores: 0,
+
+      buildRunning: false,
+      buildPercent: 0,
 
       // notification / errors
       notification: "",
       error: "",
+
+      // build notification / errors
+      buildNotification: "",
+      buildError: "",
+
+      BUILD_TYPE: {
+        RELEASE: 'release',
+        SELF_COMPILED: 'self-compiled'
+      },
+
     }
   },
   created() {
     this.init()
 
     this.output = ""
+
+    if (this.os !== 'linux') {
+      if (AppEnv.getSettingValue('SERVER_UPDATE_TYPE') !== this.BUILD_TYPE.RELEASE) {
+        AppEnv.setSetting('SERVER_UPDATE_TYPE', BUILD_TYPE.SELF_COMPILED)
+      }
+    }
+
 
     setTimeout(() => {
       this.outputContainer = document.getElementById("output");
@@ -202,6 +251,26 @@ export default {
     this.ansiRegex = new RegExp(pattern);
   },
   methods: {
+    updateSourceLocation() {
+      try {
+        AppEnv.setSetting("BUILD_LOCATION", this.sourceLocation)
+        this.notification = `Updated build location to [${this.sourceLocation}]`
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+    },
+    updateBuildCores() {
+      try {
+        AppEnv.setSetting("BUILD_CORES", this.cores)
+        this.notification = `Updated build cores to [${this.cores}]`
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+    },
     renderOutput: debounce(function () {
       this.$forceUpdate()
 
@@ -215,6 +284,7 @@ export default {
 
     async buildSource() {
 
+      this.buildRunning = true
       this.output = "Sending job to build\n"
       this.$forceUpdate()
 
@@ -234,22 +304,68 @@ export default {
         const reader      = response.body.getReader();
         for await (const chunk of readChunks(reader)) {
           const chunkText = textDecoder.decode(chunk);
-          console.log(chunkText)
+          this.output += chunkText + "\n"
 
-          // if (this.ansiRegex.test(chunkText)) {
-          //   this.output += convert.toHtml(chunkText) + "\n"
-          //
-          // } else {
-            this.output += chunkText + "\n"
-          // }
+          if (chunkText.includes("[")) {
+            let s = chunkText
+            s = s.replaceAll("[", "")
+            s = s.replaceAll("]", "")
+            const split = s.split(" ")
+            if (split.length > 0) {
+              const first = split[0].trim()
+              if (first.includes("%")) {
+                this.buildPercent = first.replaceAll("%", "")
+              } else if (first.includes("/")) {
+                const ninjaSplit = first.split("/")
+                if (ninjaSplit.length > 0) {
+                  const progress = ninjaSplit[0].trim()
+                  const total = ninjaSplit[1].trim()
+                  this.buildPercent = parseInt((progress / total) * 100)
+                }
+              }
+            }
+          }
 
           if (this.outputContainer) {
             this.outputContainer.scrollTop = this.outputContainer.scrollHeight;
           }
           this.renderOutput()
         }
+      }).finally(() => {
+        this.buildNotification = "Build complete!"
+        this.buildRunning = false
       });
+    },
 
+    async buildClean() {
+      this.output = "Sending clean to system\n"
+      this.$forceUpdate()
+
+      fetch(SpireApi.getBasePath() + '/api/v1/eqemuserver/build-clean', {
+        method: 'post',
+        body: JSON.stringify({
+          "source_directory": this.sourceLocation,
+          "build_tool": this.makeTool,
+        }),
+        headers: {
+          Authorization: `Bearer ` + UserContext.getAccessToken(),
+          'Content-Type': "application/json",
+        },
+      }).then(async (response) => {
+        const textDecoder = new TextDecoder();
+        const reader      = response.body.getReader();
+        for await (const chunk of readChunks(reader)) {
+          const chunkText = textDecoder.decode(chunk);
+          this.output += chunkText + "\n"
+
+          if (this.outputContainer) {
+            this.outputContainer.scrollTop = this.outputContainer.scrollHeight;
+          }
+          this.renderOutput()
+        }
+      }).finally(() => {
+        this.buildNotification = "Clean complete!"
+      });
     },
 
     async init() {
@@ -260,19 +376,20 @@ export default {
         this.updateType = r.data.updateType
       }
 
-      if (this.updateType === 'self-compiled') {
-        await this.getBuildInfo()
+      if (AppEnv.getOS().includes("linux")) {
+        if (this.updateType === this.BUILD_TYPE.SELF_COMPILED) {
+          await this.getBuildInfo()
+        }
       }
-    }
-    ,
+    },
 
     async getVersions() {
       try {
-      const v = await SpireApi.v1().get(`eqemuserver/version`)
-      if (v.status === 200) {
-        this.version    = v.data
-        this.version.os = AppEnv.getOS()
-      }
+        const v = await SpireApi.v1().get(`eqemuserver/version`)
+        if (v.status === 200) {
+          this.version    = v.data
+          this.version.os = AppEnv.getOS()
+        }
       } catch (err) {
         // error notify
         if (err.response && err.response.data && err.response.data.error) {
@@ -286,6 +403,7 @@ export default {
         const r = await SpireApi.v1().post(`eqemuserver/update-type/${option}`)
         if (r.status === 200) {
           this.notification = r.data.message
+          this.init()
         }
       } catch (err) {
         // error notify
@@ -293,13 +411,25 @@ export default {
           this.error = err.response.data.error
         }
       }
-    }
-    ,
+    },
+
     async getBuildInfo() {
       const r = await SpireApi.v1().get(`eqemuserver/get-build-info`)
       if (r.status === 200) {
-        this.sourceLocation = r.data.source_directory
-        this.makeTool       = r.data.build_tool
+        // always pull the make tool from server
+        this.makeTool = r.data.build_tool
+
+        // we auto look for the build location regardless
+        // we only use it if something else wasn't manually set
+        const b = AppEnv.getSetting("BUILD_LOCATION")
+        if (!b || (b && b.value === "")) {
+          await AppEnv.setSetting("BUILD_LOCATION", r.data.source_directory)
+          this.sourceLocation = r.data.source_directory
+        } else {
+          this.sourceLocation = b.value
+        }
+
+        this.cores = parseInt(AppEnv.getSettingValue("BUILD_CORES", 4))
       }
     }
   }

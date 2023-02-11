@@ -143,12 +143,12 @@ func (o *Settings) SetSetting(setting string, value string) {
 	o.LoadSettings()
 }
 
-func (o *Settings) GetSetting(setting string) string {
+func (o *Settings) GetSetting(setting string) models.Setting {
 	for _, s := range o.settings {
 		if s.Setting == setting {
-			return s.Value
+			return s
 		}
 	}
 
-	return ""
+	return models.Setting{}
 }

@@ -15,8 +15,15 @@ export default {
     }
   },
   components: { EqProgressBar },
+  props: {
+    intervalMs: {
+      type: Number,
+      required: false,
+      default: 10
+    },
+  },
   mounted() {
-    this.interval = setInterval(this.incrementLoader, 10)
+    this.interval = setInterval(this.incrementLoader, this.intervalMs)
   },
   beforeDestroy() {
     if (this.interval) {
