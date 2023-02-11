@@ -3,8 +3,6 @@
     <div class="row">
       <div class="col-3">
         <eq-window title="Current Version" style="height: 100%" class="p-0">
-
-
           <table class="eq-table eq-highlight-rows bordered m-0 mt-3" v-if="version">
             <tbody>
             <tr class="fade-in" v-if="version.os">
@@ -82,13 +80,27 @@
           </div>
 
           <div class="row mt-4" v-if="updateType === 'self-compiled'">
-            <div class="col-3 text-right">
+            <div class="col-2 text-right">
               <button class="btn btn-outline-warning mt-4 btn-sm" @click="buildSource()">
                 <i class="fa fa-wrench"></i> Build
               </button>
               <button class="btn btn-outline-primary mt-4 btn-sm ml-3" @click="buildClean()">
                 <i class="fa fa-refresh"></i> Clean
               </button>
+            </div>
+            <div class="col-3 text-center">
+              <span class="font-weight-bold">Branch</span>
+              <b-input-group>
+                <b-select v-model="currentBranch" :options="branches"/>
+                <b-input-group-append>
+
+                  <b-button variant="white" class="btn-sm" @click="setBranch">
+                    <i class="fa fa-dot-circle-o mr-2"></i>
+                    Set
+                  </b-button>
+
+                </b-input-group-append>
+              </b-input-group>
             </div>
             <div class="col-3 text-center">
               <span class="font-weight-bold">Source Location</span>
@@ -204,19 +216,18 @@ export default {
 
       os: AppEnv.getOS(),
 
-      // self-compilation
-      sourceLocation: "",
-      makeTool: "",
-      cores: 0,
-
-      buildRunning: false,
-      buildPercent: 0,
-
       // notification / errors
       notification: "",
       error: "",
 
-      // build notification / errors
+      // self-compilation
+      sourceLocation: "",
+      makeTool: "",
+      cores: 0,
+      branches: [],
+      currentBranch: "",
+      buildRunning: false,
+      buildPercent: 0,
       buildNotification: "",
       buildError: "",
 
@@ -255,6 +266,7 @@ export default {
       try {
         AppEnv.setSetting("BUILD_LOCATION", this.sourceLocation)
         this.notification = `Updated build location to [${this.sourceLocation}]`
+        this.init()
       } catch (err) {
         if (err.response && err.response.data && err.response.data.error) {
           this.error = err.response.data.error
@@ -285,7 +297,7 @@ export default {
     async buildSource() {
 
       this.buildRunning = true
-      this.output = "Sending job to build\n"
+      this.output       = "Sending job to build\n"
       this.$forceUpdate()
 
       fetch(SpireApi.getBasePath() + '/api/v1/eqemuserver/build', {
@@ -307,9 +319,9 @@ export default {
           this.output += chunkText + "\n"
 
           if (chunkText.includes("[")) {
-            let s = chunkText
-            s = s.replaceAll("[", "")
-            s = s.replaceAll("]", "")
+            let s       = chunkText
+            s           = s.replaceAll("[", "")
+            s           = s.replaceAll("]", "")
             const split = s.split(" ")
             if (split.length > 0) {
               const first = split[0].trim()
@@ -318,8 +330,8 @@ export default {
               } else if (first.includes("/")) {
                 const ninjaSplit = first.split("/")
                 if (ninjaSplit.length > 0) {
-                  const progress = ninjaSplit[0].trim()
-                  const total = ninjaSplit[1].trim()
+                  const progress    = ninjaSplit[0].trim()
+                  const total       = ninjaSplit[1].trim()
                   this.buildPercent = parseInt((progress / total) * 100)
                 }
               }
@@ -333,7 +345,7 @@ export default {
         }
       }).finally(() => {
         this.buildNotification = "Build complete!"
-        this.buildRunning = false
+        this.buildRunning      = false
       });
     },
 
@@ -379,6 +391,7 @@ export default {
       if (AppEnv.getOS().includes("linux")) {
         if (this.updateType === this.BUILD_TYPE.SELF_COMPILED) {
           await this.getBuildInfo()
+          await this.getBranchInfo()
         }
       }
     },
@@ -430,6 +443,30 @@ export default {
         }
 
         this.cores = parseInt(AppEnv.getSettingValue("BUILD_CORES", 4))
+      }
+    },
+    async getBranchInfo() {
+      this.branches = []
+      this.currentBranch = ""
+
+      SpireApi.v1().get(`eqemuserver/build/branches`).then((r) => {
+        if (r.status === 200) {
+          this.branches = r.data
+        }
+      })
+      SpireApi.v1().get(`eqemuserver/build/current-branch`).then((r) => {
+        if (r.status === 200) {
+          this.currentBranch = r.data
+        }
+      })
+    },
+    setBranch() {
+      if (confirm(`Are you sure you want to switch to this branch? Any pending changes on current branch will be lost`)) {
+        SpireApi.v1().post(`eqemuserver/build/branch/${this.currentBranch}`).then((r) => {
+          if (r.status === 200) {
+            this.init()
+          }
+        })
       }
     }
   }

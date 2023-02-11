@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
@@ -21,6 +23,8 @@ type Controller struct {
 	db             *database.DatabaseResolver
 	logger         *logrus.Logger
 	eqemuserverapi *Client
+	pathmgmt       *pathmgmt.PathManagement
+	settings       *spire.Settings
 	serverconfig   *serverconfig.EQEmuServerConfig
 	updater        *Updater
 }
@@ -30,6 +34,8 @@ func NewController(
 	logger *logrus.Logger,
 	api *Client,
 	serverconfig *serverconfig.EQEmuServerConfig,
+	pathmgmt *pathmgmt.PathManagement,
+	settings *spire.Settings,
 	updater *Updater,
 ) *Controller {
 	return &Controller{
@@ -37,7 +43,9 @@ func NewController(
 		logger:         logger,
 		eqemuserverapi: api,
 		serverconfig:   serverconfig,
+		pathmgmt:       pathmgmt,
 		updater:        updater,
+		settings:       settings,
 	}
 }
 
@@ -55,6 +63,9 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-build-info", a.getBuildInfo, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build", a.build, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build-clean", a.buildClean, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/current-branch", a.getBuildCurrentBranch, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/branches", a.getBuildBranches, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/build/branch/:branch", a.setBuildBranch, nil),
 	}
 }
 
@@ -303,7 +314,7 @@ func (a *Controller) buildClean(c echo.Context) error {
 	cmd.Dir = r.SourceDirectory
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	cmd.Stderr = cmd.Stdout
@@ -328,4 +339,114 @@ func (a *Controller) buildClean(c echo.Context) error {
 	c.Response().Flush()
 
 	return nil
+}
+
+// list branches
+// git fetch origin && git branch -a
+// checkout branch
+// cd %s && git fetch origin && git checkout -f %s && git pull
+// current branch
+// cd %s && git rev-parse --abbrev-ref HEAD
+
+func (a *Controller) getBuildBranches(c echo.Context) error {
+	var dirname string
+	s := a.settings.GetSetting("BUILD_LOCATION")
+	if s.ID != 0 {
+		dirname = s.Value
+	}
+
+	cmd := exec.Command("git", "fetch", "origin")
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
+	output, err := cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	cmd = exec.Command("git", "branch", "-a")
+	output, err = cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	branchesRaw := strings.Split(string(output), "\n")
+	branches := []string{}
+
+	for _, s := range branchesRaw {
+		branch := strings.TrimSpace(s)
+		if len(branch) == 0 {
+			continue
+		}
+		if strings.Contains(branch, " -> ") {
+			continue
+		}
+		branch = strings.ReplaceAll(branch, "* ", "")
+
+		branches = append(branches, branch)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		branches,
+	)
+}
+
+func (a *Controller) setBuildBranch(c echo.Context) error {
+	var dirname string
+	s := a.settings.GetSetting("BUILD_LOCATION")
+	if s.ID != 0 {
+		dirname = s.Value
+	}
+
+	cmd := exec.Command("git", "fetch", "origin")
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
+	output, err := cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	cmd = exec.Command("git", "checkout", "-f", c.Param("branch"))
+	_, err = cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	cmd = exec.Command("git", "pull")
+	output, err = cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"branch": strings.TrimSpace(string(output))},
+	)
+}
+
+func (a *Controller) getBuildCurrentBranch(c echo.Context) error {
+	var dirname string
+	s := a.settings.GetSetting("BUILD_LOCATION")
+	if s.ID != 0 {
+		dirname = s.Value
+	}
+
+	cmd := exec.Command("git", "fetch", "origin")
+	cmd.Dir = dirname
+	cmd.Stderr = cmd.Stdout
+	output, err := cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	cmd = exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+	output, err = cmd.Output()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		strings.TrimSpace(string(output)),
+	)
 }
