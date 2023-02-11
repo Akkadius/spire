@@ -7,9 +7,11 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/ziutek/telnet"
 	"io"
+	"net"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -17,6 +19,7 @@ type Client struct {
 	debugging bool
 	t         *telnet.Conn
 	logger    *logrus.Logger
+	mu        sync.Mutex
 }
 
 func NewClient(logger *logrus.Logger) *Client {
@@ -61,7 +64,9 @@ func (c *Client) Connect() error {
 		one := make([]byte, 1)
 		_ = c.t.SetReadDeadline(time.Now())
 		if _, err := c.t.Read(one); err == io.EOF {
-			pp.Println("Could not talk to telnet server, closing")
+			c.Close()
+		}
+		if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
 			c.Close()
 		}
 	}
@@ -107,17 +112,20 @@ func (c *Client) Connect() error {
 func (c *Client) Command(cmd string) (string, error) {
 	var err error
 
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	err = c.Connect()
 	if err != nil {
 		c.Close()
 		return "", err
 	}
 
-	err = c.t.SetReadDeadline(time.Now().Add(1 * time.Second))
+	err = c.t.SetReadDeadline(time.Now().Add(3 * time.Second))
 	if err != nil {
 		return "", err
 	}
-	err = c.t.SetWriteDeadline(time.Now().Add(1 * time.Second))
+	err = c.t.SetWriteDeadline(time.Now().Add(3 * time.Second))
 	if err != nil {
 		return "", err
 	}
