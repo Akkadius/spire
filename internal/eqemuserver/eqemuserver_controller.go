@@ -356,33 +356,33 @@ func (a *Controller) buildCancel(c echo.Context) error {
 
 	c.Response().WriteHeader(http.StatusOK)
 
-	cmd := exec.Command("pkill", "-9", filepath.Base(r.BuildTool))
-	cmd.Env = os.Environ()
-	if runtime.GOOS == "linux" {
-		cmd.Env = append(cmd.Env, "TERM=xterm")
-	}
-	cmd.Dir = r.SourceDirectory
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
+	killProcs := []string{filepath.Base(r.BuildTool), "ccache"}
+	for _, proc := range killProcs {
+		cmd := exec.Command("pkill", "-9", proc)
+		cmd.Env = os.Environ()
+		cmd.Dir = r.SourceDirectory
+		stdout, err := cmd.StdoutPipe()
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
 
-	cmd.Stderr = cmd.Stdout
-	err = cmd.Start()
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
+		cmd.Stderr = cmd.Stdout
+		err = cmd.Start()
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
 
-	merged := io.MultiReader(stdout)
-	scanner := bufio.NewScanner(merged)
-	for scanner.Scan() {
-		c.String(http.StatusOK, scanner.Text())
-		c.Response().Flush()
-	}
+		merged := io.MultiReader(stdout)
+		scanner := bufio.NewScanner(merged)
+		for scanner.Scan() {
+			c.String(http.StatusOK, scanner.Text())
+			c.Response().Flush()
+		}
 
-	err = cmd.Wait()
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+		err = cmd.Wait()
+		if err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
 	}
 
 	c.Response().Flush()
