@@ -19,7 +19,14 @@
     </div>
 
     <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
-      <table class="eq-table eq-highlight-rows bordered log-settings minified-inputs">
+
+      <div v-if="reloadTypes && reloadTypes.length === 0" class="text-center font-weight-bold">
+        This menu requires a connection to the World Server
+      </div>
+
+      <table
+        v-if="reloadTypes && reloadTypes.length > 0"
+        class="eq-table eq-highlight-rows bordered log-settings minified-inputs">
         <thead class="eq-table-floating-header">
         <tr>
           <th class="text-center" style="width: 120px">Reload</th>
