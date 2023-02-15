@@ -5,13 +5,14 @@ import (
 	"github.com/Akkadius/spire/internal/backup"
 	"github.com/k0kubun/pp/v3"
 	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/net"
-	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
+	"path/filepath"
 	"time"
 )
 
@@ -70,25 +71,58 @@ func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
 	h, _ := host.Info()
 	pp.Println(h)
 
-	//part, _ := disk.Partitions(true)
-	//pp.Println(part)
+	//
+	//processes, _ := process.Processes()
+	//for _, p := range processes {
+	//	pp.Println(p.Pid)
+	//	pp.Printf("pid [%v]\n", p.Pid)
+	//	n, _ := p.Name()
+	//	pp.Printf("name [%v]\n", n)
+	//	cli, _ := p.Cmdline()
+	//	pp.Printf("cmd [%v]\n", cli)
+	//	per, _ := p.CPUPercent()
+	//	pp.Printf("CPU Percent %v\n", per)
+	//	mper, _ := p.MemoryPercent()
+	//	pp.Printf("Memory Percent %v\n", mper)
+	//	pp.Println("IO Counters")
+	//	pp.Println(p.IOCounters())
+	//	fmt.Println("")
+	//}
 
-	processes, _ := process.Processes()
-	for _, p := range processes {
-		pp.Println(p.Pid)
-		pp.Printf("pid [%v]\n", p.Pid)
-		n, _ := p.Name()
-		pp.Printf("name [%v]\n", n)
-		cli, _ := p.Cmdline()
-		pp.Printf("cmd [%v]\n", cli)
-		per, _ := p.CPUPercent()
-		pp.Printf("CPU Percent %v\n", per)
-		mper, _ := p.MemoryPercent()
-		pp.Printf("Memory Percent %v\n", mper)
-		pp.Println("IO Counters")
-		pp.Println(p.IOCounters())
-		fmt.Println("")
+	part, _ := disk.Partitions(true)
+	pp.Println(part)
+
+	type DiskInfo struct {
+		PartitionStats []disk.PartitionStat  `json:"partition_stats"`
+		DiskUsage      []disk.UsageStat      `json:"disk_usage"`
+		IOCounters     []disk.IOCountersStat `json:"io_counters"`
 	}
+
+	var partitionStats []disk.PartitionStat
+	var diskUsage []disk.UsageStat
+	var ioCounters []disk.IOCountersStat
+	var uniqueDeviceNames []string
+
+	for _, p := range part {
+		partitionStats = append(partitionStats, p)
+
+		usage, _ := disk.Usage(p.Mountpoint)
+		diskUsage = append(diskUsage, *usage)
+
+		counters, _ := disk.IOCounters(p.Device)
+		if !contains(uniqueDeviceNames, p.Device) && len(counters[filepath.Base(p.Device)].Name) != 0 {
+			ioCounters = append(ioCounters, counters[filepath.Base(p.Device)])
+			uniqueDeviceNames = append(uniqueDeviceNames, p.Device)
+		}
+	}
+
+	diskInfo := DiskInfo{
+		PartitionStats: partitionStats,
+		DiskUsage:      diskUsage,
+		IOCounters:     ioCounters,
+	}
+
+	pp.Println(diskInfo)
 
 	fmt.Printf("Read operation took %v\n", time.Since(start))
 }
@@ -96,4 +130,14 @@ func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
 // Validate implementation of the Command interface
 func (c *HelloWorldCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
+}
+
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
 }

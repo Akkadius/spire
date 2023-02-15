@@ -19,6 +19,7 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
@@ -57,6 +58,7 @@ var httpSet = wire.NewSet(
 	serverconfig.NewController,
 	websocket.NewController,
 	backup.NewController,
+	system.NewController,
 	provideControllers,
 	NewRouter,
 )
@@ -174,6 +176,7 @@ func provideControllers(
 	serverconfigController *serverconfig.Controller,
 	backupController *backup.Controller,
 	websocketController *websocket.Controller,
+	systemController *system.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -195,6 +198,7 @@ func provideControllers(
 			serverconfigController,
 			backupController,
 			websocketController,
+			systemController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,

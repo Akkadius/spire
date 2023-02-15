@@ -33,6 +33,7 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/telnet"
 	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/gertd/go-pluralize"
@@ -109,7 +110,8 @@ func InitializeApplication() (App, error) {
 	backupController := backup.NewController(logger, mysql, pathManagement)
 	spireHandler := websocket.NewSpireHandler(logger, pathManagement)
 	websocketController := websocket.NewController(logger, pathManagement, spireHandler)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, settingsController, controller, eqemuserverController, serverconfigController, backupController, websocketController)
+	systemController := system.NewController(logger)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, settingsController, controller, eqemuserverController, serverconfigController, backupController, websocketController, systemController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
