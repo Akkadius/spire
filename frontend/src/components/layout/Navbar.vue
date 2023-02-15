@@ -326,7 +326,7 @@ export default {
       },
       adminNavs: [
         { label: "Backups", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_BACKUPS, isOcculus: true },
-        { label: "Client Files", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS, isOcculus: true },
+        { label: "Client Files", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS },
         {
           label: "Configuration",
           labelIcon: "fa fa-cog mr-1",

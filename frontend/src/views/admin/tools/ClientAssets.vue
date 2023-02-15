@@ -1,93 +1,73 @@
 <template>
-  <div class="card">
+  <div>
 
-    <div class="card-header">
-      <h4 class="card-header-title">Client Assets</h4>
-    </div>
-
-    <div class="card-body p-1">
-
-      <div class="row">
-        <div class="col-lg-12">
-
-          <div class="ml-5 mt-3">
-            <i class="fe fe-info"></i>
-            All links below can be used publicly for download without login. If you link from an SSL site, the file downloads will be blocked by browser - so you will need to proxy the request
-          </div>
-
-
-          <table class="table card-table table-vcenter mt-3">
-            <tbody>
-            <tr>
-              <td class="text-right" style="width: 180px">
-                <a
-                  :href="buildLink('/download/spells')" target="spells_download"
-                  class="btn btn-outline-primary mb-2"
-                ><i
-                  class="fe fe-download mr-2"
-                ></i>spells_us.txt</a>
-              </td>
-              <td>Generates and zips a spells file for use with an EverQuest client</td>
-            </tr>
-            <tr>
-              <td class="text-right">
-                <a :href="buildLink('/download/dbstring')" target="dbstr_download" class="btn btn-outline-primary mb-2"><i
-                  class="fe fe-download mr-2"
-                ></i>dbstr_us.txt</a>
-              </td>
-              <td>Generates and zips a strings file for use with an EverQuest client
-              </td>
-            </tr>
-            <tr>
-              <td class="text-right">
-                <a
-                  :href="buildLink('/download/skills')" target="skills_download"
-                  class="btn btn-outline-primary mb-2"
-                ><i
-                  class="fe fe-download mr-2"
-                ></i>SkillCaps.txt</a>
-              </td>
-              <td>Generates and zips a skills file for use with an EverQuest client</td>
-            </tr>
-            <tr>
-              <td class="text-right">
-                <a :href="buildLink('/download/basedata')" target="base_data" class="btn btn-outline-primary mb-2"><i
-                  class="fe fe-download mr-2"
-                ></i>BaseData.txt</a>
-              </td>
-              <td>Generates and zips a base data file for use with an EverQuest client
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+    <eq-window title="EverQuest Client Asset Exports (Publicly Downloadable Links)">
+      <div class="eq-alert">
+        <i class="fe fe-info"></i>
+        All links below can be used publicly for download without login. If you link from an SSL site, the file downloads will be blocked by browser - so you will need to proxy the request
       </div>
-    </div>
+
+      <table
+        class="eq-table eq-highlight-rows bordered log-settings minified-inputs mt-3"
+      >
+        <thead class="eq-table-floating-header">
+        <tr>
+          <th class="text-center" style="width: 120px">Asset</th>
+          <th class="">Description</th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <tr
+          v-for="r in assetDownloads"
+          :key="r.path"
+        >
+          <td class="text-right">
+            <a class="eq-button" :href="download(r)" :target="r.path">{{ r.asset }}</a>
+          </td>
+          <td>
+            <span class="font-weight-bold">{{ r.description }}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </eq-window>
+
   </div>
 </template>
 
 <script>
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-import util            from "util";
+import util       from "util";
+import {SpireApi} from "@/app/api/spire-api";
+import EqWindow   from "@/components/eq-ui/EQWindow.vue";
+//
+// t := []ExportType{
+//   {arg: "spells", file: "spells_us.txt"},
+//   {arg: "skills", file: "SkillCaps.txt"},
+//   {arg: "basedata", file: "BaseData.txt"},
+//   {arg: "dbstring", file: "dbstr_us.txt"},
+
 
 export default {
+  components: { EqWindow },
   data() {
-    return {}
+    return {
+      assetDownloads: [
+        {asset: "spells_us.txt", path: "spells", description: "Generates a Spells file for use in the EverQuest Client"},
+        {asset: "SkillCaps.txt", path: "skills", description: "Generates a Skills file for use in the EverQuest Client"},
+        {asset: "BaseData.txt", path: "basedata", description: "Generates a Base Data file for use in the EverQuest Client"},
+        {asset: "dbstr_us.txt", path: "dbstring", description: "Generates a strings database file for use in the EverQuest Client"},
+      ]
+    }
   },
   methods: {
-    buildLink(link) {
+    download(a) {
       return util.format(
-        "%s/api/v1/admin/occulus%s",
-        OcculusClient.getBaseUrl(),
-        link,
+        "%s/eqemuserver/export-client-file/%s",
+        SpireApi.getBaseV1Path(),
+        a.path,
       )
     }
   },
 }
 </script>
-
-<style scoped>
-.td-center {
-  text-align: center
-}
-</style>

@@ -1,6 +1,7 @@
 package pathmgmt
 
 import (
+	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -83,6 +84,8 @@ const (
 	binaryQueryserver       = "queryserv"
 	binaryExportClientFiles = "export_client_files"
 	binaryImportClientFiles = "import_client_files"
+	exportDir               = "export"
+	importDir               = "import"
 )
 
 // GetBinary returns the platform specific binary name
@@ -122,4 +125,19 @@ func (m *PathManagement) GetExportClientFilesBinPath() string {
 
 func (m *PathManagement) GetImportClientFilesBinPath() string {
 	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryImportClientFiles))
+}
+
+func (m *PathManagement) GetExportDir() string {
+	return filepath.Join(m.GetEQEmuServerPath(), exportDir)
+}
+
+func (m *PathManagement) MakeExportDirIfNotExists() error {
+	path := m.GetExportDir()
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(path, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

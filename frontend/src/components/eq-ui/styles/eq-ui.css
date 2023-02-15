@@ -405,6 +405,7 @@ A.eq-progress-bar DIV:before {
 .eq-button-disabled:active,
 .eq-button-disabled:hover,
 .eq-button,
+.eq-button a,
 .eq-button:link,
 .eq-button:visited,
 .eq-button:active,
@@ -416,7 +417,7 @@ A.eq-progress-bar DIV:before {
     /*line-height:       21px;*/
     text-decoration: none;
     font-weight: none;
-    color: #ffffff;
+    color: #ffffff !important;
     opacity: 1.0;
     cursor: pointer;
     position: relative;

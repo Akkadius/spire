@@ -362,7 +362,7 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS,
           component: () => import('./views/admin/tools/ClientAssets.vue'),
-          meta: {title: "Client Asset Management", occulus: true},
+          meta: {title: "Client Asset Management" },
         },
 
         {
