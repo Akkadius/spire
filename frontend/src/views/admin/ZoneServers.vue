@@ -10,6 +10,23 @@
       </div>
     </div>
 
+    <div
+      class="row justify-content-center"
+      style="position: absolute; top: 100px; z-index: 9999999; width: 100%"
+    >
+      <div class="col-6">
+        <info-error-banner
+          style="width: 100%"
+          :slim="true"
+          :notification="notification"
+          :error="error"
+          @dismiss-error="error = ''"
+          @dismiss-notification="notification = ''"
+          class="mt-3"
+        />
+      </div>
+    </div>
+
     <div class="card mb-3 mr-4" v-if="zoneList.length > 0 && loaded">
       <div class="card-body pt-0 pb-0 pl-3 pr-3">
         <div class="input-group input-group-flush">
@@ -30,7 +47,7 @@
     <div style="max-height: 80vh; overflow-y: scroll">
       <div
         :class="['card', 'mb-3']"
-        v-if="processStats[zone.zone_os_pid]"
+        v-if="getProcessStats(zone.zone_os_pid)"
         v-for="zone in filterZoneList(zoneList)"
       >
         <div
@@ -48,7 +65,11 @@
                   {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
                 </a>
 
-                <span style="color:#666;font-weight:200;font-size: 18px;" class="text-muted" v-if="!zone.zone_long_name">
+                <span
+                  style="color:#666;font-weight:200;font-size: 18px;"
+                  class="text-muted"
+                  v-if="!zone.zone_long_name"
+                >
                 Ready for players...
               </span>
 
@@ -109,21 +130,21 @@
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
-                <i class="fe fe-cpu"></i> {{ parseFloat(processStats[zone.zone_os_pid].cpu).toFixed(2) }} %
+              <p class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+                <i class="fe fe-cpu"></i> {{ parseFloat(getProcessStats(zone.zone_os_pid).cpu).toFixed(2) }} %
               </p>
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
-                {{ parseFloat(processStats[zone.zone_os_pid].memory / 1024 / 1024).toFixed(2) }}MB
+              <p class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+                {{ parseFloat(getProcessStats(zone.zone_os_pid).memory / 1024 / 1024).toFixed(2) }}MB
               </p>
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
+              <p class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
                 <i class="fe fe-clock"></i>
-                {{ parseFloat(processStats[zone.zone_os_pid].elapsed / 1000 / 60 / 60).toFixed(2) }}h
+                {{ parseFloat(getProcessStats(zone.zone_os_pid).elapsed / 1000 / 60 / 60).toFixed(2) }}h
               </p>
             </div>
 
@@ -148,11 +169,13 @@
 </template>
 
 <script>
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import {ROUTE}         from "@/routes";
+import {SpireApi}      from "@/app/api/spire-api";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
   name: "ZoneServers",
+  components: { InfoErrorBanner },
   data() {
     return {
       search: "",
@@ -161,27 +184,44 @@ export default {
       processStats: {},
       loaded: false,
       zoneServerLoop: null,
-      chartLoaded: false
+      chartLoaded: false,
+
+      // api responses
+      error: "",
+      notification: "",
     }
   },
 
   watch: {
     '$route'() {
       this.loadQueryState()
+      this.init()
     },
   },
 
   async created() {
     this.loadQueryState()
-    this.getZoneList()
-
-    this.zoneServerLoop = setInterval(() => {
-      if (!document.hidden) {
-        this.getZoneList()
-      }
-    }, 1000)
+    this.init()
   },
   methods: {
+
+    init() {
+      this.getZoneList()
+
+      if (!this.zoneServerLoop) {
+        this.zoneServerLoop = setInterval(() => {
+          if (!document.hidden) {
+            this.getZoneList()
+          }
+        }, 1000)
+      }
+    },
+
+    getProcessStats(pid) {
+      return this.processStats.find((e) => {
+        return e.pid === pid
+      })
+    },
 
     // state
     updateQueryState() {
@@ -210,18 +250,43 @@ export default {
 
     async killZone(pid) {
       if (confirm("Are you sure that you want to kill this process pid (" + pid + ")?")) {
-        await OcculusClient.killProcessByPid(pid)
+        // await OcculusClient.killProcessByPid(pid)
+
         this.zoneList = []
+
+        try {
+          const r = await SpireApi.v1().post(`admin/system/process-kill/${pid}`)
+          if (r.status === 200) {
+            this.notification = r.data.message
+            this.error        = ""
+          }
+        } catch (e) {
+          // error notify
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = e.response.data.error
+          }
+        }
+
         this.getZoneList()
       }
     },
     async getZoneList() {
-      const zoneList = await OcculusClient.getZoneList()
-      this.loaded    = true
-      if (zoneList && zoneList.zone_list !== null && Object.keys(zoneList).length > 0 && Object.keys(zoneList.process_stats).length > 0) {
-        this.zoneList     = zoneList.zone_list
-        this.processStats = zoneList.process_stats
+      try {
+        const r = await SpireApi.v1().get('eqemuserver/zone-list')
+        if (r.status === 200) {
+          this.zoneList     = r.data.zone_list.data
+          this.processStats = r.data.process_info
+          this.error        = ""
+        }
+      } catch (e) {
+        // error notify
+        if (e.response && e.response.data && e.response.data.error) {
+          this.zoneList = []
+          this.error = e.response.data.error
+        }
       }
+
+      this.loaded = true
     },
     filterZoneList(list) {
       let zoneList = []
@@ -238,7 +303,7 @@ export default {
       return zoneList
     }
   },
-  destroyed() {
+  beforeDestroy() {
     clearInterval(this.zoneServerLoop)
   },
 }

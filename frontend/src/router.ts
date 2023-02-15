@@ -275,7 +275,7 @@ const router = new Router({
         {
           path: 'zones',
           component: () => import('./views/admin/ZoneServers.vue'),
-          meta: {title: "Zone Servers", occulus: true},
+          meta: {title: "Zone Servers" },
         },
         {
           path: 'zoneservers/:port/netstats',

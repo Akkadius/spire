@@ -18,6 +18,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 )
 
 type Controller struct {
@@ -160,8 +161,22 @@ func (a *Controller) getClientList(c echo.Context) error {
 	return c.JSON(http.StatusOK, types)
 }
 
+type ZoneProcessInfo struct {
+	Pid     int32   `json:"pid"`
+	Name    string  `json:"name"`
+	CmdLine string  `json:"cmd"`
+	Cpu     float64 `json:"cpu"`
+	Memory  uint64  `json:"memory"`
+	Elapsed int64   `json:"elapsed"` // uptime
+}
+
+type ZoneListResponse struct {
+	List        WorldZoneList     `json:"zone_list"`
+	ProcessInfo []ZoneProcessInfo `json:"process_info"`
+}
+
 func (a *Controller) getZoneList(c echo.Context) error {
-	types, err := a.eqemuserverapi.GetZoneList()
+	zones, err := a.eqemuserverapi.GetZoneList()
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -169,7 +184,34 @@ func (a *Controller) getZoneList(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, types)
+	var zoneProcessInfo []ZoneProcessInfo
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		for _, z := range zones.Data {
+			if int(p.Pid) == z.ZoneOsPid {
+				name, _ := p.Name()
+				cmdLine, _ := p.Cmdline()
+				cpuPercent, _ := p.CPUPercent()
+				memory, _ := p.MemoryInfo()
+				uptime, _ := p.CreateTime()
+				now := time.Now().Unix()
+				zoneProcessInfo = append(zoneProcessInfo, ZoneProcessInfo{
+					Pid:     p.Pid,
+					Name:    name,
+					CmdLine: cmdLine,
+					Cpu:     cpuPercent,
+					Memory:  memory.RSS,
+					Elapsed: now - (uptime / 1000),
+				})
+			}
+		}
+	}
+
+	var r ZoneListResponse
+	r.List = zones
+	r.ProcessInfo = zoneProcessInfo
+
+	return c.JSON(http.StatusOK, r)
 }
 
 // setUpdateType sets the update type for the server
