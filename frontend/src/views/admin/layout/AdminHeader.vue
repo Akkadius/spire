@@ -12,6 +12,7 @@
           </h1>
         </div>
 
+
         <div class="col-auto">
           <small class="text-muted text-uppercase">Launcher</small>
           <span
@@ -50,6 +51,63 @@
           </span>
         </div>
 
+        <!-- Resource Utilization -->
+        <div class="col-1 align-content-center">
+
+          <!-- CPU -->
+          <div class="clearfix">
+            <div class="float-left">
+              <small class="text-muted">
+                CPU
+              </small>
+            </div>
+            <div class="float-right">
+              <small class="text-muted">{{ cpuPercent }}%</small>
+            </div>
+          </div>
+
+          <div
+            class="progress progress-sm mt-1"
+          >
+            <div
+              class="progress-bar bg-green"
+              role="progressbar"
+              v-bind:style="{ width: cpuPercent + '%'}"
+              :aria-valuenow="cpuPercent"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+            </div>
+          </div>
+
+          <!-- Memory -->
+          <div class="clearfix">
+            <div class="float-left">
+              <small class="text-muted">
+                MEMORY
+              </small>
+            </div>
+            <div class="float-right">
+              <small class="text-muted">{{ memoryPercent }}%</small>
+            </div>
+          </div>
+
+          <div
+            class="progress progress-sm mt-1"
+          >
+            <div
+              class="progress-bar bg-green"
+              role="progressbar"
+              v-bind:style="{ width: memoryPercent + '%'}"
+              :aria-valuenow="memoryPercent"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+            </div>
+          </div>
+
+        </div>
+
         <div class="col-auto">
           <server-process-button-component/>
         </div>
@@ -63,7 +121,6 @@ import ServerProcessButtonComponent from "@/views/admin/components/ServerProcess
 import {EventBus}                   from "@/app/event-bus/event-bus";
 import Timer                        from "@/app/timer/timer";
 import {SpireApi}                   from "@/app/api/spire-api";
-import {OcculusClient}              from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: "AdminHeader",
@@ -73,6 +130,9 @@ export default {
       pageName: "",
 
       stats: {},
+
+      cpuPercent: 0,
+      memoryPercent: 0,
     }
   },
   beforeDestroy() {
@@ -98,7 +158,7 @@ export default {
       if (!document.hidden) {
         this.loadServerStats()
       }
-    }, 5000)
+    }, 1000)
 
     // initial page name set
     if (this.$route.meta && this.$route.meta.title) {
@@ -108,12 +168,20 @@ export default {
   methods: {
 
     async loadServerStats() {
-      const r = await SpireApi.v1().get("eqemuserver/server-stats")
-      if (r.status === 200) {
-        this.stats = r.data
-        this.$forceUpdate()
+      SpireApi.v1().get("eqemuserver/server-stats").then((r) => {
+        if (r.status === 200) {
+          this.stats = r.data
+          this.$forceUpdate()
+        }
+      })
 
-      }
+      SpireApi.v1().get("admin/system/resource-usage-summary").then((r) => {
+        if (r.status === 200) {
+          console.log("updating percentage")
+          this.cpuPercent    = Math.round(r.data.cpu)
+          this.memoryPercent = Math.round(r.data.memory.usedPercent)
+        }
+      })
 
     },
 

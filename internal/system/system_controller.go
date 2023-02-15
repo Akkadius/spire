@@ -30,7 +30,9 @@ func NewController(
 func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "admin/system/host", a.getHostInfo, nil),
-		routes.RegisterRoute(http.MethodGet, "admin/system/cpu", a.getCpu, nil),
+		routes.RegisterRoute(http.MethodGet, "admin/system/cpu", a.getCpuAll, nil),
+		routes.RegisterRoute(http.MethodGet, "admin/system/cpu-percent", a.getCpuPercent, nil),
+		routes.RegisterRoute(http.MethodGet, "admin/system/resource-usage-summary", a.getResourceUsageSummary, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/mem", a.getMemory, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/network", a.getNetwork, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/disk", a.getDisk, nil),
@@ -50,7 +52,7 @@ func (a *Controller) getHostInfo(c echo.Context) error {
 	return c.JSON(http.StatusOK, host)
 }
 
-func (a *Controller) getCpu(c echo.Context) error {
+func (a *Controller) getCpuAll(c echo.Context) error {
 	ci, err := cpu.Percent(0, true)
 	if err != nil {
 		return c.JSON(
@@ -161,6 +163,44 @@ func (a *Controller) killProcess(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
+}
+
+func (a *Controller) getCpuPercent(c echo.Context) error {
+	ci, err := cpu.Percent(0, false)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	return c.JSON(http.StatusOK, ci[0])
+}
+
+func (a *Controller) getResourceUsageSummary(c echo.Context) error {
+	ci, err := cpu.Percent(0, false)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	memory, err := mem.VirtualMemory()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"cpu":    ci[0],
+			"memory": memory,
+		},
+	)
 }
 
 func contains(s []string, str string) bool {
