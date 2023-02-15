@@ -65,11 +65,6 @@
               <router-link class="nav-link" :to="ROUTE.ADMIN_ROOT" exact>
                 <i class="ra ra-eye-shield mr-1"></i> Server Admin
                 <b-badge class="ml-3" variant="primary" v-if="!isInAdmin()">NEW!</b-badge>
-
-                <b-badge class="ml-3" variant="primary" v-if="isInAdmin()">
-                  <i class="fe fe-eye"></i>
-                  Occulus
-                </b-badge>
               </router-link>
             </li>
 

@@ -54,7 +54,7 @@
               slot="legend-caption"
               class="text-muted font-weight-bold"
               style="font-size: 10px"
-            > MEM </span>
+            > MEM</span>
           </vue-ellipse-progress>
         </div>
 

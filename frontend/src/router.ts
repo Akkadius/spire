@@ -265,7 +265,7 @@ const router = new Router({
         {
           path: '/',
           component: () => import('./views/admin/Dashboard.vue'),
-          meta: {title: "Dashboard", occulus: true},
+          meta: {title: "Dashboard"},
         },
         {
           path: 'players-online',

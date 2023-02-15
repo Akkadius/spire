@@ -21,7 +21,8 @@
           <div class="row">
             <div class="col-sm-6 col-lg-6">
               <dashboard-process-counts/>
-              <dashboard-system-info :sysinfo="sysinfo"/>
+
+              <dashboard-system-info-v2/>
             </div>
             <div class="col-sm-6 col-lg-6">
               <dashboard-cpu-info/>
@@ -52,9 +53,11 @@ import DashboardCounter             from "@/views/admin/components/DashboardCoun
 import {OS}                         from "@/app/os/os";
 import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
 import {SpireApi}                   from "@/app/api/spire-api";
+import DashboardSystemInfoV2        from "@/views/admin/components/DashboardSystemInfoV2.vue";
 
 export default {
   components: {
+    DashboardSystemInfoV2,
     PlayersOnlineComponent,
     DashboardCounter,
     DashboardSystemInfo,
@@ -80,18 +83,10 @@ export default {
   },
   created: async function () {
     this.fetchDashboardStats()
-    this.loadSysInfo()
 
     if (this.timer) {
       clearInterval(this.timer)
     }
-
-    this.loadSysInfo();
-    this.timer = setInterval(() => {
-      if (!document.hidden) {
-        this.loadSysInfo()
-      }
-    }, 1000)
 
     this.statsTimer = setInterval(() => {
       if (!document.hidden) {
@@ -139,15 +134,6 @@ export default {
       )
     },
 
-    loadSysInfo: function () {
-      OcculusClient.getSysInfo().then(response => {
-        if (response) {
-          this.sysinfo = response
-        }
-
-        this.checkLoaded()
-      })
-    },
     kFormatter: function (number) {
       return number > 999 ? (number / 1000).toFixed(1) + 'k' : number
     }
