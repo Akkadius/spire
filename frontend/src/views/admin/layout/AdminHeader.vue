@@ -177,6 +177,7 @@ export default {
         if (r.status === 200) {
           this.stats = r.data
           this.$forceUpdate()
+          EventBus.$emit("server-stats", r.data)
         }
       })
 

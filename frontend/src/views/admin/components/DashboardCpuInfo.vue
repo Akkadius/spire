@@ -11,7 +11,7 @@
 
             <div class="row align-content-center">
               <div class="col-12 text-center">
-                <small class="text-muted" v-if="cpu && cpu.info[0]">
+                <small class="text-muted" v-if="cpu && cpu.info && cpu.info[0]">
                   {{cpu.info[0].modelName}} ({{(cpu.info[0].mhz / 1000).toFixed(1)}} Ghz)
                 </small>
 

@@ -3,25 +3,27 @@
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">Server Processes</h4>
-        <!--        <b-spinner variant="primary" label="Spinning" small class="ml-3" v-if="!loaded"></b-spinner>-->
       </div>
       <table class="table card-table">
         <tbody>
 
         <!-- List Counts -->
-        <tr v-for="(processCount, processName) in processCounts" :key="processName">
-          <td> {{ processName.charAt(0).toUpperCase() + processName.slice(1) }}</td>
+        <tr v-for="p in processCounts" :key="p.name">
+          <td>
+            {{ p.name }}
+            <span class="text-muted" v-if="p.optional">(Optional Service)</span>
+          </td>
           <td class="text-right">
             <span
               class="badge badge-danger"
               style="font-size: 12px"
-              v-if="processCount === 0"
+              v-if="p.count === 0"
             >Offline</span>
             <span
               class="badge badge-success"
               style="font-size: 12px"
-              v-if="processCount > 0"
-            >Online ({{ processCount }})</span>
+              v-if="p.count > 0"
+            >Online ({{ p.count }})</span>
           </td>
         </tr>
         </tbody>
@@ -32,10 +34,7 @@
 
 <script>
 
-import Timer           from "@/app/timer/timer";
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-import {EventBus}      from "@/app/event-bus/event-bus";
-import {OS}            from "@/app/os/os";
+import {EventBus} from "@/app/event-bus/event-bus";
 
 export default {
   name: 'DashboardProcessCounts',
@@ -47,45 +46,21 @@ export default {
   },
 
   beforeDestroy() {
-    clearInterval(Timer.timer['process-counts'])
-    EventBus.$off('process-change')
+    EventBus.$off('server-stats')
   },
 
-  /**
-   * Mounted
-   */
   mounted() {
-    EventBus.$on('process-change', async (event) => {
-      this.processCounts = await OcculusClient.getProcessCounts()
+    EventBus.$on('server-stats', async (e) => {
+      let p = []
+      p.push({ name: "Occulus Launcher", count: e.launcher_online ? 1 : 0 })
+      p.push({ name: "World (world)", count: e.world_online ? 1 : 0 })
+      p.push({ name: "Zones (zone)", count: e.zone_list.data.length })
+      p.push({ name: "Universal Chat Service (ucs)", count: e.ucs_online ? 1 : 0, optional: true })
+      p.push({ name: "Loginserver (loginserver)", count: e.login_online ? 1 : 0, optional: true })
+      p.push({ name: "Queryserv (queryserv)", count: e.query_serv_online ? 1 : 0, optional: true })
+
+      this.processCounts = p
     })
-  },
-
-  /**
-   * Create
-   */
-  async created() {
-    this.processCounts = await OcculusClient.getProcessCounts()
-    this.loaded        = true
-
-    /**
-     * Timer update
-     * @type {default}
-     */
-    if (Timer.timer['process-counts']) {
-      clearInterval(Timer.timer['process-counts'])
-    }
-
-    Timer.timer['process-counts'] = setInterval(async () => {
-      this.loaded = false
-      if (!document.hidden) {
-        this.processCounts = await OcculusClient.getProcessCounts()
-      }
-      this.loaded = true
-    }, (OS.get() === "Linux" ? 1000 : 5000))
   },
 }
 </script>
-
-<style scoped>
-
-</style>
