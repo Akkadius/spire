@@ -346,8 +346,8 @@ const router = new Router({
         },
         {
           path: ROUTE.ADMIN_BACKUPS,
-          component: () => import('./views/admin/tools/Backups.vue'),
-          meta: {title: "Backups", occulus: true},
+          component: () => import('./views/admin/Backups.vue'),
+          meta: {title: "Manual Backups"},
         },
         {
           path: ROUTE.ADMIN_SERVER_UPDATE,

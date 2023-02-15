@@ -3,7 +3,6 @@ package backup
 import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -41,16 +40,14 @@ func (a *Controller) backupMysql(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	pp.Println(p)
-
 	r := a.mysql.Backup(*p)
-	
+
 	return c.JSON(http.StatusOK, r)
 }
 
 func (a *Controller) mysqlBackupDownload(c echo.Context) error {
 	file := c.Param("file")
-	downloadPath := filepath.Join(a.pathmgmt.GetEQEmuServerPath(), "backups", filepath.Base(file))
+	downloadPath := filepath.Join(a.pathmgmt.GetBackupsDir(), filepath.Base(file))
 
 	return c.Inline(downloadPath, filepath.Base(file))
 }

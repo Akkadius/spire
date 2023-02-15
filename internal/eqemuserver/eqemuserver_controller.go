@@ -2,6 +2,8 @@ package eqemuserver
 
 import (
 	"bufio"
+	"context"
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
@@ -9,6 +11,7 @@ import (
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
+	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -70,6 +73,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/branches", a.getBuildBranches, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build/branch/:branch", a.setBuildBranch, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/dashboard-stats", a.getDashboardStats, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/manual-backup/:type", a.getManualBackup, nil),
 	}
 }
 
@@ -587,4 +591,103 @@ func (a *Controller) getDashboardStats(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, r)
+}
+
+type DownloadType struct {
+	path string
+	name string
+}
+
+func (a *Controller) getManualBackup(c echo.Context) error {
+	t := []DownloadType{
+		{path: a.pathmgmt.GetQuestsDir(), name: "quests"},
+		{path: a.pathmgmt.GetMapsDir(), name: "maps"},
+	}
+
+	requestedType := c.Param("type")
+	foundExport := false
+	var downloadType DownloadType
+	for _, e := range t {
+		if e.name == requestedType {
+			foundExport = true
+			downloadType = e
+		}
+	}
+
+	if !foundExport {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid download type"})
+	}
+
+	f := make(map[string]string, 0)
+
+	err := filepath.Walk(
+		downloadType.path,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if len(path) == 0 {
+				return nil
+			}
+
+			if path == downloadType.path {
+				return nil
+			}
+
+			// stat file
+			fi, err := os.Stat(path)
+			if err != nil {
+				return nil
+			}
+
+			if fi.Mode().IsRegular() {
+				replacePath := fmt.Sprintf("%v%v", downloadType.path, string(filepath.Separator))
+				zipPath := strings.ReplaceAll(path, replacePath, "")
+				zipPath = strings.ReplaceAll(zipPath, "\\", "/")
+				f[path] = zipPath
+			}
+
+			return nil
+		},
+	)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// map files on disk to their paths in the archive
+	files, err := archiver.FilesFromDisk(nil, f)
+	if err != nil {
+		return err
+	}
+
+	file := fmt.Sprintf("%v-%v.zip", downloadType.name, time.Now().Format("2006-01-02"))
+	downloadFile := filepath.Join(os.TempDir(), file)
+
+	_ = os.Remove(downloadFile)
+
+	// create the output file we'll write to
+	out, err := os.Create(downloadFile)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// we can use the CompressedArchive type to gzip a tarball
+	// (compression is not required; you could use Tar directly)
+	format := archiver.Zip{}
+
+	// create the archive
+	err = format.Archive(context.Background(), out, files)
+	if err != nil {
+		return err
+	}
+
+	c.Response().Header().Add("Access-Control-Expose-Headers", "Content-Disposition")
+
+	if _, err := os.Stat(downloadFile); !errors.Is(err, os.ErrNotExist) {
+		return c.Attachment(downloadFile, filepath.Base(downloadFile))
+	}
+
+	return nil
 }

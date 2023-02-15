@@ -99,6 +99,8 @@ func (a *PublicController) exportClientFile(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
+	c.Response().Header().Add("Access-Control-Expose-Headers", "Content-Disposition")
+
 	downloadFile := filepath.Join(a.pathmgmt.GetExportDir(), export.file)
 	if _, err := os.Stat(downloadFile); !errors.Is(err, os.ErrNotExist) {
 		return c.Attachment(downloadFile, filepath.Base(downloadFile))

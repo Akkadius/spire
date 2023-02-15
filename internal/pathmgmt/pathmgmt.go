@@ -84,6 +84,9 @@ const (
 	binaryQueryserver       = "queryserv"
 	binaryExportClientFiles = "export_client_files"
 	binaryImportClientFiles = "import_client_files"
+	backupsDir              = "backups"
+	questsDir               = "quests"
+	mapsDir                 = "maps"
 	exportDir               = "export"
 	importDir               = "import"
 )
@@ -129,6 +132,18 @@ func (m *PathManagement) GetImportClientFilesBinPath() string {
 
 func (m *PathManagement) GetExportDir() string {
 	return filepath.Join(m.GetEQEmuServerPath(), exportDir)
+}
+
+func (m *PathManagement) GetBackupsDir() string {
+	return filepath.Join(m.GetEQEmuServerPath(), backupsDir)
+}
+
+func (m *PathManagement) GetQuestsDir() string {
+	return filepath.Join(m.GetEQEmuServerPath(), questsDir)
+}
+
+func (m *PathManagement) GetMapsDir() string {
+	return filepath.Join(m.GetEQEmuServerPath(), mapsDir)
 }
 
 func (m *PathManagement) MakeExportDirIfNotExists() error {
