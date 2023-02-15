@@ -130,13 +130,19 @@
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+              <p
+                class="card-text small text-muted mb-1 mt-2 fade-in"
+                :style="'color: ' + getCpuUsageColor(zone.zone_os_pid) + ' !important'"
+                v-if="getProcessStats(zone.zone_os_pid)"
+              >
                 <i class="fe fe-cpu"></i> {{ parseFloat(getProcessStats(zone.zone_os_pid).cpu).toFixed(2) }} %
               </p>
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+              <p
+                :style="'color: ' + getMemUsageColor(zone.zone_os_pid) + ' !important'"
+                class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
                 {{ parseFloat(getProcessStats(zone.zone_os_pid).memory / 1024 / 1024).toFixed(2) }}MB
               </p>
             </div>
@@ -204,6 +210,30 @@ export default {
     this.init()
   },
   methods: {
+
+    getMemUsageColor(pid) {
+      const p = parseFloat(this.getProcessStats(pid).memory / 1024 / 1024)
+      if (p > 600) {
+        return 'red';
+      }
+      else if (p > 300) {
+        return 'orange';
+      }
+
+      return '#95aac9';
+    },
+
+    getCpuUsageColor(pid) {
+      const p = parseFloat(this.getProcessStats(pid).cpu)
+      if (p > 15) {
+        return 'red';
+      }
+      else if (p > 5) {
+        return 'orange';
+      }
+
+      return '#95aac9';
+    },
 
     init() {
       this.getZoneList()
