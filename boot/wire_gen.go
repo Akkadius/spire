@@ -333,7 +333,8 @@ func InitializeApplication() (App, error) {
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
 	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
-	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand)
+	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
+	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand)
 	webBoot := desktop.NewWebBoot(logger, server)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil

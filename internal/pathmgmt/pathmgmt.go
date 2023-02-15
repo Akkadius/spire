@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 type PathManagement struct {
@@ -72,4 +73,53 @@ func (m *PathManagement) debug(msg string, a ...interface{}) {
 
 func (m *PathManagement) GetEQEmuServerBinPath() string {
 	return filepath.Join(m.GetEQEmuServerPath(), "bin")
+}
+
+const (
+	binaryWorld             = "world"
+	binaryZone              = "zone"
+	binaryChatServer        = "ucs"
+	binaryLoginserver       = "loginserver"
+	binaryQueryserver       = "queryserv"
+	binaryExportClientFiles = "export_client_files"
+	binaryImportClientFiles = "import_client_files"
+)
+
+// GetBinary returns the platform specific binary name
+// Example linux = world, windows = world.exe
+func GetBinary(s string) string {
+	bin := s
+	if runtime.GOOS == "windows" {
+		bin += ".exe"
+	}
+
+	return bin
+}
+
+func (m *PathManagement) GetWorldBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryWorld))
+}
+
+func (m *PathManagement) GetZoneBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryZone))
+}
+
+func (m *PathManagement) GetUCSBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryChatServer))
+}
+
+func (m *PathManagement) GetLoginserverBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryLoginserver))
+}
+
+func (m *PathManagement) GetQSBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryQueryserver))
+}
+
+func (m *PathManagement) GetExportClientFilesBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryExportClientFiles))
+}
+
+func (m *PathManagement) GetImportClientFilesBinPath() string {
+	return filepath.Join(m.GetEQEmuServerBinPath(), GetBinary(binaryImportClientFiles))
 }

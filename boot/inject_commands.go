@@ -22,6 +22,7 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireMigrateCommand,
 	cmd.NewQuestExampleTestCommand,
 	cmd.NewGenerateRaceModelMapsCommand,
+	cmd.NewTestFilesystemCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -41,6 +42,7 @@ func ProvideCommands(
 	questExampleTestCommand *cmd.QuestExampleTestCommand,
 	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
 	changelogCmd *eqemuchangelog.ChangelogCommand,
+	testFilesystemCmd *cmd.TestFilesystemCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		adminPingOcculus.Command(),
@@ -56,5 +58,6 @@ func ProvideCommands(
 		questExampleTestCommand.Command(),
 		generateRaceModelMapsCommand.Command(),
 		changelogCmd.Command(),
+		testFilesystemCmd.Command(),
 	}
 }

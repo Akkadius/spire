@@ -15,7 +15,6 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -67,21 +66,12 @@ type ServerVersionInfo struct {
 }
 
 func (u *Updater) GetVersionInfo() (ServerVersionInfo, error) {
-	binPath := filepath.Join(u.pathmgmt.GetEQEmuServerPath(), "bin")
-	bin := "world"
-	if runtime.GOOS == "windows" {
-		bin = "world.exe"
-	}
-	startCmd := ""
-
-	finalPath := filepath.Join(binPath, bin)
-	if _, err := os.Stat(finalPath); !errors.Is(err, os.ErrNotExist) {
-		startCmd = filepath.Join(binPath, bin)
-	} else {
+	worldBin := u.pathmgmt.GetWorldBinPath()
+	if _, err := os.Stat(worldBin); errors.Is(err, os.ErrNotExist) {
 		return ServerVersionInfo{}, errors.New("Failed to find World binary to fetch version")
 	}
 
-	cmd := exec.Command(startCmd, "world:version")
+	cmd := exec.Command(worldBin, "world:version")
 	cmd.Dir = u.pathmgmt.GetEQEmuServerPath()
 	output, err := cmd.Output()
 	if err != nil {
