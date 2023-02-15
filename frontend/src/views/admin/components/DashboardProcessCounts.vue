@@ -4,16 +4,28 @@
       <div class="card-header">
         <h4 class="card-header-title">Server Processes</h4>
       </div>
-      <table class="table card-table">
+
+      <div class="p-3 text-center" v-if="processCounts && processCounts.length === 0">
+        Server offline
+      </div>
+
+      <table class="table card-table process-counts" v-if="processCounts && processCounts.length > 0">
         <tbody>
 
         <!-- List Counts -->
-        <tr v-for="p in processCounts" :key="p.name">
+        <tr
+          v-b-tooltip.hover.v-dark.left
+          :title="p.optional ? 'This is an optional service and not required to be running' : ''"
+          v-for="p in processCounts"
+          :key="p.name"
+        >
           <td>
             {{ p.name }}
-            <span class="text-muted" v-if="p.optional">(Optional Service)</span>
           </td>
-          <td class="text-right">
+          <td
+
+            class="text-right"
+          >
             <span
               class="badge badge-danger"
               style="font-size: 12px"
@@ -51,6 +63,8 @@ export default {
 
   mounted() {
     EventBus.$on('server-stats', async (e) => {
+      this.processCounts = []
+
       let p = []
       p.push({ name: "Occulus Launcher", count: e.launcher_online ? 1 : 0 })
       p.push({ name: "World (world)", count: e.world_online ? 1 : 0 })
@@ -64,3 +78,11 @@ export default {
   },
 }
 </script>
+
+<style>
+.process-counts td {
+  padding: 0.7rem;
+  vertical-align: top;
+  border-top: 1px solid rgba(0, 40, 100, 0.12);
+}
+</style>

@@ -75,17 +75,17 @@ func (c *Client) Connect() error {
 		return nil
 	}
 
-	d := 1000 * time.Second
+	d := 300 * time.Millisecond
 	c.t, err = telnet.DialTimeout("tcp", "localhost:9000", d)
 	if err != nil {
 		return err
 	}
 
-	err = c.t.SetReadDeadline(time.Now().Add(10 * time.Second))
+	err = c.t.SetReadDeadline(time.Now().Add(d))
 	if err != nil {
 		return err
 	}
-	err = c.t.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	err = c.t.SetWriteDeadline(time.Now().Add(d))
 	if err != nil {
 		return err
 	}
@@ -121,11 +121,11 @@ func (c *Client) Command(cmd string) (string, error) {
 		return "", err
 	}
 
-	err = c.t.SetReadDeadline(time.Now().Add(3 * time.Second))
+	err = c.t.SetReadDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
 		return "", err
 	}
-	err = c.t.SetWriteDeadline(time.Now().Add(3 * time.Second))
+	err = c.t.SetWriteDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
 		return "", err
 	}

@@ -575,10 +575,7 @@ func (a *Controller) getDashboardStats(c echo.Context) error {
 
 	uptime, err := a.eqemuserverapi.GetWorldUptime()
 	if err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
-		)
+		uptime = "Server offline"
 	}
 
 	r := DashboardStatsResponse{
