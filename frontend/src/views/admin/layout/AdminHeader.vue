@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-body">
+    <div class="card-body pl-4 pr-4 pt-3 pb-3">
       <div class="row align-items-center">
         <div class="col">
           <h6 class="header-pretitle">
@@ -12,6 +12,51 @@
           </h1>
         </div>
 
+        <!-- Resource Utilization -->
+        <div class="col-auto">
+          <small
+            style="position: absolute; top: 25px; left: -80px;"
+            class="text-muted text-uppercase">Resources</small>
+
+          <vue-ellipse-progress
+            :progress="cpuPercent"
+            animation="default 300 0"
+            thickness="4"
+            :legend-formatter="({ currentValue }) => `${currentValue}%`"
+            :size="60"
+            :color="getCpuLoadColor(cpuPercent)"
+            empty-color="#95aac9"
+            empty-thickness="1"
+            font-size=".8rem"
+            font-color="#95aac9"
+          >
+            <span
+              slot="legend-caption"
+              class="text-muted font-weight-bold"
+              style="font-size: 10px"
+            > CPU </span>
+          </vue-ellipse-progress>
+
+          <vue-ellipse-progress
+            class="ml-3"
+            :progress="memoryPercent"
+            animation="loop 600 0"
+            thickness="4"
+            :legend-formatter="({ currentValue }) => `${currentValue}%`"
+            :size="60"
+            color="#2c7be5"
+            empty-color="#95aac9"
+            empty-thickness="1"
+            font-size=".8rem"
+            font-color="#95aac9"
+          >
+            <span
+              slot="legend-caption"
+              class="text-muted font-weight-bold"
+              style="font-size: 10px"
+            > MEM </span>
+          </vue-ellipse-progress>
+        </div>
 
         <div class="col-auto">
           <small class="text-muted text-uppercase">Launcher</small>
@@ -51,63 +96,6 @@
           </span>
         </div>
 
-        <!-- Resource Utilization -->
-        <div class="col-1 align-content-center">
-
-          <!-- CPU -->
-          <div class="clearfix">
-            <div class="float-left">
-              <small class="text-muted">
-                CPU
-              </small>
-            </div>
-            <div class="float-right">
-              <small class="text-muted">{{ cpuPercent }}%</small>
-            </div>
-          </div>
-
-          <div
-            class="progress progress-sm mt-1"
-          >
-            <div
-              class="progress-bar bg-green"
-              role="progressbar"
-              v-bind:style="{ width: cpuPercent + '%'}"
-              :aria-valuenow="cpuPercent"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-            </div>
-          </div>
-
-          <!-- Memory -->
-          <div class="clearfix">
-            <div class="float-left">
-              <small class="text-muted">
-                MEMORY
-              </small>
-            </div>
-            <div class="float-right">
-              <small class="text-muted">{{ memoryPercent }}%</small>
-            </div>
-          </div>
-
-          <div
-            class="progress progress-sm mt-1"
-          >
-            <div
-              class="progress-bar bg-green"
-              role="progressbar"
-              v-bind:style="{ width: memoryPercent + '%'}"
-              :aria-valuenow="memoryPercent"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-            </div>
-          </div>
-
-        </div>
-
         <div class="col-auto">
           <server-process-button-component/>
         </div>
@@ -119,24 +107,30 @@
 <script>
 import ServerProcessButtonComponent from "@/views/admin/components/ServerProcessButtonComponent.vue";
 import {EventBus}                   from "@/app/event-bus/event-bus";
-import Timer                        from "@/app/timer/timer";
 import {SpireApi}                   from "@/app/api/spire-api";
+import {VueEllipseProgress}         from "vue-ellipse-progress";
 
 export default {
   name: "AdminHeader",
-  components: { ServerProcessButtonComponent },
+  components: {
+    ServerProcessButtonComponent,
+    VueEllipseProgress,
+  },
   data() {
     return {
       pageName: "",
 
       stats: {},
 
+
       cpuPercent: 0,
       memoryPercent: 0,
+
+      timer: null,
     }
   },
   beforeDestroy() {
-    clearInterval(Timer.timer['server-stat-refresh'])
+    clearInterval(this.timer)
 
     window.removeEventListener('keypress', this.keypressHandler)
 
@@ -154,7 +148,7 @@ export default {
       this.loadServerStats()
     })
 
-    Timer.timer['server-stat-refresh'] = setInterval(() => {
+    this.timer = setInterval(() => {
       if (!document.hidden) {
         this.loadServerStats()
       }
@@ -167,6 +161,17 @@ export default {
   },
   methods: {
 
+    getCpuLoadColor(load) {
+      if (load > 80) {
+        return 'red'
+      }
+      if (load > 50) {
+        return 'orange'
+      }
+
+      return '#2c7be5'
+    },
+
     async loadServerStats() {
       SpireApi.v1().get("eqemuserver/server-stats").then((r) => {
         if (r.status === 200) {
@@ -177,12 +182,10 @@ export default {
 
       SpireApi.v1().get("admin/system/resource-usage-summary").then((r) => {
         if (r.status === 200) {
-          console.log("updating percentage")
           this.cpuPercent    = Math.round(r.data.cpu)
           this.memoryPercent = Math.round(r.data.memory.usedPercent)
         }
       })
-
     },
 
     handleRouteChange(e) {
@@ -201,21 +204,6 @@ export default {
       }
 
       switch (String.fromCharCode(e.keyCode)) {
-        // case '1':
-        //   this.$router.push(ROUTES.ROOT)
-        //   break
-        // case '2':
-        //   this.$router.push(ROUTES.PLAYERS_ONLINE)
-        //   break
-        // case '3':
-        //   this.$router.push(ROUTES.ZONESERVERS)
-        //   break
-        // case '4':
-        //   this.$router.push(ROUTES.CONFIGURATION)
-        //   break
-        // case '5':
-        //   this.$router.push(ROUTES.TOOLS_LOGS)
-        //   break
         case 'p':
           this.$root.$emit('bv::show::modal', 'start-server-modal')
           break
