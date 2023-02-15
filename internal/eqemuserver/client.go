@@ -170,3 +170,12 @@ func (c *Client) GetReloadTypes() (ReloadTypesResponse, error) {
 
 	return r, nil
 }
+
+func (c *Client) GetWorldUptime() (string, error) {
+	o, err := c.telnet.Command("uptime 0")
+	if err != nil {
+		return "", err
+	}
+
+	return o, nil
+}

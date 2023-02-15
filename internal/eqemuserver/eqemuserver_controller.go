@@ -69,6 +69,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/current-branch", a.getBuildCurrentBranch, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/build/branches", a.getBuildBranches, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build/branch/:branch", a.setBuildBranch, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/dashboard-stats", a.getDashboardStats, nil),
 	}
 }
 
@@ -548,4 +549,42 @@ func (a *Controller) getBuildCurrentBranch(c echo.Context) error {
 		http.StatusOK,
 		strings.TrimSpace(string(output)),
 	)
+}
+
+type DashboardStatsResponse struct {
+	Accounts   int64  `json:"accounts"`
+	Characters int64  `json:"characters"`
+	Guilds     int64  `json:"guilds"`
+	Items      int64  `json:"items"`
+	Npcs       int64  `json:"npcs"`
+	Uptime     string `json:"uptime"`
+}
+
+func (a *Controller) getDashboardStats(c echo.Context) error {
+	tables := []string{"account", "character_data", "guilds", "items", "npc_types"}
+	counts := make(map[string]int64)
+	for _, table := range tables {
+		var count int64
+		a.db.GetEqemuDb().Raw(fmt.Sprintf("select count(*) as count from %v", table)).Scan(&count)
+		counts[table] = count
+	}
+
+	uptime, err := a.eqemuserverapi.GetWorldUptime()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
+		)
+	}
+
+	r := DashboardStatsResponse{
+		Accounts:   counts["account"],
+		Characters: counts["character_data"],
+		Guilds:     counts["guilds"],
+		Items:      counts["items"],
+		Npcs:       counts["npc_types"],
+		Uptime:     uptime,
+	}
+
+	return c.JSON(http.StatusOK, r)
 }

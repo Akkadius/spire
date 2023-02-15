@@ -12,10 +12,10 @@
       <div class="row row-cards" v-if="loaded">
         <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
         <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
-        <dashboard-counter name="Server Uptime" :counter="stats.uptime"/>
+        <dashboard-counter name="Server Uptime" :counter="formatUptime(stats.uptime)"/>
       </div>
 
-      <div class="row row-cards" v-if="loaded">
+      <div class="row row-cards">
         <div class="col-lg-6">
 
           <div class="row">
@@ -24,7 +24,7 @@
               <dashboard-system-info :sysinfo="sysinfo"/>
             </div>
             <div class="col-sm-6 col-lg-6">
-              <dashboard-cpu-info :sysinfo="sysinfo"/>
+              <dashboard-cpu-info/>
             </div>
           </div>
 
@@ -46,11 +46,12 @@ import ServerProcessButtonComponent from "@/views/admin/components/ServerProcess
 import DashboardProcessCounts       from "@/views/admin/components/DashboardProcessCounts";
 import DashboardCpuInfo             from "@/views/admin/components/DashboardCpuInfo";
 import DashboardSystemInfo          from "@/views/admin/components/DashboardSystemInfo";
-import Timer            from "@/app/timer/timer";
-import {OcculusClient}  from "@/app/api/eqemu-admin-client-occulus";
-import DashboardCounter from "@/views/admin/components/DashboardCounter.vue";
+import Timer                        from "@/app/timer/timer";
+import {OcculusClient}              from "@/app/api/eqemu-admin-client-occulus";
+import DashboardCounter             from "@/views/admin/components/DashboardCounter.vue";
 import {OS}                         from "@/app/os/os";
 import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
+import {SpireApi}                   from "@/app/api/spire-api";
 
 export default {
   components: {
@@ -67,36 +68,70 @@ export default {
       stats: {},
       sysinfo: {},
       statLoop: null,
-      circleProgressInitialized: null
+      circleProgressInitialized: null,
+
+      timer: null,
+      statsTimer: null,
     }
   },
   beforeDestroy() {
-    clearInterval(Timer.timer['sys-info'])
+    clearInterval(this.timer)
+    clearInterval(this.statsTimer)
   },
   created: async function () {
-    OcculusClient.getDashboardStats().then(response => {
-      if (response) {
-        this.stats = response
-        this.checkLoaded()
-      }
-    })
-
+    this.fetchDashboardStats()
     this.loadSysInfo()
 
-    if (Timer.timer['sys-info']) {
-      clearInterval(Timer.timer['sys-info'])
+    if (this.timer) {
+      clearInterval(this.timer)
     }
 
-    const sysInfoTimer = (OS.get() === "Linux" ? 1000 : 5000);
     this.loadSysInfo();
-    Timer.timer['sys-info'] = setInterval(() => {
+    this.timer = setInterval(() => {
       if (!document.hidden) {
         this.loadSysInfo()
       }
-    }, sysInfoTimer)
+    }, 1000)
+
+    this.statsTimer = setInterval(() => {
+      if (!document.hidden) {
+        this.fetchDashboardStats()
+      }
+    }, 60 * 1000)
 
   },
   methods: {
+    fetchDashboardStats() {
+      SpireApi.v1().get("eqemuserver/dashboard-stats").then((r) => {
+        if (r.status === 200) {
+          this.stats = r.data
+          this.checkLoaded()
+        }
+      })
+    },
+
+    formatUptime(t) {
+      // reformat
+      t = t.replace("Worldserver Uptime |", "")
+      t = t.replace(new RegExp(',', 'g'), '');
+      t = t.replace("and", "")
+      t = t.replace(" Days", "d")
+      t = t.replace(" Day", "d")
+      t = t.replace(" Weeks", "w")
+      t = t.replace(" Week", "w")
+      t = t.replace(" Months", "m")
+      t = t.replace(" Month", "m")
+      t = t.replace(" Hours", "h")
+      t = t.replace(" Hour", "h")
+      t = t.replace(" Minutes", "m")
+      t = t.replace(" Minute", "m")
+      t = t.replace(" Seconds", "s")
+      t = t.replace(" Second", "s")
+      t = t.replace(/^\s+|\s+$/g, "")
+
+      return t.trim();
+    },
+
     checkLoaded() {
       this.loaded = (
         Object.keys(this.stats).length >= 0 &&
