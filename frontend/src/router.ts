@@ -65,6 +65,11 @@ const router = new Router({
           meta: {title: "Race Viewer"},
         },
         {
+          path: ROUTE.COFFEE,
+          component: () => import('./views/Coffee.vue'),
+          meta: {title: "Coffee"},
+        },
+        {
           path: ROUTE.ITEM_VIEWER,
           component: () => import('./views/asset-viewers/ItemViewer.vue'),
           meta: {title: "Item Viewer"},

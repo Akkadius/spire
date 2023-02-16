@@ -24,6 +24,7 @@ export const ROUTE = {
   ADMIN_OCCULUS_REQUIRED: "/admin/occulus-required",
   DATABASE_CONNECTION_AUDIT_LOG: "/connection/%s/audit-log",
   CLIENT_FILES: "/client-files",
+  COFFEE: "/coffee",
   DATABASE_CONNECTIONS: "/connections",
   EMITTER_VIEWER: "/emitter-viewer",
   ITEM_EDIT: "/item/%s",
