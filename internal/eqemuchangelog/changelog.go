@@ -142,7 +142,7 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				replacements["INT64"] = "int64"
 				replacements["Hotfox"] = "Hotfix"
 				replacements["HotFix"] = "Hotfix"
-				replacements["Commmands"] = "Hotfix"
+				replacements["Hotfix"] = "Fixes"
 
 				for find, replacement := range replacements {
 					if category == find {
