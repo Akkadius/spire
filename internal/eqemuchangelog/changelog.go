@@ -118,8 +118,7 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 
 		// categories
 		category := ""
-		firstWordSplit := strings.Split(message, " ")
-		if len(firstWordSplit) > 0 {
+		if strings.Contains(message, "]") && strings.Contains(message, "[") {
 			category = c.GetStringInBetween(message, "[", "]")
 			if len(category) < 20 {
 				message = strings.TrimSpace(
@@ -143,6 +142,7 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				replacements["Hotfox"] = "Hotfix"
 				replacements["HotFix"] = "Hotfix"
 				replacements["Hotfix"] = "Fixes"
+				replacements["Quest"] = "Quest API"
 
 				for find, replacement := range replacements {
 					if category == find {
@@ -242,7 +242,7 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 // return it's key, otherwise it will return -1 and a bool of false.
 func contains(slice []string, val string) bool {
 	for _, item := range slice {
-		if strings.Contains(val, item) {
+		if val == item {
 			return true
 		}
 	}
