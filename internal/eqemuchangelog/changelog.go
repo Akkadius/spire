@@ -131,7 +131,8 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 
 				// one-off find replace fixes
 				replacements := make(map[string]string, 0)
-				replacements["Cleanup"] = "Code Cleanup"
+				replacements["Code Cleanup"] = "Code"
+				replacements["Cleanup"] = "Code"
 				replacements["Bot"] = "Bots"
 				replacements["Command"] = "Commands"
 				replacements["Repository"] = "Repositories"
@@ -143,6 +144,8 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				replacements["HotFix"] = "Hotfix"
 				replacements["Hotfix"] = "Fixes"
 				replacements["Quest"] = "Quest API"
+				replacements["Bots/Mercs"] = "Bots & Mercenaries"
+				replacements["Bots & Mercs"] = "Bots & Mercenaries"
 
 				for find, replacement := range replacements {
 					if category == find {
