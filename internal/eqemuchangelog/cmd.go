@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 	"strconv"
-	"time"
 )
 
 type ChangelogCommand struct {
@@ -53,11 +52,7 @@ func (c *ChangelogCommand) Handle(cmd *cobra.Command, args []string) {
 	fmt.Printf("      (Copy below the line)\n")
 	fmt.Printf("------------------------------------\n\n")
 
-	fmt.Println(
-		c.changelog.BuildChangelog(
-			c.changelog.getCommitsDaysBack(time.Duration(days)),
-		),
-	)
+	fmt.Println(c.changelog.BuildChangelog(c.changelog.getCommitsDaysBack()))
 
 }
 

@@ -35,7 +35,15 @@ func NewChangelog() *Changelog {
 	return &Changelog{client: client}
 }
 
-func (c *Changelog) getCommitsDaysBack(days time.Duration) []*github.RepositoryCommit {
+func (c *Changelog) getCommitsDaysBack() []*github.RepositoryCommit {
+	daysSinceLastRelease := 0
+	r, _, _ := c.client.Repositories.GetLatestRelease(context.Background(), "EQEmu", "Server")
+	if *r.ID > 0 {
+		date := time.Now()
+		diff := date.Sub(r.CreatedAt.Time)
+		daysSinceLastRelease = int(diff.Hours()/24) + 1
+	}
+
 	var allCommits []*github.RepositoryCommit
 	for i := 1; i < 10; i++ {
 		commits, _, err := c.client.Repositories.ListCommits(
@@ -43,7 +51,7 @@ func (c *Changelog) getCommitsDaysBack(days time.Duration) []*github.RepositoryC
 			"EQEmu",
 			"server",
 			&github.CommitsListOptions{
-				Since: time.Now().Add(-time.Hour * 24 * days),
+				Since: time.Now().Add(-time.Hour * 24 * time.Duration(daysSinceLastRelease)),
 				ListOptions: github.ListOptions{
 					Page:    i,
 					PerPage: 100,
@@ -78,6 +86,12 @@ type ChangelogEntry struct {
 }
 
 func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
+	var lastReleaseNotes string
+	r, _, _ := c.client.Repositories.GetLatestRelease(context.Background(), "EQEmu", "Server")
+	if *r.ID > 0 {
+		lastReleaseNotes = r.GetBody()
+	}
+
 	var entries []ChangelogEntry
 	var categories []string
 	for _, commit := range commits {
@@ -150,7 +164,11 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				}
 			}
 
-			if !hasEntry {
+			if strings.Contains(lastReleaseNotes, message) {
+				continue
+			}
+
+			if !hasEntry && !strings.Contains(category, "Release") {
 				entries = append(
 					entries, ChangelogEntry{
 						Author:      username,
