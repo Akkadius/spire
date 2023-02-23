@@ -629,7 +629,7 @@
                       </div>
                       <div
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')"
+                        class="col-4 m-0 p-0" :style="(((field.field != 'skillmodtype' && item[field.field] <= 0) || (field.field == 'skillmodtype' && item[field.field] < 0)) ? 'opacity: .5' : '')"
                       >
 
                         <b-form-input
