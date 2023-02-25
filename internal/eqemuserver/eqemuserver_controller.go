@@ -10,7 +10,6 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
@@ -79,6 +78,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/manual-backup/:type", a.getManualBackup, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/logs", a.listLogFiles, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/log/:file", a.getFileLog, nil),
+		routes.RegisterRoute(http.MethodDelete, "eqemuserver/log/:file", a.deleteFileLog, nil),
 	}
 }
 
@@ -745,8 +745,6 @@ type FileReadResponse struct {
 }
 
 func (a *Controller) getFileLog(c echo.Context) error {
-	pp.Println("WE ARE HERE")
-
 	logFile := filepath.Join(a.pathmgmt.GetLogsDirPath(), c.Param("file"))
 	if !strings.Contains(logFile, a.pathmgmt.GetLogsDirPath()) {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
@@ -766,20 +764,15 @@ func (a *Controller) getFileLog(c echo.Context) error {
 	var contents []byte
 	bufferSize := stat.Size()
 	if len(c.QueryParam("cursor")) > 0 {
-
 		cursorIn, err := strconv.ParseInt(c.QueryParam("cursor"), 10, 64)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 		}
 
 		bufferSize = stat.Size() - cursorIn
-
-		pp.Println(cursorIn)
-
 		bytes := make([]byte, bufferSize)
 		cursor, err := f.ReadAt(bytes, cursorIn)
 		if err != nil {
-			pp.Println("WE ARE ERRORING HERE")
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 		}
 
@@ -804,4 +797,22 @@ func (a *Controller) getFileLog(c echo.Context) error {
 		Contents: string(contents),
 		Cursor:   cursor,
 	})
+}
+
+func (a *Controller) deleteFileLog(c echo.Context) error {
+	logFile := filepath.Join(a.pathmgmt.GetLogsDirPath(), c.Param("file"))
+	if !strings.Contains(logFile, a.pathmgmt.GetLogsDirPath()) {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
+	}
+
+	_, err := os.Stat(logFile)
+	if os.IsNotExist(err) {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "File does not exist!"})
+	}
+
+	if err := os.Remove(logFile); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"message": "Deleted successfully!"})
 }

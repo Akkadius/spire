@@ -6,14 +6,54 @@
           :title="`Files (${files ? files.length : 0})`"
         >
           <div style="max-height: 80vh; overflow-y: scroll">
+
+            <div
+              class="row justify-content-center"
+              style="position: absolute; top: 20px; z-index: 9999999; width: 100%"
+            >
+              <div class="col-6">
+                <info-error-banner
+                  style="width: 100%"
+                  :slim="true"
+                  :notification="notification"
+                  :error="error"
+                  @dismiss-error="error = ''"
+                  @dismiss-notification="notification = ''"
+                  class="mt-3"
+                />
+              </div>
+            </div>
+
+            <div class="mt-1 ml-1">
+              <b-button
+                v-for="f in filterTypes"
+                :key="`${f.label}-${countLogs(f.search)}`"
+                class="btn-sm mr-2 btn-outline-warning btn-dark fade-in"
+                @click="filterOn(f)"
+                :style="`opacity: ${(filterType.length > 0 && filterType !== f.search ? '.2' : '1')}`"
+              >
+                <i class="fa fa-filter"></i>
+                {{ f.label }}
+                ({{ countLogs(f.search) }})
+              </b-button>
+
+              <b-button
+                class="btn-sm mr-2 btn-outline-white btn-dark"
+                @click="filterType = ''"
+              >
+                <i class="fa fa-eraser"></i>
+                Reset
+              </b-button>
+            </div>
+
             <table
-              class="eq-table eq-highlight-rows bordered player-events"
+              class="eq-table eq-highlight-rows bordered player-events mt-3"
               v-if="files.length > 0"
               id="file-logs"
             >
               <thead class="eq-table-floating-header">
               <tr>
-                <th style="width: 50px"></th>
+                <th style="width: 100px"></th>
                 <th style="width: 150px">File</th>
                 <th>Size</th>
                 <th>Last Modified</th>
@@ -22,12 +62,20 @@
               <tbody>
               <tr
                 class="fade-in"
-                v-for="f in files"
+                v-for="f in files.filter((e) => { return (filterType.length > 0 && e.path.includes(filterType)) || filterType.length === 0 })"
                 :key="`${f.path}-${f.modified_time}`"
               >
                 <td class="text-center">
                   <b-button
-                    class="btn-white btn-sm"
+                    class="btn-danger btn-sm"
+                    @click="deleteFile(f)"
+                    title="Delete File"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </b-button>
+
+                  <b-button
+                    class="btn-white btn-sm ml-1"
                     @click="viewLog(f)"
                     title="View and watch log file"
                   >
@@ -124,8 +172,9 @@
             ></pre>
 
             <div>
-              <span class="font-weight-bold">Line Buffer</span> {{commify(currentLineBufferLength)}} / {{commify(lineBufferLimit)}} (Max)
-              <span class="font-weight-bold">Cursor</span> {{commify(fileCursor)}}
+              <span class="font-weight-bold">Line Buffer</span> {{ commify(currentLineBufferLength) }} /
+              {{ commify(lineBufferLimit) }} (Max)
+              <span class="font-weight-bold">Cursor</span> {{ commify(fileCursor) }}
             </div>
           </div>
         </eq-window>
@@ -150,8 +199,11 @@ export default {
   components: { LoaderFakeProgress, InfoErrorBanner, EqWindow },
   data() {
     return {
+      filterType: "",
       files: [], // file listing
       fileListingTimer: null,
+      notification: "", // info/error
+      error: "", // info/error
 
       currentLineBufferLength: 0,
       lineBufferLimit: 1000,
@@ -163,6 +215,15 @@ export default {
       fileError: "", // info/error
 
       watching: false, // watching log file
+
+      filterTypes: [
+        { label: "World", search: "world" },
+        { label: "Zone", search: "zone" },
+        { label: "UCS", search: "ucs" },
+        { label: "Login", search: "login" },
+        { label: "QS", search: "query_server" },
+        { label: "Crashes", search: "crashes" },
+      ]
     }
   },
   watch: {
@@ -181,7 +242,7 @@ export default {
     }
   },
   created() {
-    this.file = ""; // file contents to display
+    this.file           = ""; // file contents to display
     this.fileLineFilter = "";
   },
   async mounted() {
@@ -192,6 +253,35 @@ export default {
     await this.init()
   },
   methods: {
+
+    filterOn(f) {
+      this.filterType = f.search
+      this.updateQueryState()
+    },
+
+    countLogs(search) {
+      return this.commify(
+        this.files.filter((e) => {
+          return (e.path.includes(search) && !e.path.includes("crash")) || (search.includes("crash") && e.path.includes(search))
+        }).length
+      )
+    },
+
+    async deleteFile(f) {
+      if (confirm(`Are you sure you want to delete this file? \n\n${f.path}`)) {
+        try {
+          const r = await SpireApi.v1().delete(`eqemuserver/log/${f.path}`)
+          if (r.status === 200) {
+            this.notification = "File deleted successfully!";
+            this.loadLogListing();
+          }
+        } catch (e) {
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = e.response.data.error
+          }
+        }
+      }
+    },
 
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -248,6 +338,9 @@ export default {
       if (this.fileLineFilter && this.fileLineFilter.length > 0) {
         q.s = this.fileLineFilter
       }
+      if (this.filterType && this.filterType.length > 0) {
+        q.ft = this.filterType
+      }
 
       this.$router.push(
         {
@@ -263,6 +356,9 @@ export default {
       }
       if (this.$route.query.s && this.$route.query.s.length > 0) {
         this.fileLineFilter = this.$route.query.s
+      }
+      if (this.$route.query.ft && this.$route.query.ft.length > 0) {
+        this.filterType = this.$route.query.ft
       }
     },
 
@@ -305,7 +401,7 @@ export default {
       this.fileCursor              = 0
       this.file                    = ""
       // watch
-      this.fileToWatch    = f.path
+      this.fileToWatch             = f.path
       this.updateQueryState()
     },
 
@@ -382,14 +478,11 @@ export default {
               if (bc && bc.length > 0) {
                 if (lbi === 1) {
                   newLine = newLine.replaceAll(`[${bc}]`, `<span class="font-weight-bold" style="color: lightblue">${bc}</span> |`)
-                }
-                else if (lbi === 2) {
+                } else if (lbi === 2) {
                   newLine = newLine.replaceAll(`[${bc}]`, `<span class="font-weight-bold" style="color: #575555">${bc}</span> |`)
-                }
-                else if (lbi === 3) {
+                } else if (lbi === 3) {
                   newLine = newLine.replaceAll(`[${bc}]`, `<span class="font-weight-bold" style="color: #ffffff">${bc}</span> |`)
-                }
-                else {
+                } else {
                   newLine = newLine.replaceAll(`[${bc}]`, `[<span class="font-weight-bold" style="color: #ffffb1">${bc}</span>]`)
                 }
               }
