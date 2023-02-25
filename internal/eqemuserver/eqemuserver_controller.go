@@ -79,6 +79,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/logs", a.listLogFiles, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/log/:file", a.getFileLog, nil),
 		routes.RegisterRoute(http.MethodDelete, "eqemuserver/log/:file", a.deleteFileLog, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/log-search/:search", a.logSearch, nil),
 	}
 }
 
@@ -815,4 +816,76 @@ func (a *Controller) deleteFileLog(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"message": "Deleted successfully!"})
+}
+
+type Line struct {
+	Line   string `json:"line"`
+	Number int    `json:"line_number"`
+}
+
+type LogSearchResult struct {
+	File  string `json:"file"`
+	Lines []Line `json:"lines"`
+}
+
+const lineMatchLimit = 100
+
+func (a *Controller) logSearch(c echo.Context) error {
+	search := strings.ToLower(c.Param("search"))
+
+	var results []LogSearchResult
+	err := filepath.Walk(a.pathmgmt.GetLogsDirPath(), func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		if filepath.Ext(info.Name()) == ".log" {
+			b, err := os.ReadFile(path) // just pass the file name
+			if err != nil {
+				fmt.Print(err)
+			}
+
+			var lines []Line
+			content := string(b)
+
+			// check the file first before attempting to search line by line
+			if !strings.Contains(strings.ToLower(content), search) {
+				return nil
+			}
+
+			line := 1
+			for _, s := range strings.Split(content, "\n") {
+				if strings.Contains(strings.ToLower(s), search) {
+					lines = append(lines, Line{
+						Line:   s,
+						Number: line,
+					})
+
+					if len(lines) > lineMatchLimit {
+						break
+					}
+				}
+				line++
+			}
+
+			newPath := strings.ReplaceAll(path, a.pathmgmt.GetLogsDirPath()+string(filepath.Separator), "")
+
+			results = append(results, LogSearchResult{
+				File:  newPath,
+				Lines: lines,
+			})
+
+			return nil
+		}
+		return nil
+	})
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

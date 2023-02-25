@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="row">
-      <div :class="fileToWatch && fileToWatch.length > 0 ? 'col-5' : 'col-12'">
+      <div
+        :class="(fileToWatch && fileToWatch.length > 0) || (searchResults && searchResults.length > 0) ? 'col-5' : 'col-12'"
+      >
         <eq-window
           :title="`Files (${files ? files.length : 0})`"
         >
@@ -24,26 +26,48 @@
               </div>
             </div>
 
-            <div class="mt-1 ml-1">
-              <b-button
-                v-for="f in filterTypes"
-                :key="`${f.label}-${countLogs(f.search)}`"
-                class="btn-sm mr-2 btn-outline-warning btn-dark fade-in"
-                @click="filterOn(f)"
-                :style="`opacity: ${(filterType.length > 0 && filterType !== f.search ? '.2' : '1')}`"
-              >
-                <i class="fa fa-filter"></i>
-                {{ f.label }}
-                ({{ countLogs(f.search) }})
-              </b-button>
+            <div class="row">
+              <div class="col-12">
+                <b-input-group>
+                  <input
+                    type="text"
+                    class="form-control"
+                    v-model="searchAllString"
+                    placeholder="Search all files by search string"
+                    v-on:keyup.enter="searchAll()"
+                  >
+                  <b-input-group-append>
+                    <b-button size="sm" variant="outline-warning" @click="searchAll()">
+                      <i class="fa fa-search"></i>
+                    </b-button>
+                  </b-input-group-append>
 
-              <b-button
-                class="btn-sm mr-2 btn-outline-white btn-dark"
-                @click="filterType = ''"
-              >
-                <i class="fa fa-eraser"></i>
-                Reset
-              </b-button>
+                </b-input-group>
+              </div>
+            </div>
+
+            <div class="mt-3 ml-1 row">
+              <div class="col-12 p-0">
+                <b-button
+                  v-for="f in filterTypes"
+                  :key="`${f.label}-${countLogs(f.search)}`"
+                  class="btn-sm mr-2 btn-outline-warning btn-dark fade-in"
+                  @click="filterOn(f)"
+                  :style="`opacity: ${(filterType.length > 0 && filterType !== f.search ? '.2' : '1')}`"
+                >
+                  <i class="fa fa-filter"></i>
+                  {{ f.label }}
+                  ({{ countLogs(f.search) }})
+                </b-button>
+
+                <b-button
+                  class="btn-sm mr-2 btn-outline-white btn-dark"
+                  @click="filterType = ''; searchAllString = ''"
+                >
+                  <i class="fa fa-eraser"></i>
+                  Reset
+                </b-button>
+              </div>
             </div>
 
             <table
@@ -179,6 +203,35 @@
           </div>
         </eq-window>
       </div>
+
+      <div
+        class="col-7"
+        v-if="searchResults && searchResults.length > 0"
+      >
+
+        <eq-window
+          class="fade-in"
+          :title="`Search All Results`"
+        >
+
+          <div style="max-height: 80vh; overflow-y: scroll">
+            <div
+              v-for="f in searchResults"
+              :key="f.file"
+            >
+              <div class="font-weight-bold mt-3">{{ f.file }}</div>
+              <pre
+                class="mt-3 fade-in mb-0"
+                style="width: 100%; word-wrap: break-word;  overflow-x: scroll; padding-bottom: 0 !important"
+                v-if="searchResults && searchResults.length > 0"
+                id="search-results"
+                v-html="formatSearchResult(f.lines)"
+              ></pre>
+            </div>
+
+          </div>
+        </eq-window>
+      </div>
     </div>
 
   </div>
@@ -199,6 +252,8 @@ export default {
   components: { LoaderFakeProgress, InfoErrorBanner, EqWindow },
   data() {
     return {
+      searchResults: [],
+
       filterType: "",
       files: [], // file listing
       fileListingTimer: null,
@@ -242,8 +297,9 @@ export default {
     }
   },
   created() {
-    this.file           = ""; // file contents to display
-    this.fileLineFilter = "";
+    this.file            = ""; // file contents to display
+    this.fileLineFilter  = "";
+    this.searchAllString = "";
   },
   async mounted() {
     Navbar.collapse()
@@ -253,6 +309,39 @@ export default {
     await this.init()
   },
   methods: {
+
+    formatSearchResult(lines) {
+      let newLines = '';
+      lines.forEach((l) => {
+        const info = `Line ${l.line_number}`
+
+        newLines += `${info.padStart(8)} | ${this.formatContents(l.line)}\n`
+      })
+
+      return newLines
+    },
+
+    async searchAll() {
+      // reset some other state
+      this.filterType = ""
+      this.stopLogStream()
+      this.fileToWatch = ""
+
+      this.updateQueryState()
+    },
+
+    async doSearchAll() {
+      try {
+        const r = await SpireApi.v1().get(`eqemuserver/log-search/${this.searchAllString}`)
+        if (r.status === 200) {
+          this.searchResults = r.data
+        }
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
+      }
+    },
 
     filterOn(f) {
       this.filterType = f.search
@@ -314,6 +403,8 @@ export default {
     },
 
     startLogStream() {
+
+
       if (this.watchTimer) {
         clearInterval(this.watchTimer);
       }
@@ -332,7 +423,7 @@ export default {
     // state
     updateQueryState() {
       let q = {};
-      if (this.search !== "") {
+      if (this.fileToWatch !== "") {
         q.f = this.fileToWatch
       }
       if (this.fileLineFilter && this.fileLineFilter.length > 0) {
@@ -340,6 +431,9 @@ export default {
       }
       if (this.filterType && this.filterType.length > 0) {
         q.ft = this.filterType
+      }
+      if (this.searchAllString && this.searchAllString.length > 0) {
+        q.sa = this.searchAllString
       }
 
       this.$router.push(
@@ -359,6 +453,9 @@ export default {
       }
       if (this.$route.query.ft && this.$route.query.ft.length > 0) {
         this.filterType = this.$route.query.ft
+      }
+      if (this.$route.query.sa && this.$route.query.sa.length > 0) {
+        this.searchAllString = this.$route.query.sa
       }
     },
 
@@ -392,6 +489,10 @@ export default {
           this.loadLogListing()
         }, 15000)
       }
+
+      if (this.searchAllString && this.searchAllString.length > 0) {
+        this.doSearchAll()
+      }
     },
 
     viewLog(f) {
@@ -400,6 +501,8 @@ export default {
       this.fileLineFilter          = ""
       this.fileCursor              = 0
       this.file                    = ""
+      this.searchAllString         = ""
+      this.searchResults           = []
       // watch
       this.fileToWatch             = f.path
       this.updateQueryState()
