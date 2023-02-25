@@ -5,7 +5,7 @@
         <eq-window
           :title="`Files (${files ? files.length : 0})`"
         >
-          <div style="height: 80vh; overflow-y: scroll">
+          <div style="max-height: 80vh; overflow-y: scroll">
             <table
               class="eq-table eq-highlight-rows bordered player-events"
               v-if="files.length > 0"
@@ -64,14 +64,63 @@
         </div>
 
         <eq-window :title="fileToWatch">
-          <b-spinner small style="position: absolute; top: -10px; z-index: 999999; left: 21px;"/>
+          <div
+            style="position: absolute; top: -10px; z-index: 999999; left: 21px;"
+          >
+            <b-spinner small v-if="watchTimer"/>
+          </div>
 
-          <div style="height: 80vh; overflow-y: scroll" id="output">
+          <div
+            class="minified-inputs row p-1 mb-3"
+          >
+            <div class="col-1 text-center p-0">
+              <b-button
+                class="btn-danger btn-sm mb-1"
+                title="Stop log stream"
+                @click="stopLogStream()"
+                :disabled="!watchTimer"
+              >
+                <i class="fa fa-stop"></i>
+              </b-button>
+
+              <b-button
+                class="btn-white btn-sm ml-1 mb-1"
+                title="Play log stream"
+                :disabled="watchTimer && parseInt(watchTimer) > 0"
+                @click="startLogStream()"
+              >
+                <i class="fa fa-play"></i>
+              </b-button>
+
+              <b-button
+                class="btn-white btn-sm ml-1 mb-1"
+                title="Copy to clipboard"
+                @click="copyFileContentsToClipboard()"
+              >
+                <i class="fa fa-copy"></i>
+              </b-button>
+            </div>
+
+            <div class="col-11 pl-0">
+              <input
+                type="text"
+                class="form-control mt-0 mb-0"
+                placeholder="Filter log contents..."
+                v-on:keyup="updateFilter()"
+                v-model="fileLineFilter"
+                style="width: 100%"
+              >
+            </div>
+
+          </div>
+
+          <div style="max-height: 80vh; overflow-y: scroll" id="output">
             <pre
-              class="mt-3 fade-in mb-1"
+              class="mt-0 fade-in mb-1"
               style="width: 100%; word-wrap: break-word; white-space: pre-wrap; overflow-x: hidden"
               v-if="file && file.length > 0"
-            >{{ file }}</pre>
+              id="file-contents"
+            >{{ filterFileResults(file) }}</pre>
           </div>
         </eq-window>
       </div>
@@ -87,6 +136,8 @@ import moment             from "moment";
 import {Navbar}           from "@/app/navbar";
 import InfoErrorBanner    from "@/components/InfoErrorBanner.vue";
 import LoaderFakeProgress from "@/components/LoaderFakeProgress.vue";
+import ClipBoard          from "@/app/clipboard/clipboard";
+import {debounce}         from "@/app/utility/debounce";
 
 export default {
   name: "FileLogs",
@@ -98,6 +149,7 @@ export default {
 
       outputContainer: null, // output container
       watchTimer: null,
+      fileLineFilter: "",
       fileToWatch: "", // file name to watch
       fileCursor: 0,
       fileNotification: "", // info/error
@@ -115,10 +167,8 @@ export default {
 
   beforeDestroy() {
     Navbar.expand()
-    
-    if (this.watchTimer) {
-      clearInterval(this.watchTimer);
-    }
+
+    this.stopLogStream()
     if (this.fileListingTimer) {
       clearInterval(this.fileListingTimer);
     }
@@ -135,11 +185,52 @@ export default {
   },
   methods: {
 
+    updateFilter: debounce(function () {
+      this.updateQueryState()
+    }, 600),
+
+    filterFileResults(file) {
+      return file.split("\n").filter((e) => {
+        return e.toLowerCase().includes(this.fileLineFilter.toLowerCase())
+      }).join("\n")
+    },
+
+    copyFileContentsToClipboard() {
+      ClipBoard.copyFromElement("file-contents");
+      this.fileNotification = "Copied to clipboard!"
+    },
+
+    stopLogStream() {
+      if (this.watchTimer) {
+        clearInterval(this.watchTimer);
+        this.watchTimer = null
+      }
+    },
+
+    startLogStream() {
+      if (this.watchTimer) {
+        clearInterval(this.watchTimer);
+      }
+
+      this.watchTimer = setInterval(() => {
+        if (document.hidden) {
+          return
+        }
+
+        if (this.fileToWatch && this.fileToWatch.length > 0) {
+          this.loadLogFile(this.fileToWatch)
+        }
+      }, 1000)
+    },
+
     // state
     updateQueryState() {
       let q = {};
       if (this.search !== "") {
         q.f = this.fileToWatch
+      }
+      if (this.fileLineFilter && this.fileLineFilter.length > 0) {
+        q.s = this.fileLineFilter
       }
 
       this.$router.push(
@@ -154,22 +245,9 @@ export default {
       if (this.$route.query.f && this.$route.query.f.length > 0) {
         this.fileToWatch = this.$route.query.f
       }
-    },
-
-    startLogWatch() {
-      if (this.watchTimer) {
-        clearInterval(this.watchTimer);
+      if (this.$route.query.s && this.$route.query.s.length > 0) {
+        this.fileLineFilter = this.$route.query.s
       }
-
-      this.watchTimer = setInterval(() => {
-        if (document.hidden) {
-          return
-        }
-
-        if (this.fileToWatch && this.fileToWatch.length > 0) {
-          this.loadLogFile(this.fileToWatch)
-        }
-      }, 1000)
     },
 
     async loadLogListing() {
@@ -188,7 +266,7 @@ export default {
     async init() {
       if (this.fileToWatch && this.fileToWatch.length > 0) {
         this.loadLogFile(this.fileToWatch)
-        this.startLogWatch()
+        this.startLogStream()
       }
 
       this.loadLogListing()
@@ -206,8 +284,8 @@ export default {
 
     viewLog(f) {
       // reset
-      this.fileCursor = 0
-      this.file = ""
+      this.fileCursor  = 0
+      this.file        = ""
       // watch
       this.fileToWatch = f.path
       this.updateQueryState()
