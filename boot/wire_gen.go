@@ -58,7 +58,7 @@ func InitializeApplication() (App, error) {
 	}
 	cache := provideCache()
 	mysql := backup.NewMysql(logger, pathManagement)
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, mysql)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, mysql, pathManagement)
 	processManagement := occulus.NewProcessManagement(pathManagement, logger)
 	proxy := occulus.NewProxy(logger, eqEmuServerConfig, processManagement)
 	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, proxy)

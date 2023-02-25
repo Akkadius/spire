@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
@@ -20,6 +21,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -74,6 +77,8 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/build/branch/:branch", a.setBuildBranch, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/dashboard-stats", a.getDashboardStats, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/manual-backup/:type", a.getManualBackup, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/logs", a.listLogFiles, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/log/:file", a.getFileLog, nil),
 	}
 }
 
@@ -687,4 +692,116 @@ func (a *Controller) getManualBackup(c echo.Context) error {
 	}
 
 	return nil
+}
+
+type FileInfo struct {
+	Name         string `json:"name"`          // base name of the file
+	Path         string `json:"path"`          // relative path to file anchored from walk path
+	Size         int64  `json:"size"`          // length in bytes for regular files; system-dependent for others
+	Mode         int    `json:"mode"`          // file mode bits
+	ModifiedTime int64  `json:"modified_time"` // modification time
+	IsDirectory  bool   `json:"is_directory"`  // abbreviation for Mode().IsDir()
+}
+
+func (a *Controller) listLogFiles(c echo.Context) error {
+	var files []FileInfo
+	err := filepath.Walk(a.pathmgmt.GetLogsDirPath(), func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		if filepath.Ext(info.Name()) == ".log" {
+			newPath := strings.ReplaceAll(path, a.pathmgmt.GetLogsDirPath()+string(filepath.Separator), "")
+			files = append(files, FileInfo{
+				Name:         info.Name(),
+				Path:         newPath,
+				Size:         info.Size(),
+				Mode:         int(info.Mode()),
+				ModifiedTime: info.ModTime().Unix(),
+				IsDirectory:  info.IsDir(),
+			})
+			return nil
+		}
+		return nil
+	})
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	sort.Slice(files, func(i, j int) bool {
+		return files[i].ModifiedTime > files[j].ModifiedTime
+	})
+
+	return c.JSON(http.StatusOK, files)
+}
+
+type FileReadResponse struct {
+	Contents string `json:"contents"`
+	Cursor   int    `json:"cursor"`
+}
+
+func (a *Controller) getFileLog(c echo.Context) error {
+	pp.Println("WE ARE HERE")
+
+	logFile := filepath.Join(a.pathmgmt.GetLogsDirPath(), c.Param("file"))
+	if !strings.Contains(logFile, a.pathmgmt.GetLogsDirPath()) {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
+	}
+
+	stat, err := os.Stat(logFile)
+	if os.IsNotExist(err) {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "File does not exist!"})
+	}
+
+	f, err := os.Open(logFile)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// read from cursor
+	var contents []byte
+	bufferSize := stat.Size()
+	if len(c.QueryParam("cursor")) > 0 {
+
+		cursorIn, err := strconv.ParseInt(c.QueryParam("cursor"), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		bufferSize = stat.Size() - cursorIn
+
+		pp.Println(cursorIn)
+
+		bytes := make([]byte, bufferSize)
+		cursor, err := f.ReadAt(bytes, cursorIn)
+		if err != nil {
+			pp.Println("WE ARE ERRORING HERE")
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		contents = bytes[:cursor]
+
+		return c.JSON(http.StatusOK, FileReadResponse{
+			Contents: string(contents),
+			Cursor:   cursor,
+		})
+	}
+
+	// read whole file, initial read
+	bytes := make([]byte, bufferSize)
+	cursor, err := f.Read(bytes)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	contents = bytes[:cursor]
+
+	return c.JSON(http.StatusOK, FileReadResponse{
+		Contents: string(contents),
+		Cursor:   cursor,
+	})
 }

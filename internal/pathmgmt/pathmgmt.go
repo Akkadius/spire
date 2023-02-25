@@ -72,10 +72,6 @@ func (m *PathManagement) debug(msg string, a ...interface{}) {
 	}
 }
 
-func (m *PathManagement) GetEQEmuServerBinPath() string {
-	return filepath.Join(m.GetEQEmuServerPath(), "bin")
-}
-
 const (
 	binaryWorld             = "world"
 	binaryZone              = "zone"
@@ -84,6 +80,8 @@ const (
 	binaryQueryserver       = "queryserv"
 	binaryExportClientFiles = "export_client_files"
 	binaryImportClientFiles = "import_client_files"
+	binDir                  = "bin"
+	logsDir                 = "logs"
 	backupsDir              = "backups"
 	questsDir               = "quests"
 	mapsDir                 = "maps"
@@ -100,6 +98,14 @@ func GetBinary(s string) string {
 	}
 
 	return bin
+}
+
+func (m *PathManagement) GetEQEmuServerBinPath() string {
+	return filepath.Join(m.GetEQEmuServerPath(), binDir)
+}
+
+func (m *PathManagement) GetLogsDirPath() string {
+	return filepath.Join(m.GetEQEmuServerPath(), logsDir)
 }
 
 func (m *PathManagement) GetWorldBinPath() string {
