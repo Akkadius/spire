@@ -284,10 +284,11 @@ export default {
 
     viewLog(f) {
       // reset
-      this.fileCursor  = 0
-      this.file        = ""
+      this.fileLineFilter = ""
+      this.fileCursor     = 0
+      this.file           = ""
       // watch
-      this.fileToWatch = f.path
+      this.fileToWatch    = f.path
       this.updateQueryState()
     },
 
