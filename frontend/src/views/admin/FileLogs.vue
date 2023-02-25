@@ -114,13 +114,14 @@
 
           </div>
 
-          <div style="max-height: 80vh; overflow-y: scroll" id="output">
+          <div style="max-height: 80vh; overflow-y: scroll; " id="output">
             <pre
               class="mt-0 fade-in mb-1"
-              style="width: 100%; word-wrap: break-word; white-space: pre-wrap; overflow-x: hidden"
+              style="width: 100%; word-wrap: break-word;  overflow-x: scroll"
               v-if="file && file.length > 0"
               id="file-contents"
-            >{{ filterFileResults(file) }}</pre>
+              v-html="filterFileResults(file)"
+            ></pre>
           </div>
         </eq-window>
       </div>
@@ -304,10 +305,10 @@ export default {
         if (r.status === 200) {
           if (this.fileCursor && this.fileCursor > 0) {
             this.fileCursor = parseInt(this.fileCursor) + parseInt(r.data.cursor)
-            this.file += r.data.contents
+            this.file += this.formatContents(r.data.contents)
           } else {
             this.fileCursor = parseInt(r.data.cursor)
-            this.file       = r.data.contents
+            this.file       = this.formatContents(r.data.contents)
           }
 
           this.$forceUpdate()
@@ -349,7 +350,42 @@ export default {
     },
     formatTimeFromNow(unix) {
       return moment.unix(unix).fromNow()
-    }
+    },
+
+    formatContents(c) {
+      let lines = []
+      c.split("\n").forEach((line) => {
+        let newLine = line
+
+        let lbs = line.split("[")
+        if (lbs.length > 0) {
+          lbs.forEach((lb, lbi) => {
+            let rbs = lb.split("]")
+            if (rbs.length > 0) {
+              let bc = rbs[0] // bracket contents
+              if (bc && bc.length > 0) {
+                if (lbi === 1) {
+                  newLine = newLine.replaceAll(`[${bc}]`, `<span class="font-weight-bold" style="color: lightblue">${bc}</span> |`)
+                }
+                else if (lbi === 2) {
+                  newLine = newLine.replaceAll(`[${bc}]`, `<span class="font-weight-bold" style="color: #575555">${bc}</span> |`)
+                }
+                else if (lbi === 3) {
+                  newLine = newLine.replaceAll(`[${bc}]`, `<span class="font-weight-bold" style="color: #ffffff">${bc}</span> |`)
+                }
+                else {
+                  newLine = newLine.replaceAll(`[${bc}]`, `[<span class="font-weight-bold" style="color: #ffffb1">${bc}</span>]`)
+                }
+              }
+            }
+          })
+        }
+
+        lines.push(newLine)
+      })
+
+      return lines.join("\n")
+    },
   }
 }
 </script>
