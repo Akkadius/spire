@@ -122,6 +122,11 @@
               id="file-contents"
               v-html="filterFileResults(file)"
             ></pre>
+
+            <div>
+              <span class="font-weight-bold">Line Buffer</span> {{commify(currentLineBufferLength)}} / {{commify(lineBufferLimit)}} (Max)
+              <span class="font-weight-bold">Cursor</span> {{commify(fileCursor)}}
+            </div>
           </div>
         </eq-window>
       </div>
@@ -148,9 +153,10 @@ export default {
       files: [], // file listing
       fileListingTimer: null,
 
+      currentLineBufferLength: 0,
+      lineBufferLimit: 1000,
       outputContainer: null, // output container
       watchTimer: null,
-      fileLineFilter: "",
       fileToWatch: "", // file name to watch
       fileCursor: 0,
       fileNotification: "", // info/error
@@ -176,6 +182,7 @@ export default {
   },
   created() {
     this.file = ""; // file contents to display
+    this.fileLineFilter = "";
   },
   async mounted() {
     Navbar.collapse()
@@ -186,14 +193,22 @@ export default {
   },
   methods: {
 
+    commify(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+
     updateFilter: debounce(function () {
       this.updateQueryState()
     }, 600),
 
     filterFileResults(file) {
-      return file.split("\n").filter((e) => {
+      const f = file.split("\n").filter((e) => {
         return e.toLowerCase().includes(this.fileLineFilter.toLowerCase())
-      }).join("\n")
+      }).slice(-1000)
+
+      this.currentLineBufferLength = f.length
+
+      return f.join("\n")
     },
 
     copyFileContentsToClipboard() {
@@ -285,9 +300,10 @@ export default {
 
     viewLog(f) {
       // reset
-      this.fileLineFilter = ""
-      this.fileCursor     = 0
-      this.file           = ""
+      this.currentLineBufferLength = 0;
+      this.fileLineFilter          = ""
+      this.fileCursor              = 0
+      this.file                    = ""
       // watch
       this.fileToWatch    = f.path
       this.updateQueryState()
