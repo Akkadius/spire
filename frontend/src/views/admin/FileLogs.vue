@@ -549,6 +549,10 @@ export default {
 
     viewLog(f) {
       // reset
+      this.fileError               = ""
+      this.fileNotification        = ""
+      this.error                   = ""
+      this.notification            = ""
       this.currentLineBufferLength = 0;
       this.fileLineFilter          = ""
       this.fileCursor              = 0

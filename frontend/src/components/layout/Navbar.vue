@@ -355,7 +355,7 @@ export default {
           routePrefixMatch: "admin/tools/player",
           navs: [
             { title: "Discord Webhooks", to: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS, icon: "fa fa-cog mr-1" },
-            { title: "File Logs", to: ROUTE.ADMIN_FILE_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
+            { title: "File Logs", to: ROUTE.ADMIN_FILE_LOGS, icon: "fe fe-book mr-1" },
             { title: "Log Settings", to: ROUTE.ADMIN_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
             { title: "Player Event Settings", to: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS, icon: "fa fa-cog mr-1" },
             { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
