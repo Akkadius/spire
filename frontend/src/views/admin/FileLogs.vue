@@ -7,7 +7,7 @@
         <eq-window
           :title="`Files (${files ? files.length : 0})`"
         >
-          <div style="max-height: 80vh; overflow-y: scroll">
+          <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
 
             <div
               class="row justify-content-center"
@@ -61,8 +61,16 @@
                 </b-button>
 
                 <b-button
+                  class="btn-sm mr-2 btn-outline-danger btn-dark"
+                  @click="deleteAllLogFiles()"
+                >
+                  <i class="fa fa-trash"></i>
+                  Delete All
+                </b-button>
+
+                <b-button
                   class="btn-sm mr-2 btn-outline-white btn-dark"
-                  @click="filterType = ''; searchAllString = ''"
+                  @click="resetAll()"
                 >
                   <i class="fa fa-eraser"></i>
                   Reset
@@ -70,9 +78,16 @@
               </div>
             </div>
 
+            <div
+              class="font-weight-bold text-center p-5"
+              v-if="getFilteredFiles().length === 0"
+            >
+              There are no files to be shown in the current filter
+            </div>
+
             <table
               class="eq-table eq-highlight-rows bordered player-events mt-3"
-              v-if="files.length > 0"
+              v-if="files && files.length > 0 && getFilteredFiles().length > 0"
               id="file-logs"
             >
               <thead class="eq-table-floating-header">
@@ -86,7 +101,7 @@
               <tbody>
               <tr
                 class="fade-in"
-                v-for="f in files.filter((e) => { return (filterType.length > 0 && e.path.includes(filterType)) || filterType.length === 0 })"
+                v-for="f in getFilteredFiles()"
                 :key="`${f.path}-${f.modified_time}`"
               >
                 <td class="text-center">
@@ -310,6 +325,42 @@ export default {
   },
   methods: {
 
+    resetAll() {
+      this.filterType = ""
+      this.stopLogStream()
+      this.fileToWatch = ""
+      this.searchAllString = ""
+      this.searchResults = []
+      this.updateQueryState()
+    },
+
+    getFilteredFiles() {
+      return this.files && this.files.length > 0 ? this.files.filter((e) => {
+        return (this.filterType.length > 0 && e.path.includes(this.filterType)) || this.filterType.length === 0
+      }) : []
+    },
+
+    async deleteAllLogFiles() {
+      if (confirm(`Are you sure? This will delete all log files shown in the current filter`)) {
+        this.resetAll()
+
+        for (const f of this.getFilteredFiles()) {
+          try {
+            const r = await SpireApi.v1().delete(`eqemuserver/log/${f.path}`)
+          } catch (e) {
+            if (e.response && e.response.data && e.response.data.error) {
+              this.error = e.response.data.error
+            }
+          }
+        }
+
+        this.notification = "Files deleted successfully!";
+
+        await this.loadLogListing();
+        this.updateQueryState()
+      }
+    },
+
     formatSearchResult(lines) {
       let newLines = '';
       lines.forEach((l) => {
@@ -350,9 +401,9 @@ export default {
 
     countLogs(search) {
       return this.commify(
-        this.files.filter((e) => {
+        this.files && this.files.length > 0 ? this.files.filter((e) => {
           return (e.path.includes(search) && !e.path.includes("crash")) || (search.includes("crash") && e.path.includes(search))
-        }).length
+        }).length : 0
       )
     },
 
@@ -363,6 +414,7 @@ export default {
           if (r.status === 200) {
             this.notification = "File deleted successfully!";
             this.loadLogListing();
+            this.resetAll()
           }
         } catch (e) {
           if (e.response && e.response.data && e.response.data.error) {
