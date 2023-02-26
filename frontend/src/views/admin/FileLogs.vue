@@ -7,7 +7,7 @@
         <eq-window
           :title="`Files (${files ? files.length : 0})`"
         >
-          <div style="max-height: 79vh; overflow-y: scroll; overflow-x: scroll">
+          <div style="max-height: 79vh; overflow-y: scroll;">
 
             <div
               class="row justify-content-center"
@@ -85,6 +85,7 @@
               There are no files to be shown in the current filter
             </div>
 
+            <div style="overflow-x: scroll">
             <table
               class="eq-table eq-highlight-rows bordered player-events mt-3"
               style="overflow: auto; width: 100%; border-collapse: collapse; white-space: nowrap; "
@@ -128,6 +129,7 @@
               </tr>
               </tbody>
             </table>
+            </div>
           </div>
 
         </eq-window>
