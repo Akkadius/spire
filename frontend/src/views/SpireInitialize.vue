@@ -13,7 +13,7 @@
           class="mt-0"
         />
 
-        <div style="height: 80vh; overflow-y: scroll; overflow-x: hidden">
+        <div style="height: 85vh; overflow-y: scroll; overflow-x: hidden">
           <eq-window>
             <p style="font-size: 14px" class="m-0">
               It appears that you are using Spire for the first time. Let's walk you through a brief setup...
