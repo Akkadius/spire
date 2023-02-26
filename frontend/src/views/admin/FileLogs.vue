@@ -7,7 +7,7 @@
         <eq-window
           :title="`Files (${files ? files.length : 0})`"
         >
-          <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
+          <div style="max-height: 79vh; overflow-y: scroll; overflow-x: scroll">
 
             <div
               class="row justify-content-center"
@@ -63,17 +63,17 @@
                 <b-button
                   class="btn-sm mr-2 btn-outline-danger btn-dark"
                   @click="deleteAllLogFiles()"
+                  title="Delete all log files in view"
                 >
                   <i class="fa fa-trash"></i>
-                  Delete All
                 </b-button>
 
                 <b-button
                   class="btn-sm mr-2 btn-outline-white btn-dark"
                   @click="resetAll()"
+                  title="Reset"
                 >
-                  <i class="fa fa-eraser"></i>
-                  Reset
+                  <i class="fa fa-refresh"></i>
                 </b-button>
               </div>
             </div>
@@ -87,24 +87,25 @@
 
             <table
               class="eq-table eq-highlight-rows bordered player-events mt-3"
+              style="overflow: auto; width: 100%; border-collapse: collapse; white-space: nowrap; "
               v-if="files && files.length > 0 && getFilteredFiles().length > 0"
               id="file-logs"
             >
               <thead class="eq-table-floating-header">
               <tr>
-                <th style="width: 100px"></th>
-                <th style="width: 150px">File</th>
-                <th>Size</th>
-                <th>Last Modified</th>
+                <th style="width: 130px"></th>
+                <th style="width: 260px" class="text-center">Last Modified</th>
+                <th style="width: 100px" class="text-center">Size</th>
+                <th>File</th>
               </tr>
               </thead>
               <tbody>
               <tr
-                class="fade-in"
+                :class="'fade-in ' + (fileToWatch && f.path === fileToWatch ? 'pulsate-highlight-white' : '')"
                 v-for="f in getFilteredFiles()"
                 :key="`${f.path}-${f.modified_time}`"
               >
-                <td class="text-center">
+                <td class="text-center p-1">
                   <b-button
                     class="btn-danger btn-sm"
                     @click="deleteFile(f)"
@@ -121,9 +122,9 @@
                     <i class="fa fa-eye"></i>
                   </b-button>
                 </td>
+                <td class="text-center">{{ formatTime(f.modified_time) }} {{ `(${formatTimeFromNow(f.modified_time)})` }}</td>
+                <td class="text-center">{{ formatBytes(f.size) }}</td>
                 <td>{{ f.path }}</td>
-                <td>{{ formatBytes(f.size) }}</td>
-                <td>{{ formatTime(f.modified_time) }} {{ `(${formatTimeFromNow(f.modified_time)})` }}</td>
               </tr>
               </tbody>
             </table>
@@ -152,15 +153,15 @@
 
         <eq-window :title="fileToWatch">
           <div
-            style="position: absolute; top: -10px; z-index: 999999; left: 21px;"
+            style="position: absolute; top: 25px; z-index: 999999; left: 21px;"
           >
             <b-spinner small v-if="watchTimer"/>
           </div>
 
           <div
-            class="minified-inputs row p-1 mb-3"
+            class="minified-inputs row p- mb-3"
           >
-            <div class="col-1 text-center p-0">
+            <div class="col-2 pr-0 text-center">
               <b-button
                 class="btn-danger btn-sm mb-1"
                 title="Stop log stream"
@@ -188,7 +189,7 @@
               </b-button>
             </div>
 
-            <div class="col-11 pl-0">
+            <div class="col-10 pl-0">
               <input
                 type="text"
                 class="form-control mt-0 mb-0"
@@ -201,10 +202,10 @@
 
           </div>
 
-          <div style="max-height: 80vh; overflow-y: scroll; " id="output">
+          <div style="max-height: 75vh; overflow-y: scroll; " id="output">
             <pre
               class="mt-0 fade-in mb-1"
-              style="width: 100%; word-wrap: break-word;  overflow-x: scroll"
+              style="width: 100%; word-wrap: break-word; overflow-x: scroll; padding-bottom: 0 !important"
               v-if="file && file.length > 0"
               id="file-contents"
               v-html="filterFileResults(file)"
