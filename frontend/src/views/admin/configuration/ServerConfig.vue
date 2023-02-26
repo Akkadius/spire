@@ -30,6 +30,22 @@
 
           </eq-tab>
 
+          <eq-tab name="Networking">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="form-label">Public Address</label>
+                <input type="text" class="form-control" v-model="config.server.world.address"/>
+                <small class="form-text mt-3 eq-alert">If your server is on the internet, you will need to specify your public address. When on a LAN behind a NAT you will need both this and <b>localaddress</b> set </small>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label class="form-label">Local Address</label>
+                <input type="text" class="form-control" v-model="config.server.world.localaddress"/>
+                <small class="form-text mt-3 eq-alert">If you are on a LAN you will need this address set to the local address of your host so that others on your network can properly be routed to your gameserver. Do not use 127.0.0.1</small>
+              </div>
+            </div>
+          </eq-tab>
+
           <eq-tab name="Key">
             <div class="form-group">
               <label class="form-label">Server Key</label>
