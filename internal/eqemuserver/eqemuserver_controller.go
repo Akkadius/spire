@@ -10,7 +10,6 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
@@ -946,11 +945,7 @@ func (a *Controller) preflight(c echo.Context) error {
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
 	for scanner.Scan() {
-		pp.Printf("Checking assertion [%v] against [%v]\n", check.assertion, stripAnsi(scanner.Text()))
-
 		if strings.Contains(stripAnsi(scanner.Text()), check.assertion) && !check.asserted {
-			// sleep a little because assertions might rely
-			// on inter-process connectivity
 			check.asserted = true
 			cmd.Process.Kill()
 		}

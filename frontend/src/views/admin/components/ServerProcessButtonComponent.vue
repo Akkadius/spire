@@ -63,11 +63,7 @@
             <td class="text-center">
               <check-mark-animated style="height: 20px; width: 20px" v-if="p.checkSuccess"/>
               <b-spinner small v-if="!p.checkSuccess && !p.message"/>
-              <i
-                class="fa fa-stop-circle-o fade-in"
-                style="color:red; font-size: 20px"
-                v-if="!p.checkSuccess && p.message"
-              ></i>
+              <error-mark-animated v-if="!p.checkSuccess && p.message" style="height: 30px; width: 30px" class="ml-1"/>
             </td>
             <td class="text-center">{{ p.name }}</td>
             <td><span v-if="p.message" v-html="p.message"></span></td>
@@ -188,6 +184,7 @@ import {debounce}        from "@/app/utility/debounce";
 import CheckMarkAnimated from "@/components/CheckMarkAnimated.vue";
 import EqTabs            from "@/components/eq-ui/EQTabs.vue";
 import EqTab             from "@/components/eq-ui/EQTab.vue";
+import ErrorMarkAnimated from "@/components/ErrorMarkAnimated.vue";
 
 const Convert = require('ansi-to-html');
 const convert = new Convert();
@@ -195,6 +192,7 @@ const convert = new Convert();
 export default {
   name: 'ServerProcessButtonComponent',
   components: {
+    ErrorMarkAnimated,
     EqTab,
     EqTabs,
     CheckMarkAnimated,
@@ -267,7 +265,7 @@ export default {
     },
 
     async runPreflightChecks() {
-      await OcculusClient.stopServer()
+      // await OcculusClient.stopServer()
 
       this.startModalSize = "xl"
       this.preflight      = true
