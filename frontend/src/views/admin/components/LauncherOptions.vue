@@ -1,8 +1,6 @@
 <template>
-  <b-card
-    header="Launcher Options"
-  >
-    <b-card-text>
+  <div class="card">
+    <div class="p-0 card-body">
       <div class="mb-3">
         <b-form-checkbox
           v-model="launcher.runSharedMemory"
@@ -78,8 +76,8 @@
         </b-form-group>
 
       </div>
-    </b-card-text>
-  </b-card>
+    </div>
+  </div>
 </template>
 
 <script>

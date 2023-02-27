@@ -68,7 +68,7 @@ export default {
       let p = []
       p.push({ name: "Occulus Launcher", count: e.launcher_online ? 1 : 0 })
       p.push({ name: "World (world)", count: e.world_online ? 1 : 0 })
-      p.push({ name: "Zones (zone)", count: e.zone_list.data.length })
+      p.push({ name: "Zones (zone)", count: e && e.zone_list && e.zone_list.data ? e.zone_list.data.length : 0 })
       p.push({ name: "Universal Chat Service (ucs)", count: e.ucs_online ? 1 : 0, optional: true })
       p.push({ name: "Loginserver (loginserver)", count: e.login_online ? 1 : 0, optional: true })
       p.push({ name: "Queryserv (queryserv)", count: e.query_serv_online ? 1 : 0, optional: true })

@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
@@ -80,6 +81,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/log/:file", a.getFileLog, nil),
 		routes.RegisterRoute(http.MethodDelete, "eqemuserver/log/:file", a.deleteFileLog, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/log-search/:search", a.logSearch, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/pre-flight/:process", a.preflight, nil),
 	}
 }
 
@@ -334,7 +336,7 @@ func (a *Controller) build(c echo.Context) error {
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
 	for scanner.Scan() {
-		c.String(http.StatusOK, scanner.Text())
+		c.String(http.StatusOK, scanner.Text()+"\n")
 		c.Response().Flush()
 	}
 
@@ -888,4 +890,85 @@ func (a *Controller) logSearch(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+type PreflightCheck struct {
+	process   string
+	assertion string
+	asserted  bool
+	timeout   int
+	args      []string
+}
+
+func (a *Controller) preflight(c echo.Context) error {
+	checks := []PreflightCheck{
+		{process: "world", assertion: "listener started on port", timeout: 10},
+		{process: "zone", assertion: "Zone bootup type", timeout: 10, args: []string{"soldungb"}},
+		{process: "shared_memory", assertion: "Loading base data", timeout: 10},
+		{process: "ucs", assertion: "LoadChatChannels", timeout: 10},
+		{process: "loginserver", assertion: "Server Started", timeout: 10},
+	}
+
+	p := strings.ReplaceAll(strings.ToLower(c.Param("process")), " ", "_")
+
+	var check = PreflightCheck{}
+	for _, ch := range checks {
+		if ch.process == p {
+			check = ch
+		}
+	}
+
+	if len(check.assertion) == 0 {
+		return c.String(http.StatusBadRequest, "Invalid check type!")
+	}
+
+	c.Response().WriteHeader(http.StatusOK)
+
+	bin := filepath.Join(a.pathmgmt.GetEQEmuServerBinPath(), check.process)
+	cmd := exec.Command(bin, check.args...)
+	cmd.Env = os.Environ()
+	if runtime.GOOS == "linux" {
+		cmd.Env = append(cmd.Env, "IS_TTY=true")
+	}
+	cmd.Dir = a.pathmgmt.GetEQEmuServerPath()
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		a.logger.Fatalf("could not get stdout pipe: %v", err)
+	}
+
+	cmd.Stderr = cmd.Stdout
+
+	err = cmd.Start()
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	merged := io.MultiReader(stdout)
+	scanner := bufio.NewScanner(merged)
+	for scanner.Scan() {
+		pp.Printf("Checking assertion [%v] against [%v]\n", check.assertion, stripAnsi(scanner.Text()))
+
+		if strings.Contains(stripAnsi(scanner.Text()), check.assertion) && !check.asserted {
+			// sleep a little because assertions might rely
+			// on inter-process connectivity
+			check.asserted = true
+			cmd.Process.Kill()
+		}
+
+		c.String(http.StatusOK, scanner.Text()+"\n")
+		c.Response().Flush()
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		if strings.Contains(err.Error(), "signal: killed") {
+			return c.String(http.StatusOK, "Completed pre-flight checks successfully\n")
+		}
+
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	c.Response().Flush()
+
+	return nil
 }

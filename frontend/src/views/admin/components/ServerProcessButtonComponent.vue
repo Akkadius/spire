@@ -35,17 +35,71 @@
     <!-- Start Server -->
     <b-modal
       centered
-      no-fade
       id="start-server-modal"
+      :size="startModalSize"
       title="Start Server"
       header-text-variant="dark"
       body-text-variant="dark"
       ok-title="Start Server"
+      @hidden="resetPreflight()"
       @ok="startServer"
     >
-      <p class="pt-3 pb-3">Are you sure you want to start server?</p>
+      <LauncherOptions :launcherConfig="launcher" v-if="!preflight"/>
 
-      <LauncherOptions :launcherConfig="launcher"></LauncherOptions>
+      <eq-window title="Pre-Flight Checks" v-if="preflight" class="fade-in">
+
+        <table
+          class="eq-table eq-highlight-rows bordered mt-3"
+        >
+          <thead class="eq-table-floating-header">
+          <tr>
+            <th class="text-center" style="width: 120px">Status</th>
+            <th class="text-center" style="width: 140px">Process</th>
+            <th class="text-left">Messages</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="p in processTypes" :key="p.name">
+            <td class="text-center">
+              <check-mark-animated style="height: 20px; width: 20px" v-if="p.checkSuccess"/>
+              <b-spinner small v-if="!p.checkSuccess && !p.message"/>
+              <i
+                class="fa fa-stop-circle-o fade-in"
+                style="color:red; font-size: 20px"
+                v-if="!p.checkSuccess && p.message"
+              ></i>
+            </td>
+            <td class="text-center">{{ p.name }}</td>
+            <td><span v-if="p.message" v-html="p.message"></span></td>
+          </tr>
+          </tbody>
+        </table>
+
+        <eq-tabs @on-selected="scrollPreflight($event)">
+          <eq-tab :name="p.name" :selected="p.name === 'World'" v-for="p in processTypes" :key="p.name">
+            <pre
+              :id="'preflight-output-' + p.name"
+              style="width: 100%; height: 40vh; word-wrap: break-word; white-space: pre-wrap; overflow-x: hidden"
+              v-html="p.console"
+            ></pre>
+          </eq-tab>
+        </eq-tabs>
+
+      </eq-window>
+
+
+      <template #modal-footer="{ ok, cancel, hide }">
+        <b-button size="sm" variant="outline-primary" @click="runPreflightChecks()" v-if="!preflight">
+          <i class="fa fa-check-circle"></i>
+          Start Server Pre-Flight Checks
+        </b-button>
+        <b-button size="sm" variant="primary" @click="ok()" :disabled="!havePreflightChecksRan()">
+          <i class="fa fa-rocket"></i> Start Server
+        </b-button>
+        <b-button size="sm" variant="outline-secondary" @click="hide('forget')">
+          <i class="fa fa-remove"></i> Close
+        </b-button>
+      </template>
 
     </b-modal>
 
@@ -125,13 +179,26 @@
 
 <script>
 
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-import {EventBus}      from "@/app/event-bus/event-bus";
-import LauncherOptions    from "@/views/admin/components/LauncherOptions.vue";
+import {OcculusClient}   from "@/app/api/eqemu-admin-client-occulus";
+import {EventBus}        from "@/app/event-bus/event-bus";
+import LauncherOptions   from "@/views/admin/components/LauncherOptions.vue";
+import {HttpStream}      from "@/app/httpstream/http-stream";
+import EqWindow          from "@/components/eq-ui/EQWindow.vue";
+import {debounce}        from "@/app/utility/debounce";
+import CheckMarkAnimated from "@/components/CheckMarkAnimated.vue";
+import EqTabs            from "@/components/eq-ui/EQTabs.vue";
+import EqTab             from "@/components/eq-ui/EQTab.vue";
+
+const Convert = require('ansi-to-html');
+const convert = new Convert();
 
 export default {
   name: 'ServerProcessButtonComponent',
   components: {
+    EqTab,
+    EqTabs,
+    CheckMarkAnimated,
+    EqWindow,
     LauncherOptions
   },
   data() {
@@ -139,23 +206,107 @@ export default {
       delayedRestart: 0,
       delayedStop: 0,
       launcher: {},
+
+      startModalSize: "md",
+
+      scrollTimer: null,
+
+      preflight: false,
+      processTypes: [
+        { name: "World", checkSuccess: false, console: "", required: true },
+        { name: "Zone", checkSuccess: false, console: "", required: true },
+        { name: "Shared Memory", checkSuccess: false, console: "", required: true },
+        { name: "UCS", checkSuccess: false, console: "", required: true },
+        { name: "Loginserver", checkSuccess: false, console: "", required: false },
+      ],
     }
   },
+  created() {
+    const pattern = [
+      '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+      '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))'
+    ].join('|');
+
+    this.ansiRegex = new RegExp(pattern);
+  },
+
   async mounted() {
     const result  = await OcculusClient.getLauncherConfig();
     this.launcher = result.data;
   },
   methods: {
-    /**
-     * Start
-     */
     startServerModal() {
       this.$root.$emit('bv::show::modal', 'start-server-modal')
     },
-    startServer() {
+
+    scrollPreflight: debounce(function (e) {
+      setTimeout(() => {
+        const t = document.getElementById('preflight-output-' + e)
+        if (t) {
+          t.scrollTop = t.scrollHeight + 100;
+        }
+      }, 1)
+    }, 10),
+
+    resetPreflight() {
+      this.startModalSize = "md"
+      this.preflight      = false
+      for (let [i, p] of this.processTypes.entries()) {
+        this.processTypes[i].checkSuccess = false
+        delete this.processTypes[i].message
+      }
+    },
+
+    havePreflightChecksRan() {
+      for (let p of this.processTypes) {
+        if (typeof p.message === "undefined" || p.message.length === 0) {
+          return false;
+        }
+      }
+      return true;
+    },
+
+    async runPreflightChecks() {
+      await OcculusClient.stopServer()
+
+      this.startModalSize = "xl"
+      this.preflight      = true
+
+      for (let [i, p] of this.processTypes.entries()) {
+        HttpStream.get("/api/v1/eqemuserver/pre-flight/" + p.name.toLowerCase()).then(async (r) => {
+          for await (const m of HttpStream.read(r)) {
+            this.processTypes[i].console += this.getStreamFormatted(m)
+            if (m.includes("QueryErr") || m.includes("Error")) {
+              this.processTypes[i].message = this.getStreamFormatted(m).split("\n").filter((e) => {
+                return e.includes("QueryErr") || e.includes("Error")
+              }).join("\n")
+            }
+
+            this.$forceUpdate()
+            this.scrollPreflight(p.name)
+          }
+        }).finally(() => {
+          if (!this.processTypes[i].message) {
+            this.processTypes[i].checkSuccess = true
+            this.processTypes[i].message      = "Checks succeeded"
+          }
+          this.$forceUpdate()
+        });
+      }
+    },
+
+    startServer(e) {
       OcculusClient.startServer();
       this.notify("Server Start", "Server is starting!");
       this.notifyProcessChange()
+    },
+
+    getStreamFormatted(m) {
+      if (this.ansiRegex.test(m)) {
+        return convert.toHtml(m)
+      } else {
+        return m
+      }
     },
 
     /**
@@ -168,8 +319,7 @@ export default {
       OcculusClient.stopServer({ timer: this.delayedStop });
       if (this.delayedStop > 0) {
         this.notify("Server Stopped", "Server delayed stop timer started!");
-      }
-      else {
+      } else {
         this.notify("Server Stopped", "Server has been stopped!");
       }
       this.notifyProcessChange()

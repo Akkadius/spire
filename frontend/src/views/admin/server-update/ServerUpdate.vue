@@ -360,7 +360,7 @@ export default {
         const reader      = response.body.getReader();
         for await (const chunk of readChunks(reader)) {
           const chunkText = textDecoder.decode(chunk);
-          this.output += chunkText + "\n"
+          this.output += chunkText
 
           if (chunkText.includes("[")) {
             let s       = chunkText

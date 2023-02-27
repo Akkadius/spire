@@ -73,7 +73,7 @@
                   @click="resetAll()"
                   title="Reset"
                 >
-                  <i class="fa fa-refresh"></i>
+                  <i class="fa fa-dot-circle-o"></i>
                 </b-button>
               </div>
             </div>
@@ -345,8 +345,6 @@ export default {
 
     async deleteAllLogFiles() {
       if (confirm(`Are you sure? This will delete all log files shown in the current filter`)) {
-        this.resetAll()
-
         for (const f of this.getFilteredFiles()) {
           try {
             const r = await SpireApi.v1().delete(`eqemuserver/log/${f.path}`)
@@ -356,6 +354,8 @@ export default {
             }
           }
         }
+
+        this.resetAll()
 
         this.notification = "Files deleted successfully!";
 
