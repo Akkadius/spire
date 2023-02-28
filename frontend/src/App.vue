@@ -1,5 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <ninja-keys
+      class="dark ninja-icon"
+      ref="ninjaKeys"
+      placeholder="Where would you like to go?"
+    />
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -11,20 +18,20 @@ import {AppEnv}                 from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 import {ROUTE}                  from "@/routes";
 import UserContext              from "@/app/user/UserContext";
-import router                   from "@/router";
 
 export default {
   name: "App",
   async beforeMount() {
     await AppEnv.init()
   },
+
   async mounted() {
 
     this.loadKeypressBindings();
     this.loadWallpaper();
     this.loadSpellIconSettings();
 
-    this.user  = await UserContext.getUser()
+    this.user = await UserContext.getUser()
     if (typeof AppEnv.getOS() === "undefined") {
       await AppEnv.init()
     }
@@ -59,6 +66,30 @@ export default {
     },
 
     loadKeypressBindings() {
+      document.onkeydown = function (e) {
+        e = e || window.event;//Get event
+        if (!e.ctrlKey) return;
+        let code = e.which || e.keyCode;//Get key code
+
+        switch (code) {
+          case 75: // Ctrl+K
+            e.preventDefault();
+            const ninja = document.querySelector('ninja-keys');
+
+            setTimeout(() => {
+              ninja.open()
+            }, 1)
+
+            e.stopPropagation();
+            break;
+          case 87://Block Ctrl+W
+          case 83://Block Ctrl+S
+            e.preventDefault();
+            // e.stopPropagation();
+            break;
+        }
+      };
+
       window.addEventListener("keypress", (e) => {
         if (e.srcElement.tagName !== "BODY" && e.srcElement.tagName !== "A") {
           return

@@ -5,6 +5,7 @@
     <router-link
       v-if="config.to"
       :to="config.to"
+      :exact="config.exact ? config.exact : false"
       class="nav-link"
     >
       <i :class="config.labelIcon" v-if="config.labelIcon"></i> {{ config.label }}

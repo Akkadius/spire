@@ -25,6 +25,7 @@
     "leaflet": "^1.7.1",
     "markdown-it": "^12.2.0",
     "moment": "^2.29.1",
+    "ninja-keys": "^1.2.2",
     "qs": "^6.5.2",
     "rpg-awesome": "^0.2.0",
     "semver": "^5.7.0",

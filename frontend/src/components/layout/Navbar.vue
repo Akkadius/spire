@@ -4,8 +4,10 @@
     style="overflow-y: overlay"
     id="sidebar"
     @click.self="expandNavbar()"
-    v-if="!hideNavbar"
+    v-show="!hideNavbar"
   >
+
+
 
     <div
       style="position: inherit; top: 50%; left: 10px; display: none"
@@ -61,22 +63,10 @@
           </h6>
 
           <ul class="navbar-nav mb-md-3">
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_ROOT" exact>
                 <i class="ra ra-eye-shield mr-1"></i> Server Admin
-                <b-badge class="ml-3" variant="primary" v-if="!isInAdmin()">NEW!</b-badge>
-              </router-link>
-            </li>
-
-            <li class="nav-item" v-if="isInAdmin()">
-              <router-link class="nav-link" :to="ROUTE.ADMIN_PLAYERS_ONLINE" exact>
-                <i class="ra ra-double-team mr-1"></i> Players Online
-              </router-link>
-            </li>
-
-            <li class="nav-item" v-if="isInAdmin()">
-              <router-link class="nav-link" :to="ROUTE.ADMIN_ZONE_SERVERS">
-                <i class="ra ra-tower mr-1"></i> Zone Servers
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
               </router-link>
             </li>
 
@@ -231,7 +221,6 @@
         <db-connection-status-pill/>
 
       </div> <!-- / .navbar-collapse -->
-
     </div>
   </nav>
 </template>
@@ -249,6 +238,8 @@ import {AppEnv}               from "@/app/env/app-env";
 import {Navbar}               from "@/app/navbar";
 import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 import {SpireApi}             from "@/app/api/spire-api";
+import "ninja-keys";
+
 
 export default {
   computed: {
@@ -325,6 +316,9 @@ export default {
         ]
       },
       adminNavs: [
+        { label: "Server Admin", labelIcon: "ra ra-eye-shield mr-1", to: ROUTE.ADMIN_ROOT, exact: true },
+        { label: "Players Online", labelIcon: "ra ra-double-team mr-1", to: ROUTE.ADMIN_PLAYERS_ONLINE },
+        { label: "Zone Servers", labelIcon: "ra ra-tower mr-1", to: ROUTE.ADMIN_ZONE_SERVERS },
         { label: "Backups", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_BACKUPS },
         { label: "Client Files", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS },
         {
@@ -466,9 +460,87 @@ export default {
 
     // sidebar
     this.setSidebarStyle()
+
+    this.parseNinjaKeys()
+
   },
 
   methods: {
+
+    parseNinjaNav(nav) {
+      let keys = []
+      for (let n of nav) {
+        if (n.label && n.to) {
+          keys.push({
+            id: n.label,
+            title: n.label,
+            handler: () => {
+              this.$router.push(n.to).catch((e) => {
+              })
+            }
+          })
+        }
+
+        // children
+        if (n.navs) {
+          for (let c of n.navs) {
+            keys.push({
+              id: `[${n.label}] ${c.title}`,
+              title: `[${n.label}] ${c.title}`,
+              handler: () => {
+                this.$router.push(c.to).catch((e) => {
+                })
+              }
+            })
+          }
+        }
+      }
+
+      return keys
+    },
+
+    parseNinjaKeys() {
+      let keys = []
+
+      let navs = [
+        this.adminNavs,
+        [this.botNav],
+        [this.npcNav],
+        [this.viewerNav],
+        [this.spireApiNav],
+        [this.componentNavs],
+        [this.calculatorNav],
+      ]
+
+      for (let n of navs) {
+        keys = keys.concat(this.parseNinjaNav(n))
+      }
+
+      let manualRoutes = [
+        {name: "Tasks", route: ROUTE.TASKS},
+        {name: "Items", route: ROUTE.ITEMS_LIST},
+        {name: "Spells", route: ROUTE.SPELLS_LIST},
+        {name: "Quest API Explorer", route: ROUTE.QUEST_API_EXPLORER},
+        {name: "Zones", route: ROUTE.ZONES},
+      ]
+
+      for (let m of manualRoutes) {
+        keys.push({
+          id: m.name, title: m.name, handler: () => {
+            this.$router.push(m.route).catch((e) => {
+            })
+          }
+        })
+      }
+
+      keys = keys.sort((a, b) => {
+        return a.title.localeCompare(b.title);
+      });
+
+
+      const ninja = document.querySelector('ninja-keys')
+      ninja.data = keys
+    },
 
     isInAdmin() {
       return this.$route.path.includes("/admin")

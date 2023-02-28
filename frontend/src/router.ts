@@ -105,7 +105,7 @@ const router = new Router({
           meta: {title: "Emitter Viewer"},
         },
         {
-          path: '/test/:zone',
+          path: '/test',
           component: () => import('./views/Test.vue'),
           meta: {title: "Test"},
         },
