@@ -512,6 +512,7 @@ export default {
       }
 
       let manualRoutes = [
+        {name: "Coffee", route: ROUTE.COFFEE},
         {name: "Tasks", route: ROUTE.TASKS},
         {name: "Items", route: ROUTE.ITEMS_LIST},
         {name: "Spells", route: ROUTE.SPELLS_LIST},

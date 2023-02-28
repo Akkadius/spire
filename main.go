@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	_ "embed"
 	"fmt"
 	"github.com/Akkadius/spire/boot"
@@ -10,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/updater"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
@@ -46,8 +46,9 @@ func main() {
 
 func Fatal(err error) {
 	log.Println(err)
-	fmt.Print("Press any to continue...")
-	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
+	fmt.Print("Automatically shutting down in 10 seconds...")
+	time.Sleep(10 * time.Second)
+	os.Exit(1)
 }
 
 var (
