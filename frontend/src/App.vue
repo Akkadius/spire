@@ -11,6 +11,7 @@
 
 <script>
 
+import "ninja-keys";
 import * as util                from "util";
 import {App}                    from "@/constants/app";
 import {EventBus}               from "@/app/event-bus/event-bus";

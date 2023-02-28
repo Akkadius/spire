@@ -4,11 +4,8 @@
     style="overflow-y: overlay"
     id="sidebar"
     @click.self="expandNavbar()"
-    v-show="!hideNavbar"
+    v-if="!hideNavbar"
   >
-
-
-
     <div
       style="position: inherit; top: 50%; left: 10px; display: none"
       @click="expandNavbar()"
@@ -238,8 +235,6 @@ import {AppEnv}               from "@/app/env/app-env";
 import {Navbar}               from "@/app/navbar";
 import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 import {SpireApi}             from "@/app/api/spire-api";
-import "ninja-keys";
-
 
 export default {
   computed: {
