@@ -26,6 +26,7 @@
                 v-model="search"
                 v-on:keyup="doSearch()"
                 placeholder="Search by text or id"
+                autofocus
               />
             </div>
 

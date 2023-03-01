@@ -35,6 +35,7 @@
                     v-model="searchAllString"
                     placeholder="Search all files by search string"
                     v-on:keyup.enter="searchAll()"
+                    autofocus
                   >
                   <b-input-group-append>
                     <b-button size="sm" variant="outline-warning" @click="searchAll()">

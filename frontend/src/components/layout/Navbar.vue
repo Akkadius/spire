@@ -516,7 +516,9 @@ export default {
         {name: "Tasks", route: ROUTE.TASKS},
         {name: "Items", route: ROUTE.ITEMS_LIST},
         {name: "Spells", route: ROUTE.SPELLS_LIST},
-        {name: "Quest API Explorer", route: ROUTE.QUEST_API_EXPLORER},
+        {name: "[Quest API] Explorer", route: ROUTE.QUEST_API_EXPLORER},
+        {name: "[Quest API] Explorer (Perl)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=perl`},
+        {name: "[Quest API] Explorer (Lua)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=lua`},
         {name: "Zones", route: ROUTE.ZONES},
       ]
 

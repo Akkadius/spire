@@ -25,6 +25,7 @@
           <b-form-input
             type="text"
             class="form-control list-search"
+            autofocus
             @keyup="updateQueryState()"
             v-model="search"
             placeholder="Search rules..."

@@ -11,6 +11,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Search by zone long or short name, expansion etc."
+                autofocus
                 v-model="zoneSearchText"
                 v-on:keyup="selectedExpansion = -1; setStateDebounce();"
                 v-on:keyup.enter="updateQueryState"

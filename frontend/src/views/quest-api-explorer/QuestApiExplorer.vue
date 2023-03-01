@@ -47,6 +47,7 @@
               v-model="search"
               v-on:keyup="optionLoaded = false; onSearch(); onSearchMethodExampleLoad()"
               placeholder="Search for methods, events (soon constants)..."
+              autofocus
             />
           </div>
           <div class="col-lg-1 col-sm-12 text-center" v-if="appEnvLocal">

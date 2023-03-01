@@ -14,6 +14,7 @@
                 placeholder="Merchants by Name"
                 v-model="search"
                 @keyup.enter="zoneSelection = 0; searchItemName = ''; updateQueryState()"
+                autofocus
               >
             </div>
 

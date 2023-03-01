@@ -29,6 +29,7 @@
               @keyup="updateQueryState()"
               v-model="search"
               placeholder="Search log settings..."
+              autofocus
             />
           </div>
 

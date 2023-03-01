@@ -50,6 +50,7 @@
                 v-model="search"
                 v-on:keyup="subSelectedId = -1; rows = []; loading = true; updateQueryStateDebounce()"
                 placeholder="Search by text or id"
+                autofocus
               />
             </div>
           </div>

@@ -39,6 +39,7 @@
             @keyup="updateQueryState"
             v-model="search"
             placeholder="Filter zones..."
+            autofocus
           >
         </div>
       </div>
