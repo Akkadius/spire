@@ -565,7 +565,7 @@
       class="row justify-content-center"
       style="position: absolute; bottom: 5%; z-index: 9999999; width: 100%"
     >
-      <div class="col-4">
+      <div class="col-6">
         <info-error-banner
           style="width: 100%"
           :slim="true"
@@ -611,7 +611,18 @@ export default {
     },
   },
   async created() {
-    this.config = await OcculusClient.getServerConfig()
+
+    try {
+      const r = await SpireApi.v1().get('admin/serverconfig')
+      if (r.status === 200) {
+        this.config = r.data
+      }
+    } catch (e) {
+      // error notify
+      if (e.response && e.response.data && e.response.data.error) {
+        this.error = e.response.data.error
+      }
+    }
 
     if (!this.config.server.content_database) {
       this.config.server.content_database = {

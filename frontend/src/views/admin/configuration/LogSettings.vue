@@ -1,26 +1,26 @@
 <template>
   <div>
-    <div
-      class="row justify-content-center"
-      style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
-    >
-      <div class="col-4">
-        <info-error-banner
-          style="width: 100%"
-          :slim="true"
-          :notification="notification"
-          :error="error"
-          @dismiss-error="error = ''"
-          @dismiss-notification="notification = ''"
-          class="mt-3"
-        />
-      </div>
-    </div>
 
     <eq-window title="Log Settings">
 
-      <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
+      <div
+        class="row justify-content-center"
+        style="position: absolute; top: 0; z-index: 9999999; width: 100%"
+      >
+        <div class="col-6">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mt-3"
+          />
+        </div>
+      </div>
 
+      <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
         <div class="row mb-3">
           <div class="col-11">
             <b-form-input
@@ -282,9 +282,16 @@ export default {
   async mounted() {
     this.loadQueryState()
 
-    let r = await (new LogsysCategoryApi(...SpireApi.cfg())).listLogsysCategories()
-    if (r.status === 200) {
-      this.settings = r.data
+    try {
+      let r = await (new LogsysCategoryApi(...SpireApi.cfg())).listLogsysCategories()
+      if (r.status === 200) {
+        this.settings = r.data
+      }
+    } catch (e) {
+      // error notify
+      if (e.response && e.response.data && e.response.data.error) {
+        this.error = e.response.data.error
+      }
     }
 
     r = await (new DiscordWebhookApi(...SpireApi.cfg())).listDiscordWebhooks()

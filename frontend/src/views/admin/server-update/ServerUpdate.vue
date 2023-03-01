@@ -528,10 +528,18 @@ export default {
         if (r.status === 200) {
           this.branches = r.data
         }
+      }).catch((e) => {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
       })
       SpireApi.v1().get(`eqemuserver/build/current-branch`).then((r) => {
         if (r.status === 200) {
           this.currentBranch = r.data
+        }
+      }).catch((e) => {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
         }
       })
     },
@@ -541,6 +549,10 @@ export default {
           if (r.status === 200) {
             this.notification = `Branch has been set to [${this.currentBranch}]`
             this.init()
+          }
+        }).catch((e) => {
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = e.response.data.error
           }
         })
       }
