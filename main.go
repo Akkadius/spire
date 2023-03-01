@@ -18,6 +18,9 @@ func main() {
 		updater.NewUpdaterService(packageJson).CheckForUpdates()
 	}
 
+	// default
+	_ = os.Setenv("APP_ENV", "local")
+
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
 		Fatal(err)

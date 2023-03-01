@@ -65,11 +65,12 @@ var httpSet = wire.NewSet(
 )
 
 type appControllerGroups struct {
-	authControllers       []routes.Controller
-	helloWorldControllers []routes.Controller
-	v1controllers         []routes.Controller
-	v1controllersNoAuth   []routes.Controller
-	v1Analytics           []routes.Controller
+	authControllers            []routes.Controller
+	helloWorldControllers      []routes.Controller
+	v1controllersNoPermissions []routes.Controller
+	v1controllers              []routes.Controller
+	v1controllersNoAuth        []routes.Controller
+	v1Analytics                []routes.Controller
 }
 
 func NewRouter(
@@ -118,6 +119,18 @@ func NewRouter(
 				cg.authControllers,
 				[]echo.MiddlewareFunc{}...,
 			),
+			// non-crud v1 routes that don't need
+			// to go through permissions middleware
+			routes.NewControllerGroup(
+				"/api/v1/",
+				cg.v1controllersNoPermissions,
+				userContextMiddleware.HandleHeader(),
+				userContextMiddleware.HandleQuerystring(),
+				localUserAuthMiddleware.Handle(),
+				readOnlyModeMiddleware.Handle(),
+				v1RateLimit(),
+			),
+			// non-crud v1 routes subject to permissions
 			routes.NewControllerGroup(
 				"/api/v1/",
 				cg.v1controllers,
@@ -125,19 +138,23 @@ func NewRouter(
 				userContextMiddleware.HandleQuerystring(),
 				localUserAuthMiddleware.Handle(),
 				readOnlyModeMiddleware.Handle(),
+				permissionsMiddleware.Handle(),
 				v1RateLimit(),
 			),
+			// v1 controllers that require no auth
 			routes.NewControllerGroup(
 				"/api/v1/",
 				cg.v1controllersNoAuth,
 				v1RateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
+			// v1 analytics
 			routes.NewControllerGroup(
 				"/api/v1/",
 				cg.v1Analytics,
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
+			// v1 crud code generated routes
 			routes.NewControllerGroup(
 				"/api/v1/",
 				crudc.routes,
@@ -184,13 +201,15 @@ func provideControllers(
 		authControllers: []routes.Controller{
 			auth,
 		},
-		v1controllers: []routes.Controller{
+		v1controllersNoPermissions: []routes.Controller{
 			me,
 			analytics,
 			connections,
 			hello,
 			docs,
 			query,
+		},
+		v1controllers: []routes.Controller{
 			settingsController,
 			clientFilesController,
 			permissionsController,

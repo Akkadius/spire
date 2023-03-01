@@ -33,7 +33,7 @@ func NewPermissionsMiddleware(
 		logger:      logger,
 		cache:       cache,
 		permissions: permissions,
-		debug:       env.GetInt("DEBUG", "0"),
+		debug:       env.GetInt("PERMISSIONS_DEBUG", "0"),
 	}
 }
 
@@ -82,15 +82,11 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 						if !pass {
 							return c.JSON(
 								http.StatusForbidden,
-								echo.Map{"error": fmt.Sprintf("You do not have permission to %v this resource [%v]", r.getAccessDescription(c), resource)},
+								echo.Map{"error": fmt.Sprintf("You do not have permission to %v this resource [%v]", r.getAccessDescription(c), c.Request().URL.Path)},
 							)
 						}
-
-						//pp.Println(results)
-
 					}
 				}
-
 			}
 
 			return next(c)
