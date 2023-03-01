@@ -167,7 +167,7 @@
             :key="e.id"
           >
             <td>{{ commify(e.id) }}</td>
-            <td>
+            <td :style="(characterId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
 
               <div class="avatar-list avatar-list-stacked">
                 <img
@@ -191,7 +191,7 @@
 
               </div>
             </td>
-            <td>
+            <td :style="(zoneId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
               <a
                 class="ml-1"
                 @click="zoneId = e.zone.zoneidnumber; updateQueryState()"
@@ -200,7 +200,7 @@
               </a>({{ e.zone.zoneidnumber }})
             </td>
 
-            <td class="text-center">
+            <td class="text-center" :style="(eventType ? 'background-color: rgba(123, 113, 74, .1);' : '')">
               <a
                 class="ml-1"
                 @click="eventType = e.event_type_id; updateQueryState()"
