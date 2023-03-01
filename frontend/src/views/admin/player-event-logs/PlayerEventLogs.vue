@@ -1,15 +1,34 @@
 <template>
   <div>
 
-    <app-loader :is-loading="initialLoading"/>
 
     <v-runtime-template/>
 
     <eq-window
-      v-if="!initialLoading"
       class="pb-1"
       title="Player Event Log Explorer"
     >
+      <app-loader :is-loading="initialLoading"/>
+
+
+      <div
+        class="row justify-content-center"
+        style="position: absolute; top: -10px; z-index: 9999999; width: 100%"
+      >
+        <div class="col-6">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mt-3"
+          />
+        </div>
+      </div>
+
+
       <div v-if="!initialLoading">
         <div class="row mb-3">
           <div class="col-2 text-center font-weight-bold">
@@ -283,7 +302,6 @@ import {AA}                        from "@/app/aa";
 import {Zones}                     from "@/app/zones";
 import {Npcs}                      from "@/app/npcs";
 import {Items}                     from "@/app/items";
-import {ROUTE}                     from "@/routes";
 import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-api";
 import Timer                       from "@/app/timer/timer";
 import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
@@ -292,6 +310,7 @@ import hljs                        from "highlight.js";
 import {Navbar}                    from "@/app/navbar";
 import {Characters}                from "@/app/characters";
 import util                        from "util";
+import InfoErrorBanner             from "@/components/InfoErrorBanner.vue";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -339,6 +358,7 @@ import util                        from "util";
 export default {
   name: "PlayerEventLogs",
   components: {
+    InfoErrorBanner,
     "v-runtime-template": () => import("v-runtime-template"),
     LoaderFakeProgress,
     EqProgressBar,
@@ -351,6 +371,9 @@ export default {
       eventType: 0,
       zoneId: null,
       characterId: null,
+
+      notification: "",
+      error: "",
 
       refreshInterval: 5000,
 
@@ -676,13 +699,19 @@ export default {
       builder.orderBy(["id"])
       builder.orderDirection("desc")
 
-      // @ts-ignore
-      this.requesting = true
-      const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs({}, { params: builder.get() })
-      let events      = []
-      if (r.status === 200) {
-        events          = r.data
-        this.requesting = false
+      let events = []
+      try {
+        // @ts-ignore
+        this.requesting = true
+        const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs({}, { params: builder.get() })
+        if (r.status === 200) {
+          events          = r.data
+          this.requesting = false
+        }
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
       }
 
       // get total count
@@ -691,11 +720,17 @@ export default {
       builder.limit(10000000000000)
       builder.page(0)
 
-      SpireApi.v1().get(`player_event_logs/count`, { params: builder.get() }).then((r) => {
-        if (r.status === 200) {
-          this.totalRows = r.data.count
+      try {
+        SpireApi.v1().get(`player_event_logs/count`, { params: builder.get() }).then((r) => {
+          if (r.status === 200) {
+            this.totalRows = r.data.count
+          }
+        })
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
         }
-      })
+      }
 
       let shouldPreload = false
       let npcIds        = []

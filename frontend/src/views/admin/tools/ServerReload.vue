@@ -5,7 +5,7 @@
       class="row justify-content-center"
       style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
     >
-      <div class="col-4">
+      <div class="col-6">
         <info-error-banner
           style="width: 100%"
           :slim="true"
@@ -26,7 +26,8 @@
 
       <table
         v-if="reloadTypes && reloadTypes.length > 0"
-        class="eq-table eq-highlight-rows bordered log-settings minified-inputs">
+        class="eq-table eq-highlight-rows bordered log-settings minified-inputs"
+      >
         <thead class="eq-table-floating-header">
         <tr>
           <th class="text-center" style="width: 120px">Reload</th>
@@ -75,9 +76,15 @@ export default {
   },
   methods: {
     async getReloadTypes() {
-      const r = await SpireApi.v1().get("eqemuserver/reload-types")
-      if (r.status === 200) {
-        this.reloadTypes = r.data.data
+      try {
+        const r = await SpireApi.v1().get("eqemuserver/reload-types")
+        if (r.status === 200) {
+          this.reloadTypes = r.data.data
+        }
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
       }
     },
     async reload(e) {

@@ -61,9 +61,16 @@
       </div>
 
       <div id="permissions" v-if="canViewPermissions() && permissionsLoaded">
+
+        <div class="text-center">
+          Everything below are comprehensive of API resources provided by Spire. <br>Not all resources may be in use by Spire tools or resources.
+        </div>
+
+        <hr>
+
         <!-- Header -->
-        <div class="row mt-1 mb-3">
-          <div class="col-5 text-right">
+        <div class="row mt-3 mb-3">
+          <div class="col-5 text-right font-weight-bold">
             Permissions
           </div>
           <div class="col-1"></div>
