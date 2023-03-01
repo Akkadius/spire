@@ -692,11 +692,9 @@ export default {
     },
 
     submitServerConfig: async function () {
-      const result = await OcculusClient.postServerConfig(this.config)
       try {
-        const r = await SpireApi.v1().post("admin/serverconfig", this.config)
+        const r = await SpireApi.v1().post('admin/serverconfig', this.config)
         if (r.status === 200) {
-          this.config       = r.data
           this.notification = "Server configuration updated!"
         }
       } catch (e) {

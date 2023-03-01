@@ -1,24 +1,24 @@
 <template>
   <div>
-
-    <div
-      class="row justify-content-center"
-      style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
-    >
-      <div class="col-4">
-        <info-error-banner
-          style="width: 100%"
-          :slim="true"
-          :notification="notification"
-          :error="error"
-          @dismiss-error="error = ''"
-          @dismiss-notification="notification = ''"
-          class="mt-3"
-        />
-      </div>
-    </div>
-
     <eq-window title="Crash Logs" v-if="Object.keys(serverConfig).length > 0">
+
+      <div
+        class="row justify-content-center"
+        style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
+      >
+        <div class="col-4">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mt-3"
+          />
+        </div>
+      </div>
+
       <div class="form-group col-md-12 mb-0 p-0">
         <label class="form-label">Crash Logs Webhook</label>
         <small class="d-block text-muted">
@@ -43,9 +43,9 @@
 </template>
 
 <script>
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import EqWindow        from "@/components/eq-ui/EQWindow.vue";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
+import {SpireApi}      from "@/app/api/spire-api";
 
 export default {
   components: { InfoErrorBanner, EqWindow },
@@ -60,7 +60,17 @@ export default {
     }
   },
   async created() {
-    this.serverConfig = await OcculusClient.getServerConfig()
+    try {
+      const r = await SpireApi.v1().get('admin/serverconfig')
+      if (r.status === 200) {
+        this.serverConfig = r.data
+      }
+    } catch (e) {
+      // error notify
+      if (e.response && e.response.data && e.response.data.error) {
+        this.error = e.response.data.error
+      }
+    }
 
     if (!this.serverConfig['web-admin'].discord) {
       this.serverConfig['web-admin'].discord = {};
@@ -74,11 +84,19 @@ export default {
   methods: {
 
     submitServerConfig: async function () {
-      const result = await OcculusClient.postServerConfig(this.serverConfig)
 
-      if (result.success) {
-        this.notification = "Saved crash webhook!"
+      try {
+        const r = await SpireApi.v1().post('admin/serverconfig', this.serverConfig)
+        if (r.status === 200) {
+          this.notification = "Saved crash webhook!"
+        }
+      } catch (e) {
+        // error notify
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
       }
+
     }
   }
 }

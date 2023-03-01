@@ -74,22 +74,6 @@
                 Ready for players...
               </span>
 
-                <router-link
-                  class="text-muted ml-2"
-                  :to="`zoneservers/${zone.client_port}/logs?zone=${zone.zone_long_name}`"
-                  style="font-size:12px"
-                >
-                  <i class="fe fe-play"></i> Stream Logs
-                </router-link>
-
-                <router-link
-                  class="text-muted ml-2"
-                  :to="`zoneservers/${zone.client_port}/netstats`"
-                  style="font-size:12px"
-                >
-                  <i class="fe fe-airplay"></i> Network Stats
-                </router-link>
-
               </h4>
             </div>
 

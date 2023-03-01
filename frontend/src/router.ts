@@ -283,16 +283,6 @@ const router = new Router({
           meta: {title: "Zone Servers" },
         },
         {
-          path: 'zoneservers/:port/netstats',
-          component: () => import('./views/admin/NetStats.vue'),
-          meta: {title: "Netstats", occulus: true},
-        },
-        {
-          path: 'zoneservers/:port/logs',
-          component: () => import('./views/admin/ZoneLogs.vue'),
-          meta: {title: "Zone Logs (Streamed)", occulus: true},
-        },
-        {
           path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
           component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
           meta: {title: "Discord Crash Webhook", occulus: true},
