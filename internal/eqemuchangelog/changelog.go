@@ -225,10 +225,9 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 					}
 
 					msg += fmt.Sprintf(
-						"* %v %v ([%v](https://github.com/%v)) %v\n",
+						"* %v %v @%v %v\n",
 						e.Message,
 						pr,
-						e.Author,
 						e.Author,
 						e.Time.Format("2006-01-02"),
 					)
