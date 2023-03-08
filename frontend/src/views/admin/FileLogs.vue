@@ -302,6 +302,10 @@ export default {
   },
   watch: {
     '$route'() {
+      this.fileToWatch = ""
+      this.fileCursor = 0
+      this.stopLogStream()
+
       this.loadQueryState()
       this.init()
     },
