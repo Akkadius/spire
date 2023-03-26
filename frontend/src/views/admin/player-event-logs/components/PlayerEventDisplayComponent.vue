@@ -25,8 +25,33 @@
       <item-popover
         :item="itemData[event(e).item_id]"
         class="mr-1 font-weight-bold d-inline-block"
+      /> ({{ event(e).charges }})
+      for <eq-cash-display
+        class="font-weight-bold"
+        :price="parseInt(event(e).price)"
       />
       from trader <span class="font-weight-bold">{{ event(e).trader_name }}</span>
+      remaining player balance
+      <eq-cash-display
+        class="font-weight-bold"
+        :price="parseInt(event(e).player_money_balance)"
+      />
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.TRADER_SELL">
+      Sold item
+      <item-popover
+        :item="itemData[event(e).item_id]"
+        class="mr-1 font-weight-bold d-inline-block"
+      /> ({{ event(e).charges }})
+      for <eq-cash-display
+        class="font-weight-bold"
+        :price="parseInt(event(e).price)"
+      />
+
+      as a trader to <span class="font-weight-bold">{{ event(e).buyer_name }}</span>
+
+      from trader
       remaining player balance
       <eq-cash-display
         class="font-weight-bold"
