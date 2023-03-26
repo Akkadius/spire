@@ -2,21 +2,35 @@
   <div class="d-inline-block">
 
     <div v-if="e.event_type_id === PLAYER_EVENT.TASK_UPDATE">
-      Progressed task update <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{event(e).task_id}})
+      Progressed task update <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{ event(e).task_id }})
       <span class="font-weight-bold">activity_id</span> {{ event(e).activity_id }}
       <span class="font-weight-bold">done_count</span> {{ event(e).done_count }}
     </div>
 
     <div v-if="e.event_type_id === PLAYER_EVENT.TASK_COMPLETE">
-      Completed task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{event(e).task_id}})
+      Completed task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{ event(e).task_id }})
     </div>
 
     <div v-if="e.event_type_id === PLAYER_EVENT.ITEM_CREATION">
-      Server created item <item-popover
-      :item="itemData[event(e).item_id]"
-      class="mr-1 font-weight-bold d-inline-block"
-    />
+      Server created item
+      <item-popover
+        :item="itemData[event(e).item_id]"
+        class="mr-1 font-weight-bold d-inline-block"
+      />
       ({{ event(e).charges }})
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.SPLIT_MONEY">
+      Split
+      <eq-cash-display
+        class="font-weight-bold"
+        :price="calcMoney(event(e))"
+      />
+      remaining player balance
+      <eq-cash-display
+        class="font-weight-bold"
+        :price="parseInt(event(e).player_money_balance)"
+      />
     </div>
 
     <div v-if="e.event_type_id === PLAYER_EVENT.GM_COMMAND">
@@ -126,7 +140,7 @@
     <div
       v-if="e.event_type_id === PLAYER_EVENT.POSSIBLE_HACK"
     >
-      {{event(e).message}}
+      {{ event(e).message }}
     </div>
 
     <div
@@ -273,7 +287,7 @@
             />
 
 
-<!--            <span class="font-weight-bold">{{ npcData[event(e).npc_id] }}</span>-->
+            <!--            <span class="font-weight-bold">{{ npcData[event(e).npc_id] }}</span>-->
           </div>
         </div>
         <div class="row mt-3">
@@ -492,6 +506,7 @@ export default {
     this.$forceUpdate()
   },
   methods: {
+
     expandEvent(e) {
       this.expandedEvent[e.id] = 1
       this.$forceUpdate()
