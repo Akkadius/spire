@@ -37,7 +37,6 @@ export default {
         { keys: "H", desc: "Toggles Navigation menu hide/show"},
         { keys: "P", desc: "Start server modal (Admin)"},
         { keys: "S", desc: "Stop server modal (Admin)"},
-        { keys: "S", desc: "Stop server modal (Admin)"},
         { keys: "R", desc: "Restart server modal (Admin)"},
         { keys: "C", desc: "Cancel server modal (Admin)"},
       ]

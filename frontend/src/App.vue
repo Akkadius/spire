@@ -102,10 +102,13 @@ export default {
         }
       };
 
-      document.onkeyup = (e) => {
+      window.onblur = () => {
+        this.$bvModal.hide('keypress-commands-modal')
+      }
+
+      window.onkeyup = (e) => {
         e = e || window.event;//Get event
         if (!e.ctrlKey && e.key !== "Control") return;
-        let code = e.which || e.keyCode;//Get key code
 
         this.$bvModal.hide('keypress-commands-modal')
       };
