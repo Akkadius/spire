@@ -20,6 +20,20 @@
       ({{ event(e).charges }})
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.TRADER_PURCHASE">
+      Purchased item
+      <item-popover
+        :item="itemData[event(e).item_id]"
+        class="mr-1 font-weight-bold d-inline-block"
+      />
+      from trader <span class="font-weight-bold">{{ event(e).trader_name }}</span>
+      remaining player balance
+      <eq-cash-display
+        class="font-weight-bold"
+        :price="parseInt(event(e).player_money_balance)"
+      />
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.SPLIT_MONEY">
       Split
       <eq-cash-display
