@@ -1,6 +1,14 @@
 <template>
   <div class="d-inline-block">
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.ITEM_CREATION">
+      Server created item <item-popover
+      :item="itemData[event(e).item_id]"
+      class="mr-1 font-weight-bold d-inline-block"
+    />
+      ({{ event(e).charges }})
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.GM_COMMAND">
       Used GM command <span class="font-weight-bold">{{ event(e).message }}</span>
       <span v-if="event(e).target && event(e).target !== 'NONE'">

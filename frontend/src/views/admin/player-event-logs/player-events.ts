@@ -45,6 +45,7 @@ export const PLAYER_EVENT = {
   KILLED_NPC: 44,
   KILLED_NAMED_NPC: 45,
   KILLED_RAID_NPC: 46,
+  ITEM_CREATION: 47,
 };
 
 
