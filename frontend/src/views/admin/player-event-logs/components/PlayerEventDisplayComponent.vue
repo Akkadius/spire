@@ -214,13 +214,6 @@
       from the ground!
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.GROUNDSPAWN_PICKUP">
-      Picked up
-      <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
-      ({{ event(e).charges }})
-      from the ground!
-    </div>
-
     <div v-if="e.event_type_id === PLAYER_EVENT.TASK_ACCEPT">
       Accepted task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{ event(e).task_id }})
       <span v-if="event(e).npc_id">
