@@ -5,6 +5,7 @@
       ref="ninjaKeys"
       placeholder="Where would you like to go?"
     />
+    <keypress-commands-modal/>
     <router-view></router-view>
   </div>
 </template>
@@ -19,9 +20,11 @@ import {AppEnv}                 from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 import {ROUTE}                  from "@/routes";
 import UserContext              from "@/app/user/UserContext";
+import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.vue";
 
 export default {
   name: "App",
+  components: { KeypressCommandsModal },
   async beforeMount() {
     await AppEnv.init()
   },
@@ -67,12 +70,20 @@ export default {
     },
 
     loadKeypressBindings() {
-      document.onkeydown = function (e) {
+      document.onkeydown = (e) => {
         e = e || window.event;//Get event
-        if (!e.ctrlKey) return;
+        if (!e.ctrlKey && e.key !== "Control") return;
         let code = e.which || e.keyCode;//Get key code
 
+        // if command is accompanied by another key, dismiss commands modal
+        if (code !== 17) {
+          this.$bvModal.hide('keypress-commands-modal')
+        }
+
         switch (code) {
+          case 17: // just command
+            this.$bvModal.show('keypress-commands-modal');
+            break;
           case 75: // Ctrl+K
             e.preventDefault();
             const ninja = document.querySelector('ninja-keys');
@@ -89,6 +100,14 @@ export default {
             // e.stopPropagation();
             break;
         }
+      };
+
+      document.onkeyup = (e) => {
+        e = e || window.event;//Get event
+        if (!e.ctrlKey && e.key !== "Control") return;
+        let code = e.which || e.keyCode;//Get key code
+
+        this.$bvModal.hide('keypress-commands-modal')
       };
 
       window.addEventListener("keypress", (e) => {
