@@ -1,6 +1,16 @@
 <template>
   <div class="d-inline-block">
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.TASK_UPDATE">
+      Progressed task update <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{event(e).task_id}})
+      <span class="font-weight-bold">activity_id</span> {{ event(e).activity_id }}
+      <span class="font-weight-bold">done_count</span> {{ event(e).done_count }}
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.TASK_COMPLETE">
+      Completed task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{event(e).task_id}})
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.ITEM_CREATION">
       Server created item <item-popover
       :item="itemData[event(e).item_id]"
