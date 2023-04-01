@@ -466,9 +466,17 @@ export default {
       let keys = []
       for (let n of nav) {
         if (n.label && n.to) {
+          let adminPanelRouteEnabled = false
+          if (n.to.includes(ROUTE.ADMIN_ROOT)) {
+            if (!AppEnv.isAppLocal()) {
+              continue;
+            }
+            adminPanelRouteEnabled = true
+          }
+
           keys.push({
             id: n.label,
-            title: n.label,
+            title:  (adminPanelRouteEnabled ? '[Admin] ' : '') + n.label,
             handler: () => {
               this.$router.push(n.to).catch((e) => {
               })
@@ -479,9 +487,17 @@ export default {
         // children
         if (n.navs) {
           for (let c of n.navs) {
+            let adminPanelRouteEnabled = false
+            if (c.to.includes(ROUTE.ADMIN_ROOT)) {
+              if (!AppEnv.isAppLocal()) {
+                continue;
+              }
+              adminPanelRouteEnabled = true
+            }
+
             keys.push({
               id: `[${n.label}] ${c.title}`,
-              title: `[${n.label}] ${c.title}`,
+              title: (adminPanelRouteEnabled ? '[Admin] ' : '') + `[${n.label}] ${c.title}`,
               handler: () => {
                 this.$router.push(c.to).catch((e) => {
                 })

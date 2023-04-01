@@ -70,10 +70,12 @@ export default {
     },
 
     loadKeypressBindings() {
+      let controlPressed = false;
+
       document.onkeydown = (e) => {
-        e = e || window.event;//Get event
+        e = e || window.event; //Get event
         if (!e.ctrlKey && e.key !== "Control") return;
-        let code = e.which || e.keyCode;//Get key code
+        let code = e.which || e.keyCode; //Get key code
 
         // if command is accompanied by another key, dismiss commands modal
         if (code !== 17) {
@@ -82,17 +84,29 @@ export default {
 
         switch (code) {
           case 17: // just command
+            if (controlPressed) {
+              this.$bvModal.hide('keypress-commands-modal')
+              return
+            }
+
+            // don't show modal help window if search box is open
+            const n = document.querySelector('ninja-keys');
+            if (n.visible) {
+              break;
+            }
             this.$bvModal.show('keypress-commands-modal');
             break;
-          case 75: // Ctrl+K
+          case 191: // Ctrl + /
+          case 75: // Ctrl + K
             e.preventDefault();
-            const ninja = document.querySelector('ninja-keys');
 
+            const ninja = document.querySelector('ninja-keys');
             setTimeout(() => {
               ninja.open()
             }, 1)
 
             e.stopPropagation();
+
             break;
           case 87://Block Ctrl+W
           case 83://Block Ctrl+S
@@ -100,14 +114,32 @@ export default {
             // e.stopPropagation();
             break;
         }
+
+        controlPressed = true;
       };
 
-      window.onblur = () => {
+      document.onkeyup = (e) => {
+        e = e || window.event; //Get event
+        if (!e.ctrlKey && e.key !== "Control") return;
+        let code = e.which || e.keyCode; //Get key code
+
+        setTimeout(() => {
+          if (document.getElementById('keypress-commands-modal')) {
+            this.$bvModal.hide('keypress-commands-modal')
+          }
+          controlPressed = false;
+        }, 1)
+      };
+
+      window.onblur  = () => {
+        this.$bvModal.hide('keypress-commands-modal')
+      }
+      window.onfocus = () => {
         this.$bvModal.hide('keypress-commands-modal')
       }
 
       window.onkeyup = (e) => {
-        e = e || window.event;//Get event
+        e = e || window.event; //Get event
         if (!e.ctrlKey && e.key !== "Control") return;
 
         this.$bvModal.hide('keypress-commands-modal')
