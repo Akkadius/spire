@@ -167,11 +167,23 @@
             </li>
 
           </ul>
+
+
+
         </div>
 
         <h6 class="navbar-heading" v-if="appVersion">
           Version ({{ appEnv }}) {{ appVersion }}
         </h6>
+
+        <ul class="navbar-nav mb-md-3">
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-toggle="modal" @click="openSearch()">
+              <i class="fe fe-search mr-2"></i>
+              Search (Ctrl + K)
+            </a>
+          </li>
+        </ul>
 
         <!-- Push content down -->
         <div class="mt-auto"></div>
@@ -461,6 +473,13 @@ export default {
   },
 
   methods: {
+
+    openSearch() {
+      const ninja = document.querySelector('ninja-keys')
+      setTimeout(() => {
+        ninja.open();
+      }, 1)
+    },
 
     parseNinjaNav(nav) {
       let keys = []
