@@ -536,5 +536,6 @@ html, body{
 }
 
 .lazy-image-unloaded {
-    min-height: 500px !important;
+    height: 300px !important;
+    width: 100%;
 }

@@ -38,7 +38,7 @@ export default class LazyImageLoader {
           // @ts-ignore
           image.src = dataSrc;
           image.classList.add('fade-in')
-          image.classList.remove('lazy-image-unload')
+          image.classList.remove('lazy-image-unloaded')
         }
       }
     }
