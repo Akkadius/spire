@@ -161,6 +161,18 @@ Spire admin now has a rich interface where you can download new server releases,
 
 ![image](https://user-images.githubusercontent.com/3319450/229334970-cae8036a-5d15-44ce-87f5-67bcc9fddb09.png)
 
+### [Spire Admin] Permissions
+
+If you'd like to limit access of other users to your server and especially sensitive areas. There are permissions that cover access to various resources within the admin section of Spire in your local installation
+
+![image](https://user-images.githubusercontent.com/3319450/229336838-8e7a73d7-8e05-4737-a89f-1a61e0cae0e1.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229336854-19a2b2d8-8937-497f-ae47-57ba21d27e22.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229336858-d0becf18-f67f-45aa-b543-1db54685e774.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229336867-70706d23-d286-4ada-a04a-039f0a6903fe.png)
+
 ### Spire Setup
 
 Spire when ran locally will now redirect users to a one-time initial setup where users can choose whether they want their install to be guarded by authentication or not.
