@@ -38,6 +38,7 @@ export default class LazyImageLoader {
         if (dataSrc && LazyImageLoader.elementInViewport(image)) {
           // @ts-ignore
           image.src = dataSrc;
+          image.classList.add('fade-in')
           image.classList.add('lazy-image')
         }
       }
