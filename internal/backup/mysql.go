@@ -72,6 +72,7 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 	runPath := filepath.Join(m.pathmanager.GetEQEmuServerPath(), "bin", "world")
 	cmd := exec.Command(runPath, args...)
 	stdout, _ := cmd.StdoutPipe()
+	cmd.Stderr = cmd.Stdout
 	err := cmd.Start()
 	if err != nil {
 		m.logger.Error(err)
@@ -81,11 +82,9 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 	scanner := bufio.NewScanner(stdout)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		m.logger.Printf("[Occulus] %v\n", scanner.Text())
+		m.logger.Printf("[Backup] %v\n", scanner.Text())
 		output += fmt.Sprintf("%v\n", scanner.Text())
 	}
-
-	output = StripAnsi(output)
 
 	err = cmd.Wait()
 	if err != nil {

@@ -1034,3 +1034,11 @@ h6.eq-header {
     background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
     padding: 15px;
 }
+
+.eq-list ul {
+    list-style-type: circle !important;
+}
+
+.eq-list li {
+    list-style-type: circle !important;
+}

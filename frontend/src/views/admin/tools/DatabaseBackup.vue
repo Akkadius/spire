@@ -47,8 +47,7 @@
     </div>
 
     <div class="row">
-      <div class="col-3 text-right mt-3"></div>
-      <div class="col-9 text-left mt-3">
+      <div class="col-12 text-left mt-3">
         <info-error-banner
           :slim="true"
           :notification="notification"
@@ -202,6 +201,13 @@ export default {
 
             if (r.data.file_path) {
               this.downloadBackup(path.basename(r.data.file_path))
+            }
+
+            for (const l of r.data.stdout.split("\n")) {
+              if (l.includes("Error")) {
+                this.error = l
+                break
+              }
             }
           }
         } catch (e) {
