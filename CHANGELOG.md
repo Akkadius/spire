@@ -66,6 +66,14 @@ Critical bug fixes have also been made to the HRM
 
 ![image](https://user-images.githubusercontent.com/3319450/229334070-96250391-8cc4-4c9f-b00c-e267d0f96969.png)
 
+### [Spire Admin] Server Reloading
+
+You can trigger server reloads directly through Spire. Reloads are triggered globally and reload data from the database into the server memory state.
+
+Many tools already utilize this when editing related data.
+
+![image](https://user-images.githubusercontent.com/3319450/229336522-158c268e-48bb-4180-8ca3-e53a9bc4e446.png)
+
 ### [Spire Admin] Server Rules
 
 List, search, edit your server rules in real time. Spire will reload rules directly on your server immediately so you do not need to manually reload them in game. Super handy!
