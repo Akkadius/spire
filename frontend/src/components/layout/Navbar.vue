@@ -167,9 +167,6 @@
             </li>
 
           </ul>
-
-
-
         </div>
 
         <h6 class="navbar-heading" v-if="appVersion">
