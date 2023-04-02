@@ -27,16 +27,6 @@ export default class LazyImageLoader {
     };
   }
 
-  public static stopAll() {
-    let images   = document.getElementsByClassName("lazy-image");
-    for (let i = 0; i < images.length; i++) {
-      let image = <HTMLimageElement>images.item(i)
-      if (image) {
-        image.pause()
-      }
-    }
-  }
-
   public static handleRender = LazyImageLoader.debounce(() => {
     // @ts-ignore
     let images   = document.getElementsByClassName("lazy-image");
