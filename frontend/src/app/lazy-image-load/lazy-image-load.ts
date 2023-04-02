@@ -33,13 +33,12 @@ export default class LazyImageLoader {
     for (let i = 0; i < images.length; i++) {
       let image = images.item(i)
       if (image) {
-        console.log(image)
         let dataSrc = image.getAttribute("data-src");
         if (dataSrc && LazyImageLoader.elementInViewport(image)) {
           // @ts-ignore
           image.src = dataSrc;
           image.classList.add('fade-in')
-          image.classList.add('lazy-image')
+          image.classList.remove('lazy-image-unload')
         }
       }
     }

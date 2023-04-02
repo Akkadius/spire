@@ -63,7 +63,7 @@ export default {
             }
           }
         })
-
+        
         const md = require("markdown-it")({
           html: true,
           xhtmlOut: false,
@@ -105,11 +105,12 @@ export default {
             $heading.append($anchor);
           });
 
-          document.querySelectorAll("img").forEach((e) => {
+          document.querySelectorAll("#changelog img").forEach((e) => {
             if (e) {
               e.setAttribute("data-src", e.src)
               e.style.minHeight = 500;
               e.classList.add('lazy-image')
+              e.classList.add('lazy-image-unloaded')
               e.src = "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
             }
           });
