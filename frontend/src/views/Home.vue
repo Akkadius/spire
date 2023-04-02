@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" style="padding-left: 15px !important; padding-right: 15px !important;">
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-12 col-xl-12 content-pop">
+      <div class="col-12 col-lg-12 col-xl-12 content-pop mt-0">
 
         <div class="container-fluid">
 
@@ -108,6 +108,7 @@ export default {
           document.querySelectorAll("img").forEach((e) => {
             if (e) {
               e.setAttribute("data-src", e.src)
+              e.style.minHeight = 500;
               e.classList.add('lazy-image')
               e.src = "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
             }
