@@ -46,7 +46,7 @@
           </div>
 
           <table
-            v-if="Object.keys(filteredClientList).length > 0"
+            v-if="clientList && clientList.length > 0 && loaded && Object.keys(filteredClientList).length > 0"
             class="table table-sm table-nowrap players-online sticky"
           >
             <thead class="sticky">
