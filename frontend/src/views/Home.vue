@@ -1,8 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-10 content-pop">
-        <!--        <page-header title="Components" pre-title="Preview Components"/>-->
+      <div class="col-12 col-lg-12 col-xl-12 content-pop">
 
         <div class="container-fluid">
 
@@ -20,11 +19,12 @@
 
 <script>
 
-import EqWindow         from "@/components/eq-ui/EQWindow";
-import UserContext from "@/app/user/UserContext";
-import {SpireApi}  from "../app/api/spire-api";
-import * as util   from "util";
-import VideoViewer      from "../app/video-viewer/video-viewer";
+import EqWindow        from "@/components/eq-ui/EQWindow";
+import UserContext     from "@/app/user/UserContext";
+import {SpireApi}      from "../app/api/spire-api";
+import * as util       from "util";
+import VideoViewer     from "../app/video-viewer/video-viewer";
+import LazyImageLoader from "@/app/lazy-image-load/lazy-image-load";
 
 export default {
   components: {
@@ -105,6 +105,14 @@ export default {
             $heading.append($anchor);
           });
 
+          document.querySelectorAll("img").forEach((e) => {
+            if (e) {
+              e.setAttribute("data-src", e.src)
+              e.classList.add('lazy-image')
+              e.src = "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+            }
+          });
+
           document.querySelectorAll("table").forEach((e) => {
             if (e) {
               e.classList.add('eq-table')
@@ -115,15 +123,16 @@ export default {
 
         }, 100)
 
-
-
       }
     })
+
+    LazyImageLoader.addScrollListener()
 
     // auto play videos that are in the viewport
     window.addEventListener("scroll", this.handleRender);
     setTimeout(() => {
       this.handleRender()
+      LazyImageLoader.handleRender()
     }, 500)
   },
   methods: {
@@ -139,6 +148,7 @@ export default {
   },
   deactivated() {
     window.removeEventListener("scroll", this.handleRender, false)
+    LazyImageLoader.destroyScrollListener()
   }
 }
 </script>
