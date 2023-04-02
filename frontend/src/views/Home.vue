@@ -7,7 +7,7 @@
 
           <div class="row" id="changelog">
             <div class="col-12">
-              <v-runtime-template class="changelog" :template="changelog"/>
+              <v-runtime-template class="changelog markdown-body" :template="changelog"/>
             </div>
           </div>
 
@@ -205,6 +205,39 @@ export default {
   color: red;
   background-color: rgba(110, 118, 129, .4);
   border-radius: 6px;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.6em;
+  font-size: 2em;
+  border-bottom: 1px solid #6666665e;
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.6em;
+  border-bottom: 1px solid #6666665e;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: black;
 }
 
 </style>
