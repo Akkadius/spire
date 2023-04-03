@@ -1,3 +1,7 @@
+## [3.0.1] 4/3/2023 - Spire Admin
+
+* Fix issue with Windows resolving `localhost` to ipv6 for server API connections
+
 ## [3.0.0] 4/2/2023 - Spire Admin
 
 This release is nothing short of massive. Buckle up! The changelog notes are hefty!

@@ -76,7 +76,7 @@ func (c *Client) Connect() error {
 	}
 
 	d := 300 * time.Millisecond
-	c.t, err = telnet.DialTimeout("tcp", "localhost:9000", d)
+	c.t, err = telnet.DialTimeout("tcp", "127.0.0.1:9000", d)
 	if err != nil {
 		return err
 	}
