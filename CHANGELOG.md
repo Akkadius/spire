@@ -234,7 +234,6 @@ My pressing the **Control** key, you can now see a modal that will show you Spir
 ### Fixes
 
 * Fixed [Bug] Merchant Editor creates new merchant list entries with max status of 0 https://github.com/Akkadius/spire/issues/107
-* Fix 
 
 ## [2.6.1]
 
