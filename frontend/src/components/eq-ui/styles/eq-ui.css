@@ -809,10 +809,10 @@ table.eq-table tr:nth-child(even) {
     background-color: rgba(255, 255, 255, .03);
 }
 
-.eq-table a:link,
-.eq-table a:visited,
-.eq-table a:active,
-.eq-table a {
+.eq-table a:link:not(.btn),
+.eq-table a:visited:not(.btn),
+.eq-table a:active:not(.btn),
+.eq-table a:not(.btn) {
     color: #8aa3ff;
     -moz-transition: all .05s ease;
     -o-transition: all .05s ease;

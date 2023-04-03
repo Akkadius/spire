@@ -48,25 +48,25 @@
                   <i class="fa fa-trash"></i>
                 </b-button>
 
-                <b-button
-                  @click="editItem(item.id)"
+                <router-link
+                  :to="ROUTE.ITEM_EDIT.replace('%s', item.id)"
                   size="sm"
                   style="width: 28px; height: 28px"
                   title="Edit"
-                  class="btn btn-dark btn-outline-success mr-2"
+                  class="btn btn-dark btn-sm btn-outline-success mr-2"
                 >
                   <i class="fa fa-pencil-square"></i>
-                </b-button>
+                </router-link>
 
-                <b-button
-                  @click="editItem(item.id, true)"
+                <router-link
+                  :to="ROUTE.ITEM_EDIT.replace('%s', item.id) + '?clone=true'"
                   size="sm"
                   style="width: 30px; height: 28px"
                   title="Clone"
-                  variant="outline-light"
+                  class="btn btn-dark btn-sm btn-outline-light mr-2"
                 >
                   <i class="ra ra-double-team"></i>
-                </b-button>
+                </router-link>
 
               </td>
               <td>
@@ -117,6 +117,7 @@ export default {
       title: "",
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
+      ROUTE: ROUTE,
     }
   },
   mounted() {
@@ -142,15 +143,6 @@ export default {
 
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    },
-    editItem(itemId, clone = false) {
-      this.$router.push(
-        {
-          path: util.format(ROUTE.ITEM_EDIT + (clone ? "?clone" : ""), itemId),
-          query: {}
-        }
-      ).catch(() => {
-      })
     },
     getClasses(item) {
       let classes      = []
