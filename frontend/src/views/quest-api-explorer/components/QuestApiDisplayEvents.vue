@@ -12,7 +12,7 @@
       </div>
 
       <pre
-        id="event-content"
+        :id="event"
         class="ml-0 mb-4 code-display"
         style="width: 100%; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
       >
@@ -54,7 +54,7 @@ export default {
       );
     },
     copyToClip(e) {
-      ClipBoard.copyFromElement("event-content")
+      ClipBoard.copyFromElement(e)
 
       const event = e.split("-")[1]
       Analytics.trackCountsEvent("clipboard_copy_content", event)
