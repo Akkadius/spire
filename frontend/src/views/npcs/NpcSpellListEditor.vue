@@ -599,7 +599,7 @@ export default {
               "minlevel": 0,
               "maxlevel": 0,
               "manacost": -1,
-              "recast_delay": 60,
+              "recast_delay": -1,
               "priority": 1,
               "resist_adjust": null,
               "min_hp": 0,
