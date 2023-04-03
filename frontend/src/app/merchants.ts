@@ -261,6 +261,8 @@ export class Merchants {
       probability: 100,
       min_expansion: -1,
       max_expansion: -1,
+      min_status: 0,
+      max_status: 255,
       bucket_comparison: 0,
     }
 

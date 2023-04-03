@@ -228,6 +228,8 @@ export default {
         { desc: "Alternate Currency Cost", field: "alt_currency_cost", fType: "text" },
         { desc: "Enabled with Classes", field: "classes_required", fType: "classes" },
         { desc: "Probability", field: "probability", fType: "range", min: 0, max: 100 },
+        { desc: "Min Status", field: "min_status", fType: "text" },
+        { desc: "Max Status", field: "max_status", fType: "text" },
         { desc: "Min Expansion", field: "min_expansion", fType: "content-expansion" },
         { desc: "Max Expansion", field: "max_expansion", fType: "content-expansion" },
         { desc: "Enabled on Content Flag(s)", field: "content_flags", fType: "content-flag" },
