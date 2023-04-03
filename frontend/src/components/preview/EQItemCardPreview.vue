@@ -316,6 +316,13 @@
       </div>
     </div>
 
+    <!-- Food / Drink -->
+    <div v-if="[14, 15].includes(itemData.itemtype)" class="mt-3 row">
+      <div class="col-12">
+        {{ getFoodDescription() }}
+      </div>
+    </div>
+
     <!-- Faction -->
     <div v-for="i in 4" :key="i">
       <div class="mt-1 row" v-if="itemData['factionmod_' + i] > 0 && factionNames[itemData['factionmod_' + i]]">
@@ -597,6 +604,10 @@ export default {
     }
   },
   methods: {
+
+    getFoodDescription() {
+      return Items.getFoodDescription(this.itemData)
+    },
 
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

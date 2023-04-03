@@ -1158,6 +1158,58 @@
               </div>
             </eq-tab>
 
+            <eq-tab name="Food" class="minified-inputs">
+              <div
+                class="row"
+                :key="field.field"
+                v-for="field in
+                   [
+                     {
+                       description: 'Consumption Rate',
+                       field: 'casttime_',
+                     },
+                   ]"
+              >
+                <div class="col-5 text-right mr-3 p-0 mt-2">
+                  {{ field.description }}
+                </div>
+                <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                  <b-form-input
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    v-if="!field.selectData && !field.type"
+                    :id="field.field"
+                    v-model.number="item[field.field]"
+                  />
+
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="d-inline-block mt-2 mb-2"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="item[field.field]"
+                    @input="item[field.field] = $event"
+                    v-if="field.type === 'bool'"
+                  />
+
+                  <select
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    v-model.number="item[field.field]"
+                    class="form-control"
+                    v-if="field.selectData"
+                  >
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
+                    >
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+
+                </div>
+              </div>
+            </eq-tab>
+
             <eq-tab name="Charm" class="minified-inputs">
               <div
                 class="row"
@@ -1892,8 +1944,11 @@ export default {
     },
     'item.casttime': function (newVal, oldVal) {
       if (newVal !== oldVal && this.item) {
-        this.item.casttime_ = this.item.casttime
-        console.log("casttime_ is [%s]", this.item.casttime_)
+        // don't force this value for food and drink
+        if (![14, 15].includes(this.item.itemtype)) {
+          this.item.casttime_ = this.item.casttime
+          console.log("casttime_ is [%s]", this.item.casttime_)
+        }
       }
     },
 
