@@ -591,13 +591,13 @@
                     </div>
                     <div class="col-2">
                       <div v-if="field.category === 'Description'">
-                        <router-link
+                        <a
                           class="btn btn-warning btn-sm mt-2"
-                          tag="button"
-                          :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
+                          :target="field.field"
+                          :href="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
                         >
                           <i class="ra ra-scroll-unfurled mr-1"></i> Editor
-                        </router-link>
+                        </a>
                       </div>
                     </div>
                   </div>
