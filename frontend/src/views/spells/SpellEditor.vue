@@ -26,6 +26,8 @@
 
           <eq-tabs
             v-if="spell && spell.id >= 0"
+            :selected="tabSelected"
+            @on-selected="tabSelected = $event; updateQueryState()"
             id="spell-edit-card"
             class="spell-edit-card"
             @mouseover.native="previewSpell(false)"
@@ -1734,6 +1736,8 @@ export default {
   },
   data() {
     return {
+      tabSelected: "Basic",
+
       spell: null, // spell record data
 
       // constants
@@ -1825,6 +1829,28 @@ export default {
     this.load()
   },
   methods: {
+
+    updateQueryState() {
+      let q = {}
+
+      if (this.tabSelected !== "") {
+        q.tab = this.tabSelected
+      }
+
+      this.$router.replace(
+        {
+          path: this.$route.path,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.tab && this.$route.query.tab.length > 0) {
+        this.tabSelected = this.$route.query.tab
+      }
+    },
 
     none() {
       for (let i = 1; i <= 16; i++) {
@@ -2213,6 +2239,7 @@ export default {
     },
 
     load() {
+      this.loadQueryState()
 
       if (this.$route.params.id > 0) {
         this.error = ""
