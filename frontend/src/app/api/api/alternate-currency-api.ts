@@ -110,6 +110,58 @@ export const AlternateCurrencyApiAxiosParamCreator = function (configuration?: C
                 options: localVarRequestOptions,
             };
         },
+        getAlternateCurrenciesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/alternate_currencies/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         getAlternateCurrency: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id','Required parameter id was null or undefined when calling getAlternateCurrency.');
@@ -262,6 +314,13 @@ export const AlternateCurrencyApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getAlternateCurrenciesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAlternateCurrency>>> {
+            const localVarAxiosArgs = await AlternateCurrencyApiAxiosParamCreator(configuration).getAlternateCurrenciesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async getAlternateCurrency(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAlternateCurrency>>> {
             const localVarAxiosArgs = await AlternateCurrencyApiAxiosParamCreator(configuration).getAlternateCurrency(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -296,6 +355,9 @@ export const AlternateCurrencyApiFactory = function (configuration?: Configurati
         getAlternateCurrenciesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsAlternateCurrency>> {
             return AlternateCurrencyApiFp(configuration).getAlternateCurrenciesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getAlternateCurrenciesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAlternateCurrency>> {
+            return AlternateCurrencyApiFp(configuration).getAlternateCurrenciesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         getAlternateCurrency(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAlternateCurrency>> {
             return AlternateCurrencyApiFp(configuration).getAlternateCurrency(id, includes, select, options).then((request) => request(axios, basePath));
         },
@@ -315,6 +377,17 @@ export interface AlternateCurrencyApiDeleteAlternateCurrencyRequest {
 }
 export interface AlternateCurrencyApiGetAlternateCurrenciesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface AlternateCurrencyApiGetAlternateCurrenciesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface AlternateCurrencyApiGetAlternateCurrencyRequest {
     readonly id: number
@@ -345,6 +418,9 @@ export class AlternateCurrencyApi extends BaseAPI {
     }
     public getAlternateCurrenciesBulk(requestParameters: AlternateCurrencyApiGetAlternateCurrenciesBulkRequest, options?: any) {
         return AlternateCurrencyApiFp(this.configuration).getAlternateCurrenciesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getAlternateCurrenciesCount(requestParameters: AlternateCurrencyApiGetAlternateCurrenciesCountRequest = {}, options?: any) {
+        return AlternateCurrencyApiFp(this.configuration).getAlternateCurrenciesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public getAlternateCurrency(requestParameters: AlternateCurrencyApiGetAlternateCurrencyRequest, options?: any) {
         return AlternateCurrencyApiFp(this.configuration).getAlternateCurrency(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

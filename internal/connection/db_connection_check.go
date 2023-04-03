@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
-	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/sirupsen/logrus"
 )
@@ -26,7 +25,7 @@ func NewDbConnectionCheckService(
 }
 
 func (c *DbConnectionCheckService) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", c.crypt.GetEncryptionKey(), userId)
 }
 
 func (c *DbConnectionCheckService) Handle(userId uint, connectionId string) error {

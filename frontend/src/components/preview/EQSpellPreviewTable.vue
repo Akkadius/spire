@@ -11,7 +11,7 @@
 
       <div
         class='spell-table'
-        style="height: 75vh; overflow-y: scroll; overflow-x: hidden; "
+        style="height: 78vh; overflow-y: scroll; overflow-x: hidden; "
         v-if="spells.length > 0"
       >
         <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->

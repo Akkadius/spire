@@ -36,6 +36,7 @@ func (e *FactionValueController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "faction_value/:charId", e.getFactionValue, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_values", e.listFactionValues, nil),
+		routes.RegisterRoute(http.MethodGet, "faction_values/count", e.getFactionValuesCount, nil),
 		routes.RegisterRoute(http.MethodPut, "faction_value", e.createFactionValue, nil),
 		routes.RegisterRoute(http.MethodDelete, "faction_value/:charId", e.deleteFactionValue, nil),
 		routes.RegisterRoute(http.MethodPatch, "faction_value/:charId", e.updateFactionValue, nil),
@@ -362,4 +363,32 @@ func (e *FactionValueController) getFactionValuesBulk(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getFactionValuesCount godoc
+// @Id getFactionValuesCount
+// @Summary Counts FactionValues
+// @Accept json
+// @Produce json
+// @Tags FactionValue
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.FactionValue
+// @Failure 500 {string} string "Bad query request"
+// @Router /faction_values/count [get]
+func (e *FactionValueController) getFactionValuesCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.FactionValue{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

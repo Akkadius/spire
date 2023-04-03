@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/connection/contexts"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
-	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/sirupsen/logrus"
 )
@@ -27,7 +26,7 @@ func NewDbConnectionCreateService(
 }
 
 func (c *DbConnectionCreateService) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", c.crypt.GetEncryptionKey(), userId)
 }
 
 func (c *DbConnectionCreateService) Handle(ctx *contexts.ConnectionCreateContext) error {
@@ -39,6 +38,7 @@ func (c *DbConnectionCreateService) Handle(ctx *contexts.ConnectionCreateContext
 
 	// validate connection doesn't already exist
 	var con models.ServerDatabaseConnection
+
 	c.db.GetSpireDb().Where(
 		"name = ? and db_host = ? and db_name = ? and db_port = ? and db_username = ?",
 		ctx.ConnectionName(),

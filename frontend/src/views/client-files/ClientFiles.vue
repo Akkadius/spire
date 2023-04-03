@@ -2,7 +2,7 @@
   <content-area class="text-center" style="padding: 0 !important">
     <eq-window-simple
       title="Client File Drop Zone"
-      style="width: 700px"
+      style="height: 95vh"
       class="mt-3 p-0"
     >
       <div
@@ -39,6 +39,7 @@
       <!-- Dropzone -->
       <vue-dropzone
         class="mt-4"
+        style="height: 70vh"
         v-on:vdropzone-success="success"
         v-on:vdropzone-queue-complete="queueComplete"
         v-on:vdropzone-processing="processing"
@@ -61,8 +62,8 @@
 import querystring        from 'querystring'
 import vue2Dropzone       from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import {SpireApi}     from "../../app/api/spire-api";
-import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
+import {SpireApi}         from "../../app/api/spire-api";
+import EqWindowSimple     from "../../components/eq-ui/EQWindowSimple";
 import EqWindow           from "../../components/eq-ui/EQWindow";
 import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import util               from "util";
@@ -161,6 +162,10 @@ export default {
 
 .dz-message:hover {
   color: yellow;
+}
+
+.dz-message {
+  height: 80vh;
 }
 
 </style>

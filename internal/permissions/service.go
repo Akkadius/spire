@@ -39,7 +39,7 @@ func NewService(
 		cache:     cache,
 		logger:    logger,
 		pluralize: pluralize,
-		debug:     env.GetInt("DEBUG", "0"),
+		debug:     env.GetInt("PERMISSIONS_DEBUG", "0"),
 	}
 }
 
@@ -48,20 +48,42 @@ func NewService(
 func (s *Service) RegisterManualResources() map[string][]string {
 	return map[string][]string{
 		"Client Files": {"client-file"},
+
+		// admin server
+		"Server Configuration":    {"admin/serverconfig"},
+		"Server Admin Occulus":    {"admin/occulus"},
+		"Server System Resources": {"admin/system"},
+		"Server Update / Build": {
+			"eqemuserver/build",
+			"eqemuserver/install-release",
+			"eqemuserver/get-build-info",
+			"eqemuserver/update-type",
+			"eqemuserver/version",
+		},
+		"Server Players Online":    {"eqemuserver/client-list"},
+		"Server Dashboard Stats":   {"eqemuserver/dashboard-stats"},
+		"Server File Logs":         {"eqemuserver/log"},
+		"Server Manual Backup":     {"eqemuserver/manual-backup"},
+		"Server Pre-Flight Checks": {"eqemuserver/pre-flight"},
+		"Server Reload API":        {"eqemuserver/reload"},
+		"Server Process Stats":     {"eqemuserver/server-stats"},
+		"Server Zone Servers":      {"eqemuserver/zone-list"},
+		"Spire Settings":           {"spire/setting"},
 	}
 }
 
 // Resource is a representation of a permission resource
 // contains an identifier with route match prefixes
 // @example
-//   permissions.Resource{
-//    Name:               "Npc Type",
-//    Identifier:         "NPC_TYPE",
-//    RouteMatchPrefixes: []string{
-//      "npc_type",
-//      "npc_types",
-//    },
-//  },
+//
+//	 permissions.Resource{
+//	  Name:               "Npc Type",
+//	  Identifier:         "NPC_TYPE",
+//	  RouteMatchPrefixes: []string{
+//	    "npc_type",
+//	    "npc_types",
+//	  },
+//	},
 type Resource struct {
 	Name               string   `json:"name"`       // used for visual display in the UI
 	Identifier         string   `json:"identifier"` // used for backend storage identification
@@ -71,7 +93,11 @@ type Resource struct {
 }
 
 // GetResources returns a complete list of resources
+// it automatically builds resources from echo routes
+// also applies manual routes using RegisterManualResources()
 func (s *Service) GetResources(routes []*echo.Route) []Resource {
+
+	// below logic build routes from echo
 	type Route struct {
 		Method string `json:"method"`
 		Path   string `json:"path"`
@@ -177,11 +203,28 @@ func (s *Service) GetResources(routes []*echo.Route) []Resource {
 				// count routes per resource
 				resourceRouteCount[title]++
 
-				// if resource not added to map
-				if _, ok := resources[title]; !ok {
-					resources[title] = []string{
-						resource,
-						s.pluralize.Plural(resource),
+				addToMap := true
+
+				// don't add auto resources for things that get
+				// manually registered
+				for _, manualResources := range s.RegisterManualResources() {
+					for _, mr := range manualResources {
+						// if the resource route path contains a manually registered route
+						// lets exclude it from being added to the auto build map
+						if strings.Contains(route.Path, mr) {
+							addToMap = false
+							continue
+						}
+					}
+				}
+
+				if addToMap {
+					// if resource not added to map
+					if _, ok := resources[title]; !ok {
+						resources[title] = []string{
+							resource,
+							s.pluralize.Plural(resource),
+						}
 					}
 				}
 			}
@@ -192,7 +235,11 @@ func (s *Service) GetResources(routes []*echo.Route) []Resource {
 	// delete non-crud resources
 	// crud routes have at least 4 routes per resource
 	for resource, _ := range resources {
-		if resourceRouteCount[resource] < 4 {
+		//pp.Println(resource, resourceRouteCount[resource])
+
+		// contains([]string{"Quest-Api", "Changelog", "Analytics", "App", "Query"}, resource)
+
+		if resourceRouteCount[resource] != 5 {
 			if s.debug >= 3 {
 				pp.Printf("Deleting resources [%v]\n", resource)
 			}
@@ -201,6 +248,7 @@ func (s *Service) GetResources(routes []*echo.Route) []Resource {
 	}
 
 	// apply manually registered resources
+	// ex "Client Files": {"client-file"},
 	for resource, val := range s.RegisterManualResources() {
 		resources[resource] = val
 	}
@@ -223,8 +271,8 @@ func (s *Service) GetResources(routes []*echo.Route) []Resource {
 	if s.debug >= 3 {
 		console.PrintBanner(fmt.Sprintf("Total Routes [%v] Unique Routes [%v]", len(routes), len(r)), bannerLength)
 
-		pp.Println("# Resources")
-		pp.Println(res)
+		//pp.Println("# Resources")
+		//pp.Println(res)
 	}
 
 	return res
@@ -237,6 +285,17 @@ type userPermissions struct {
 	canReadAll        bool
 	canWriteAll       bool
 	permissions       []Resource
+}
+
+func (s *Service) IsWriteRequest(c echo.Context) bool {
+	return contains(
+		[]string{
+			http.MethodPatch,
+			http.MethodPost,
+			http.MethodPut,
+		},
+		c.Request().Method,
+	) && !strings.Contains(c.Request().URL.Path, "/bulk")
 }
 
 func (s *Service) CanAccessResource(c echo.Context, user models.User, connectionId uint) bool {
@@ -258,14 +317,7 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 		return true
 	}
 
-	isWriteRequest := contains(
-		[]string{
-			http.MethodPatch,
-			http.MethodPost,
-			http.MethodPut,
-		},
-		c.Request().Method,
-	) && !strings.Contains(c.Request().URL.Path, "/bulk")
+	isWriteRequest := s.IsWriteRequest(c)
 
 	// global level rules
 	if p.canReadAll && !isWriteRequest {
@@ -274,11 +326,6 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 	if p.canWriteAll && isWriteRequest {
 		return true
 	}
-
-	//pp.Println("permissions")
-	//pp.Println(p)
-	//
-	//pp.Println(c.Request().RequestURI)
 
 	// match on v1 routes
 	if strings.Contains(c.Request().URL.Path, "/api/v1/") {
@@ -291,9 +338,21 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 
 		for _, up := range p.permissions {
 			for _, prefix := range up.RouteMatchPrefixes {
-				if prefix == resource {
+				// first check looks for CRUD generated resources eg task/tasks
+				// second check looks for things that would be in manually registered prefixes
+
+				isManualRouteMatch := strings.Contains(c.Request().URL.Path, prefix) && strings.Contains(prefix, "/")
+
+				if prefix == resource || isManualRouteMatch {
 					if s.debug >= 3 {
-						s.logger.Info(pp.Sprintf("[permissions] user [%v] FOUND MATCH FOR PREFIX [%v]\n", user.UserName, prefix))
+						s.logger.Info(
+							pp.Sprintf(
+								"[permissions] user [%v] FOUND MATCH FOR PREFIX [%v] for route [%v]\n",
+								user.UserName,
+								prefix,
+								c.Request().URL.Path,
+							),
+						)
 					}
 
 					if isWriteRequest && up.CanWrite {

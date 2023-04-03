@@ -6,7 +6,7 @@
         style="display: inline-block"
       />
       <span
-        class="ml-3"
+        :class="(size === 'sm' ? 'ml-2' : 'ml-3')"
         :style="'position:relative;' + (this.size === 'regular' ? 'top: -15px' : '')"
       >{{ item.name }} {{annotation}} <slot></slot></span>
 

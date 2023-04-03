@@ -9,7 +9,7 @@
       </div>
       <span
         v-if="showLabel"
-        class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 300px"
+        :class="(showImage ? 'ml-3' : '') + ' d-inline-block'" :style="(showImage ? 'top: 30%; position: absolute; min-width: 300px' : '')"
       >
         {{ getCleanName(npc.name) }} {{ formatLastName(npc.lastname) }} {{additionalLabel ? additionalLabel : ""}}
       </span>

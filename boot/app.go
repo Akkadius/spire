@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/spire"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -22,6 +23,7 @@ type App struct {
 	db            *database.DatabaseResolver
 	router        *routes.Router
 	desktop       *desktop.WebBoot
+	onboarding    *spire.Init
 }
 
 func (a App) Cache() *gocache.Cache {
@@ -50,6 +52,7 @@ func NewApplication(
 	dbConnections *database.Connections,
 	router *routes.Router,
 	desktop *desktop.WebBoot,
+	onboarding *spire.Init,
 ) App {
 	return App{
 		context:       context.Background(),
@@ -61,5 +64,6 @@ func NewApplication(
 		dbConnections: dbConnections,
 		router:        router,
 		desktop:       desktop,
+		onboarding:    onboarding,
 	}
 }

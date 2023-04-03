@@ -53,6 +53,7 @@
                     type="text"
                     placeholder="Filter results by name..."
                     v-model="taskSearchFilter"
+                    autofocus
                     :disabled="saveFreeze"
                     @keyup="filterResultsByName"
                     class="form-control"

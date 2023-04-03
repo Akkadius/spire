@@ -1,10 +1,9 @@
-package controllers
+package questapi
 
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
-	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,14 +11,14 @@ import (
 
 type QuestApiController struct {
 	logger  *logrus.Logger
-	parser  *questapi.ParseService
-	sourcer *questapi.QuestExamplesGithubSourcer
+	parser  *ParseService
+	sourcer *QuestExamplesGithubSourcer
 }
 
 func NewQuestApiController(
 	logger *logrus.Logger,
-	parser *questapi.ParseService,
-	sourcer *questapi.QuestExamplesGithubSourcer,
+	parser *ParseService,
+	sourcer *QuestExamplesGithubSourcer,
 ) *QuestApiController {
 	return &QuestApiController{logger: logger, parser: parser, sourcer: sourcer}
 }

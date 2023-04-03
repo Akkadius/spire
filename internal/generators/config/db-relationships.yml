@@ -184,3 +184,10 @@ tasks:
   - 1-* id->task_activities:taskid
   - 1-* id->tasksets:taskid
   - 1-1 reward_point_type->alternate_currency:id
+player_event_logs:
+  - 1-1 account_id->account:id
+  - 1-1 character_id->character_data:id
+  - 1-1 zone_id->zone:zoneidnumber
+aa_ranks:
+  - 1-1 spell->spells_new:id
+  - 1-1 id->aa_ability:first_rank_id

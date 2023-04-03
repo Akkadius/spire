@@ -35,7 +35,15 @@ func NewChangelog() *Changelog {
 	return &Changelog{client: client}
 }
 
-func (c *Changelog) getCommitsDaysBack(days time.Duration) []*github.RepositoryCommit {
+func (c *Changelog) getCommitsDaysBack() []*github.RepositoryCommit {
+	daysSinceLastRelease := 0
+	r, _, _ := c.client.Repositories.GetLatestRelease(context.Background(), "EQEmu", "Server")
+	if *r.ID > 0 {
+		date := time.Now()
+		diff := date.Sub(r.CreatedAt.Time)
+		daysSinceLastRelease = int(diff.Hours()/24) + 1
+	}
+
 	var allCommits []*github.RepositoryCommit
 	for i := 1; i < 10; i++ {
 		commits, _, err := c.client.Repositories.ListCommits(
@@ -43,7 +51,7 @@ func (c *Changelog) getCommitsDaysBack(days time.Duration) []*github.RepositoryC
 			"EQEmu",
 			"server",
 			&github.CommitsListOptions{
-				Since: time.Now().Add(-time.Hour * 24 * days),
+				Since: time.Now().Add(-time.Hour * 24 * time.Duration(daysSinceLastRelease)),
 				ListOptions: github.ListOptions{
 					Page:    i,
 					PerPage: 100,
@@ -78,6 +86,12 @@ type ChangelogEntry struct {
 }
 
 func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
+	var lastReleaseNotes string
+	r, _, _ := c.client.Repositories.GetLatestRelease(context.Background(), "EQEmu", "Server")
+	if *r.ID > 0 {
+		lastReleaseNotes = r.GetBody()
+	}
+
 	var entries []ChangelogEntry
 	var categories []string
 	for _, commit := range commits {
@@ -104,8 +118,7 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 
 		// categories
 		category := ""
-		firstWordSplit := strings.Split(message, " ")
-		if len(firstWordSplit) > 0 {
+		if strings.Contains(message, "]") && strings.Contains(message, "[") {
 			category = c.GetStringInBetween(message, "[", "]")
 			if len(category) < 20 {
 				message = strings.TrimSpace(
@@ -118,7 +131,8 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 
 				// one-off find replace fixes
 				replacements := make(map[string]string, 0)
-				replacements["Cleanup"] = "Code Cleanup"
+				replacements["Code Cleanup"] = "Code"
+				replacements["Cleanup"] = "Code"
 				replacements["Bot"] = "Bots"
 				replacements["Command"] = "Commands"
 				replacements["Repository"] = "Repositories"
@@ -128,7 +142,10 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				replacements["INT64"] = "int64"
 				replacements["Hotfox"] = "Hotfix"
 				replacements["HotFix"] = "Hotfix"
-				replacements["Commmands"] = "Hotfix"
+				replacements["Hotfix"] = "Fixes"
+				replacements["Quest"] = "Quest API"
+				replacements["Bots/Mercs"] = "Bots & Mercenaries"
+				replacements["Bots & Mercs"] = "Bots & Mercenaries"
 
 				for find, replacement := range replacements {
 					if category == find {
@@ -150,7 +167,11 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				}
 			}
 
-			if !hasEntry {
+			if strings.Contains(lastReleaseNotes, message) {
+				continue
+			}
+
+			if !hasEntry && !strings.Contains(category, "Release") {
 				entries = append(
 					entries, ChangelogEntry{
 						Author:      username,
@@ -204,10 +225,9 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 					}
 
 					msg += fmt.Sprintf(
-						"* %v %v ([%v](https://github.com/%v)) %v\n",
+						"* %v %v @%v %v\n",
 						e.Message,
 						pr,
-						e.Author,
 						e.Author,
 						e.Time.Format("2006-01-02"),
 					)
@@ -224,7 +244,7 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 // return it's key, otherwise it will return -1 and a bool of false.
 func contains(slice []string, val string) bool {
 	for _, item := range slice {
-		if strings.Contains(val, item) {
+		if val == item {
 			return true
 		}
 	}

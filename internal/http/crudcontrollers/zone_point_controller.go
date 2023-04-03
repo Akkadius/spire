@@ -36,6 +36,7 @@ func (e *ZonePointController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "zone_point/:id", e.getZonePoint, nil),
 		routes.RegisterRoute(http.MethodGet, "zone_points", e.listZonePoints, nil),
+		routes.RegisterRoute(http.MethodGet, "zone_points/count", e.getZonePointsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "zone_point", e.createZonePoint, nil),
 		routes.RegisterRoute(http.MethodDelete, "zone_point/:id", e.deleteZonePoint, nil),
 		routes.RegisterRoute(http.MethodPatch, "zone_point/:id", e.updateZonePoint, nil),
@@ -329,4 +330,32 @@ func (e *ZonePointController) getZonePointsBulk(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getZonePointsCount godoc
+// @Id getZonePointsCount
+// @Summary Counts ZonePoints
+// @Accept json
+// @Produce json
+// @Tags ZonePoint
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.ZonePoint
+// @Failure 500 {string} string "Bad query request"
+// @Router /zone_points/count [get]
+func (e *ZonePointController) getZonePointsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.ZonePoint{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

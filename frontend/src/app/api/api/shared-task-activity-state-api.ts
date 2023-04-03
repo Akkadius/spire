@@ -145,6 +145,58 @@ export const SharedTaskActivityStateApiAxiosParamCreator = function (configurati
                 options: localVarRequestOptions,
             };
         },
+        getSharedTaskActivityStatesCount: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/shared_task_activity_states/count`;
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
+            }
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
+            }
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         listSharedTaskActivityStates: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/shared_task_activity_states`;
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -269,6 +321,13 @@ export const SharedTaskActivityStateApiFp = function(configuration?: Configurati
                 return axios.request(axiosRequestArgs);
             };
         },
+        async getSharedTaskActivityStatesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSharedTaskActivityState>>> {
+            const localVarAxiosArgs = await SharedTaskActivityStateApiAxiosParamCreator(configuration).getSharedTaskActivityStatesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         async listSharedTaskActivityStates(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSharedTaskActivityState>>> {
             const localVarAxiosArgs = await SharedTaskActivityStateApiAxiosParamCreator(configuration).listSharedTaskActivityStates(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -299,6 +358,9 @@ export const SharedTaskActivityStateApiFactory = function (configuration?: Confi
         getSharedTaskActivityStatesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsSharedTaskActivityState>> {
             return SharedTaskActivityStateApiFp(configuration).getSharedTaskActivityStatesBulk(body, options).then((request) => request(axios, basePath));
         },
+        getSharedTaskActivityStatesCount(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSharedTaskActivityState>> {
+            return SharedTaskActivityStateApiFp(configuration).getSharedTaskActivityStatesCount(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
         listSharedTaskActivityStates(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSharedTaskActivityState>> {
             return SharedTaskActivityStateApiFp(configuration).listSharedTaskActivityStates(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
@@ -320,6 +382,17 @@ export interface SharedTaskActivityStateApiGetSharedTaskActivityStateRequest {
 }
 export interface SharedTaskActivityStateApiGetSharedTaskActivityStatesBulkRequest {
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface SharedTaskActivityStateApiGetSharedTaskActivityStatesCountRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
 }
 export interface SharedTaskActivityStateApiListSharedTaskActivityStatesRequest {
     readonly includes?: string
@@ -348,6 +421,9 @@ export class SharedTaskActivityStateApi extends BaseAPI {
     }
     public getSharedTaskActivityStatesBulk(requestParameters: SharedTaskActivityStateApiGetSharedTaskActivityStatesBulkRequest, options?: any) {
         return SharedTaskActivityStateApiFp(this.configuration).getSharedTaskActivityStatesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getSharedTaskActivityStatesCount(requestParameters: SharedTaskActivityStateApiGetSharedTaskActivityStatesCountRequest = {}, options?: any) {
+        return SharedTaskActivityStateApiFp(this.configuration).getSharedTaskActivityStatesCount(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
     public listSharedTaskActivityStates(requestParameters: SharedTaskActivityStateApiListSharedTaskActivityStatesRequest = {}, options?: any) {
         return SharedTaskActivityStateApiFp(this.configuration).listSharedTaskActivityStates(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));

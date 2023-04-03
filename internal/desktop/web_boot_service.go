@@ -3,7 +3,6 @@ package desktop
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/http"
-	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/sirupsen/logrus"
 	"log"
 	"net"
@@ -18,11 +17,11 @@ import (
 
 type WebBoot struct {
 	logger *logrus.Logger
-	router *routes.Router
+	server *http.Server
 }
 
-func NewWebBoot(logger *logrus.Logger, router *routes.Router) *WebBoot {
-	return &WebBoot{logger: logger, router: router}
+func NewWebBoot(logger *logrus.Logger, server *http.Server) *WebBoot {
+	return &WebBoot{logger: logger, server: server}
 }
 
 func (c *WebBoot) Boot() {
@@ -44,7 +43,7 @@ func (c *WebBoot) Boot() {
 
 	// start web server
 	go func() {
-		if err := http.Serve(uint(port), c.logger, c.router); err != nil {
+		if err := c.server.Serve(uint(port)); err != nil {
 			c.logger.WithError(err).Fatal(err.Error())
 		}
 	}()

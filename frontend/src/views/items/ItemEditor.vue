@@ -22,6 +22,8 @@
 
           <eq-tabs
             v-if="item"
+            :selected="tabSelected"
+            @on-selected="tabSelected = $event; updateQueryState()"
             id="item-edit-card"
             class="item-edit-card"
             @mouseover.native="previewItem"
@@ -629,7 +631,8 @@
                       </div>
                       <div
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')"
+                        class="col-4 m-0 p-0"
+                        :style="(typeof field.zeroValue === 'undefined' && item[field.field] <= 0 || (typeof field.zeroValue !== 'undefined' && item[field.field] === field.zeroValue) ? 'opacity: .5' : '')"
                       >
 
                         <b-form-input
@@ -1114,6 +1117,58 @@
                            field: 'filename',
                          },
                        ]"
+              >
+                <div class="col-5 text-right mr-3 p-0 mt-2">
+                  {{ field.description }}
+                </div>
+                <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                  <b-form-input
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    v-if="!field.selectData && !field.type"
+                    :id="field.field"
+                    v-model.number="item[field.field]"
+                  />
+
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="d-inline-block mt-2 mb-2"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="item[field.field]"
+                    @input="item[field.field] = $event"
+                    v-if="field.type === 'bool'"
+                  />
+
+                  <select
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    v-model.number="item[field.field]"
+                    class="form-control"
+                    v-if="field.selectData"
+                  >
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
+                    >
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+
+                </div>
+              </div>
+            </eq-tab>
+
+            <eq-tab name="Food" class="minified-inputs">
+              <div
+                class="row"
+                :key="field.field"
+                v-for="field in
+                   [
+                     {
+                       description: 'Consumption Rate',
+                       field: 'casttime_',
+                     },
+                   ]"
               >
                 <div class="col-5 text-right mr-3 p-0 mt-2">
                   {{ field.description }}
@@ -1671,6 +1726,8 @@ export default {
   },
   data() {
     return {
+      tabSelected: "General",
+
       item: null, // item record data
       originalItem: {}, // item record data; used to reference original values in tools
 
@@ -1738,7 +1795,8 @@ export default {
         {
           description: 'Extra Damage Skill',
           field: 'extradmgskill',
-          selectData: DB_SKILLS
+          selectData: DB_SKILLS,
+          zeroValue: -1
         },
         {
           description: 'Extra Damage Amount',
@@ -1788,6 +1846,7 @@ export default {
           description: 'Skill Mod Type',
           field: 'skillmodtype',
           selectData: DB_SKILLS,
+          zeroValue: -1
         },
         {
           description: 'Skill Mod Value',
@@ -1814,7 +1873,6 @@ export default {
     }
   },
   watch: {
-
 
     // reset state vars when we navigate away
     '$route'() {
@@ -1886,8 +1944,11 @@ export default {
     },
     'item.casttime': function (newVal, oldVal) {
       if (newVal !== oldVal && this.item) {
-        this.item.casttime_ = this.item.casttime
-        console.log("casttime_ is [%s]", this.item.casttime_)
+        // don't force this value for food and drink
+        if (![14, 15].includes(this.item.itemtype)) {
+          this.item.casttime_ = this.item.casttime
+          console.log("casttime_ is [%s]", this.item.casttime_)
+        }
       }
     },
 
@@ -1940,6 +2001,28 @@ export default {
     this.load()
   },
   methods: {
+
+    updateQueryState() {
+      let q = {}
+
+      if (this.tabSelected !== "") {
+        q.tab = this.tabSelected
+      }
+
+      this.$router.replace(
+        {
+          path: this.$route.path,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.tab && this.$route.query.tab.length > 0) {
+        this.tabSelected = this.$route.query.tab
+      }
+    },
 
     getFieldDescription(field) {
       return Items.getFieldDescription(field);
@@ -2062,6 +2145,7 @@ export default {
     },
 
     load() {
+      this.loadQueryState()
 
       if (this.$route.params.id > 0) {
         this.error = ""

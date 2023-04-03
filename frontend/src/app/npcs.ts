@@ -318,11 +318,18 @@ export class Npcs {
     }
   }
 
+  public static npc = <any>{}
+
   /**
    * @param id
    * @param relations
    */
   static async getNpc(id: number, relations: any[] = []) {
+    // return cache if exist
+    if (this.npc[id]) {
+      return this.npc[id]
+    }
+
     const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
@@ -349,6 +356,9 @@ export class Npcs {
       },
       {query: builder.get()})
     if (r.status === 200) {
+      // cache
+      this.npc[id] = r.data
+
       return r.data
     }
   }
@@ -358,6 +368,10 @@ export class Npcs {
    * @param relations
    */
   static async getNpcsBulk(ids: number[], relations: any[] = []) {
+    if (ids.length === 0) {
+      return []
+    }
+
     const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
@@ -387,6 +401,12 @@ export class Npcs {
       }
     )
     if (r.status === 200) {
+
+      for (let n of r.data) {
+        // @ts-ignore
+        this.npc[n.id] = n
+      }
+
       return r.data
     }
   }
@@ -612,6 +632,10 @@ export class Npcs {
     }
 
     return ''
+  }
+
+  static cacheExists(npc_id: any) {
+    return this.npc[npc_id];
   }
 }
 

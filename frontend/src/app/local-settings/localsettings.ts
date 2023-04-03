@@ -3,6 +3,7 @@ export class Setting {
   static TAB_HOVER  = "tab-hover";
   static ALPHA_ENABLED  = "alpha-enabled";
   static SPELL_LEGACY_ICONS  = "spell-legacy-icons";
+  static DEFAULT_LANGUAGE_PREFERENCE  = "default-language-preference";
 }
 
 export class LocalSettings {

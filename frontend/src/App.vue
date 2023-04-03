@@ -1,27 +1,53 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <ninja-keys
+      class="dark ninja-icon"
+      ref="ninjaKeys"
+      placeholder="Where would you like to go?"
+    />
+    <keypress-commands-modal/>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
 
+import "ninja-keys";
 import * as util                from "util";
 import {App}                    from "@/constants/app";
 import {EventBus}               from "@/app/event-bus/event-bus";
 import {AppEnv}                 from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
+import {ROUTE}                  from "@/routes";
+import UserContext              from "@/app/user/UserContext";
+import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.vue";
 
 export default {
   name: "App",
-  mounted() {
+  components: { KeypressCommandsModal },
+  async beforeMount() {
+    await AppEnv.init()
+  },
+
+  async mounted() {
 
     this.loadKeypressBindings();
     this.loadWallpaper();
     this.loadSpellIconSettings();
 
-    // init app env / version
-    AppEnv.init().then(() => {
-      EventBus.$emit('APP_ENV_LOADED', true);
-    })
+    this.user = await UserContext.getUser()
+    if (typeof AppEnv.getOS() === "undefined") {
+      await AppEnv.init()
+    }
+
+    EventBus.$emit('APP_ENV_LOADED', true);
+    AppEnv.routeCheckOcculus(this.$route, this.$router)
+    AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
+    this.checkIfUserNeedsToAuth()
+
+    setTimeout(() => {
+      AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
+    }, 1)
   },
 
   created() {
@@ -33,9 +59,93 @@ export default {
 
   methods: {
 
+    async checkIfUserNeedsToAuth() {
+      if (AppEnv.isSpireInitialized() &&
+        AppEnv.isLocalAuthEnabled() &&
+        UserContext.getAccessToken().length === 0 &&
+        this.$route.fullPath !== ROUTE.LOGIN) {
+        await this.$router.push(ROUTE.LOGIN).catch((e) => {
+        })
+      }
+    },
+
     loadKeypressBindings() {
-      var self = this
-      window.addEventListener("keypress", function (e) {
+      let controlPressed = false;
+
+      document.onkeydown = (e) => {
+        e = e || window.event; //Get event
+        if (!e.ctrlKey && e.key !== "Control") return;
+        let code = e.which || e.keyCode; //Get key code
+
+        // if command is accompanied by another key, dismiss commands modal
+        if (code !== 17) {
+          this.$bvModal.hide('keypress-commands-modal')
+        }
+
+        switch (code) {
+          case 17: // just command
+            if (controlPressed) {
+              this.$bvModal.hide('keypress-commands-modal')
+              return
+            }
+
+            // don't show modal help window if search box is open
+            const n = document.querySelector('ninja-keys');
+            if (n.visible) {
+              break;
+            }
+            this.$bvModal.show('keypress-commands-modal');
+            break;
+          case 191: // Ctrl + /
+          case 75: // Ctrl + K
+            e.preventDefault();
+
+            const ninja = document.querySelector('ninja-keys');
+            setTimeout(() => {
+              ninja.open()
+            }, 1)
+
+            e.stopPropagation();
+
+            break;
+          case 87://Block Ctrl+W
+          case 83://Block Ctrl+S
+            e.preventDefault();
+            // e.stopPropagation();
+            break;
+        }
+
+        controlPressed = true;
+      };
+
+      document.onkeyup = (e) => {
+        e = e || window.event; //Get event
+        if (!e.ctrlKey && e.key !== "Control") return;
+        let code = e.which || e.keyCode; //Get key code
+
+        setTimeout(() => {
+          if (document.getElementById('keypress-commands-modal')) {
+            this.$bvModal.hide('keypress-commands-modal')
+          }
+          controlPressed = false;
+        }, 1)
+      };
+
+      window.onblur  = () => {
+        this.$bvModal.hide('keypress-commands-modal')
+      }
+      window.onfocus = () => {
+        this.$bvModal.hide('keypress-commands-modal')
+      }
+
+      window.onkeyup = (e) => {
+        e = e || window.event; //Get event
+        if (!e.ctrlKey && e.key !== "Control") return;
+
+        this.$bvModal.hide('keypress-commands-modal')
+      };
+
+      window.addEventListener("keypress", (e) => {
         if (e.srcElement.tagName !== "BODY" && e.srcElement.tagName !== "A") {
           return
         }
@@ -47,6 +157,12 @@ export default {
         switch (String.fromCharCode(e.keyCode)) {
           case 'h':
             EventBus.$emit('HIDE_NAVBAR', true);
+            break
+          case 'b':
+            this.$router.push({ path: '/break' })
+            break
+          case '`':
+            this.$router.push({ path: '/' })
             break
           case 'd':
             setTimeout(() => {
@@ -95,6 +211,7 @@ export default {
       }
     }
   },
+
 }
 </script>
 

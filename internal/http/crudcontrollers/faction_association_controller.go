@@ -36,6 +36,7 @@ func (e *FactionAssociationController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "faction_association/:id", e.getFactionAssociation, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_associations", e.listFactionAssociations, nil),
+		routes.RegisterRoute(http.MethodGet, "faction_associations/count", e.getFactionAssociationsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "faction_association", e.createFactionAssociation, nil),
 		routes.RegisterRoute(http.MethodDelete, "faction_association/:id", e.deleteFactionAssociation, nil),
 		routes.RegisterRoute(http.MethodPatch, "faction_association/:id", e.updateFactionAssociation, nil),
@@ -329,4 +330,32 @@ func (e *FactionAssociationController) getFactionAssociationsBulk(c echo.Context
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getFactionAssociationsCount godoc
+// @Id getFactionAssociationsCount
+// @Summary Counts FactionAssociations
+// @Accept json
+// @Produce json
+// @Tags FactionAssociation
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.FactionAssociation
+// @Failure 500 {string} string "Bad query request"
+// @Router /faction_associations/count [get]
+func (e *FactionAssociationController) getFactionAssociationsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.FactionAssociation{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

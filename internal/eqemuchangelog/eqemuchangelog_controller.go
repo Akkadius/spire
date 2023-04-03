@@ -6,8 +6,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
-	"strconv"
-	"time"
 )
 
 type EqemuChangelogController struct {
@@ -30,22 +28,16 @@ func NewEqemuChangelogController(
 
 func (a *EqemuChangelogController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "changelog/:days", a.getChangelog, nil),
+		routes.RegisterRoute(http.MethodGet, "changelog", a.getChangelog, nil),
 	}
 }
 
 func (a *EqemuChangelogController) getChangelog(c echo.Context) error {
-	daysParam := c.Param("days")
-	days, err := strconv.Atoi(daysParam)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
 	return c.JSON(
 		http.StatusOK,
 		echo.Map{
 			"data": a.changelog.BuildChangelog(
-				a.changelog.getCommitsDaysBack(time.Duration(days)),
+				a.changelog.getCommitsDaysBack(),
 			),
 		},
 	)

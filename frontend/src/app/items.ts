@@ -41,6 +41,10 @@ export class Items {
   }
 
   public static async loadItemsBulk(ids: any[]) {
+    if (ids.length === 0) {
+      return []
+    }
+
     // items bulk fetch preload
     const r = await (new ItemApi(...SpireApi.cfg())).getItemsBulk({
       body: {
@@ -468,5 +472,39 @@ export class Items {
     } catch (err) {
       return Promise.reject(err)
     }
+  }
+
+  static cacheExists(item_id) {
+    return this.items[item_id];
+  }
+
+  static getFoodDescription(item: Object) {
+    // @ts-ignore
+    const v            = item.casttime_;
+    const descriptions = [
+      {t: 14, l: 0, h: 5, desc: "This is a snack."},
+      {t: 14, l: 6, h: 20, desc: "This is a meal."},
+      {t: 14, l: 21, h: 30, desc: "This is a hearty meal."},
+      {t: 14, l: 31, h: 40, desc: "This is a banquet size meal."},
+      {t: 14, l: 41, h: 50, desc: "This meal is a feast!"},
+      {t: 14, l: 51, h: 60, desc: "This is an enduring meal!"},
+      {t: 14, l: 61, h: 10000, desc: "This is a miraculous meal!"},
+      {t: 15, l: 0, h: 5, desc: "This is a whistle wetter."},
+      {t: 15, l: 6, h: 20, desc: "This is a drink."},
+      {t: 15, l: 21, h: 30, desc: "This is a refreshing drink."},
+      {t: 15, l: 31, h: 40, desc: "This is a lasting drink."},
+      {t: 15, l: 41, h: 50, desc: "This meal is a flowing drink!"},
+      {t: 15, l: 51, h: 60, desc: "This is an enduring drink!"},
+      {t: 15, l: 61, h: 10000, desc: "This is a miraculous drink!"},
+    ]
+
+    for (let d of descriptions) {
+      // @ts-ignore
+      if (d.t === item.itemtype && v >= d.l && v <= d.h) {
+        return d.desc
+      }
+    }
+
+    return "";
   }
 }

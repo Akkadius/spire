@@ -3,6 +3,6 @@ export interface ModelsBotPet {
     hp?: number;
     mana?: number;
     name?: string;
+    pet_id?: number;
     pets_index?: number;
-    spell_id?: number;
 }

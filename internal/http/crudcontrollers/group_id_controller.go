@@ -36,6 +36,7 @@ func (e *GroupIdController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "group_id/:groupid", e.getGroupId, nil),
 		routes.RegisterRoute(http.MethodGet, "group_ids", e.listGroupIds, nil),
+		routes.RegisterRoute(http.MethodGet, "group_ids/count", e.getGroupIdsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "group_id", e.createGroupId, nil),
 		routes.RegisterRoute(http.MethodDelete, "group_id/:groupid", e.deleteGroupId, nil),
 		routes.RegisterRoute(http.MethodPatch, "group_id/:groupid", e.updateGroupId, nil),
@@ -395,4 +396,32 @@ func (e *GroupIdController) getGroupIdsBulk(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getGroupIdsCount godoc
+// @Id getGroupIdsCount
+// @Summary Counts GroupIds
+// @Accept json
+// @Produce json
+// @Tags GroupId
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.GroupId
+// @Failure 500 {string} string "Bad query request"
+// @Router /group_ids/count [get]
+func (e *GroupIdController) getGroupIdsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.GroupId{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

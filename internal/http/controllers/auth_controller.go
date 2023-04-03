@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/danilopolani/gocialite"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -18,18 +19,25 @@ type AuthController struct {
 	db     *database.DatabaseResolver
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
+	user   *spire.UserService
 }
 
-func NewAuthController(db *database.DatabaseResolver, logger *logrus.Logger) *AuthController {
+func NewAuthController(
+	db *database.DatabaseResolver,
+	logger *logrus.Logger,
+	user *spire.UserService,
+) *AuthController {
 	return &AuthController{
 		db:     db,
 		logger: logger,
 		gocial: gocialite.NewDispatcher(),
+		user:   user,
 	}
 }
 
 func (a *AuthController) Routes() []*routes.Route {
 	return []*routes.Route{
+		routes.RegisterRoute(http.MethodPost, "login", a.login, nil),
 		routes.RegisterRoute(http.MethodGet, "github", a.githubRedirectHandler, nil),
 		routes.RegisterRoute(http.MethodGet, "github/callback", a.githubCallbackHandler, nil),
 	}
@@ -80,33 +88,76 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	code := c.QueryParam("code")
 	state := c.QueryParam("state")
 
-	user, _, err := a.gocial.Handle(state, code)
+	github, _, err := a.gocial.Handle(state, code)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	//spew.Dump(user)
+	//spew.Dump(github)
 	//spew.Dump(token)
 
-	var newUser models.User
-	a.db.GetSpireDb().FirstOrCreate(
-		&newUser, models.User{
-			UserName:  user.Username,
-			FullName:  user.FullName,
-			FirstName: user.FirstName,
-			LastName:  user.LastName,
-			Email:     user.Email,
-			Avatar:    user.Avatar,
-			Provider:  "github",
-			CreatedAt: time.Time{},
-			UpdatedAt: time.Time{},
-		},
-	)
+	var user models.User
+	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, spire.LoginProviderGithub).First(&user)
 
-	newToken, _ := createJwtToken(fmt.Sprintf("%v", newUser.ID))
+	if user.ID == 0 {
+		u := models.User{
+			UserName:  github.Username,
+			FullName:  github.FullName,
+			FirstName: github.FirstName,
+			LastName:  github.LastName,
+			Email:     github.Email,
+			Avatar:    github.Avatar,
+			Provider:  spire.LoginProviderGithub,
+		}
+
+		// new github
+		newUser, err := a.user.CreateUser(u)
+		if err != nil {
+			a.logger.Error(err)
+		}
+
+		if newUser.ID > 0 {
+			user.ID = newUser.ID
+		}
+	}
+
+	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
 	callbackUrl := fmt.Sprintf("%s/fe-auth-callback?jwt=%s", os.Getenv("VUE_APP_FRONTEND_BASE_URL"), newToken)
 
 	fmt.Println(callbackUrl)
 
 	return c.Redirect(http.StatusMovedPermanently, callbackUrl)
+}
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (a *AuthController) login(c echo.Context) error {
+	u := new(LoginRequest)
+	if err := c.Bind(u); err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	passwordValid, err, user := a.user.CheckUserLogin(u.Username, u.Password)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	if !passwordValid {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Password invalid"})
+	}
+
+	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"data": echo.Map{
+				"message": "Login success",
+				"token":   newToken,
+			},
+		},
+	)
 }

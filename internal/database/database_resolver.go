@@ -71,7 +71,7 @@ func (d *DatabaseResolver) GetEqemuDb() *gorm.DB {
 }
 
 func (d *DatabaseResolver) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", d.crypt.GetEncryptionKey(), userId)
 }
 
 func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
@@ -301,6 +301,36 @@ func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB 
 	return query
 }
 
+func (d *DatabaseResolver) handleJsonWheres(query *gorm.DB, filter string) *gorm.DB {
+	// parse where field = value
+	wheres := strings.Split(filter, equalDelimiter)
+	if len(wheres) > 1 {
+		jsonDataField := wheres[0]
+		jsonLookupField := wheres[1]
+		lookupValue := wheres[2]
+		if strings.Contains(jsonLookupField, "[*]") {
+			query = query.Where(fmt.Sprintf("JSON_CONTAINS(JSON_EXTRACT(`%v`, '$%v'), ?, '$') = 1", jsonDataField, jsonLookupField), lookupValue)
+		} else {
+			query = query.Where(fmt.Sprintf("JSON_EXTRACT(`%v`, '$%v') = ?", jsonDataField, jsonLookupField), lookupValue)
+		}
+	}
+
+	// parse where field contains value
+	wheres = strings.Split(filter, likeDelimiter)
+	if len(wheres) > 1 {
+		jsonDataField := wheres[0]
+		jsonLookupField := wheres[1]
+		lookupValue := wheres[2]
+		if strings.Contains(jsonLookupField, "[*]") {
+			query = query.Where(fmt.Sprintf("JSON_SEARCH(JSON_EXTRACT(`%v`, '$%v'), 'all', ?, null, '$') IS NOT NULL", jsonDataField, jsonLookupField), "%"+lookupValue+"%")
+		} else {
+			query = query.Where(fmt.Sprintf("INSTR(JSON_EXTRACT(`%v`, '$%v'), ?) > 0", jsonDataField, jsonLookupField), lookupValue)
+		}
+	}
+
+	return query
+}
+
 func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.DB {
 	// parse where field = value
 	wheres := strings.Split(filter, equalDelimiter)
@@ -366,6 +396,14 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 }
 
 func (d *DatabaseResolver) GetUserConnection(user models.User) models.UserServerDatabaseConnection {
+	// cache
+	key := fmt.Sprintf("active-user-db-connection-%v", user.ID)
+	cachedConn, found := d.cache.Get(key)
+	if found {
+		return cachedConn.(models.UserServerDatabaseConnection)
+	}
+
+	// cache miss
 	var conn models.UserServerDatabaseConnection
 	relationships := models.UserServerDatabaseConnection{}.Relationships()
 	query := d.GetSpireDb().Model(&models.UserServerDatabaseConnection{})
@@ -374,6 +412,9 @@ func (d *DatabaseResolver) GetUserConnection(user models.User) models.UserServer
 	}
 
 	query.Where("user_id = ? and active = 1", user.ID).First(&conn)
+
+	// set cache
+	d.cache.Set(key, conn, 10*time.Minute)
 
 	return conn
 }

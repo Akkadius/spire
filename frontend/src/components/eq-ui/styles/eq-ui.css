@@ -212,17 +212,21 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
     .eq-window NAV.eq-tab-box-fancy UL {
         display: contents;
     }
+
     .tabs-details {
         margin-top: 20px;
     }
+
     .eq-window NAV.eq-tab-box-fancy UL LI {
         background-image: url(../images/tab_up_l.png),
         url(../images/tab_up_r.png),
         url(../images/tab_up_t.png) !important;
     }
+
     .eq-window NAV.eq-tab-box-fancy UL LI:hover {
         line-height: 36px !important;
     }
+
     .eq-window NAV.eq-tab-box-fancy UL LI a:hover,
     .eq-window NAV.eq-tab-box-fancy UL LI.eq-tab-open a {
         color: yellow !important;
@@ -379,35 +383,18 @@ A.eq-progress-bar DIV:before {
               anchor stylesheets
 ------------------------------------------------- */
 
-A {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
 
-A:link {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
 
-A:active {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
+/*.eq-table a:link,*/
+/*.eq-table a:visited,*/
+/*.eq-table a:active {*/
+/*    color: #8aa3ff;*/
+/*}*/
 
-A:visited {
-    text-decoration: none;
-    font-weight: none;
-    color: #6b614a;
-}
+/*.eq-table a:hover {*/
+/*    color: #073efd;*/
+/*}*/
 
-A:hover {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
 
 /* ----------------------------------------------
        button styles on most pages
@@ -418,6 +405,7 @@ A:hover {
 .eq-button-disabled:active,
 .eq-button-disabled:hover,
 .eq-button,
+.eq-button a,
 .eq-button:link,
 .eq-button:visited,
 .eq-button:active,
@@ -429,13 +417,13 @@ A:hover {
     /*line-height:       21px;*/
     text-decoration: none;
     font-weight: none;
-    color: #ffffff;
+    color: #ffffff !important;
     opacity: 1.0;
     cursor: pointer;
     position: relative;
 
     background-size: 100%;
-    background-repeat: no-repeat;
+    background-repeat: round;
     width: auto;
     padding: 10px;
     font-size: 14px;
@@ -821,25 +809,38 @@ table.eq-table tr:nth-child(even) {
     background-color: rgba(255, 255, 255, .03);
 }
 
-table.eq-table A:link,
-table.eq-table A:visited,
-table.eq-table A:active,
-table.eq-table A:hover {
+.eq-table a:link:not(.btn),
+.eq-table a:visited:not(.btn),
+.eq-table a:active:not(.btn),
+.eq-table a:not(.btn) {
     color: #8aa3ff;
+    -moz-transition: all .05s ease;
+    -o-transition: all .05s ease;
+    -webkit-transition: all .05s ease;
+    transition: all .05s ease;
 }
 
-table.eq-table THEAD TR TH {
+.eq-table a:hover {
+    color: #073efd;
+}
+
+.eq-table THEAD TR TH {
     font-weight: bold;
     color: #8aa3ff;
     vertical-align: top;
     margin: 0px;
-    padding: 20px 15px 5px;
+    padding: 20px 15px 15px;
     border-collapse: collapse;
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
+
+    border-right: 0.1px solid #ffffff1c;
+    border-left: 0.1px solid #ffffff1c;
+    border-bottom: 1px solid #ffffff1c;
+    border-top: 1px solid #ffffff1c;
 }
 
-table.eq-table TBODY TR TD {
+.eq-table TBODY TR TD {
     color: #ffffff;
     vertical-align: top;
     margin: 0px;
@@ -848,7 +849,7 @@ table.eq-table TBODY TR TD {
     text-align: left;
 }
 
-table.eq-table TFOOT TR TD {
+.eq-table TFOOT TR TD {
     color: #ffffff;
     vertical-align: top;
     margin: 0px;
@@ -858,8 +859,9 @@ table.eq-table TFOOT TR TD {
 }
 
 /* makes rows highlight in brown */
-table.eq-highlight-rows TBODY TR:hover {
-    background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);
+.eq-highlight-rows TBODY TR:hover {
+    /*background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);*/
+    background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0) 50%, rgba(123, 113, 74, 1) 100%);
 }
 
 table.bordered tr {
@@ -972,6 +974,71 @@ h6.eq-header {
     background-image: url(../images/super_fancy_bg.png);
     position: sticky;
     top: 0;
+    border-collapse: separate;
     z-index: 9999;
-    /*box-shadow: rgb(0 0 0) 0px 20px 15px inset;*/
+    border-bottom: 1px solid #ffffff1c;
+
+    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, .2));
+}
+
+.eq-table-floating-header {
+    box-shadow: inset 0 1px 0 #ffffff1c, inset 0 -1px 0 #ffffff1c;
+}
+
+.eq-window-simple .text-muted {
+    color: #81959c !important;
+}
+
+/*anchor tags*/
+.eq-window-simple a {
+    text-decoration: none;
+    font-weight: none;
+    color: #7b714a;
+
+    -moz-transition: all .05s ease;
+    -o-transition: all .05s ease;
+    -webkit-transition: all .05s ease;
+    transition: all .05s ease;
+}
+
+.eq-window-simple  a:link{
+    text-decoration: none;
+    font-weight: none;
+    color: #7b714a;
+}
+
+.eq-window-simple a:active {
+    text-decoration: none;
+    font-weight: none;
+    color: #7b714a;
+}
+
+.eq-window-simple a:visited {
+    text-decoration: none;
+    font-weight: none;
+    color: #6b614a;
+}
+
+.eq-window-simple a:hover {
+    text-decoration: none;
+    font-weight: none;
+    color: white;
+}
+
+.eq-alert {
+    background-image: url(../images/super_fancy_bg.png);
+    outline-offset: -20px;
+    border: 2px #40434e solid;
+    background-position-x: left, right, left, right, left;
+    background-position-y: top, top, bottom, bottom, top;
+    background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
+    padding: 15px;
+}
+
+.eq-list ul {
+    list-style-type: circle !important;
+}
+
+.eq-list li {
+    list-style-type: circle !important;
 }

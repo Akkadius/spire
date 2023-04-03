@@ -107,6 +107,7 @@ export interface ModelsCharacterDatum {
     e_percent_to_aa?: number;
     endurance?: number;
     exp?: number;
+    exp_enabled?: number;
     eye_color_1?: number;
     eye_color_2?: number;
     face?: number;

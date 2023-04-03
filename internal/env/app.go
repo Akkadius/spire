@@ -66,6 +66,10 @@ func LoadEnvFileIfExists() error {
 	return nil
 }
 
+func IsEnvLoaded() bool {
+	return envLoaded
+}
+
 // searches for .env file through directory traversal
 // loads .env file if found
 func loadEnvFile(envFile string) bool {

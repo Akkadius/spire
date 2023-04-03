@@ -36,6 +36,7 @@ func (e *GlobalLootController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "global_loot/:id", e.getGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodGet, "global_loots", e.listGlobalLoots, nil),
+		routes.RegisterRoute(http.MethodGet, "global_loots/count", e.getGlobalLootsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "global_loot", e.createGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodDelete, "global_loot/:id", e.deleteGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodPatch, "global_loot/:id", e.updateGlobalLoot, nil),
@@ -329,4 +330,32 @@ func (e *GlobalLootController) getGlobalLootsBulk(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getGlobalLootsCount godoc
+// @Id getGlobalLootsCount
+// @Summary Counts GlobalLoots
+// @Accept json
+// @Produce json
+// @Tags GlobalLoot
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.GlobalLoot
+// @Failure 500 {string} string "Bad query request"
+// @Router /global_loots/count [get]
+func (e *GlobalLootController) getGlobalLootsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.GlobalLoot{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

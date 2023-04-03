@@ -71,6 +71,7 @@ export interface ModelsNpcType {
     ignore_despawn?: number;
     isbot?: number;
     isquest?: number;
+    keeps_sold_items?: number;
     lastname?: string;
     legtexture?: number;
     level?: number;

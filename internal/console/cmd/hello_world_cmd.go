@@ -1,24 +1,36 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/internal/database"
-	"github.com/Akkadius/spire/internal/models"
+	"fmt"
+	"github.com/Akkadius/spire/internal/backup"
+	"github.com/Akkadius/spire/internal/pathmgmt"
+	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type HelloWorldCommand struct {
-	db      *gorm.DB
-	logger  *logrus.Logger
-	command *cobra.Command
+	db       *gorm.DB
+	logger   *logrus.Logger
+	command  *cobra.Command
+	backup   *backup.Mysql
+	pathmgmt *pathmgmt.PathManagement
 }
 
 func (c *HelloWorldCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand {
+func NewHelloWorldCommand(
+	db *gorm.DB,
+	logger *logrus.Logger,
+	backup *backup.Mysql,
+	pathmgmt *pathmgmt.PathManagement,
+) *HelloWorldCommand {
 	i := &HelloWorldCommand{
 		db:     db,
 		logger: logger,
@@ -26,6 +38,8 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand
 			Use:   "hello:hello-world",
 			Short: "Says hello world",
 		},
+		backup:   backup,
+		pathmgmt: pathmgmt,
 	}
 
 	i.command.Args = i.Validate
@@ -36,19 +50,46 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand
 
 // Handle implementation of the Command interface
 func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
-	// grab first entry
-	var source models.Task
-	err := c.db.Where("id", 1).First(&source).Error
+	pp.Println(c.pathmgmt.GetLogsDirPath())
+
+	var logFile string
+	err := filepath.Walk(c.pathmgmt.GetLogsDirPath(), func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		if strings.Contains(path, ".log") {
+			logFile = path
+			return nil
+		}
+
+		//fmt.Printf("dir: %v: name: %s\n", info.IsDir(), path)
+		return nil
+	})
 	if err != nil {
-		c.logger.Println(err)
+		fmt.Println(err)
 	}
 
-	var dest = source
-	dest.Type = 1
-	dest.ExpReward = 30002
-	dest.Description = "Some new description3"
+	pp.Println(logFile)
 
-	c.db.Model(&dest).Updates(database.ResultDifference(source, dest))
+	f, err := os.Open(logFile)
+	if err != nil {
+		pp.Println(err)
+	}
+
+	b1 := make([]byte, 100*1024*1024)
+	n1, err := f.Read(b1)
+	if err != nil {
+		pp.Println(err)
+	}
+
+	pp.Println(n1)
+
 }
 
 // Validate implementation of the Command interface

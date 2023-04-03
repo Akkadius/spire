@@ -7,20 +7,20 @@
       <div v-if="loaded">
 
         <!-- Form -->
-        <div class="row" @click="resetAllState()">
+        <div class="row">
           <div class="col-lg-1 col-sm-12 text-center">
             Language
             <b-form-select
               v-model="languageSelection"
               :options="languageOptions"
-              @change="languageSelect();"
+              @change="languageReset(); updateQueryState();"
             />
           </div>
           <div class="col-lg-2 col-sm-12 text-center">
             Types
             <b-form-select
               v-model="methodTypeSelection"
-              @change="methodTypeSelectReset(); formChange(); "
+              @change="methodTypeSelectReset(); updateQueryState(); "
               :options="methodTypeOptions"
             />
           </div>
@@ -28,7 +28,7 @@
             Events
             <b-form-select
               v-model="eventSelection"
-              @change="eventSelectReset(); formChange();"
+              @change="eventSelectReset(); updateQueryState();"
               :options="eventOptions"
             />
           </div>
@@ -36,7 +36,7 @@
             Constants
             <b-form-select
               v-model="constantSelection"
-              @change="constantSelectReset(); formChange();"
+              @change="constantSelectReset(); updateQueryState();"
               :options="constantOptions"
             />
           </div>
@@ -47,6 +47,7 @@
               v-model="search"
               v-on:keyup="optionLoaded = false; onSearch(); onSearchMethodExampleLoad()"
               placeholder="Search for methods, events (soon constants)..."
+              autofocus
             />
           </div>
           <div class="col-lg-1 col-sm-12 text-center" v-if="appEnvLocal">
@@ -203,7 +204,7 @@
           class="mt-3"
           @click="closeExample"
         >
-          <div style="right: 30px; top: -12px; position: absolute">
+          <div style="right: 30px; top: -10px; position: absolute; z-index: 999999">
             <a
               style="color: white"
               @click="closeExample"
@@ -283,7 +284,7 @@
         <iframe
           frameborder="0"
           allowtransparency="true"
-          style="width: 100%; height: 69vh; border-radius: 10px"
+          style="width: 100%; height: 75vh; border-radius: 10px"
           src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"
         />
 
@@ -315,6 +316,7 @@ import {debounce} from "@/app/utility/debounce";
 import {ROUTE} from "@/routes";
 import {AppEnv} from "@/app/env/app-env";
 import ContentArea from "@/components/layout/ContentArea.vue";
+import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 
 export default {
   components: {
@@ -385,22 +387,28 @@ export default {
 
       // search
       search: "",
-      searchApiResultMethods: {},
+      searchApiResultMethods: [],
       searchEventsResult: [],
       searchConstantsResult: []
     }
   },
+  watch: {
+    $route(to, from) {
+      this.loadQueryState()
+    }
+  },
+
   destroyed() {
     Debug.log("[deactivated]")
 
-    // remove route watcher
-    this.routeWatcher()
-
     document.body.removeEventListener('keyup', this.closeExampleKeyHandler)
   },
-  mounted() {
+  async mounted() {
     Debug.log("[activated]")
 
+    this.reset()
+    await this.loadDefinitions();
+    this.loadQueryState()
     this.init()
   },
   methods: {
@@ -445,7 +453,7 @@ export default {
 
       this.optionLoaded = false
 
-      this.formChange()
+      this.updateQueryState()
 
       let apiMethods = []
       for (const [key, value] of Object.entries(this.api[this.languageSelection].methods)) {
@@ -512,35 +520,6 @@ export default {
       this.loadSearchExamples(methodSearchTerms)
     }, 500),
 
-    resetAllState() {
-      // return
-
-      Debug.log("[resetAllState]")
-
-      this.displayExamples = []
-
-      let query = this.$route.query
-      delete query.h
-
-      // for some reason this needs to be wiped first
-      this.$router.replace(
-        {
-          path: ROUTE.QUEST_API_EXPLORER,
-          query: {}
-        }
-      ).catch(() => {
-      })
-
-      this.$router.replace(
-        {
-          path: ROUTE.QUEST_API_EXPLORER,
-          query: query
-        }
-      ).catch((e) => {
-      })
-
-      Debug.log("[resetAllState] done")
-    },
     fromNow(time) {
       return moment(time).fromNow()
     },
@@ -549,13 +528,20 @@ export default {
         this.closeExample()
       }
     },
-    init() {
-      Debug.blankLine()
-      Debug.log("[init]")
+    languageReset() {
+      delete this.$route.query.h
+      this.methodTypeSelection    = null
+      this.methodTypeOptions      = []
+      this.eventSelection         = null
+      this.eventOptions           = []
+      this.constantSelection      = null
+      this.constantOptions        = []
+      this.displayExamples        = []
+      this.search                 = ""
+      this.searchApiResultMethods = []
+    },
 
-      // this.lastQueryParamState = this.$route.query
-
-      // reset
+    reset() {
       this.languageSelection      = null
       this.methodTypeSelection    = null
       this.methodTypeOptions      = []
@@ -565,13 +551,21 @@ export default {
       this.constantOptions        = []
       this.displayExamples        = []
       this.search                 = ""
-      this.searchApiResultMethods = {}
+      this.searchApiResultMethods = []
       this.loaded                 = false
+    },
 
-      // route watcher
-      this.routeWatcher = this.$watch('$route.query', () => {
-        this.loadQueryParams()
-      });
+    async loadDefinitions() {
+      const r = await SpireApi.v1().get('/quest-api/definitions')
+      if (r.data && r.data.data) {
+        this.api    = r.data.data
+        this.loaded = true
+      }
+    },
+
+    init() {
+      Debug.blankLine()
+      Debug.log("[init]")
 
       // get app env
       this.appEnvLocal = AppEnv.isAppLocal()
@@ -579,27 +573,10 @@ export default {
       // escape handler
       document.body.addEventListener('keyup', this.closeExampleKeyHandler)
 
-      // load data from api
-      SpireApi.v1().get('/quest-api/definitions').then((response) => {
-        if (response.data && response.data.data) {
-          this.api    = response.data.data
-          this.loaded = true
-          this.loadQueryParams()
-        }
-      }, (error) => {
-        // this.errorMessage = "Unknown error trying to contact the database"
-        if (error.response && error.response.data) {
-          // this.errorMessage = error.response.data.error
-        }
-      }).catch((error) => {
-        if (!axios.isCancel(error)) {
-          // console.log(error)
-          // this.errorMessage = "Unknown error trying to contact the database"
-        }
-      });
+      this.loadDefinitions()
     },
-    loadQueryParams() {
-      Debug.log("[loadQueryParams] trigger")
+    loadQueryState() {
+      Debug.log("[loadQueryState] trigger")
 
       this.languageSelection   = null
       this.methodTypeSelection = null
@@ -614,6 +591,7 @@ export default {
         this.displayExamples   = []
       }
 
+      const langSetting = LocalSettings.get(Setting.DEFAULT_LANGUAGE_PREFERENCE);
       if (this.$route.query.lang) {
         this.languageSelection = this.$route.query.lang
         if (this.lastQueryParamState.lang !== this.$route.query.lang) {
@@ -627,6 +605,11 @@ export default {
         }
         this.languageSelect()
       }
+      // load default user preference if query string not set
+      else if (langSetting !== "") {
+        this.languageSelection = langSetting
+        this.languageSelect()
+      }
 
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
@@ -637,7 +620,7 @@ export default {
       if (this.$route.query.event) {
         this.eventSelection = this.$route.query.event
         if (this.lastQueryParamState.event !== this.$route.query.event) {
-          Debug.log("[loadQueryParams] eventSelect")
+          Debug.log("[loadQueryState] eventSelect")
           this.eventSelect()
         }
       }
@@ -645,7 +628,7 @@ export default {
         this.constantSelection = this.$route.query.constant
 
         if (this.lastQueryParamState.constant !== this.$route.query.constant) {
-          Debug.log("[loadQueryParams] constantSelect")
+          Debug.log("[loadQueryState] constantSelect")
           this.constantSelect()
         }
       }
@@ -654,7 +637,7 @@ export default {
         this.search = this.$route.query.q
 
         if (this.lastQueryParamState.q !== this.$route.query.q) {
-          Debug.log("[loadQueryParams] search")
+          Debug.log("[loadQueryState] search")
           this.doSearch()
           this.onSearchMethodExampleLoad()
         }
@@ -666,9 +649,9 @@ export default {
 
       this.lastQueryParamState = this.$route.query
     },
-    formChange() {
+    updateQueryState() {
       Debug.blankLine()
-      Debug.log("[formChange] trigger")
+      Debug.log("[updateQueryState] trigger")
       let query = {}
       if (this.languageSelection) {
         query.lang = this.languageSelection
@@ -711,6 +694,10 @@ export default {
     languageSelect: function () {
       this.constantSelection = null
       this.search            = ""
+
+      if (this.languageSelection.length !== 0) {
+        LocalSettings.set(Setting.DEFAULT_LANGUAGE_PREFERENCE, this.languageSelection)
+      }
 
       // methods
       if (this.api[this.languageSelection].methods) {
@@ -768,11 +755,6 @@ export default {
           this.constantSelection = null
         }
       }
-
-      // update browser / route state
-      setTimeout(() => {
-        this.formChange();
-      }, 50);
     },
     slug: function (toSlug) {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
@@ -907,7 +889,7 @@ export default {
       let apiMethods  = []
       this.apiMethods = []
 
-      // this.formChange()
+      // this.updateQueryState()
 
       // used to search sources for examples
       let methodSearchTerms  = []
@@ -948,7 +930,7 @@ export default {
 
       // update browser / route state
       // setTimeout(() => {
-      //   this.formChange(), 100
+      //   this.updateQueryState(), 100
       // });
 
       const event        = this.eventSelection.split("-")[1]
@@ -974,7 +956,7 @@ export default {
 
       // // update browser / route state
       // setTimeout(() => {
-      //   this.formChange(), 100
+      //   this.updateQueryState(), 100
       // });
 
       if (this.constantSelection) {

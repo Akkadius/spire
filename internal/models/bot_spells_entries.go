@@ -1,9 +1,5 @@
 package models
 
-import (
-	"github.com/volatiletech/null/v8"
-)
-
 type BotSpellsEntry struct {
 	ID                uint       `json:"id" gorm:"Column:id"`
 	NpcSpellsId       int        `json:"npc_spells_id" gorm:"Column:npc_spells_id"`
@@ -19,7 +15,7 @@ type BotSpellsEntry struct {
 	MaxHp             int16      `json:"max_hp" gorm:"Column:max_hp"`
 	BucketName        string     `json:"bucket_name" gorm:"Column:bucket_name"`
 	BucketValue       string     `json:"bucket_value" gorm:"Column:bucket_value"`
-	BucketComparison  null.Uint8 `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
+	BucketComparison  uint8      `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
 	NpcSpell          *NpcSpell  `json:"npc_spell,omitempty" gorm:"foreignKey:npc_spells_id;references:id"`
 	SpellsNew         *SpellsNew `json:"spells_new,omitempty" gorm:"foreignKey:spellid;references:id"`
 }

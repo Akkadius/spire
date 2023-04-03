@@ -131,6 +131,7 @@ type NpcType struct {
 	ExpMod                 int                `json:"exp_mod" gorm:"Column:exp_mod"`
 	HeroicStrikethrough    int                `json:"heroic_strikethrough" gorm:"Column:heroic_strikethrough"`
 	FactionAmount          int                `json:"faction_amount" gorm:"Column:faction_amount"`
+	KeepsSoldItems         uint8              `json:"keeps_sold_items" gorm:"Column:keeps_sold_items"`
 	AlternateCurrency      *AlternateCurrency `json:"alternate_currency,omitempty" gorm:"foreignKey:alt_currency_id;references:id"`
 	Merchantlists          []Merchantlist     `json:"merchantlists,omitempty" gorm:"foreignKey:merchantid;references:merchant_id"`
 	NpcFactions            []NpcFaction       `json:"npc_factions,omitempty" gorm:"foreignKey:id;references:npc_faction_id"`

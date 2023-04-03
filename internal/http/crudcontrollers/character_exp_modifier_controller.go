@@ -36,6 +36,7 @@ func (e *CharacterExpModifierController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "character_exp_modifier/:characterId", e.getCharacterExpModifier, nil),
 		routes.RegisterRoute(http.MethodGet, "character_exp_modifiers", e.listCharacterExpModifiers, nil),
+		routes.RegisterRoute(http.MethodGet, "character_exp_modifiers/count", e.getCharacterExpModifiersCount, nil),
 		routes.RegisterRoute(http.MethodPut, "character_exp_modifier", e.createCharacterExpModifier, nil),
 		routes.RegisterRoute(http.MethodDelete, "character_exp_modifier/:characterId", e.deleteCharacterExpModifier, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_exp_modifier/:characterId", e.updateCharacterExpModifier, nil),
@@ -395,4 +396,32 @@ func (e *CharacterExpModifierController) getCharacterExpModifiersBulk(c echo.Con
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getCharacterExpModifiersCount godoc
+// @Id getCharacterExpModifiersCount
+// @Summary Counts CharacterExpModifiers
+// @Accept json
+// @Produce json
+// @Tags CharacterExpModifier
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.CharacterExpModifier
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_exp_modifiers/count [get]
+func (e *CharacterExpModifierController) getCharacterExpModifiersCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.CharacterExpModifier{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

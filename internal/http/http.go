@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/docs"
 	"github.com/Akkadius/spire/internal/banner"
+	"github.com/Akkadius/spire/internal/env"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
+	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -18,6 +20,24 @@ import (
 
 	_ "github.com/Akkadius/spire/docs"
 )
+
+type Server struct {
+	logger  *logrus.Logger
+	router  *routes.Router
+	occulus *occulus.ProcessManagement
+}
+
+func NewServer(
+	logger *logrus.Logger,
+	router *routes.Router,
+	occulus *occulus.ProcessManagement,
+) *Server {
+	return &Server{
+		logger:  logger,
+		router:  router,
+		occulus: occulus,
+	}
+}
 
 // @title Spire
 // @version 3.0
@@ -34,12 +54,12 @@ import (
 // @BasePath /api/v1
 
 // Serve runs a http server
-func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
+func (c *Server) Serve(port uint) error {
 	e := echo.New()
 
-	BootstrapMiddleware(e, router)
-	if err := BootstrapControllers(e, router.ControllerGroups()...); err != nil {
-		logger.Fatal(err)
+	BootstrapMiddleware(e, c.router)
+	if err := BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
+		c.logger.Fatal(err)
 	}
 
 	// basic auth if env passed
@@ -66,7 +86,7 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e.GET("/api/v1/routes", listRoutes)
 
 	// serve spa as embedded static assets
-	s := spa.NewSpirePackagedSpaService(logger)
+	s := spa.NewSpirePackagedSpaService(c.logger)
 	e.GET("/*", s.Spa().Handler(), middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}))
 	e.Use(s.Spa().MiddlewareHandler())
 
@@ -74,6 +94,14 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e.HideBanner = true
 
 	banner.Print()
+
+	// only run Occulus initialization in local environment
+	if env.IsAppEnvLocal() {
+		err := c.occulus.Run()
+		if err != nil {
+			c.logger.Error(err)
+		}
+	}
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }
@@ -116,6 +144,8 @@ func BootstrapControllers(e *echo.Echo, controllerGroups ...*routes.ControllerGr
 func registerRoutes(controller routes.Controller, g *echo.Group) error {
 	for _, r := range controller.Routes() {
 		switch r.Method() {
+		case "ANY":
+			g.Any(r.Route(), r.Handler(), r.Middlewares()...)
 		case http.MethodGet:
 			g.GET(r.Route(), r.Handler(), r.Middlewares()...)
 		case http.MethodPost:

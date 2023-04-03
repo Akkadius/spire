@@ -1,3 +1,240 @@
+## [3.0.0] 4/2/2023 - Spire Admin
+
+This release is nothing short of massive. Buckle up! The changelog notes are hefty!
+
+### [Spire Admin] Dashboard
+
+Similar to the dashboard in [Occulus](https://github.com/Akkadius/Occulus), but ported for modernization, quality of life changes, and the high-level server information is always available at the top of every admin page.
+
+![image](https://user-images.githubusercontent.com/3319450/229333545-e8c6132c-68f7-4971-8d7c-0e00eda67eb6.png)
+
+### [Spire Admin] Static Zone Launcher
+
+You can now manage launch static zones via the Occulus launcher directly in the server start UI.
+
+![image](https://user-images.githubusercontent.com/3319450/229336435-f2f1a173-b1f9-4c6e-b53b-1b79f19af9bc.png)
+
+### [Spire Admin] Server Pre-Flight Checks
+
+Before you launch your server, you are required to run basic pre-flight checks, this will ensure that your processes don't have any issues and you are made aware of them before all of your processes are launched in the background
+
+![image](https://user-images.githubusercontent.com/3319450/229333233-b0fc22b1-0df0-467b-8b13-53621c382306.png)
+
+### [Spire Admin] Players Online
+
+![image](https://user-images.githubusercontent.com/3319450/229333775-104344eb-e008-48a6-9acd-13a340401bdc.png)
+
+### [Spire Admin] Zone Servers
+
+List and search booted zone processes and resources, kill zone processes
+
+![image](https://user-images.githubusercontent.com/3319450/229333800-b39a8443-71fb-49c6-8af8-54d9ba0391dd.png)
+
+### [Spire Admin] Manual Backups
+
+Manually backup server assets
+
+![image](https://user-images.githubusercontent.com/3319450/229333864-de528f46-c81a-4404-9327-cb06dd2bdddc.png)
+
+### [Spire Admin] EverQuest Client Asset Exports (Publicly Downloadable Links)
+
+![image](https://user-images.githubusercontent.com/3319450/229333921-73b79f4c-d1d6-44f8-bdee-bead89b847b5.png)
+
+### [Spire Admin] Server Configuration Management
+
+Tired of editing that pesky `eqemu_config` JSON file manually? Spire admin breaks out configuration editing into easy to use deep-link able sections
+
+![image](https://user-images.githubusercontent.com/3319450/229333958-4eb2b9de-38d0-43d0-8dd9-67bd5c666a19.png)
+
+### [Spire Admin] Crash Log Webhooks (Occulus)
+
+Crash log webhooks that you used in Occulus? Spire integrates with Occulus to continue providing those in Spire. You can edit the Discord webhook right in the UI
+
+![image](https://user-images.githubusercontent.com/3319450/229334006-10d5e97f-09c9-4f77-8bfd-98552ca90d60.png)
+
+### [Spire Admin] Message of the Day
+
+You know that message players read when they log in? You edit that here
+
+![image](https://user-images.githubusercontent.com/3319450/229334040-c8a42200-53ec-4dc1-83e9-91a5a80d08cd.png)
+
+### [Spire Admin] Quest Hot Reload (Occulus)
+
+The hot reload functionality that was brought to you in Occulus is now configurable directly from Spire Admin. Anytime you make changes here it will immediately take affect.
+
+Critical bug fixes have also been made to the HRM
+
+![image](https://user-images.githubusercontent.com/3319450/229334070-96250391-8cc4-4c9f-b00c-e267d0f96969.png)
+
+### [Spire Admin] Server Reloading
+
+You can trigger server reloads directly through Spire. Reloads are triggered globally and reload data from the database into the server memory state.
+
+Many tools already utilize this when editing related data.
+
+![image](https://user-images.githubusercontent.com/3319450/229336522-158c268e-48bb-4180-8ca3-e53a9bc4e446.png)
+
+### [Spire Admin] Server Rules
+
+List, search, edit your server rules in real time. Spire will reload rules directly on your server immediately so you do not need to manually reload them in game. Super handy!
+
+![image](https://user-images.githubusercontent.com/3319450/229334145-4536565e-50b2-4b17-bc7a-7f0bf485bd92.png)
+
+### [Spire Admin] Server Database Backup
+
+Ever just want to take a quick manual database backup? Spire admin could not make this any easier by tapping into the native eqemu server utility that wraps around `mysqldump`. You can select specific types of tables to dump, dump everything and compress it with an immediate download
+
+![image](https://user-images.githubusercontent.com/3319450/229334188-57e515d1-efee-4572-9b6d-620b4d1cbb87.png)
+
+
+### [Spire Admin] Server File Log Viewer
+
+Completely overhauled and ported from Occulus. Spire file log viewer is highly performant, streams realtime and only streams changes since the last file write.
+
+Emulates console coloring, filters by log type, search filters, file deletion, bulk file deletion and more!
+
+<video src="https://user-images.githubusercontent.com/3319450/229334302-064df32f-9f27-405a-a6f0-c5623ab35400.mp4" data-canonical-src="https://user-images.githubusercontent.com/3319450/229334302-064df32f-9f27-405a-a6f0-c5623ab35400.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px"></video>
+
+### [Spire Admin] Discord Logging Webhooks
+
+Manage your Discord logging webhooks directly through Spire.
+
+![image](https://user-images.githubusercontent.com/3319450/229334410-111c2cc4-40d6-4644-8426-55f7e70ef64d.png)
+
+### [Spire Admin] Manage Server Logging Settings
+
+Manage your logging settings directly in Spire admin. Anytime changes are made your logging settings are reloaded real-time in the server without having to reboot or type commands in game!
+
+![image](https://user-images.githubusercontent.com/3319450/229334469-85521c13-5435-4419-b9c2-2102949d7043.png)
+
+### [Spire Admin] Player Event Log Explorer
+
+Accompanied by a massive new feature in the EverQuest Emulator server ([see Player Event Logging](https://github.com/EQEmu/Server/pull/2833)) we are brought a powerful new explorer for rich auditing tools.
+
+#### Rich Data Viewing
+
+Spire translates event data into viewable NPC, Item, Spell etc. cards to have contextual insight into the events and what they contain.
+
+![image](https://user-images.githubusercontent.com/3319450/216812922-547efee0-4a84-4b1d-8637-1a2d13283cba.png)
+
+![image](https://user-images.githubusercontent.com/3319450/216810318-32e0e8f3-1392-497e-a14b-55f6585e7edd.png)
+
+#### Event Raw
+
+Any event you can see the richly formatted event or you can inspect the raw event data
+
+![event-raw](https://user-images.githubusercontent.com/3319450/216810779-b14bbb99-7492-497e-afdf-407843ab1275.gif)
+
+#### Flexible Filtering
+
+You can filter by event type, zone_id, character_id which are top level filters always available and indexed regardless of event type
+
+![event-filter](https://user-images.githubusercontent.com/3319450/216810442-62040911-f17c-4b41-b032-ec00a440c49d.gif)
+
+#### Advanced Event Data Filtering
+
+You can filter by JSON event data
+
+![event-data-filter](https://user-images.githubusercontent.com/3319450/216810590-9802cfb5-a619-4e08-ab0e-342376e4044b.gif)
+
+You can even filter by deeply nested data. For example if you're trying to search for a certain item that was traded by doing a nested wildcard search
+
+![event-deep-filter](https://user-images.githubusercontent.com/3319450/216810644-dea5d9b6-3a8c-4936-afaf-efae03fb1fe5.gif)
+
+![image](https://user-images.githubusercontent.com/3319450/229334536-f035ccd4-45ae-48e0-b5f7-e5b57a7b80e0.png)
+
+### [Spire Admin] Player Event Log Settings
+
+Once again you're able to edit your player event log settings within spire admin and changes are real-time reloaded in game without having to issue commands!
+
+![image](https://user-images.githubusercontent.com/3319450/229334708-ab18f1d2-d9bb-49c8-8689-747bce0c2453.png)
+
+### [Spire Admin] Server Update
+
+Spire admin now has a rich interface where you can download new server releases, or build your own (Linux only)
+
+![image](https://user-images.githubusercontent.com/3319450/229334953-b945783c-9e6a-4356-90d8-3a53d0dc7f21.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229334987-c7ac5374-a4ca-436e-b52f-9d8b7edf471f.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229334994-e5ca8f0f-6f65-442d-90f2-691438792c30.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229334970-cae8036a-5d15-44ce-87f5-67bcc9fddb09.png)
+
+### [Spire Admin] Permissions
+
+If you'd like to limit access of other users to your server and especially sensitive areas. There are permissions that cover access to various resources within the admin section of Spire in your local installation
+
+![image](https://user-images.githubusercontent.com/3319450/229336838-8e7a73d7-8e05-4737-a89f-1a61e0cae0e1.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229336854-19a2b2d8-8937-497f-ae47-57ba21d27e22.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229336858-d0becf18-f67f-45aa-b543-1db54685e774.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229336867-70706d23-d286-4ada-a04a-039f0a6903fe.png)
+
+### Spire Setup
+
+Spire when ran locally will now redirect users to a one-time initial setup where users can choose whether they want their install to be guarded by authentication or not.
+
+This bootstraps Spire for local installations.
+
+![image](https://user-images.githubusercontent.com/3319450/229335122-9ee573db-93e4-48b5-8c8a-b836c0bd03cf.png)
+
+### Local Users
+
+Spire now has the ability during initial install to be configured with local users and authentication!
+
+![image](https://user-images.githubusercontent.com/3319450/229334852-bc03242f-fe94-41f2-9a97-3ab866cdcf90.png)
+
+![image](https://user-images.githubusercontent.com/3319450/229334891-1fba993e-d298-4fee-9234-479c14db4e8c.png)
+
+
+### Navigation Search
+
+Want to quickly and fluidly navigate your way around Spire? There's now a kbar in Spire similar to Discord, Slack, Github etc.
+
+Navigation search can be activated by using Ctrl + K, Ctrl + / or clicking "Search" in the navigation menu
+
+![image](https://user-images.githubusercontent.com/3319450/229332345-76c89678-ccc5-4850-b223-39dd0af5f712.png)
+
+### Keyboard Shortcuts
+
+My pressing the **Control** key, you can now see a modal that will show you Spire keyboard shortcuts
+
+![image](https://user-images.githubusercontent.com/3319450/229333312-8fd5fd05-6fa2-42bc-8fc5-27aef60b1f6f.png)
+
+### Item Editor
+
+* Item editor edit button now is a hyperlink that can be opened in a new tab https://github.com/Akkadius/spire/issues/106
+* Item editor clone button now is a hyperlink that can be opened in a new tab https://github.com/Akkadius/spire/issues/106
+* Item editor now can deeply link to tabs
+* Added "Food" tab with proper item display values in item card preview https://github.com/Akkadius/spire/issues/100
+* Added proper "zero value" for skillmodtype and extradmgskill (Thanks Kinglykrab)
+
+### Spell Editor
+
+* Add "Corruption" to resist types https://github.com/Akkadius/spire/issues/92
+* Spell editor now can deeply link to tabs
+* Have DB String buttons open a new tab to prevent loss of progress in editor https://github.com/Akkadius/spire/issues/95
+
+### Merchant Editor
+
+* Fix an issue with new merchantlist entries creating a max_status of 0 preventing new merchant items from being displayed https://github.com/Akkadius/spire/issues/107
+
+### NPC / Bot Spells Editor
+
+* Fix an issue where editing a spell results in a number type error https://github.com/Akkadius/spire/issues/83
+
+### Quest API Explorer
+
+* Fix an issue with copy to clipboard for multiple events being displayed in search https://github.com/Akkadius/spire/issues/104
+* Added user preference default language https://github.com/Akkadius/spire/issues/98
+
+### Fixes
+
+* Fixed [Bug] Merchant Editor creates new merchant list entries with max status of 0 https://github.com/Akkadius/spire/issues/107
+
 ## [2.6.1]
 
 ### Item Editor

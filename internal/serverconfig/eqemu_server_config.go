@@ -22,6 +22,14 @@ func NewEQEmuServerConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManageme
 	}
 }
 
+type DatabaseConfig struct {
+	Db       string `json:"db,omitempty"`
+	Host     string `json:"host,omitempty"`
+	Port     string `json:"port,omitempty"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+}
+
 type EQEmuConfigJson struct {
 	Server struct {
 		Zones struct {
@@ -30,57 +38,57 @@ type EQEmuConfigJson struct {
 				Low  string `json:"low"`
 				High string `json:"high"`
 			} `json:"ports"`
-		} `json:"zones"`
-		Qsdatabase struct {
-			Host     string `json:"host"`
-			Port     string `json:"port"`
-			Username string `json:"username"`
-			Password string `json:"password"`
-			Db       string `json:"db"`
-		} `json:"qsdatabase"`
+		} `json:"zones,omitempty"`
+		Qsdatabase *DatabaseConfig `json:"qsdatabase,omitempty"`
 		Chatserver struct {
 			Port string `json:"port"`
 			Host string `json:"host"`
-		} `json:"chatserver"`
+		} `json:"chatserver,omitempty"`
 		Mailserver struct {
 			Host string `json:"host"`
 			Port string `json:"port"`
-		} `json:"mailserver"`
+		} `json:"mailserver,omitempty"`
 		World struct {
+			API struct {
+				Enabled bool `json:"enabled"`
+			} `json:"api,omitempty"`
+			Address      string `json:"address,omitempty"`
+			Localaddress string `json:"localaddress,omitempty"`
 			Loginserver1 struct {
+				Port     string `json:"port"`
+				Account  string `json:"account"`
+				Password string `json:"password"`
+				Host     string `json:"host"`
+			} `json:"loginserver1,omitempty"`
+			Loginserver2 struct {
+				Account  string `json:"account"`
+				Password string `json:"password"`
+				Host     string `json:"host"`
+				Port     string `json:"port"`
+			} `json:"loginserver2,omitempty"`
+			TCP struct {
+				IP   string `json:"ip"`
+				Port string `json:"port"`
+			} `json:"tcp,omitempty"`
+			Telnet struct {
+				IP      string `json:"ip"`
+				Port    string `json:"port"`
+				Enabled string `json:"enabled"`
+			} `json:"telnet,omitempty"`
+			Key          string `json:"key"`
+			Shortname    string `json:"shortname"`
+			Longname     string `json:"longname"`
+			Loginserver3 struct {
 				Account  string `json:"account"`
 				Password string `json:"password"`
 				Legacy   string `json:"legacy"`
 				Host     string `json:"host"`
 				Port     string `json:"port"`
-			} `json:"loginserver1"`
-			Loginserver2 struct {
-				Port     string `json:"port"`
-				Account  string `json:"account"`
-				Password string `json:"password"`
-				Host     string `json:"host"`
-			} `json:"loginserver2"`
-			TCP struct {
-				IP   string `json:"ip"`
-				Port string `json:"port"`
-			} `json:"tcp"`
-			Telnet struct {
-				IP      string `json:"ip"`
-				Port    string `json:"port"`
-				Enabled string `json:"enabled"`
-			} `json:"telnet"`
-			Key       string `json:"key"`
-			Shortname string `json:"shortname"`
-			Longname  string `json:"longname"`
+			} `json:"loginserver3,omitempty"`
 		} `json:"world"`
-		Database struct {
-			Db       string `json:"db"`
-			Host     string `json:"host"`
-			Port     string `json:"port"`
-			Username string `json:"username"`
-			Password string `json:"password"`
-		} `json:"database"`
-		Files struct {
+		Database        *DatabaseConfig `json:"database"`
+		ContentDatabase *DatabaseConfig `json:"content_database,omitempty"`
+		Files           struct {
 			Opcodes     string `json:"opcodes"`
 			MailOpcodes string `json:"mail_opcodes"`
 		} `json:"files"`
@@ -89,6 +97,32 @@ type EQEmuConfigJson struct {
 			Opcodes string `json:"opcodes"`
 		} `json:"directories"`
 	} `json:"server"`
+	WebAdmin struct { // Occulus
+		Discord *struct {
+			CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
+		} `json:"discord,omitempty"`
+		Application struct {
+			Key   string `json:"key,omitempty"`
+			Admin struct {
+				Password string `json:"password,omitempty"`
+			} `json:"admin,omitempty"`
+		} `json:"application,omitempty"`
+		Launcher struct {
+			RunSharedMemory  bool   `json:"runSharedMemory"`
+			RunLoginserver   bool   `json:"runLoginserver"`
+			RunQueryServ     bool   `json:"runQueryServ"`
+			IsRunning        bool   `json:"isRunning"`
+			MinZoneProcesses int    `json:"minZoneProcesses"`
+			StaticZones      string `json:"staticZones,omitempty"`
+		} `json:"launcher,omitempty"`
+		Quests struct {
+			HotReload bool `json:"hotReload"`
+		} `json:"quests"`
+		ServerCodePath string `json:"serverCodePath,omitempty"`
+	} `json:"web-admin,omitempty"`
+	Spire struct {
+		EncryptionKey string `json:"encryption_key,omitempty"`
+	} `json:"spire,omitempty"`
 }
 
 func (e EQEmuServerConfig) Get() EQEmuConfigJson {
@@ -115,12 +149,36 @@ func (e EQEmuServerConfig) Get() EQEmuConfigJson {
 	return EQEmuConfigJson{}
 }
 
-func (m *EQEmuServerConfig) debug(msg string, a ...interface{}) {
+func (e *EQEmuServerConfig) debug(msg string, a ...interface{}) {
 	if len(os.Getenv("DEBUG")) >= 3 {
 		if len(a) > 0 {
-			m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
+			e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
 			return
 		}
-		m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
+		e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
 	}
+}
+
+func (e EQEmuServerConfig) Exists() bool {
+	return len(e.pathmgmt.GetEQEmuServerConfigFilePath()) > 0
+}
+
+func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
+	if c.WebAdmin.Discord != nil {
+		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
+			c.WebAdmin.Discord = nil
+		}
+	}
+
+	file, err := json.MarshalIndent(c, "", " ")
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(e.pathmgmt.GetEQEmuServerConfigFilePath(), file, 0755)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

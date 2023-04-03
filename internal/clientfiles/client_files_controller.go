@@ -1,8 +1,7 @@
-package controllers
+package clientfiles
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
@@ -20,15 +19,15 @@ import (
 
 type ClientFilesController struct {
 	logger   *logrus.Logger
-	exporter *clientfiles.Exporter
-	importer *clientfiles.Importer
+	exporter *Exporter
+	importer *Importer
 	db       *database.DatabaseResolver
 }
 
 func NewClientFilesController(
 	logger *logrus.Logger,
-	exporter *clientfiles.Exporter,
-	importer *clientfiles.Importer,
+	exporter *Exporter,
+	importer *Importer,
 	db *database.DatabaseResolver,
 ) *ClientFilesController {
 	return &ClientFilesController{
@@ -125,7 +124,7 @@ func (f *ClientFilesController) importFile(c echo.Context) error {
 	}
 
 	fileContents := string(fileBytes)
-	r := clientfiles.ImportResult{}
+	r := ImportResult{}
 	if strings.Contains(fileName, "spells_us") {
 		db := f.db.Get(&models.DbStr{}, c)
 		r, err = f.importer.ImportSpells(db, fileContents)

@@ -36,6 +36,7 @@ func (e *CharacterPotionbeltController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "character_potionbelt/:id", e.getCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodGet, "character_potionbelts", e.listCharacterPotionbelts, nil),
+		routes.RegisterRoute(http.MethodGet, "character_potionbelts/count", e.getCharacterPotionbeltsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "character_potionbelt", e.createCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodDelete, "character_potionbelt/:id", e.deleteCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_potionbelt/:id", e.updateCharacterPotionbelt, nil),
@@ -362,4 +363,32 @@ func (e *CharacterPotionbeltController) getCharacterPotionbeltsBulk(c echo.Conte
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getCharacterPotionbeltsCount godoc
+// @Id getCharacterPotionbeltsCount
+// @Summary Counts CharacterPotionbelts
+// @Accept json
+// @Produce json
+// @Tags CharacterPotionbelt
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.CharacterPotionbelt
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_potionbelts/count [get]
+func (e *CharacterPotionbeltController) getCharacterPotionbeltsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.CharacterPotionbelt{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

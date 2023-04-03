@@ -8,6 +8,13 @@ database:
     - backup
     - vw_
     - peq_admin
+    - spire_
+    - tool_
+    - goallists
+    - mercbuffs
+    - merc_
+    - mercs
+    - new_table
 #    - perl_event_export_settings
     - group_leader
   table_connections:

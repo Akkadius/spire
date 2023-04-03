@@ -11,6 +11,9 @@
     <router-link :to="ROUTE.DATABASE_CONNECTIONS" class="dropdown-item" v-if="user">
       <i class="fe fe-database"></i> Manage Connections
     </router-link>
+    <router-link :to="ROUTE.USER_MANAGEMENT" class="dropdown-item" v-if="user && isAdmin()">
+      <i class="fe fe-user"></i> Manage Users
+    </router-link>
     <hr class="dropdown-divider" v-if="user">
     <router-link :to="ROUTE.LOGOUT" class="dropdown-item" v-if="user">Logout</router-link>
   </div>
@@ -32,6 +35,11 @@ export default {
   },
   props: {
     menuRight: String
+  },
+  methods: {
+    isAdmin() {
+      return this.user.is_admin
+    }
   },
   async mounted() {
     this.user = await (UserContext.getUser())

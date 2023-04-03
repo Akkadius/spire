@@ -36,6 +36,7 @@ func (e *CharacterItemRecastController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "character_item_recast/:id", e.getCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodGet, "character_item_recasts", e.listCharacterItemRecasts, nil),
+		routes.RegisterRoute(http.MethodGet, "character_item_recasts/count", e.getCharacterItemRecastsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "character_item_recast", e.createCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodDelete, "character_item_recast/:id", e.deleteCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_item_recast/:id", e.updateCharacterItemRecast, nil),
@@ -97,7 +98,7 @@ func (e *CharacterItemRecastController) getCharacterItemRecast(c echo.Context) e
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [recast_type] position [2] type [smallint]
+	// key param [recast_type] position [2] type [int]
 	if len(c.QueryParam("recast_type")) > 0 {
 		recastTypeParam, err := strconv.Atoi(c.QueryParam("recast_type"))
 		if err != nil {
@@ -162,7 +163,7 @@ func (e *CharacterItemRecastController) updateCharacterItemRecast(c echo.Context
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [recast_type] position [2] type [smallint]
+	// key param [recast_type] position [2] type [int]
 	if len(c.QueryParam("recast_type")) > 0 {
 		recastTypeParam, err := strconv.Atoi(c.QueryParam("recast_type"))
 		if err != nil {
@@ -283,7 +284,7 @@ func (e *CharacterItemRecastController) deleteCharacterItemRecast(c echo.Context
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [recast_type] position [2] type [smallint]
+	// key param [recast_type] position [2] type [int]
 	if len(c.QueryParam("recast_type")) > 0 {
 		recastTypeParam, err := strconv.Atoi(c.QueryParam("recast_type"))
 		if err != nil {
@@ -362,4 +363,32 @@ func (e *CharacterItemRecastController) getCharacterItemRecastsBulk(c echo.Conte
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getCharacterItemRecastsCount godoc
+// @Id getCharacterItemRecastsCount
+// @Summary Counts CharacterItemRecasts
+// @Accept json
+// @Produce json
+// @Tags CharacterItemRecast
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.CharacterItemRecast
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_item_recasts/count [get]
+func (e *CharacterItemRecastController) getCharacterItemRecastsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.CharacterItemRecast{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

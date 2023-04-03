@@ -9,6 +9,7 @@ package boot
 import (
 	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auditlog"
+	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/console/cmd"
@@ -18,16 +19,23 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/github"
+	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	"github.com/Akkadius/spire/internal/http/crudcontrollers"
 	"github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
+	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/system"
+	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/gertd/go-pluralize"
 )
 
@@ -49,14 +57,20 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
+	mysql := backup.NewMysql(logger, pathManagement)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, mysql, pathManagement)
+	processManagement := occulus.NewProcessManagement(pathManagement, logger)
+	proxy := occulus.NewProxy(logger, eqEmuServerConfig, processManagement)
+	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, proxy)
+	connections := provideAppDbConnections(eqEmuServerConfig, logger)
+	encrypter := encryption.NewEncrypter(logger, eqEmuServerConfig)
+	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
+	userService := spire.NewUserService(databaseResolver, logger, encrypter, cache)
+	userCreateCommand := cmd.NewUserCreateCommand(databaseResolver, logger, encrypter, userService)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
-	connections := provideAppDbConnections(eqEmuServerConfig)
-	encrypter := encryption.NewEncrypter()
-	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
-	authController := controllers.NewAuthController(databaseResolver, logger)
+	authController := controllers.NewAuthController(databaseResolver, logger, userService)
 	meController := controllers.NewMeController()
 	client := influx.NewClient()
 	analyticsController := controllers.NewAnalyticsController(logger, client, databaseResolver)
@@ -64,28 +78,41 @@ func InitializeApplication() (App, error) {
 	dbConnectionCheckService := connection.NewDbConnectionCheckService(databaseResolver, logger, encrypter)
 	pluralizeClient := pluralize.NewClient()
 	service := permissions.NewService(databaseResolver, cache, logger, pluralizeClient)
-	connectionsController := controllers.NewConnectionsController(databaseResolver, logger, cache, dbConnectionCreateService, dbConnectionCheckService, service)
+	settings := spire.NewSettings(connections, logger)
+	init := spire.NewInit(connections, eqEmuServerConfig, logger, settings, cache, encrypter, dbConnectionCreateService, userService)
+	connectionsController := controllers.NewConnectionsController(databaseResolver, logger, cache, dbConnectionCreateService, dbConnectionCheckService, service, init, userService)
 	docsController := controllers.NewDocsController(databaseResolver, logger)
 	githubSourceDownloader := github.NewGithubSourceDownloader(logger, cache)
 	parseService := questapi.NewParseService(logger, cache, githubSourceDownloader)
 	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
-	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
-	appController := controllers.NewAppController(cache, logger)
+	questApiController := questapi.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
+	appController := controllers.NewAppController(cache, logger, init, userService, settings)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
-	questFileApiController := controllers.NewQuestFileApiController(logger)
 	exporter := clientfiles.NewExporter(logger)
 	importer := clientfiles.NewImporter(logger)
-	clientFilesController := controllers.NewClientFilesController(logger, exporter, importer, databaseResolver)
+	clientFilesController := clientfiles.NewClientFilesController(logger, exporter, importer, databaseResolver)
 	staticMapController := staticmaps.NewStaticMapController(databaseResolver, logger)
-	assetsController := controllers.NewAssetsController(logger, databaseResolver)
-	permissionsController := controllers.NewPermissionsController(logger, databaseResolver, service)
-	usersController := controllers.NewUsersController(databaseResolver, logger)
 	releases := eqemuanalytics.NewReleases()
 	eqemuanalyticsAnalyticsController := eqemuanalytics.NewAnalyticsController(logger, databaseResolver, releases)
 	changelog := eqemuchangelog.NewChangelog()
 	eqemuChangelogController := eqemuchangelog.NewEqemuChangelogController(logger, databaseResolver, changelog)
 	deployController := deploy.NewDeployController(logger)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController)
+	assetsController := assets.NewAssetsController(logger, databaseResolver)
+	permissionsController := permissions.NewPermissionsController(logger, databaseResolver, service)
+	usersController := spire.NewUsersController(databaseResolver, logger, userService, encrypter)
+	settingsController := spire.NewSettingController(databaseResolver, logger, encrypter, settings)
+	controller := occulus.NewController(logger, databaseResolver, proxy)
+	telnetClient := telnet.NewClient(logger)
+	eqemuserverClient := eqemuserver.NewClient(telnetClient)
+	updater := eqemuserver.NewUpdater(databaseResolver, logger, eqEmuServerConfig, settings, pathManagement)
+	eqemuserverController := eqemuserver.NewController(databaseResolver, logger, eqemuserverClient, eqEmuServerConfig, pathManagement, settings, updater)
+	publicController := eqemuserver.NewPublicController(databaseResolver, logger, eqemuserverClient, eqEmuServerConfig, pathManagement, settings, updater)
+	serverconfigController := serverconfig.NewController(logger, eqEmuServerConfig)
+	backupController := backup.NewController(logger, mysql, pathManagement)
+	spireHandler := websocket.NewSpireHandler(logger, pathManagement)
+	websocketController := websocket.NewController(logger, pathManagement, spireHandler)
+	systemController := system.NewController(logger)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, settingsController, controller, eqemuserverController, publicController, serverconfigController, backupController, websocketController, systemController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
@@ -122,6 +149,7 @@ func InitializeApplication() (App, error) {
 	botPetController := crudcontrollers.NewBotPetController(databaseResolver, logger, userEvent)
 	botPetInventoryController := crudcontrollers.NewBotPetInventoryController(databaseResolver, logger, userEvent)
 	botSpellCastingChanceController := crudcontrollers.NewBotSpellCastingChanceController(databaseResolver, logger, userEvent)
+	botSpellSettingController := crudcontrollers.NewBotSpellSettingController(databaseResolver, logger, userEvent)
 	botSpellsEntryController := crudcontrollers.NewBotSpellsEntryController(databaseResolver, logger, userEvent)
 	botStanceController := crudcontrollers.NewBotStanceController(databaseResolver, logger, userEvent)
 	botTimerController := crudcontrollers.NewBotTimerController(databaseResolver, logger, userEvent)
@@ -162,6 +190,7 @@ func InitializeApplication() (App, error) {
 	characterSpellController := crudcontrollers.NewCharacterSpellController(databaseResolver, logger, userEvent)
 	characterTaskController := crudcontrollers.NewCharacterTaskController(databaseResolver, logger, userEvent)
 	characterTaskTimerController := crudcontrollers.NewCharacterTaskTimerController(databaseResolver, logger, userEvent)
+	chatchannelReservedNameController := crudcontrollers.NewChatchannelReservedNameController(databaseResolver, logger, userEvent)
 	completedSharedTaskActivityStateController := crudcontrollers.NewCompletedSharedTaskActivityStateController(databaseResolver, logger, userEvent)
 	completedSharedTaskController := crudcontrollers.NewCompletedSharedTaskController(databaseResolver, logger, userEvent)
 	completedSharedTaskMemberController := crudcontrollers.NewCompletedSharedTaskMemberController(databaseResolver, logger, userEvent)
@@ -244,6 +273,8 @@ func InitializeApplication() (App, error) {
 	petsBeastlordDatumController := crudcontrollers.NewPetsBeastlordDatumController(databaseResolver, logger, userEvent)
 	petsEquipmentsetController := crudcontrollers.NewPetsEquipmentsetController(databaseResolver, logger, userEvent)
 	petsEquipmentsetEntryController := crudcontrollers.NewPetsEquipmentsetEntryController(databaseResolver, logger, userEvent)
+	playerEventLogController := crudcontrollers.NewPlayerEventLogController(databaseResolver, logger, userEvent)
+	playerEventLogSettingController := crudcontrollers.NewPlayerEventLogSettingController(databaseResolver, logger, userEvent)
 	playerTitlesetController := crudcontrollers.NewPlayerTitlesetController(databaseResolver, logger, userEvent)
 	questGlobalController := crudcontrollers.NewQuestGlobalController(databaseResolver, logger, userEvent)
 	raidDetailController := crudcontrollers.NewRaidDetailController(databaseResolver, logger, userEvent)
@@ -281,18 +312,21 @@ func InitializeApplication() (App, error) {
 	trapController := crudcontrollers.NewTrapController(databaseResolver, logger, userEvent)
 	tributeController := crudcontrollers.NewTributeController(databaseResolver, logger, userEvent)
 	tributeLevelController := crudcontrollers.NewTributeLevelController(databaseResolver, logger, userEvent)
+	variableController := crudcontrollers.NewVariableController(databaseResolver, logger, userEvent)
 	veteranRewardTemplateController := crudcontrollers.NewVeteranRewardTemplateController(databaseResolver, logger, userEvent)
 	zoneController := crudcontrollers.NewZoneController(databaseResolver, logger, userEvent)
 	zoneFlagController := crudcontrollers.NewZoneFlagController(databaseResolver, logger, userEvent)
 	zonePointController := crudcontrollers.NewZonePointController(databaseResolver, logger, userEvent)
-	bootCrudControllers := provideCrudControllers(aaAbilityController, aaRankController, aaRankEffectController, aaRankPrereqController, accountController, accountFlagController, accountIpController, accountRewardController, adventureDetailController, adventureMemberController, adventureStatController, adventureTemplateController, adventureTemplateEntryController, adventureTemplateEntryFlavorController, alternateCurrencyController, auraController, baseDatumController, blockedSpellController, bookController, botBuffController, botCreateCombinationController, botDatumController, botGroupController, botGroupMemberController, botGuildMemberController, botHealRotationController, botHealRotationMemberController, botHealRotationTargetController, botInspectMessageController, botInventoryController, botOwnerOptionController, botPetBuffController, botPetController, botPetInventoryController, botSpellCastingChanceController, botSpellsEntryController, botStanceController, botTimerController, bugController, bugReportController, buyerController, charCreateCombinationController, charCreatePointAllocationController, charRecipeListController, characterActivityController, characterAltCurrencyController, characterAlternateAbilityController, characterAuraController, characterBandolierController, characterBindController, characterBuffController, characterCorpseController, characterCorpseItemController, characterCurrencyController, characterDatumController, characterDisciplineController, characterEnabledtaskController, characterExpModifierController, characterExpeditionLockoutController, characterInspectMessageController, characterInstanceSafereturnController, characterItemRecastController, characterLanguageController, characterLeadershipAbilityController, characterMaterialController, characterMemmedSpellController, characterPeqzoneFlagController, characterPetBuffController, characterPetInfoController, characterPetInventoryController, characterPotionbeltController, characterSkillController, characterSpellController, characterTaskController, characterTaskTimerController, completedSharedTaskActivityStateController, completedSharedTaskController, completedSharedTaskMemberController, completedTaskController, contentFlagController, damageshieldtypeController, dataBucketController, dbStrController, discordWebhookController, discoveredItemController, doorController, dynamicZoneController, dynamicZoneMemberController, dynamicZoneTemplateController, eventlogController, expeditionController, expeditionLockoutController, expeditionMemberController, factionAssociationController, factionBaseDatumController, factionListController, factionListModController, factionValueController, fishingController, forageController, friendController, globalLootController, gmIpController, graveyardController, gridController, gridEntryController, groundSpawnController, groupIdController, guildController, guildMemberController, guildRankController, guildRelationController, hackerController, horseController, instanceListController, instanceListPlayerController, inventoryController, inventorySnapshotController, ipExemptionController, itemController, itemTickController, ldonTrapEntryController, ldonTrapTemplateController, levelExpModController, lfguildController, loginAccountController, loginApiTokenController, loginServerAdminController, loginServerListTypeController, loginWorldServerController, logsysCategoryController, lootdropController, lootdropEntryController, loottableController, loottableEntryController, mailController, merchantlistController, merchantlistTempController, nameFilterController, npcEmoteController, npcFactionController, npcFactionEntryController, npcScaleGlobalBaseController, npcSpellController, npcSpellsEffectController, npcSpellsEffectsEntryController, npcSpellsEntryController, npcTypeController, npcTypesTintController, objectContentController, objectController, perlEventExportSettingController, petController, petitionController, petsBeastlordDatumController, petsEquipmentsetController, petsEquipmentsetEntryController, playerTitlesetController, questGlobalController, raidDetailController, raidMemberController, reportController, respawnTimeController, ruleSetController, ruleValueController, saylinkController, serverScheduledEventController, sharedTaskActivityStateController, sharedTaskController, sharedTaskDynamicZoneController, sharedTaskMemberController, skillCapController, spawn2Controller, spawnConditionController, spawnConditionValueController, spawnEventController, spawnentryController, spawngroupController, spellBucketController, spellGlobalController, spellsNewController, startZoneController, startingItemController, taskActivityController, taskController, tasksetController, timerController, titleController, traderController, tradeskillRecipeController, tradeskillRecipeEntryController, trapController, tributeController, tributeLevelController, veteranRewardTemplateController, zoneController, zoneFlagController, zonePointController)
+	bootCrudControllers := provideCrudControllers(aaAbilityController, aaRankController, aaRankEffectController, aaRankPrereqController, accountController, accountFlagController, accountIpController, accountRewardController, adventureDetailController, adventureMemberController, adventureStatController, adventureTemplateController, adventureTemplateEntryController, adventureTemplateEntryFlavorController, alternateCurrencyController, auraController, baseDatumController, blockedSpellController, bookController, botBuffController, botCreateCombinationController, botDatumController, botGroupController, botGroupMemberController, botGuildMemberController, botHealRotationController, botHealRotationMemberController, botHealRotationTargetController, botInspectMessageController, botInventoryController, botOwnerOptionController, botPetBuffController, botPetController, botPetInventoryController, botSpellCastingChanceController, botSpellSettingController, botSpellsEntryController, botStanceController, botTimerController, bugController, bugReportController, buyerController, charCreateCombinationController, charCreatePointAllocationController, charRecipeListController, characterActivityController, characterAltCurrencyController, characterAlternateAbilityController, characterAuraController, characterBandolierController, characterBindController, characterBuffController, characterCorpseController, characterCorpseItemController, characterCurrencyController, characterDatumController, characterDisciplineController, characterEnabledtaskController, characterExpModifierController, characterExpeditionLockoutController, characterInspectMessageController, characterInstanceSafereturnController, characterItemRecastController, characterLanguageController, characterLeadershipAbilityController, characterMaterialController, characterMemmedSpellController, characterPeqzoneFlagController, characterPetBuffController, characterPetInfoController, characterPetInventoryController, characterPotionbeltController, characterSkillController, characterSpellController, characterTaskController, characterTaskTimerController, chatchannelReservedNameController, completedSharedTaskActivityStateController, completedSharedTaskController, completedSharedTaskMemberController, completedTaskController, contentFlagController, damageshieldtypeController, dataBucketController, dbStrController, discordWebhookController, discoveredItemController, doorController, dynamicZoneController, dynamicZoneMemberController, dynamicZoneTemplateController, eventlogController, expeditionController, expeditionLockoutController, expeditionMemberController, factionAssociationController, factionBaseDatumController, factionListController, factionListModController, factionValueController, fishingController, forageController, friendController, globalLootController, gmIpController, graveyardController, gridController, gridEntryController, groundSpawnController, groupIdController, guildController, guildMemberController, guildRankController, guildRelationController, hackerController, horseController, instanceListController, instanceListPlayerController, inventoryController, inventorySnapshotController, ipExemptionController, itemController, itemTickController, ldonTrapEntryController, ldonTrapTemplateController, levelExpModController, lfguildController, loginAccountController, loginApiTokenController, loginServerAdminController, loginServerListTypeController, loginWorldServerController, logsysCategoryController, lootdropController, lootdropEntryController, loottableController, loottableEntryController, mailController, merchantlistController, merchantlistTempController, nameFilterController, npcEmoteController, npcFactionController, npcFactionEntryController, npcScaleGlobalBaseController, npcSpellController, npcSpellsEffectController, npcSpellsEffectsEntryController, npcSpellsEntryController, npcTypeController, npcTypesTintController, objectContentController, objectController, perlEventExportSettingController, petController, petitionController, petsBeastlordDatumController, petsEquipmentsetController, petsEquipmentsetEntryController, playerEventLogController, playerEventLogSettingController, playerTitlesetController, questGlobalController, raidDetailController, raidMemberController, reportController, respawnTimeController, ruleSetController, ruleValueController, saylinkController, serverScheduledEventController, sharedTaskActivityStateController, sharedTaskController, sharedTaskDynamicZoneController, sharedTaskMemberController, skillCapController, spawn2Controller, spawnConditionController, spawnConditionValueController, spawnEventController, spawnentryController, spawngroupController, spellBucketController, spellGlobalController, spellsNewController, startZoneController, startingItemController, taskActivityController, taskController, tasksetController, timerController, titleController, traderController, tradeskillRecipeController, tradeskillRecipeEntryController, trapController, tributeController, tributeLevelController, variableController, veteranRewardTemplateController, zoneController, zoneFlagController, zonePointController)
 	userContextMiddleware := middleware.NewUserContextMiddleware(databaseResolver, cache, logger)
 	readOnlyMiddleware := middleware.NewReadOnlyMiddleware(databaseResolver, logger)
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(databaseResolver, logger, cache, service)
 	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
+	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(databaseResolver, logger, cache, settings, init)
 	spireAssets := assets.NewSpireAssets(logger, cache, githubSourceDownloader)
-	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, spireAssets)
-	httpServeCommand := cmd.NewHttpServeCommand(logger, router)
+	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
+	server := http.NewServer(logger, router, processManagement)
+	httpServeCommand := cmd.NewHttpServeCommand(logger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router, logger)
 	generateConfigurationCommand := cmd.NewGenerateConfigurationCommand(databaseResolver, logger)
 	spireMigrateCommand := cmd.NewSpireMigrateCommand(connections, logger)
@@ -300,8 +334,9 @@ func InitializeApplication() (App, error) {
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
 	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
-	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand)
-	webBoot := desktop.NewWebBoot(logger, router)
-	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot)
+	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
+	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand)
+	webBoot := desktop.NewWebBoot(logger, server)
+	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil
 }

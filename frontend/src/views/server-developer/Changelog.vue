@@ -2,21 +2,24 @@
   <div>
     <eq-window title="Changelog Generator">
       <div class="row">
-        <div class="col-3">
-          Days Back
-          <input type="text" class="form-control" v-model="daysBack">
-        </div>
-        <div class="col-2">
+        <div class="col-2 text-right">
           <b-button
             size="sm"
             variant="outline-warning"
-            class="form mt-4"
+            class="form mt-3"
             @click="generate()"
           >
             <i class="fa fa-refresh mr-1"></i>
             Generate Changelog
           </b-button>
         </div>
+
+        <div class="col-10">
+          <div class="eq-alert">
+            This will generate changelog notes of all commits formatted since last release
+          </div>
+        </div>
+
       </div>
     </eq-window>
 
@@ -51,15 +54,13 @@ export default {
     return {
       loading: false,
 
-      daysBack: 5,
-
       changelog: "",
     }
   },
   methods: {
     async generate() {
       this.loading = true;
-      const r      = await SpireApi.v1().get(`changelog/${this.daysBack}`)
+      const r      = await SpireApi.v1().get(`changelog`)
       if (r.status === 200) {
         this.changelog = r.data.data
         this.loading   = false;

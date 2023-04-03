@@ -2,13 +2,21 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {ROUTE} from "@/routes";
 import * as util from "util";
+import {AppEnv} from "@/app/env/app-env";
+import {EventBus} from "@/app/event-bus/event-bus";
+import qs from "qs";
+import {scrollToHash} from "@/app/utility/scrollToTarget";
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
+  stringifyQuery: query => {
+    let result = qs.stringify(query, {format: 'RFC1738'})
+    return result ? ('?' + result) : ''
+  },
   scrollBehavior(to, from, savedPosition) {
     // console.log("[scrollBehavior] to, from, savedPosition", to, from, savedPosition)
 
@@ -19,13 +27,14 @@ export default new Router({
 
     // if link contains a hash target
     if (to.hash) {
-      const hash       = to.hash.replace("#", "");
-      const hashTarget = document.getElementById(hash)
-      if (hashTarget) {
+      // for initial loads
+      if (to.fullPath === from.fullPath) {
         setTimeout(() => {
-          hashTarget.scrollIntoView();
-        }, 400);
-        return null
+          scrollToHash(to)
+        }, 1000);
+      }
+      else if (to.fullPath !== from.fullPath) {
+        return null;
       }
     }
 
@@ -56,6 +65,11 @@ export default new Router({
           path: ROUTE.RACE_VIEWER,
           component: () => import('./views/asset-viewers/RaceViewer.vue'),
           meta: {title: "Race Viewer"},
+        },
+        {
+          path: ROUTE.COFFEE,
+          component: () => import('./views/Coffee.vue'),
+          meta: {title: "Coffee"},
         },
         {
           path: ROUTE.ITEM_VIEWER,
@@ -93,7 +107,7 @@ export default new Router({
           meta: {title: "Emitter Viewer"},
         },
         {
-          path: '/test/:zone',
+          path: '/test',
           component: () => import('./views/Test.vue'),
           meta: {title: "Test"},
         },
@@ -203,6 +217,11 @@ export default new Router({
           meta: {title: "Manage Database Connections"},
         },
         {
+          path: ROUTE.USER_MANAGEMENT,
+          component: () => import('./views/user/UserManagement.vue'),
+          meta: {title: "Manage Spire Users"},
+        },
+        {
           path: util.format(ROUTE.DATABASE_CONNECTION_AUDIT_LOG, ":connection"),
           component: () => import('./views/connections/AuditLog.vue'),
           meta: {title: "Audit Log"},
@@ -239,6 +258,129 @@ export default new Router({
         },
       ]
     },
+
+    // Admin
+    {
+      path: ROUTE.ADMIN_OCCULUS_REQUIRED,
+      component: () => import('./views/admin/OcculusRequire.vue'),
+      meta: {title: "Occulus Required"},
+    },
+    {
+      path: ROUTE.ADMIN_ROOT,
+      component: () => import('./views/admin/layout/AdminLayout.vue'),
+      children: [
+        {
+          path: '/',
+          component: () => import('./views/admin/Dashboard.vue'),
+          meta: {title: "Dashboard"},
+        },
+        {
+          path: 'players-online',
+          component: () => import('./views/admin/PlayersOnline.vue'),
+          meta: {title: "Players Online"},
+        },
+        {
+          path: 'zones',
+          component: () => import('./views/admin/ZoneServers.vue'),
+          meta: {title: "Zone Servers"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
+          component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
+          meta: {title: "Discord Crash Webhook", occulus: true},
+        },
+        {
+          path: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS,
+          component: () => import('./views/admin/configuration/DiscordWebhooks.vue'),
+          meta: {title: "Discord Webhook Settings"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_SERVER_RULES,
+          component: () => import('./views/admin/configuration/ServerRules.vue'),
+          meta: {title: "Server Rules"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD,
+          component: () => import('./views/admin/configuration/QuestHotReload.vue'),
+          meta: {title: "Quest Hot Reload Settings", occulus: true},
+        },
+        {
+          path: ROUTE.ADMIN_DATABASE_BACKUP,
+          component: () => import('./views/admin/tools/DatabaseBackup.vue'),
+          meta: {title: "Database Backup"},
+        },
+        {
+          path: ROUTE.ADMIN_RELOAD,
+          component: () => import('./views/admin/tools/ServerReload.vue'),
+          meta: {title: "Server Reload API"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_MOTD,
+          component: () => import('./views/admin/configuration/Motd.vue'),
+          meta: {title: "Message of the Day", occulus: true},
+        },
+        {
+          path: ROUTE.ADMIN_LOG_SETTINGS,
+          component: () => import('./views/admin/configuration/LogSettings.vue'),
+          meta: {title: "Log Settings"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS,
+          component: () => import('./views/admin/player-event-logs/PlayerEventLogSettings.vue'),
+          meta: {title: "Player Event Log Settings"},
+        },
+        {
+          path: ROUTE.ADMIN_SERVER_CONFIG,
+          component: () => import('./views/admin/configuration/ServerConfig.vue'),
+          meta: {title: "Server Configuration"},
+        },
+
+        // tools
+        {
+          path: ROUTE.ADMIN_FILE_LOGS,
+          component: () => import('./views/admin/FileLogs.vue'),
+          meta: {title: "Server Logs"},
+        },
+
+        {
+          path: ROUTE.ADMIN_BACKUPS,
+          component: () => import('./views/admin/Backups.vue'),
+          meta: {title: "Manual Backups"},
+        },
+        {
+          path: ROUTE.ADMIN_SERVER_UPDATE,
+          component: () => import('./views/admin/server-update/ServerUpdate.vue'),
+          meta: {title: "Server Update"},
+        },
+        {
+          path: ROUTE.ADMIN_TOOL_SERVER_QUESTS,
+          component: () => import('./views/admin/tools/ServerQuests.vue'),
+          meta: {title: "Quests Management", occulus: true},
+        },
+        {
+          path: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS,
+          component: () => import('./views/admin/tools/ClientAssets.vue'),
+          meta: {title: "Client Asset Management"},
+        },
+
+        {
+          path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
+          component: () => import('./views/admin/player-event-logs/PlayerEventLogs.vue'),
+          meta: {title: "Player Event Logs Explorer"},
+        },
+        {
+          path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
+          component: () => import('./views/admin/player-event-logs/PlayerEventLogs.vue'),
+          meta: {title: "Player Event Logs Explorer"},
+        },
+        {
+          path: '/admin/ws-poc',
+          component: () => import('./views/admin/WebsocketPoc.vue'),
+          meta: {title: "Websocket POC"},
+        },
+      ]
+    },
+
     {
       path: '/break/',
       component: () => import('./views/Break.vue')
@@ -264,9 +406,44 @@ export default new Router({
       meta: {title: "Login"},
     },
     {
+      path: ROUTE.SPIRE_INITIALIZE,
+      component: () => import('./views/SpireInitialize.vue'),
+      meta: {title: "Spire Setup"},
+    },
+    {
       path: '/fe-auth-callback',
       component: () => import('./views/AuthCallback.vue'),
       meta: {title: "Authentication Callback"},
     },
   ]
 })
+
+// router middleware
+router.beforeEach(async (to, from, next) => {
+  // console.log("Middleware from [%s] to [%s]", from, to)
+  // console.log(from)
+  // console.log(to)
+
+  if (typeof AppEnv.getEnv() !== 'undefined') {
+    AppEnv.routeCheckOcculus(to, router)
+    AppEnv.routeCheckSpireInitialized(to, router)
+  }
+
+  EventBus.$emit('ROUTE_CHANGE', to);
+
+  next()
+})
+
+router.afterEach(async (to, from) => {
+  setTimeout(() => {
+    const inputs = document.getElementsByTagName("input");
+    for (let i = 0; i < inputs.length; i++) {
+      if (inputs[i].getAttribute("autofocus")) {
+        inputs[i].focus();
+        break;
+      }
+    }
+  }, 1)
+})
+
+export default router;

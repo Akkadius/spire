@@ -10,7 +10,8 @@
         >
           <a
             @click="selectTab(tab)"
-            style="color: white">
+            style="color: white"
+          >
             {{ tab.name }}
           </a>
         </li>
@@ -31,8 +32,24 @@ export default {
   data() {
     return { tabs: [] };
   },
+  watch: {
+    'selected'() {
+      if (this.selected && this.selected.length > 0) {
+        this.tabs.forEach(tab => {
+          tab.isActive = tab.name === this.selected;
+        })
+      }
+    },
+  },
   created() {
     this.tabs = this.$children;
+  },
+  mounted() {
+    if (this.selected && this.selected.length > 0) {
+      this.tabs.forEach(tab => {
+        tab.isActive = tab.name === this.selected;
+      })
+    }
   },
   methods: {
     selectTabHover(selectedTab) {
@@ -43,10 +60,18 @@ export default {
     selectTab(selectedTab) {
       this.tabs.forEach(tab => {
         tab.isActive = (tab.name === selectedTab.name);
+        if (tab.isActive) {
+          this.$emit("on-selected", tab.name)
+        }
       });
     }
   },
   props: {
+    selected: {
+      default: "",
+      required: false,
+      type: String,
+    },
     hoverOpen: {
       default: false,
       required: false,

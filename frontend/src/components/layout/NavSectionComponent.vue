@@ -1,5 +1,21 @@
 <template>
   <li class="nav-item" v-show="navId !== '' && config && config.label">
+
+    <!-- top level nav -->
+    <router-link
+      v-if="config.to"
+      :to="config.to"
+      :exact="config.exact ? config.exact : false"
+      class="nav-link"
+    >
+      <i :class="config.labelIcon" v-if="config.labelIcon"></i> {{ config.label }}
+      <b-badge class="ml-2" variant="primary" v-if="config.isOcculus">
+        <i class="fe fe-eye"></i>
+        Occulus
+      </b-badge>
+    </router-link>
+
+    <!-- nested nav dropdown -->
     <a
       :class="'nav-link collapse ' + (hasRoute(config.routePrefixMatch) || hasRouteInArray(config.routePrefixMatches) ? 'active' : 'collapsed')"
       :href="'#sidebar-' + navId"
@@ -7,6 +23,7 @@
       role="button"
       :aria-expanded="(hasRoute(config.routePrefixMatch) || hasRouteInArray(config.routePrefixMatches) ? 'true' : 'false')"
       :aria-controls="'sidebar-' + navId"
+      v-if="!config.to"
     >
       <i :class="config.labelIcon" v-if="config.labelIcon"></i>
       {{ config.label }}
@@ -14,6 +31,7 @@
     <div
       :class="'collapse ' + (hasRoute(config.routePrefixMatch) || hasRouteInArray(config.routePrefixMatches) ? 'show' : '')"
       :id="'sidebar-' + navId"
+      v-if="!config.to"
     >
       <ul class="nav nav-sm flex-column">
         <li v-for="nav in config.navs">
@@ -23,10 +41,17 @@
             :class="'nav-link collapse ' + (hasRoute(nav.to) || hasRouteInArray(nav.routes) ? 'active' : 'collapsed')"
             :to="nav.to"
             v-if="!nav.to.includes('http')"
+            :exact="nav.exact ? nav.exact : false"
           >
             <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
             <b-badge class="ml-3" variant="primary" v-if="nav.isAlpha">ALPHA</b-badge>
             <b-badge class="ml-3" variant="primary" v-if="nav.isNew">NEW!</b-badge>
+
+            <b-badge class="ml-2" variant="primary" v-if="nav.isOcculus">
+              <i class="fe fe-eye"></i>
+              Occulus
+            </b-badge>
+
           </router-link>
 
           <!-- external link -->
@@ -79,8 +104,6 @@ export default {
   created() {
     const uuidv4 = require("uuid/v4")
     this.navId   = uuidv4()
-
-    console.log(this.config)
   }
 }
 </script>

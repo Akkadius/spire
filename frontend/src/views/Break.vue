@@ -1,12 +1,12 @@
 <template>
   <content-area>
-    <eq-window class="text-center mt-6">
-      <h1 class="eq-header mt-8" style="font-size: 200px">
+    <div class="text-center mt-6" style="left: 13%; top: 20%; position: fixed">
+      <h1 class="eq-header" style="font-size: 200px">
         Break... Be right back..
       </h1>
 
       <app-loader :is-loading="true" class="mt-3 mb-8"/>
-    </eq-window>
+    </div>
   </content-area>
 </template>
 

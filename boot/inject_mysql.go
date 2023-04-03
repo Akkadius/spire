@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm/logger"
 	"log"
@@ -24,20 +25,29 @@ var databaseSet = wire.NewSet(
 )
 
 // we need to do this because
-func provideAppDbConnections(serverconfig *serverconfig.EQEmuServerConfig) *database.Connections {
+func provideAppDbConnections(serverconfig *serverconfig.EQEmuServerConfig, logger *logrus.Logger) *database.Connections {
 	eqEmuLocalDatabase, err := provideEQEmuLocalDatabase(serverconfig)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	spireDatabase, err := provideSpireDatabase(serverconfig)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
+	}
+
+	// if we're local, we assume our emulator database
+	// is where we are housing our spire tables
+	if env.IsAppEnvLocal() {
+		if spireDatabase == nil {
+			spireDatabase = eqEmuLocalDatabase
+		}
 	}
 
 	return database.NewConnections(
 		spireDatabase,
 		eqEmuLocalDatabase,
+		logger,
 	)
 }
 
@@ -69,7 +79,7 @@ func getEQEmuLocalMySQLConfig(serverconfig *serverconfig.EQEmuServerConfig) (*My
 
 	// load eqemu config if exists
 	config := serverconfig.Get()
-	if config.Server.Database.Db != "" {
+	if config.Server.Database != nil && config.Server.Database.Db != "" {
 		port, err := strconv.Atoi(config.Server.Database.Port)
 		if err != nil {
 			log.Fatalf("unable to convert string to integer error [%v]", err)
@@ -201,7 +211,7 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.DB, error) {
 	// if booting from local server folder
 	cfg := serverconfig.Get()
-	if cfg.Server.Database.Db != "" {
+	if cfg.Server.Database != nil && cfg.Server.Database.Db != "" {
 		return nil, nil
 	}
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	_ "embed"
 	"fmt"
 	"github.com/Akkadius/spire/boot"
@@ -10,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/updater"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
@@ -17,6 +17,9 @@ func main() {
 	if len(os.Args) == 1 {
 		updater.NewUpdaterService(packageJson).CheckForUpdates()
 	}
+
+	// default
+	_ = os.Setenv("APP_ENV", "local")
 
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
@@ -46,8 +49,9 @@ func main() {
 
 func Fatal(err error) {
 	log.Println(err)
-	fmt.Print("Press any to continue...")
-	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
+	fmt.Print("Automatically shutting down in 10 seconds...")
+	time.Sleep(10 * time.Second)
+	os.Exit(1)
 }
 
 var (

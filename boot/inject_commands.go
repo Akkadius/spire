@@ -11,6 +11,8 @@ import (
 // command set
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
+	cmd.NewAdminPingOcculus,
+	cmd.NewUserCreateCommand,
 	cmd.NewGenerateModelsCommand,
 	cmd.NewGenerateControllersCommand,
 	cmd.NewHttpServeCommand,
@@ -20,6 +22,7 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireMigrateCommand,
 	cmd.NewQuestExampleTestCommand,
 	cmd.NewGenerateRaceModelMapsCommand,
+	cmd.NewTestFilesystemCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -27,6 +30,8 @@ var commandSet = wire.NewSet(
 // commands provider
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
+	adminPingOcculus *cmd.AdminPingOcculus,
+	userCreateCommand *cmd.UserCreateCommand,
 	generateModelsCommand *cmd.GenerateModelsCommand,
 	generateControllersCommand *cmd.GenerateControllersCommand,
 	httpServeCommand *cmd.HttpServeCommand,
@@ -37,9 +42,12 @@ func ProvideCommands(
 	questExampleTestCommand *cmd.QuestExampleTestCommand,
 	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
 	changelogCmd *eqemuchangelog.ChangelogCommand,
+	testFilesystemCmd *cmd.TestFilesystemCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
+		adminPingOcculus.Command(),
 		helloWorldCommand.Command(),
+		userCreateCommand.Command(),
 		generateModelsCommand.Command(),
 		generateControllersCommand.Command(),
 		httpServeCommand.Command(),
@@ -50,5 +58,6 @@ func ProvideCommands(
 		questExampleTestCommand.Command(),
 		generateRaceModelMapsCommand.Command(),
 		changelogCmd.Command(),
+		testFilesystemCmd.Command(),
 	}
 }

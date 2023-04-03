@@ -10,6 +10,8 @@ type Merchantlist struct {
 	Item                   int         `json:"item" gorm:"Column:item"`
 	FactionRequired        int16       `json:"faction_required" gorm:"Column:faction_required"`
 	LevelRequired          uint8       `json:"level_required" gorm:"Column:level_required"`
+	MinStatus              uint8       `json:"min_status" gorm:"Column:min_status"`
+	MaxStatus              uint8       `json:"max_status" gorm:"Column:max_status"`
 	AltCurrencyCost        uint16      `json:"alt_currency_cost" gorm:"Column:alt_currency_cost"`
 	ClassesRequired        int         `json:"classes_required" gorm:"Column:classes_required"`
 	Probability            int         `json:"probability" gorm:"Column:probability"`

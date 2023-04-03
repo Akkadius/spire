@@ -11,6 +11,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Search by zone long or short name, expansion etc."
+                autofocus
                 v-model="zoneSearchText"
                 v-on:keyup="selectedExpansion = -1; setStateDebounce();"
                 v-on:keyup.enter="updateQueryState"
@@ -36,7 +37,7 @@
         <eq-window
           v-if="zones"
           class="p-3 pt-0"
-          style="height: 80vh; overflow-y: scroll; overflow-x: hidden"
+          style="height: 87vh; overflow-y: scroll; overflow-x: hidden"
         >
           <table
             id="zonetable"

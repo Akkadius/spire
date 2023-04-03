@@ -26,6 +26,8 @@
 
           <eq-tabs
             v-if="spell && spell.id >= 0"
+            :selected="tabSelected"
+            @on-selected="tabSelected = $event; updateQueryState()"
             id="spell-edit-card"
             class="spell-edit-card"
             @mouseover.native="previewSpell(false)"
@@ -591,13 +593,13 @@
                     </div>
                     <div class="col-2">
                       <div v-if="field.category === 'Description'">
-                        <router-link
+                        <a
                           class="btn btn-warning btn-sm mt-2"
-                          tag="button"
-                          :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
+                          :target="field.field"
+                          :href="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
                         >
                           <i class="ra ra-scroll-unfurled mr-1"></i> Editor
-                        </router-link>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -1734,6 +1736,8 @@ export default {
   },
   data() {
     return {
+      tabSelected: "Basic",
+
       spell: null, // spell record data
 
       // constants
@@ -1825,6 +1829,28 @@ export default {
     this.load()
   },
   methods: {
+
+    updateQueryState() {
+      let q = {}
+
+      if (this.tabSelected !== "") {
+        q.tab = this.tabSelected
+      }
+
+      this.$router.replace(
+        {
+          path: this.$route.path,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.tab && this.$route.query.tab.length > 0) {
+        this.tabSelected = this.$route.query.tab
+      }
+    },
 
     none() {
       for (let i = 1; i <= 16; i++) {
@@ -2213,6 +2239,7 @@ export default {
     },
 
     load() {
+      this.loadQueryState()
 
       if (this.$route.params.id > 0) {
         this.error = ""

@@ -61,18 +61,26 @@
       </div>
 
       <div id="permissions" v-if="canViewPermissions() && permissionsLoaded">
+
+        <div class="text-center">
+          Everything below are comprehensive of API resources provided by Spire. <br>Not all resources may be in use by Spire tools or resources.
+        </div>
+
+        <hr>
+
         <!-- Header -->
-        <div class="row mt-1 mb-3">
-          <div class="col-5 text-right font-weight-bold">Resource</div>
-          <div class="col-7 text-muted">
-            Permission
+        <div class="row mt-3 mb-3">
+          <div class="col-5 text-right font-weight-bold">
+            Permissions
           </div>
+          <div class="col-1"></div>
+          <div class="col-5 text-left font-weight-bold">Resource</div>
+
         </div>
 
         <!-- All -->
         <div class="row mt-1 mb-3">
-          <div class="col-5 text-right">ALL</div>
-          <div class="col-7">
+          <div class="col-6 text-right">
             <b-form-checkbox
               switch
               v-for="option in options"
@@ -87,27 +95,36 @@
               {{ option.text }}
             </b-form-checkbox>
           </div>
+          <div class="col-5 text-left">ALL</div>
+
         </div>
 
+        <hr>
+
         <div
-          class="row mt-1" v-for="p in permissions"
+          v-for="(p, i) in permissions"
           :key="p.name"
+          class="mt-1"
         >
-          <div class="col-5 text-right">{{ p.name }}</div>
-          <div class="col-7">
-            <b-form-checkbox
-              switch
-              v-for="option in options"
-              :key="option.value"
-              :disabled="!isCurrentUserOwnerOfConnection()"
-              v-model="selectedPermissions[p.identifier][option.value]"
-              :aria-describedby="option.text"
-              @change="showChanges(p.identifier)"
-              name="flavour-4a"
-              inline
-            >
-              {{ option.text }}
-            </b-form-checkbox>
+          <hr v-if="isPermissionDifferentFromLast(permissions, i)">
+          <div class="row">
+            <div class="col-6 text-right">
+              <b-form-checkbox
+                switch
+                v-for="option in options"
+                :key="option.value"
+                :disabled="!isCurrentUserOwnerOfConnection()"
+                v-model="selectedPermissions[p.identifier][option.value]"
+                :aria-describedby="option.text"
+                @change="showChanges(p.identifier)"
+                name="flavour-4a"
+                inline
+              >
+                {{ option.text }}
+              </b-form-checkbox>
+
+            </div>
+            <div class="col-5 text-left">{{ p.name }}</div>
           </div>
         </div>
       </div>
@@ -163,6 +180,13 @@ export default {
     },
   },
   methods: {
+
+    // determines if the first word of a permission was different from the last rendered row,
+    // so we can use it to break apart the sections in a little more reader friendly format
+    isPermissionDifferentFromLast(permissions, i) {
+      return permissions[i] && permissions[i - 1] && permissions[i].name.replace(/ .*/,'') !== permissions[i - 1].name.replace(/ .*/,'')
+    },
+
     toggleAll(type) {
       console.log("toggle all", type, this.selectedAllToggle[type])
 
@@ -171,6 +195,7 @@ export default {
       }
 
       this.submitPermissions()
+      this.$forceUpdate()
     },
 
     showChanges(identifier) {

@@ -1,9 +1,8 @@
-package controllers
+package permissions
 
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
-	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,13 +11,13 @@ import (
 type PermissionsController struct {
 	logger      *logrus.Logger
 	db          *database.DatabaseResolver
-	permissions *permissions.Service
+	permissions *Service
 }
 
 func NewPermissionsController(
 	logger *logrus.Logger,
 	db *database.DatabaseResolver,
-	permissions *permissions.Service,
+	permissions *Service,
 ) *PermissionsController {
 	return &PermissionsController{
 		logger:      logger,

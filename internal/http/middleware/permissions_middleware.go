@@ -33,7 +33,7 @@ func NewPermissionsMiddleware(
 		logger:      logger,
 		cache:       cache,
 		permissions: permissions,
-		debug:       env.GetInt("DEBUG", "0"),
+		debug:       env.GetInt("PERMISSIONS_DEBUG", "0"),
 	}
 }
 
@@ -81,19 +81,23 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 						// did not pass ACL
 						if !pass {
 							return c.JSON(
-								http.StatusUnauthorized,
-								echo.Map{"error": fmt.Sprintf("You do not have permission to access this resource [%v]", resource)},
+								http.StatusForbidden,
+								echo.Map{"error": fmt.Sprintf("You do not have permission to %v this resource [%v]", r.getAccessDescription(c), c.Request().URL.Path)},
 							)
 						}
-
-						//pp.Println(results)
-
 					}
 				}
-
 			}
 
 			return next(c)
 		}
 	}
+}
+
+func (r PermissionsMiddleware) getAccessDescription(c echo.Context) string {
+	if r.permissions.IsWriteRequest(c) {
+		return "write to"
+	}
+
+	return "read"
 }

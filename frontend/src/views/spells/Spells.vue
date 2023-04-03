@@ -1,6 +1,6 @@
 <template>
   <div>
-    <eq-window-simple class="pt-0">
+    <eq-window-simple class="pt-0 mt-0">
       <div class="row">
         <div v-for="(icon, index) in dbClassIcons" class="text-center">
           <div class="text-center p-0 mr-3 col-lg-12 col-sm-12">
@@ -23,10 +23,10 @@
             name="spell_name"
             type="text"
             class="form-control"
+            autofocus
             v-on:keyup.enter="triggerState"
             v-model="spellName"
             placeholder="Name or ID"
-            autofocus=""
             id="spell_name"
             value=""
           >

@@ -350,6 +350,14 @@ bot_spell_casting_chances:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+bot_spell_settings:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
 bot_spells_entries:
   - column: id
     data_type: int
@@ -700,11 +708,11 @@ character_item_recast:
     column_type: int(11) unsigned
     column_default: "0"
   - column: recast_type
-    data_type: smallint
+    data_type: int
     column_key: PRI
     ordinal_position: "2"
     is_nullable: "NO"
-    column_type: smallint(11) unsigned
+    column_type: int(11) unsigned
     column_default: "0"
 character_languages:
   - column: id
@@ -908,6 +916,14 @@ character_tasks:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+chatchannel_reserved_names:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
 chatchannels:
   - column: name
     data_type: varchar
@@ -1017,11 +1033,11 @@ data_buckets:
     column_default: ""
 db_str:
   - column: id
-    data_type: int
+    data_type: bigint
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: int(10)
+    column_type: bigint(20)
     column_default: ""
   - column: type
     data_type: int
@@ -1826,6 +1842,22 @@ pets_equipmentset_entries:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+player_event_log_settings:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+player_event_logs:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
 player_titlesets:
   - column: id
     data_type: int
@@ -2298,13 +2330,13 @@ tributes:
     column_type: tinyint(4)
     column_default: "0"
 variables:
-  - column: varname
-    data_type: varchar
+  - column: id
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: varchar(25)
-    column_default: ''''''
+    column_type: int(11)
+    column_default: ""
 veteran_reward_templates:
   - column: claim_id
     data_type: int

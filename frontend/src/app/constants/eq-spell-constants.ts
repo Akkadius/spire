@@ -772,7 +772,8 @@ export const DB_SPELL_RESISTS = {
   "5": "Disease",
   "6": "Chromatic",
   "7": "Prismatic",
-  "8": "Physical"
+  "8": "Physical",
+  "9": "Corruption"
 }
 
 export const DB_SPELL_TARGET_RESTRICTION = {

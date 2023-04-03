@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import {SpireApi} from "../app/api/spire-api";
+import {SpireApi} from "@/app/api/spire-api";
 import {EventBus} from "@/app/event-bus/event-bus";
-import {ROUTE}          from "@/routes";
-import util             from "util";
+import {ROUTE}    from "@/routes";
+import util       from "util";
 
 export default {
   name: "DbConnectionStatusPill",
@@ -81,6 +81,18 @@ export default {
       return '#00d97e'
     },
 
+    truncate(text, limit) {
+      if (text.length > limit) {
+        for (let i = limit; i > 0; i--) {
+          if (text.charAt(i) === ' ' && (text.charAt(i - 1) !== ',' || text.charAt(i - 1) !== '.' || text.charAt(i - 1) !== ';')) {
+            return text.substring(0, i) + '...';
+          }
+        }
+        return text.substring(0, limit) + '...';
+      } else
+        return text;
+    },
+
     fetchConnection() {
       // connection status
       SpireApi.v1().get('/connections').then((r) => {
@@ -94,6 +106,8 @@ export default {
 
             if (connection.active) {
               this.connection = connection
+
+              this.connection.database_connection.name = this.truncate(this.connection.database_connection.name, 19)
 
               SpireApi.v1().get(`/connection-check/${connectionId}`).then((cr) => {
                 this.connectionStatus = cr.data.data.message

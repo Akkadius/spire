@@ -15,12 +15,13 @@ type QueryBuilderRequest = {
 export class SpireQueryBuilder {
   private selects: string[]       = [];
   private wheres: string[]        = [];
+  private whereJsons: string[]    = [];
   private whereOrs: string[]      = [];
   private orderBys: string[]      = [];
   private groupBys: string[]      = [];
   private includesParam: string[] = [];
   private orderDirections: string = "";
-  private limitParam: number      = 1000;
+  private limitParam: number      = 0;
   private pageParam: number       = 0;
 
   translateOperator(operator) {
@@ -105,6 +106,21 @@ export class SpireQueryBuilder {
     return this
   }
 
+  whereJson(dbField, jsonField, operator, value) {
+    const where = util.format(
+      "%s%s%s%s%s",
+      dbField,
+      this.translateOperator(operator),
+      jsonField,
+      this.translateOperator(operator),
+      value
+    )
+
+    this.whereJsons.push(where)
+
+    return this
+  }
+
   whereOr(field, operator, value) {
     const where = util.format(
       "%s%s%s",
@@ -135,6 +151,10 @@ export class SpireQueryBuilder {
     if (Object.keys(this.wheres).length > 0) {
       request.where = this.wheres.join(".")
     }
+    if (Object.keys(this.whereJsons).length > 0) {
+      // @ts-ignore
+      request.whereJson = this.whereJsons.join("_json_")
+    }
     if (Object.keys(this.whereOrs).length > 0) {
       request.whereOr = this.whereOrs.join(".")
     }
@@ -153,12 +173,12 @@ export class SpireQueryBuilder {
     if (this.orderDirections) {
       request.orderDirection = this.orderDirections
     }
-
     if (this.pageParam > 0) {
       request.page = (this.pageParam - 1)
     }
-
-    request.limit = this.limitParam
+    if (this.limitParam) {
+      request.limit = this.limitParam
+    }
 
     return request
   }

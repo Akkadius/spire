@@ -6,7 +6,6 @@
     @click.self="expandNavbar()"
     v-if="!hideNavbar"
   >
-
     <div
       style="position: inherit; top: 50%; left: 10px; display: none"
       @click="expandNavbar()"
@@ -28,170 +27,160 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Brand -->
-      <!--      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">-->
-      <!--        <img-->
-      <!--          src="~@/assets/img/eqemu-logo-1.png"-->
-      <!--          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."-->
-      <!--          style="max-height: 6rem"-->
-      <!--        >-->
-      <!--      </router-link>-->
-
-
       <router-link class="ml-3 mt-3" to="/">
         <h1 class="text-center eq-header small-mobile">
           Spire
+          <!--          <h3 class="text-center eq-header small-mobile d-inline" style="font-size: 40px">-->
+          <!--            [Admin]-->
+          <!--          </h3>-->
         </h1>
-
       </router-link>
 
-      <!--      <hr class="dropdown-divider">-->
-
-
-      <!--      <hr class="dropdown-divider">-->
-
-      <!--      <h4 class=" text-center menuetto-header mt-2" style="font-size: 34px">-->
-      <!--        Tools-->
-      <!--      </h4>-->
-
-      <!-- User (xs) -->
       <div class="navbar-user d-md-none">
-
-        <!-- Dropdown -->
         <div class="dropdown">
-
-          <!-- Toggle -->
           <a
             href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false"
           >
-            <div class="avatar avatar-sm avatar-online">
+            <div :class="'avatar avatar-sm ' + (isUserLoggedIn() ? 'avatar-online' : '')">
               <img
-                :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
+                :src="getUserAvatar()"
                 class="avatar-img rounded-circle" alt="..."
               >
             </div>
           </a>
-
           <navbar-dropdown-menu menu-right="1"/>
-
         </div>
-
       </div>
 
-      <!-- Collapse -->
       <div class="collapse navbar-collapse" id="sidebarCollapse">
+        <div v-if="isAppLocal()">
+          <h6 class="navbar-heading mt-3">
+            Admin
+          </h6>
 
-        <!-- Form -->
-        <!--        <form class="mt-4 mb-3 d-md-none">-->
-        <!--          <div class="input-group input-group-rounded input-group-merge">-->
-        <!--            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search"-->
-        <!--                   aria-label="Search">-->
-        <!--            <div class="input-group-prepend">-->
-        <!--              <div class="input-group-text">-->
-        <!--                <span class="fe fe-search"></span>-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </form>-->
+          <ul class="navbar-nav mb-md-3">
+            <li class="nav-item" v-if="!isInAdmin()">
+              <router-link class="nav-link" :to="ROUTE.ADMIN_ROOT" exact>
+                <i class="ra ra-eye-shield mr-1"></i> Server Admin
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
 
-        <!-- Heading -->
-        <h6 class="navbar-heading mt-3">
-          Tools
-        </h6>
+            <nav-section-component
+              v-for="nav in adminNavs"
+              :key="nav.label"
+              :config="nav"
+              v-if="isInAdmin()"/>
 
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
-          <nav-section-component :config="botNav" v-if="alphaEnabled"/>
+          </ul>
+        </div>
 
-          <nav-section-component :config="calculatorNav"/>
+        <div v-if="!isInAdmin()">
+          <h6 class="navbar-heading">
+            Content Tools
+          </h6>
 
-          <li class="nav-item">
-            <router-link class="nav-link" to="/client-files">
-              <i class="ra ra-cycle mr-1"></i> Client Files
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
+          <ul class="navbar-nav mb-md-3">
+            <nav-section-component :config="botNav" v-if="alphaEnabled"/>
+            <nav-section-component :config="calculatorNav"/>
 
-          <li class="nav-item">
-            <router-link class="nav-link " to="/items">
-              <i class="ra ra-relic-blade mr-1"></i> Items
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/client-files">
+                <i class="ra ra-cycle mr-1"></i> Client File
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
 
-          <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/items">
+                <i class="ra ra-relic-blade mr-1"></i> Items
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
 
-          <li class="nav-item">
-            <router-link class="nav-link " to="/quest-api-explorer">
-              <i class="ra ra-compass mr-1"></i> Quest API Explorer
-            </router-link>
-          </li>
+            <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
 
-          <li class="nav-item">
-            <router-link class="nav-link " to="/strings-database">
-              <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/spells">
-              <i class="ra ra-book mr-1"></i> Spells
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/tasks">
-              <i class="ra ra-zebra-shield mr-1"></i> Tasks
-              <b-badge class="ml-3" variant="primary">BETA</b-badge>
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-          <nav-section-component :config="viewerNav"/>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/quest-api-explorer">
+                <i class="ra ra-compass mr-1"></i> Quest API Explorer
+              </router-link>
+            </li>
 
-          <li class="nav-item" v-if="alphaEnabled">
-            <router-link class="nav-link " to="/zones">
-              <i class="ra ra-wooden-sign mr-2"></i> Zones
-              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/strings-database">
+                <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/spells">
+                <i class="ra ra-book mr-1"></i> Spells
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/tasks">
+                <i class="ra ra-zebra-shield mr-1"></i> Tasks
+                <b-badge class="ml-3" variant="primary">BETA</b-badge>
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+            <nav-section-component :config="viewerNav"/>
 
-        </ul>
+            <li class="nav-item" v-if="alphaEnabled">
+              <router-link class="nav-link " to="/zones">
+                <i class="ra ra-wooden-sign mr-2"></i> Zones
+                <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
 
-        <!-- Heading -->
-        <h6 class="navbar-heading">
-          Spire Docs
-        </h6>
+          </ul>
 
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
+          <!-- Heading -->
+          <h6 class="navbar-heading">
+            Spire Docs
+          </h6>
 
-          <nav-section-component :config="spireApiNav"/>
+          <!-- Navigation -->
+          <ul class="navbar-nav mb-md-3">
 
-          <!-- Components -->
-          <li class="nav-item">
-            <a
-              :class="'nav-link collapse ' + (hasRoute('components') ? 'active' : 'collapsed')"
-              href="#sidebarComponents" data-toggle="collapse" role="button"
-              aria-expanded="false" aria-controls="sidebarComponents"
-            >
-              <i class="ra ra-burst-blob mr-1"></i> Components
-            </a>
-            <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
-              <ul class="nav nav-sm flex-column">
-                <li v-for="nav in componentNavs">
-                  <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
-                </li>
-              </ul>
-            </div>
-          </li>
+            <nav-section-component :config="spireApiNav"/>
 
-        </ul>
+            <!-- Components -->
+            <li class="nav-item">
+              <a
+                :class="'nav-link collapse ' + (hasRoute('components') ? 'active' : 'collapsed')"
+                href="#sidebarComponents" data-toggle="collapse" role="button"
+                aria-expanded="false" aria-controls="sidebarComponents"
+              >
+                <i class="ra ra-burst-blob mr-1"></i> Components
+              </a>
+              <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
+                <ul class="nav nav-sm flex-column">
+                  <li v-for="nav in componentNavs">
+                    <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+          </ul>
+        </div>
 
         <h6 class="navbar-heading" v-if="appVersion">
           Version ({{ appEnv }}) {{ appVersion }}
         </h6>
+
+        <ul class="navbar-nav mb-md-3">
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-toggle="modal" @click="openSearch()">
+              <i class="fe fe-search mr-2"></i>
+              Nav Search (Ctrl + K)
+            </a>
+          </li>
+        </ul>
 
         <!-- Push content down -->
         <div class="mt-auto"></div>
@@ -210,7 +199,7 @@
             >
               <div class="avatar avatar-sm avatar-online">
                 <img
-                  :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
+                  :src="getUserAvatar()"
                   class="avatar-img rounded-circle" alt="..."
                 >
               </div>
@@ -238,7 +227,6 @@
         <db-connection-status-pill/>
 
       </div> <!-- / .navbar-collapse -->
-
     </div>
   </nav>
 </template>
@@ -258,9 +246,18 @@ import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 import {SpireApi}             from "@/app/api/spire-api";
 
 export default {
+  computed: {
+    ROUTE() {
+      return ROUTE
+    }
+  },
   components: { DbConnectionStatusPill, NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
   data() {
     return {
+
+      // state
+      lastPartition: "default",
+
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
@@ -322,6 +319,51 @@ export default {
           // },
         ]
       },
+      adminNavs: [
+        { label: "Server Admin", labelIcon: "ra ra-eye-shield mr-1", to: ROUTE.ADMIN_ROOT, exact: true },
+        { label: "Players Online", labelIcon: "ra ra-double-team mr-1", to: ROUTE.ADMIN_PLAYERS_ONLINE },
+        { label: "Zone Servers", labelIcon: "ra ra-tower mr-1", to: ROUTE.ADMIN_ZONE_SERVERS },
+        { label: "Backups", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_BACKUPS },
+        { label: "Client Files", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS },
+        {
+          label: "Configuration",
+          labelIcon: "fa fa-cog mr-1",
+          routePrefixMatch: "admin/configuration",
+          navs: [
+            { title: "Server Config", to: ROUTE.ADMIN_SERVER_CONFIG, icon: "fa fa-cog mr-1" },
+            { title: "Crash Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK, icon: "ra ra-fire mr-1", isOcculus: true },
+            { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1" },
+            { title: "Quest Hot Reload", to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD, icon: "ra ra-alien-fire mr-1", isOcculus: true },
+            { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
+            { title: "UCS", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=UCS', icon: "ra ra-speech-bubbles mr-1", exact: true },
+            { title: "World Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=World+Server', icon: "ra ra-double-team mr-1", exact: true },
+            { title: "Zone Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Zone+Server', icon: "ra ra-player mr-1", exact: true },
+          ]
+        },
+        {
+          label: "Database", labelIcon: "fa fa-database mr-1", routePrefixMatch: "admin/database",
+          navs: [
+            { title: "Database Config", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Database', icon: "fa fa-cog mr-1", exact: true},
+            { title: "Database Backups", to: ROUTE.ADMIN_DATABASE_BACKUP, icon: "fa fa-download mr-1" },
+          ]
+        },
+        {
+          label: "Logs",
+          labelIcon: "ra ra-telescope mr-1",
+          routePrefixMatch: "admin/tools/player",
+          navs: [
+            { title: "Discord Webhooks", to: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS, icon: "fa fa-cog mr-1" },
+            { title: "File Logs", to: ROUTE.ADMIN_FILE_LOGS, icon: "fe fe-book mr-1" },
+            { title: "Log Settings", to: ROUTE.ADMIN_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
+            { title: "Player Event Settings", to: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS, icon: "fa fa-cog mr-1" },
+            { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
+          ]
+        },
+        { label: "Quests", labelIcon: "fa fa-code-fork mr-1", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, isOcculus: true },
+        { label: "Reloading (Global)", labelIcon: "fa fa-refresh mr-1", routePrefixMatch: "admin/tools/player", to: ROUTE.ADMIN_RELOAD },
+        { label: "Server Update", labelIcon: "fa fa-upload mr-1", to: ROUTE.ADMIN_SERVER_UPDATE },
+
+      ],
       viewerNav: {
         label: "Viewers",
         labelIcon: "ra ra-bleeding-eye mr-1",
@@ -345,8 +387,16 @@ export default {
         labelIcon: "ra ra-book mr-1",
         routePrefixMatches: ["swagger", "model-viewer"],
         navs: [
-          { title: "Swagger API", to: SpireApi.getBasePath() + '/swagger/index.html', icon: "ra ra-monster-skull mr-1" },
-          { title: "Model Relationship Explorer", to: ROUTE.API_MODEL_RELATIONSHIP_EXPLORER, icon: "ra ra-kaleidoscope mr-1" },
+          {
+            title: "Swagger API",
+            to: SpireApi.getBasePath() + '/swagger/index.html',
+            icon: "ra ra-monster-skull mr-1"
+          },
+          {
+            title: "Model Relationship Explorer",
+            to: ROUTE.API_MODEL_RELATIONSHIP_EXPLORER,
+            icon: "ra ra-kaleidoscope mr-1"
+          },
         ]
       },
       componentNavs: [
@@ -399,19 +449,191 @@ export default {
     EventBus.$on("HIDE_NAVBAR", this.toggleNavbarCollapse);
     EventBus.$on("APP_ENV_LOADED", this.handleAppEnvLoaded);
     EventBus.$on("ALPHA_ENABLED", this.handleAppAlphaEnabled);
+    EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
   },
   destroyed() {
     EventBus.$off("HIDE_NAVBAR", this.toggleNavbarCollapse);
     EventBus.$off("APP_ENV_LOADED", this.handleAppEnvLoaded);
     EventBus.$off("ALPHA_ENABLED", this.handleAppAlphaEnabled);
+    EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
   },
 
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
+
+    // sidebar
+    this.setSidebarStyle()
+
+    this.parseNinjaKeys()
+
   },
 
   methods: {
+
+    openSearch() {
+      const ninja = document.querySelector('ninja-keys')
+      setTimeout(() => {
+        ninja.open();
+      }, 1)
+    },
+
+    parseNinjaNav(nav) {
+      let keys = []
+      for (let n of nav) {
+        if (n.label && n.to) {
+          let adminPanelRouteEnabled = false
+          if (n.to.includes(ROUTE.ADMIN_ROOT)) {
+            if (!AppEnv.isAppLocal()) {
+              continue;
+            }
+            adminPanelRouteEnabled = true
+          }
+
+          keys.push({
+            id: n.label,
+            title:  (adminPanelRouteEnabled ? '[Admin] ' : '') + n.label,
+            handler: () => {
+              this.$router.push(n.to).catch((e) => {
+              })
+            }
+          })
+        }
+
+        // children
+        if (n.navs) {
+          for (let c of n.navs) {
+            let adminPanelRouteEnabled = false
+            if (c.to.includes(ROUTE.ADMIN_ROOT)) {
+              if (!AppEnv.isAppLocal()) {
+                continue;
+              }
+              adminPanelRouteEnabled = true
+            }
+
+            keys.push({
+              id: `[${n.label}] ${c.title}`,
+              title: (adminPanelRouteEnabled ? '[Admin] ' : '') + `[${n.label}] ${c.title}`,
+              handler: () => {
+                this.$router.push(c.to).catch((e) => {
+                })
+              }
+            })
+          }
+        }
+      }
+
+      return keys
+    },
+
+    parseNinjaKeys() {
+      let keys = []
+
+      let navs = [
+        this.adminNavs,
+        [this.botNav],
+        [this.npcNav],
+        [this.viewerNav],
+        [this.spireApiNav],
+        [this.componentNavs],
+        [this.calculatorNav],
+      ]
+
+      for (let n of navs) {
+        keys = keys.concat(this.parseNinjaNav(n))
+      }
+
+      let manualRoutes = [
+        {name: "Coffee", route: ROUTE.COFFEE},
+        {name: "Tasks", route: ROUTE.TASKS},
+        {name: "Items", route: ROUTE.ITEMS_LIST},
+        {name: "Spells", route: ROUTE.SPELLS_LIST},
+        {name: "[Quest API] Explorer", route: ROUTE.QUEST_API_EXPLORER},
+        {name: "[Quest API] Explorer (Perl)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=perl`},
+        {name: "[Quest API] Explorer (Lua)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=lua`},
+        {name: "Zones", route: ROUTE.ZONES},
+      ]
+
+      for (let m of manualRoutes) {
+        keys.push({
+          id: m.name, title: m.name, handler: () => {
+            this.$router.push(m.route).catch((e) => {
+            })
+          }
+        })
+      }
+
+      keys = keys.sort((a, b) => {
+        return a.title.localeCompare(b.title);
+      });
+
+
+      const ninja = document.querySelector('ninja-keys')
+      ninja.data = keys
+    },
+
+    isInAdmin() {
+      return this.$route.path.includes("/admin")
+    },
+
+    getPartitionName() {
+      if (this.isInAdmin()) {
+        return "admin"
+      }
+
+      return "default"
+    },
+
+    isAppLocal() {
+      return AppEnv.isAppLocal()
+    },
+
+    isUserLoggedIn() {
+      return this.user && this.user.avatar && this.user.avatar.length > 0
+    },
+
+    getUserAvatar() {
+      if (this.user && this.user.avatar && this.user.avatar.length > 0) {
+        return this.user.avatar
+      }
+
+      return require('@/assets/img/spire.png')
+    },
+
+    setSidebarStyle() {
+      setTimeout(() => {
+        if (this.lastPartition !== this.getPartitionName()) {
+          const sidebar = document.getElementById("sidebar")
+
+          if (sidebar) {
+            // remove all classes
+            sidebar.classList.remove("sidebar-admin")
+            sidebar.classList.remove("sidebar-normal")
+
+            // trigger reset class
+            // this tricks color animation to bring opacity down before transitioning back
+            // up with the other sidebar classes
+            sidebar.classList.add("sidebar-reset")
+
+            setTimeout(() => {
+              if (this.isInAdmin()) {
+                sidebar.classList.remove("sidebar-reset")
+                sidebar.classList.add("sidebar-admin")
+              } else {
+                sidebar.classList.remove("sidebar-reset")
+                sidebar.classList.add("sidebar-normal")
+              }
+            }, 300)
+          }
+
+          this.lastPartition = this.getPartitionName()
+        }
+      }, 10)
+    },
+
+    handleRouteChange() {
+      this.setSidebarStyle()
+    },
     handleAppAlphaEnabled() {
       this.alphaEnabled = App.ALPHA_TOOLS_ENABLED
     },

@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/http"
-	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/sirupsen/logrus"
 
 	"errors"
@@ -15,21 +14,21 @@ type HttpServeCommand struct {
 	port    uint
 	logger  *logrus.Logger
 	command *cobra.Command
-	router  *routes.Router
+	server  *http.Server
 }
 
 func (c *HttpServeCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewHttpServeCommand(logger *logrus.Logger, router *routes.Router) *HttpServeCommand {
+func NewHttpServeCommand(logger *logrus.Logger, server *http.Server) *HttpServeCommand {
 	i := &HttpServeCommand{
 		logger: logger,
 		command: &cobra.Command{
 			Use:   "http:serve",
 			Short: "Starts the API listener",
 		},
-		router: router,
+		server: server,
 	}
 
 	i.command.Flags().Uint("port", 3000, "Port that the HTTP server listens on")
@@ -41,7 +40,7 @@ func NewHttpServeCommand(logger *logrus.Logger, router *routes.Router) *HttpServ
 
 // Handle implementation of the Command interface
 func (c *HttpServeCommand) Handle(_ *cobra.Command, _ []string) {
-	if err := http.Serve(c.port, c.logger, c.router); err != nil {
+	if err := c.server.Serve(c.port); err != nil {
 		c.logger.WithError(err).Fatal(err.Error())
 	}
 }

@@ -1,9 +1,9 @@
 package models
 
 type CharacterItemRecast struct {
-	ID          uint   `json:"id" gorm:"Column:id"`
-	RecastType  uint16 `json:"recast_type" gorm:"Column:recast_type"`
-	Timestamp   uint   `json:"timestamp" gorm:"Column:timestamp"`
+	ID          uint `json:"id" gorm:"Column:id"`
+	RecastType  uint `json:"recast_type" gorm:"Column:recast_type"`
+	Timestamp   uint `json:"timestamp" gorm:"Column:timestamp"`
 }
 
 func (CharacterItemRecast) TableName() string {

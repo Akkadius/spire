@@ -1,14 +1,13 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" style="padding-left: 15px !important; padding-right: 15px !important;">
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-10 content-pop">
-        <!--        <page-header title="Components" pre-title="Preview Components"/>-->
+      <div class="col-12 col-lg-12 col-xl-12 content-pop mt-0">
 
         <div class="container-fluid">
 
           <div class="row" id="changelog">
             <div class="col-12">
-              <v-runtime-template class="changelog" :template="changelog"/>
+              <v-runtime-template class="changelog markdown-body" :template="changelog"/>
             </div>
           </div>
 
@@ -20,11 +19,12 @@
 
 <script>
 
-import EqWindow         from "@/components/eq-ui/EQWindow";
-import UserContext from "@/app/user/UserContext";
-import {SpireApi}  from "../app/api/spire-api";
-import * as util   from "util";
-import VideoViewer      from "../app/video-viewer/video-viewer";
+import EqWindow        from "@/components/eq-ui/EQWindow";
+import UserContext     from "@/app/user/UserContext";
+import {SpireApi}      from "../app/api/spire-api";
+import * as util       from "util";
+import VideoViewer     from "../app/video-viewer/video-viewer";
+import LazyImageLoader from "@/app/lazy-image-load/lazy-image-load";
 
 export default {
   components: {
@@ -74,6 +74,12 @@ export default {
 
         markdownRaw = md.render(markdownRaw);
 
+        // lazy image load injection
+        markdownRaw = markdownRaw.replaceAll(
+          "img src=",
+          "img class='lazy-image lazy-image-unloaded' src='data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' data-src="
+        )
+
         // doc
         this.changelog = "<div>" + markdownRaw + "</div>"
 
@@ -115,15 +121,16 @@ export default {
 
         }, 100)
 
-
-
       }
     })
+
+    LazyImageLoader.addScrollListener()
 
     // auto play videos that are in the viewport
     window.addEventListener("scroll", this.handleRender);
     setTimeout(() => {
       this.handleRender()
+      LazyImageLoader.handleRender()
     }, 500)
   },
   methods: {
@@ -139,6 +146,7 @@ export default {
   },
   deactivated() {
     window.removeEventListener("scroll", this.handleRender, false)
+    LazyImageLoader.destroyScrollListener()
   }
 }
 </script>
@@ -151,13 +159,8 @@ export default {
   -webkit-text-size-adjust: 100%;
 }
 
-.anchor-heading {
-  margin-top: 20px !important;
-}
-
 .changelog img {
   border-radius: 5px;
-  max-width: 95% !important;
   text-align: center;
   display: block;
   margin-bottom: 5px;
@@ -168,14 +171,6 @@ export default {
   width: 100%;
   height: 0;
   padding-bottom: 56.25%;
-}
-
-.anchor-link:hover {
-  display: initial;
-}
-
-.anchor-link {
-  display: none;
 }
 
 .video {
@@ -194,6 +189,39 @@ export default {
   color: red;
   background-color: rgba(110, 118, 129, .4);
   border-radius: 6px;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.6em;
+  font-size: 2em;
+  border-bottom: 1px solid #6666665e;
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.6em;
+  border-bottom: 1px solid #6666665e;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: black;
 }
 
 </style>

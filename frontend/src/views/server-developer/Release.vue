@@ -29,6 +29,7 @@
             <th>OS</th>
             <th>Lines</th>
             <th>Created</th>
+            <th>Origin</th>
           </tr>
           </thead>
           <tbody>
@@ -45,7 +46,7 @@
                 title="View Crash"
                 @click="viewCrash(c)"
               >
-                <i class="fa fa-circle-o"></i>
+                <i class="fa fa-eye"></i>
               </b-button>
             </td>
             <td>{{ c.id }}</td>
@@ -56,6 +57,7 @@
             <td>{{ c.os_sysname }} ({{ c.os_machine }})</td>
             <td>{{ c.crash_report.split("\n").length }}</td>
             <td>{{ c.created_at ? c.created_at : "" }}</td>
+            <td>{{ c.origination_info }}</td>
           </tr>
           </tbody>
         </table>

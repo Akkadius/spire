@@ -1,6 +1,7 @@
 export interface ModelsBotDatum {
     ac?: number;
     agi?: number;
+    archery_setting?: number;
     atk?: number;
     beard?: number;
     beard_color?: number;
@@ -16,6 +17,7 @@ export interface ModelsBotDatum {
     drakkin_details?: number;
     drakkin_heritage?: number;
     drakkin_tattoo?: number;
+    enforce_spell_settings?: number;
     expansion_bitmask?: number;
     eye_color_1?: number;
     eye_color_2?: number;

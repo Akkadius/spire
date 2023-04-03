@@ -221,7 +221,7 @@
     </div>
 
     <!-- Skill Mod Type -->
-    <div class="row" v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0">
+    <div class="row" v-if="itemData['skillmodtype'] >= 0 && itemData['skillmodvalue'] !== 0">
       <div class="mt-3 col-12">
         <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
         +{{ itemData.skillmodvalue }}
@@ -313,6 +313,13 @@
     <div v-if="itemData.lore" class="mt-3 row">
       <div class="col-12">
         <span style="font-weight: bold" class="mr-1">Lore</span> {{ itemData.lore }}
+      </div>
+    </div>
+
+    <!-- Food / Drink -->
+    <div v-if="[14, 15].includes(itemData.itemtype)" class="mt-3 row">
+      <div class="col-12">
+        {{ getFoodDescription() }}
       </div>
     </div>
 
@@ -597,6 +604,10 @@ export default {
     }
   },
   methods: {
+
+    getFoodDescription() {
+      return Items.getFoodDescription(this.itemData)
+    },
 
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

@@ -13,4 +13,18 @@ function scrollToTarget(containerId, targetId, offset = 300) {
   }, 100)
 }
 
-export {scrollToTarget}
+function scrollToHash(route) {
+  const hash       = route.hash.replace("#", "");
+  const hashTarget = document.getElementById(hash)
+  if (hashTarget) {
+    const y = hashTarget.getBoundingClientRect().top + window.scrollY;
+    window.scroll(
+      {
+        top: y,
+        behavior: 'smooth'
+      }
+    );
+  }
+}
+
+export {scrollToTarget, scrollToHash};

@@ -17,7 +17,7 @@ export default {
   name: "EqDebug",
   components: { EqWindow },
   props: {
-    data: Object
+    data: [Object, Array]
   },
   methods: {
     debugUpdatedListener(){

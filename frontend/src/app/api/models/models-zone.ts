@@ -47,6 +47,7 @@ export interface ModelsZone {
     long_name?: string;
     map_file_name?: string;
     max_expansion?: number;
+    max_level?: number;
     max_movement_update_range?: number;
     maxclients?: number;
     maxclip?: number;

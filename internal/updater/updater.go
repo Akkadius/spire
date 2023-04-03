@@ -142,6 +142,8 @@ func (s UpdaterService) CheckForUpdates() {
 			}
 
 			// linux
+			// todo: Move these checks to use platform agnostic filepath.Join calls
+			// these will be risky to refactor so will need testing
 			if runtime.GOOS == "linux" {
 
 				// unzip
@@ -184,6 +186,8 @@ func (s UpdaterService) CheckForUpdates() {
 			}
 
 			// windows
+			// todo: Move these checks to use platform agnostic filepath.Join calls
+			// these will be risky to refactor so will need testing
 			if runtime.GOOS == "windows" {
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s\\%s", os.TempDir(), targetFileNameZipped)

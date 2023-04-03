@@ -36,6 +36,7 @@ api/bot-pet-api.ts
 api/bot-pet-buff-api.ts
 api/bot-pet-inventory-api.ts
 api/bot-spell-casting-chance-api.ts
+api/bot-spell-setting-api.ts
 api/bot-spells-entry-api.ts
 api/bot-stance-api.ts
 api/bot-timer-api.ts
@@ -76,6 +77,7 @@ api/character-skill-api.ts
 api/character-spell-api.ts
 api/character-task-api.ts
 api/character-task-timer-api.ts
+api/chatchannel-reserved-name-api.ts
 api/completed-shared-task-activity-state-api.ts
 api/completed-shared-task-api.ts
 api/completed-shared-task-member-api.ts
@@ -159,6 +161,8 @@ api/petition-api.ts
 api/pets-beastlord-datum-api.ts
 api/pets-equipmentset-api.ts
 api/pets-equipmentset-entry-api.ts
+api/player-event-log-api.ts
+api/player-event-log-setting-api.ts
 api/player-titleset-api.ts
 api/quest-global-api.ts
 api/raid-detail-api.ts
@@ -196,6 +200,7 @@ api/tradeskill-recipe-entry-api.ts
 api/trap-api.ts
 api/tribute-api.ts
 api/tribute-level-api.ts
+api/variable-api.ts
 api/veteran-reward-template-api.ts
 api/zone-api.ts
 api/zone-flag-api.ts
@@ -241,6 +246,7 @@ models/models-bot-pet-buff.ts
 models/models-bot-pet-inventory.ts
 models/models-bot-pet.ts
 models/models-bot-spell-casting-chance.ts
+models/models-bot-spell-setting.ts
 models/models-bot-spells-entry.ts
 models/models-bot-stance.ts
 models/models-bot-timer.ts
@@ -282,6 +288,7 @@ models/models-character-spell.ts
 models/models-character-task-timer.ts
 models/models-character-task.ts
 models/models-character-tribute.ts
+models/models-chatchannel-reserved-name.ts
 models/models-completed-shared-task-activity-state.ts
 models/models-completed-shared-task-member.ts
 models/models-completed-shared-task.ts
@@ -366,6 +373,8 @@ models/models-petition.ts
 models/models-pets-beastlord-datum.ts
 models/models-pets-equipmentset-entry.ts
 models/models-pets-equipmentset.ts
+models/models-player-event-log-setting.ts
+models/models-player-event-log.ts
 models/models-player-titleset.ts
 models/models-quest-global.ts
 models/models-raid-detail.ts
@@ -408,6 +417,7 @@ models/models-tribute-level.ts
 models/models-tribute.ts
 models/models-user-server-database-connection.ts
 models/models-user.ts
+models/models-variable.ts
 models/models-veteran-reward-template.ts
 models/models-zone-flag.ts
 models/models-zone-point.ts
