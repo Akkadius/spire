@@ -1,75 +1,81 @@
 <template>
-  <eq-window title="Database Backup">
-    <div
-      class="row"
-      v-for="o in options"
-      :key="o.key"
-    >
-      <div class="col-3 text-right mt-3">
-        <eq-checkbox
-          :label="o.label"
-          class="d-inline-block"
-          :fade-when-not-true="true"
-          :true-value="true"
-          :false-value="false"
-          v-model="request[o.key]"
-          :style="disabled[o.key] ? 'opacity: .3' : 'opacity: 1'"
-          @input="checked(o)"
-          :disabled="loading"
-        />
-      </div>
-      <div class="col-9">
-        <div class="text-muted mt-3">
-          {{ o.desc }}
+  <div>
+    <eq-window title="Database Backup">
+      <div
+        class="row"
+        v-for="o in options"
+        :key="o.key"
+      >
+        <div class="col-3 text-right mt-3">
+          <eq-checkbox
+            :label="o.label"
+            class="d-inline-block"
+            :fade-when-not-true="true"
+            :true-value="true"
+            :false-value="false"
+            v-model="request[o.key]"
+            :style="disabled[o.key] ? 'opacity: .3' : 'opacity: 1'"
+            @input="checked(o)"
+            :disabled="loading"
+          />
+        </div>
+        <div class="col-9">
+          <div class="text-muted mt-3">
+            {{ o.desc }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-3 text-right mt-3"></div>
-      <div class="col-9 text-left mt-3">
-        <button
-          :style="loading ? 'opacity: .3' : 'opacity: 1'"
-          class="eq-button d-inline-block"
-          :disabled="loading"
-          @click="backup"
-        >
-          Backup
-        </button>
+      <div class="row">
+        <div class="col-3 text-right mt-3"></div>
+        <div class="col-9 text-left mt-3">
+          <button
+            :style="loading ? 'opacity: .3' : 'opacity: 1'"
+            class="eq-button d-inline-block"
+            :disabled="loading"
+            @click="backup"
+          >
+            Backup
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="row" v-if="downloading">
-      <div class="col-3 text-right mt-3"></div>
-      <div class="col-9 text-left mt-3 font-weight-bold">
-        Downloading file...
+      <div class="row" v-if="downloading">
+        <div class="col-3 text-right mt-3"></div>
+        <div class="col-9 text-left mt-3 font-weight-bold">
+          Downloading file...
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-12 text-left mt-3">
-        <info-error-banner
-          :slim="true"
-          :notification="notification"
-          :error="error"
-          @dismiss-error="error = ''"
-          @dismiss-notification="notification = ''"
-          class="mb-3"
-        />
+      <div class="row">
+        <div class="col-12 text-left mt-3">
+          <info-error-banner
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mb-3"
+          />
+        </div>
       </div>
-    </div>
 
-    <app-loader :is-loading="loading"/>
+      <eq-debug :data="request"/>
+    </eq-window>
 
-    <div v-if="backupResult && Object.keys(backupResult).length > 0">
-      <span class="font-weight-bold">Command</span>
-      <pre v-if="backupResult.command" style="width: 100%">{{ backupResult.command }}</pre>
-      <span class="font-weight-bold">Output</span>
-      <pre v-if="backupResult.command" style="width: 100%">{{ backupResult.stdout }}</pre>
-    </div>
+    <eq-window
+      title="Backup Result"
+      v-if="loading || (backupResult && Object.keys(backupResult).length > 0)">
+      <app-loader :is-loading="loading"/>
 
-    <eq-debug :data="request"/>
-  </eq-window>
+      <div v-if="backupResult && Object.keys(backupResult).length > 0">
+        <span class="font-weight-bold">Command</span>
+        <pre v-if="backupResult.command" style="width: 100%">{{ backupResult.command }}</pre>
+        <span class="font-weight-bold">Output</span>
+        <pre v-if="backupResult.command" style="width: 100%">{{ backupResult.stdout }}</pre>
+      </div>
+    </eq-window>
+  </div>
 </template>
 
 <script>
@@ -102,7 +108,11 @@ export default {
         { label: "State Tables", key: 'state_tables', desc: "Dump state tables" },
         { label: "System Tables", key: 'system_tables', desc: "Dump system tables" },
         { label: "Login Tables", key: 'login_tables', desc: "Dump login tables" },
-        { label: "Compress", key: 'compress', desc: "Compresses the dump with the available compression found in the operating system" },
+        {
+          label: "Compress",
+          key: 'compress',
+          desc: "Compresses the dump with the available compression found in the operating system"
+        },
       ],
 
       disabled: {},

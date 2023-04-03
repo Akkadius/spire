@@ -38,8 +38,6 @@ const router = new Router({
       }
     }
 
-    console.log("doing stuff")
-
     // otherwise resolve the state of location prior
     return new Promise((resolve, reject) => {
       setTimeout(() => {

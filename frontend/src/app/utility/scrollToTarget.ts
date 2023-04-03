@@ -17,12 +17,13 @@ function scrollToHash(route) {
   const hash       = route.hash.replace("#", "");
   const hashTarget = document.getElementById(hash)
   if (hashTarget) {
-
     const y = hashTarget.getBoundingClientRect().top + window.scrollY;
-    window.scroll({
-      top: y,
-      behavior: 'smooth'
-    });
+    window.scroll(
+      {
+        top: y,
+        behavior: 'smooth'
+      }
+    );
   }
 }
 
