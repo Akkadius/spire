@@ -22,6 +22,8 @@
 
           <eq-tabs
             v-if="item"
+            :selected="tabSelected"
+            @on-selected="tabSelected = $event; updateQueryState()"
             id="item-edit-card"
             class="item-edit-card"
             @mouseover.native="previewItem"
@@ -1671,6 +1673,8 @@ export default {
   },
   data() {
     return {
+      tabSelected: "General",
+
       item: null, // item record data
       originalItem: {}, // item record data; used to reference original values in tools
 
@@ -1815,7 +1819,6 @@ export default {
   },
   watch: {
 
-
     // reset state vars when we navigate away
     '$route'() {
       this.item         = null;
@@ -1941,6 +1944,28 @@ export default {
   },
   methods: {
 
+    updateQueryState() {
+      let q = {}
+
+      if (this.tabSelected !== "") {
+        q.tab = this.tabSelected
+      }
+
+      this.$router.replace(
+        {
+          path: this.$route.path,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.tab && this.$route.query.tab.length > 0) {
+        this.tabSelected = this.$route.query.tab
+      }
+    },
+
     getFieldDescription(field) {
       return Items.getFieldDescription(field);
     },
@@ -2062,6 +2087,7 @@ export default {
     },
 
     load() {
+      this.loadQueryState()
 
       if (this.$route.params.id > 0) {
         this.error = ""
