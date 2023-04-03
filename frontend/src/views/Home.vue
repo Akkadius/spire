@@ -110,7 +110,7 @@ export default {
             //append anchor after heading text
             $heading.append($anchor);
           });
-          
+
           document.querySelectorAll("table").forEach((e) => {
             if (e) {
               e.classList.add('eq-table')
@@ -159,13 +159,8 @@ export default {
   -webkit-text-size-adjust: 100%;
 }
 
-.anchor-heading {
-  margin-top: 20px !important;
-}
-
 .changelog img {
   border-radius: 5px;
-  max-width: 95% !important;
   text-align: center;
   display: block;
   margin-bottom: 5px;
@@ -176,14 +171,6 @@ export default {
   width: 100%;
   height: 0;
   padding-bottom: 56.25%;
-}
-
-.anchor-link:hover {
-  display: initial;
-}
-
-.anchor-link {
-  display: none;
 }
 
 .video {

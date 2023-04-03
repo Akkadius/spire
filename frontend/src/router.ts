@@ -5,6 +5,7 @@ import * as util from "util";
 import {AppEnv} from "@/app/env/app-env";
 import {EventBus} from "@/app/event-bus/event-bus";
 import qs from "qs";
+import {scrollToHash} from "@/app/utility/scrollToTarget";
 
 Vue.use(Router)
 
@@ -12,8 +13,8 @@ const router = new Router({
   mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
-  stringifyQuery  : query => {
-    let result = qs.stringify(query, { format: 'RFC1738' })
+  stringifyQuery: query => {
+    let result = qs.stringify(query, {format: 'RFC1738'})
     return result ? ('?' + result) : ''
   },
   scrollBehavior(to, from, savedPosition) {
@@ -26,15 +27,18 @@ const router = new Router({
 
     // if link contains a hash target
     if (to.hash) {
-      const hash       = to.hash.replace("#", "");
-      const hashTarget = document.getElementById(hash)
-      if (hashTarget) {
+      // for initial loads
+      if (to.fullPath === from.fullPath) {
         setTimeout(() => {
-          hashTarget.scrollIntoView();
-        }, 400);
-        return null
+          scrollToHash(to)
+        }, 1000);
+      }
+      else if (to.fullPath !== from.fullPath) {
+        return null;
       }
     }
+
+    console.log("doing stuff")
 
     // otherwise resolve the state of location prior
     return new Promise((resolve, reject) => {
@@ -261,7 +265,7 @@ const router = new Router({
     {
       path: ROUTE.ADMIN_OCCULUS_REQUIRED,
       component: () => import('./views/admin/OcculusRequire.vue'),
-      meta: {title: "Occulus Required" },
+      meta: {title: "Occulus Required"},
     },
     {
       path: ROUTE.ADMIN_ROOT,
@@ -280,7 +284,7 @@ const router = new Router({
         {
           path: 'zones',
           component: () => import('./views/admin/ZoneServers.vue'),
-          meta: {title: "Zone Servers" },
+          meta: {title: "Zone Servers"},
         },
         {
           path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
@@ -320,17 +324,17 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_LOG_SETTINGS,
           component: () => import('./views/admin/configuration/LogSettings.vue'),
-          meta: {title: "Log Settings" },
+          meta: {title: "Log Settings"},
         },
         {
           path: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS,
           component: () => import('./views/admin/player-event-logs/PlayerEventLogSettings.vue'),
-          meta: {title: "Player Event Log Settings" },
+          meta: {title: "Player Event Log Settings"},
         },
         {
           path: ROUTE.ADMIN_SERVER_CONFIG,
           component: () => import('./views/admin/configuration/ServerConfig.vue'),
-          meta: {title: "Server Configuration" },
+          meta: {title: "Server Configuration"},
         },
 
         // tools
@@ -358,23 +362,23 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS,
           component: () => import('./views/admin/tools/ClientAssets.vue'),
-          meta: {title: "Client Asset Management" },
+          meta: {title: "Client Asset Management"},
         },
 
         {
           path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
           component: () => import('./views/admin/player-event-logs/PlayerEventLogs.vue'),
-          meta: {title: "Player Event Logs Explorer" },
+          meta: {title: "Player Event Logs Explorer"},
         },
         {
           path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
           component: () => import('./views/admin/player-event-logs/PlayerEventLogs.vue'),
-          meta: {title: "Player Event Logs Explorer" },
+          meta: {title: "Player Event Logs Explorer"},
         },
         {
           path: '/admin/ws-poc',
           component: () => import('./views/admin/WebsocketPoc.vue'),
-          meta: {title: "Websocket POC" },
+          meta: {title: "Websocket POC"},
         },
       ]
     },
@@ -435,7 +439,7 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach(async (to, from) => {
   setTimeout(() => {
     const inputs = document.getElementsByTagName("input");
-    for (let i = 0; i < inputs.length; i++)       {
+    for (let i = 0; i < inputs.length; i++) {
       if (inputs[i].getAttribute("autofocus")) {
         inputs[i].focus();
         break;
