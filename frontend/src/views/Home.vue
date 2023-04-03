@@ -74,6 +74,12 @@ export default {
 
         markdownRaw = md.render(markdownRaw);
 
+        // lazy image load injection
+        markdownRaw = markdownRaw.replaceAll(
+          "img src=",
+          "img class='lazy-image lazy-image-unloaded' src='data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' data-src="
+        )
+
         // doc
         this.changelog = "<div>" + markdownRaw + "</div>"
 
@@ -104,16 +110,7 @@ export default {
             //append anchor after heading text
             $heading.append($anchor);
           });
-
-          document.querySelectorAll("#changelog img").forEach((e) => {
-            if (e) {
-              e.setAttribute("data-src", e.src)
-              e.classList.add('lazy-image')
-              e.classList.add('lazy-image-unloaded')
-              e.src = "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-            }
-          });
-
+          
           document.querySelectorAll("table").forEach((e) => {
             if (e) {
               e.classList.add('eq-table')
