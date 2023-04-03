@@ -174,7 +174,7 @@
                 <b-form-input
                   v-if="field.fType === 'text'"
                   :id="field.field"
-                  v-model.number="editingSpellEntry[field.field]"
+                  v-model="editingSpellEntry[field.field]"
                   class="m-0 mt-1"
                   v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                   v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
