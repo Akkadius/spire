@@ -177,7 +177,7 @@
           <li class="nav-item">
             <a href="#" class="nav-link" data-toggle="modal" @click="openSearch()">
               <i class="fe fe-search mr-2"></i>
-              Search (Ctrl + K)
+              Nav Search (Ctrl + K)
             </a>
           </li>
         </ul>

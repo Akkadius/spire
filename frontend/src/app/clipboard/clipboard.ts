@@ -13,9 +13,6 @@ export default class Clipboard {
 
   static copyFromElement(element) {
     // @ts-ignore
-    console.log(element)
-    console.log(document.getElementById(element))
-
     const str = document.getElementById(element).innerText
     const el  = document.createElement('textarea')
     el.value  = str

@@ -204,6 +204,38 @@ My pressing the **Control** key, you can now see a modal that will show you Spir
 
 ![image](https://user-images.githubusercontent.com/3319450/229333312-8fd5fd05-6fa2-42bc-8fc5-27aef60b1f6f.png)
 
+### Item Editor
+
+* Item editor edit button now is a hyperlink that can be opened in a new tab https://github.com/Akkadius/spire/issues/106
+* Item editor clone button now is a hyperlink that can be opened in a new tab https://github.com/Akkadius/spire/issues/106
+* Item editor now can deeply link to tabs
+* Added "Food" tab with proper item display values in item card preview https://github.com/Akkadius/spire/issues/100
+* Added proper "zero value" for skillmodtype and extradmgskill (Thanks Kinglykrab)
+
+### Spell Editor
+
+* Add "Corruption" to resist types https://github.com/Akkadius/spire/issues/92
+* Spell editor now can deeply link to tabs
+* Have DB String buttons open a new tab to prevent loss of progress in editor https://github.com/Akkadius/spire/issues/95
+
+### Merchant Editor
+
+* Fix an issue with new merchantlist entries creating a max_status of 0 preventing new merchant items from being displayed https://github.com/Akkadius/spire/issues/107
+
+### NPC / Bot Spells Editor
+
+* Fix an issue where editing a spell results in a number type error https://github.com/Akkadius/spire/issues/83
+
+### Quest API Explorer
+
+* Fix an issue with copy to clipboard for multiple events being displayed in search https://github.com/Akkadius/spire/issues/104
+* Added user preference default language https://github.com/Akkadius/spire/issues/98
+
+### Fixes
+
+* Fixed [Bug] Merchant Editor creates new merchant list entries with max status of 0 https://github.com/Akkadius/spire/issues/107
+* Fix 
+
 ## [2.6.1]
 
 ### Item Editor
