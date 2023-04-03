@@ -631,7 +631,8 @@
                       </div>
                       <div
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')"
+                        class="col-4 m-0 p-0"
+                        :style="(typeof field.zeroValue === 'undefined' && item[field.field] <= 0 || (typeof field.zeroValue !== 'undefined' && item[field.field] === field.zeroValue) ? 'opacity: .5' : '')"
                       >
 
                         <b-form-input
@@ -1742,7 +1743,8 @@ export default {
         {
           description: 'Extra Damage Skill',
           field: 'extradmgskill',
-          selectData: DB_SKILLS
+          selectData: DB_SKILLS,
+          zeroValue: -1
         },
         {
           description: 'Extra Damage Amount',
@@ -1792,6 +1794,7 @@ export default {
           description: 'Skill Mod Type',
           field: 'skillmodtype',
           selectData: DB_SKILLS,
+          zeroValue: -1
         },
         {
           description: 'Skill Mod Value',
