@@ -1,3 +1,7 @@
+## [3.0.3] 4/3/2023 - Spire Admin
+
+* Fix an issue during Spire initialization with older MySQL installs and a collation, index size issue
+
 ## [3.0.2] 4/3/2023 - Spire Admin
 
 * Fixed an issue where when the control key is pressed while in an input field that it would bring up a modal help window. This is annoying in circumstances where you use "Ctrl+A" to select all in a text field to delete and the modal pops up. The modal is now cancelled under this scenario
