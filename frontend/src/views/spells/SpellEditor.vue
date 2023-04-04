@@ -1809,23 +1809,18 @@ export default {
         this.drawConeVisualizer()
       }
     },
-
-    '$route'() {
-      this.loaded = false
-
-      // reset state vars when we navigate away
-      this.visibleEffectSlots = []
-      this.notification       = ""
-      this.zeroStateSelected  = true
-      EditFormFieldUtil.resetFieldEditedStatus()
-      this.resetPreviewComponents()
-      EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
-
-      // reload
-      this.load()
-    }
   },
   async created() {
+    this.loaded = false
+
+    // reset state vars when we navigate away
+    this.visibleEffectSlots = []
+    this.notification       = ""
+    this.zeroStateSelected  = true
+    EditFormFieldUtil.resetFieldEditedStatus()
+    this.resetPreviewComponents()
+    EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
+
     this.load()
   },
   methods: {

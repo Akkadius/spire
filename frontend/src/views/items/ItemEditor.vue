@@ -1874,20 +1874,6 @@ export default {
   },
   watch: {
 
-    // reset state vars when we navigate away
-    '$route'() {
-      this.item         = null;
-      this.originalItem = {};
-
-      // reset state vars when we navigate away
-      this.notification = ""
-      EditFormFieldUtil.resetFieldEditedStatus()
-      this.resetPreviewComponents()
-
-      // reload
-      this.load()
-    },
-
     // some item effect types have defaults when the effect is set
     // they only appear to use that type when the effect is non-zero
     'item.worneffect': function (newVal, oldVal) {
@@ -1998,6 +1984,14 @@ export default {
     },
   },
   async created() {
+    this.item         = null;
+    this.originalItem = {};
+
+    // reset state vars when we navigate away
+    this.notification = ""
+    EditFormFieldUtil.resetFieldEditedStatus()
+    this.resetPreviewComponents()
+
     this.load()
   },
   methods: {
