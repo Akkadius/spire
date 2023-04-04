@@ -73,9 +73,17 @@ export default {
       let controlPressed = false;
 
       document.onkeydown = (e) => {
+        const tagName = e.srcElement.tagName
+
         e = e || window.event; //Get event
         if (!e.ctrlKey && e.key !== "Control") return;
         let code = e.which || e.keyCode; //Get key code
+
+        // if we only press the control key, reject further action if we are inside
+        // things like inputs
+        if (!["BODY", "A", "NINJA-KEYS", "DIV"].includes(tagName) && code === 17) {
+          return
+        }
 
         // if command is accompanied by another key, dismiss commands modal
         if (code !== 17) {

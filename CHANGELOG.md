@@ -1,6 +1,13 @@
+## [3.0.2] 4/3/2023 - Spire Admin
+
+* Fixed an issue where when the control key is pressed while in an input field that it would bring up a modal help window. This is annoying in circumstances where you use "Ctrl+A" to select all in a text field to delete and the modal pops up. The modal is now cancelled under this scenario
+* Fixed an issue where HTTP streams are incorrectly sending `Bearer` headers when a token is not set
+* JWT signing key will now use the encryption key
+* When local installs have authentication disabled, local JWT tokens get purged so API calls aren't made and authentication is rejected
+
 ## [3.0.1] 4/3/2023 - Spire Admin
 
-* Fix issue with Windows resolving `localhost` to ipv6 for server API connections
+Fix issue with Windows resolving `localhost` to ipv6 for server API connections
 
 ## [3.0.0] 4/2/2023 - Spire Admin
 
