@@ -100,6 +100,8 @@ export default class UserContext {
   static deleteAccessToken() {
     if (typeof (Storage) !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY)
+      // remove legacy occulus token as well
+      localStorage.removeItem('access_token')
     }
   }
 

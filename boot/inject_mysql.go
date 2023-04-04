@@ -135,7 +135,7 @@ func provideEQEmuLocalDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*g
 
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN: fmt.Sprintf(
-			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
+			"%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
 			config.Username,
 			config.Password,
 			config.Host,
@@ -227,7 +227,7 @@ func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.D
 
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN: fmt.Sprintf(
-			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
+			"%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
 			config.Username,
 			config.Password,
 			config.Host,

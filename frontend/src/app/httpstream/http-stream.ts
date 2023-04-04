@@ -3,12 +3,16 @@ import UserContext from "@/app/user/UserContext";
 
 export class HttpStream {
   static get(url: string) {
+    let headers             = {}
+    headers['Content-Type'] = "application/json";
+    if (UserContext.getAccessToken() !== "") {
+      // @ts-ignore
+      headers.Authorization = `Bearer ` + UserContext.getAccessToken()
+    }
+
     return fetch(SpireApi.getBasePath() + url, {
       method: 'get',
-      headers: {
-        Authorization: `Bearer ` + UserContext.getAccessToken(),
-        'Content-Type': "application/json",
-      },
+      headers: headers,
     })
   }
 

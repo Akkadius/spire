@@ -3,6 +3,7 @@
 import {SpireApi} from "../api/spire-api";
 import VueRouter, {Route} from "vue-router";
 import {ROUTE} from "@/routes";
+import UserContext from "@/app/user/UserContext";
 
 // these should be mirrored with env/app.go
 const AppEnvTesting    = "testing"
@@ -101,7 +102,7 @@ export class AppEnv {
 
   static isLocalAuthEnabled() {
     if (!this.getSettings()) {
-      return;
+      return false;
     }
 
     for (let s of this.getSettings()) {
@@ -129,6 +130,12 @@ export class AppEnv {
       this.setFeatures(data.features)
       this.setSettings(data.settings)
       this.setIsSpireInitialized(data.is_spire_initialized)
+
+      // if a local install is not using auth but somehow the user still
+      // has a JWT stored locally, let's purge it
+      if (!this.isLocalAuthEnabled()) {
+        UserContext.deleteAccessToken()
+      }
 
       return true;
     }

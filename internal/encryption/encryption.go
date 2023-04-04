@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/argon2"
 	"io"
+	"os"
 	"strings"
 )
 
@@ -122,6 +123,11 @@ func (e *Encrypter) loadEncryptionKey() string {
 	if e.serverconfig.Exists() {
 		c := e.serverconfig.Get()
 		if len(c.Spire.EncryptionKey) != 0 {
+			// only if we don't have one predefined already, use the encryption key
+			// as the JWT secret key
+			if len(os.Getenv("JWT_SECRET_KEY")) == 0 {
+				_ = os.Setenv("JWT_SECRET_KEY", c.Spire.EncryptionKey)
+			}
 			e.logger.Debug("[encryption] Using eqemu server config encryption key")
 			return c.Spire.EncryptionKey
 		}
