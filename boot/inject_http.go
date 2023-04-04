@@ -8,6 +8,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	apphttp "github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
@@ -17,7 +18,6 @@ import (
 	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
-	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/websocket"
@@ -56,7 +56,7 @@ var httpSet = wire.NewSet(
 	deploy.NewDeployController,
 	eqemuserver.NewController,
 	eqemuserver.NewPublicController,
-	serverconfig.NewController,
+	eqemuserverconfig.NewController,
 	websocket.NewController,
 	backup.NewController,
 	system.NewController,
@@ -192,7 +192,7 @@ func provideControllers(
 	occulusController *occulus.Controller,
 	eqemuserverController *eqemuserver.Controller,
 	eqemuserverPublicController *eqemuserver.PublicController,
-	serverconfigController *serverconfig.Controller,
+	serverconfigController *eqemuserverconfig.Controller,
 	backupController *backup.Controller,
 	websocketController *websocket.Controller,
 	systemController *system.Controller,

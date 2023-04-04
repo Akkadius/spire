@@ -1,4 +1,4 @@
-package serverconfig
+package eqemuserverconfig
 
 import (
 	"encoding/json"
@@ -9,14 +9,14 @@ import (
 	"os"
 )
 
-type EQEmuServerConfig struct {
+type Config struct {
 	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
 	config   EQEmuConfigJson
 }
 
-func NewEQEmuServerConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *EQEmuServerConfig {
-	return &EQEmuServerConfig{
+func NewConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *Config {
+	return &Config{
 		logger:   logger,
 		pathmgmt: pathmgmt,
 	}
@@ -125,7 +125,7 @@ type EQEmuConfigJson struct {
 	} `json:"spire,omitempty"`
 }
 
-func (e EQEmuServerConfig) Get() EQEmuConfigJson {
+func (e Config) Get() EQEmuConfigJson {
 	cfg := e.pathmgmt.GetEQEmuServerConfigFilePath()
 	e.debug("path [%v]", cfg)
 
@@ -149,7 +149,7 @@ func (e EQEmuServerConfig) Get() EQEmuConfigJson {
 	return EQEmuConfigJson{}
 }
 
-func (e *EQEmuServerConfig) debug(msg string, a ...interface{}) {
+func (e *Config) debug(msg string, a ...interface{}) {
 	if len(os.Getenv("DEBUG")) >= 3 {
 		if len(a) > 0 {
 			e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
@@ -159,11 +159,11 @@ func (e *EQEmuServerConfig) debug(msg string, a ...interface{}) {
 	}
 }
 
-func (e EQEmuServerConfig) Exists() bool {
+func (e Config) Exists() bool {
 	return len(e.pathmgmt.GetEQEmuServerConfigFilePath()) > 0
 }
 
-func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
+func (e Config) Save(c EQEmuConfigJson) error {
 	if c.WebAdmin.Discord != nil {
 		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
 			c.WebAdmin.Discord = nil

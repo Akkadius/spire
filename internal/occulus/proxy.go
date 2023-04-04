@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -18,13 +18,13 @@ import (
 type Proxy struct {
 	authToken    string // holds the authentication token
 	logger       *logrus.Logger
-	serverconfig *serverconfig.EQEmuServerConfig
+	serverconfig *eqemuserverconfig.Config
 	process      *ProcessManagement
 }
 
 func NewProxy(
 	logger *logrus.Logger,
-	serverconfig *serverconfig.EQEmuServerConfig,
+	serverconfig *eqemuserverconfig.Config,
 	process *ProcessManagement,
 ) *Proxy {
 	return &Proxy{

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
-	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm/logger"
@@ -25,7 +25,7 @@ var databaseSet = wire.NewSet(
 )
 
 // we need to do this because
-func provideAppDbConnections(serverconfig *serverconfig.EQEmuServerConfig, logger *logrus.Logger) *database.Connections {
+func provideAppDbConnections(serverconfig *eqemuserverconfig.Config, logger *logrus.Logger) *database.Connections {
 	eqEmuLocalDatabase, err := provideEQEmuLocalDatabase(serverconfig)
 	if err != nil {
 		logger.Fatal(err)
@@ -64,7 +64,7 @@ type MySQLConfig struct {
 }
 
 // return mysql config
-func getEQEmuLocalMySQLConfig(serverconfig *serverconfig.EQEmuServerConfig) (*MySQLConfig, error) {
+func getEQEmuLocalMySQLConfig(serverconfig *eqemuserverconfig.Config) (*MySQLConfig, error) {
 	m := &MySQLConfig{
 		Password:           os.Getenv("MYSQL_EQEMU_PASSWORD"),
 		Username:           os.Getenv("MYSQL_EQEMU_USERNAME"),
@@ -122,7 +122,7 @@ func isQueryLoggingEnabled() bool {
 // database connection, configured from the environment.
 // eqemu Local database is what is used if a remote connection is not provided otherwise
 // If someone has a local installation of spire pointed to their own database this connection would be used
-func provideEQEmuLocalDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.DB, error) {
+func provideEQEmuLocalDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB, error) {
 	config, err := getEQEmuLocalMySQLConfig(serverconfig)
 	if err != nil {
 		return nil, err
@@ -208,7 +208,7 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 }
 
 // Local spire database connection
-func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.DB, error) {
+func provideSpireDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB, error) {
 	// if booting from local server folder
 	cfg := serverconfig.Get()
 	if cfg.Server.Database != nil && cfg.Server.Database.Db != "" {

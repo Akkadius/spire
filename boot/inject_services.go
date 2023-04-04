@@ -10,13 +10,13 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
-	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/telnet"
 	"github.com/Akkadius/spire/internal/websocket"
@@ -34,7 +34,7 @@ var serviceSet = wire.NewSet(
 	desktop.NewWebBoot,
 	clientfiles.NewExporter,
 	clientfiles.NewImporter,
-	serverconfig.NewEQEmuServerConfig,
+	eqemuserverconfig.NewConfig,
 	pathmgmt.NewPathManagement,
 	permissions.NewService,
 	pluralize.NewClient,

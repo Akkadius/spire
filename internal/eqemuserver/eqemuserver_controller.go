@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
@@ -32,7 +32,7 @@ type Controller struct {
 	eqemuserverapi *Client
 	pathmgmt       *pathmgmt.PathManagement
 	settings       *spire.Settings
-	serverconfig   *serverconfig.EQEmuServerConfig
+	serverconfig   *eqemuserverconfig.Config
 	updater        *Updater
 }
 
@@ -40,7 +40,7 @@ func NewController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 	api *Client,
-	serverconfig *serverconfig.EQEmuServerConfig,
+	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
 	settings *spire.Settings,
 	updater *Updater,

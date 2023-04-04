@@ -6,8 +6,8 @@ import (
 	"errors"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/download"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/sirupsen/logrus"
@@ -21,7 +21,7 @@ import (
 type Updater struct {
 	db           *database.DatabaseResolver
 	logger       *logrus.Logger
-	serverconfig *serverconfig.EQEmuServerConfig
+	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
 	pathmgmt     *pathmgmt.PathManagement
 }
@@ -29,7 +29,7 @@ type Updater struct {
 func NewUpdater(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
-	serverconfig *serverconfig.EQEmuServerConfig,
+	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
 

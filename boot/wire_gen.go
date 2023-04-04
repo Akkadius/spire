@@ -31,7 +31,7 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
-	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/telnet"
@@ -51,7 +51,7 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	pathManagement := pathmgmt.NewPathManagement(logger)
-	eqEmuServerConfig := serverconfig.NewEQEmuServerConfig(logger, pathManagement)
+	eqEmuServerConfig := eqemuserverconfig.NewConfig(logger, pathManagement)
 	db, err := provideEQEmuLocalDatabase(eqEmuServerConfig)
 	if err != nil {
 		return App{}, err
@@ -107,7 +107,7 @@ func InitializeApplication() (App, error) {
 	updater := eqemuserver.NewUpdater(databaseResolver, logger, eqEmuServerConfig, settings, pathManagement)
 	eqemuserverController := eqemuserver.NewController(databaseResolver, logger, eqemuserverClient, eqEmuServerConfig, pathManagement, settings, updater)
 	publicController := eqemuserver.NewPublicController(databaseResolver, logger, eqemuserverClient, eqEmuServerConfig, pathManagement, settings, updater)
-	serverconfigController := serverconfig.NewController(logger, eqEmuServerConfig)
+	serverconfigController := eqemuserverconfig.NewController(logger, eqEmuServerConfig)
 	backupController := backup.NewController(logger, mysql, pathManagement)
 	spireHandler := websocket.NewSpireHandler(logger, pathManagement)
 	websocketController := websocket.NewController(logger, pathManagement, spireHandler)

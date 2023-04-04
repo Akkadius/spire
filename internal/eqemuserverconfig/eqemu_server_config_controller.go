@@ -1,4 +1,4 @@
-package serverconfig
+package eqemuserverconfig
 
 import (
 	"github.com/Akkadius/spire/internal/http/routes"
@@ -9,12 +9,12 @@ import (
 
 type Controller struct {
 	logger       *logrus.Logger
-	serverconfig *EQEmuServerConfig
+	serverconfig *Config
 }
 
 func NewController(
 	logger *logrus.Logger,
-	serverconfig *EQEmuServerConfig,
+	serverconfig *Config,
 ) *Controller {
 	return &Controller{
 		logger:       logger,

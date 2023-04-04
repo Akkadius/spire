@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
-	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/argon2"
 	"io"
@@ -26,7 +26,7 @@ type PasswordConfig struct {
 
 type Encrypter struct {
 	logger         *logrus.Logger
-	serverconfig   *serverconfig.EQEmuServerConfig
+	serverconfig   *eqemuserverconfig.Config
 	encryptionKey  string
 	passwordConfig *PasswordConfig
 }
@@ -41,7 +41,7 @@ func (e *Encrypter) SetEncryptionKey(encryptionKey string) {
 
 func NewEncrypter(
 	logger *logrus.Logger,
-	serverconfig *serverconfig.EQEmuServerConfig,
+	serverconfig *eqemuserverconfig.Config,
 ) *Encrypter {
 	e := &Encrypter{
 		logger:       logger,

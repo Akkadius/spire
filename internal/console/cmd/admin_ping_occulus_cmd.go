@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/occulus"
-	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -13,7 +13,7 @@ type AdminPingOcculus struct {
 	db           *gorm.DB
 	logger       *logrus.Logger
 	command      *cobra.Command
-	serverconfig *serverconfig.EQEmuServerConfig
+	serverconfig *eqemuserverconfig.Config
 	occulus      *occulus.Proxy
 }
 
@@ -24,7 +24,7 @@ func (c *AdminPingOcculus) Command() *cobra.Command {
 func NewAdminPingOcculus(
 	db *gorm.DB,
 	logger *logrus.Logger,
-	serverconfig *serverconfig.EQEmuServerConfig,
+	serverconfig *eqemuserverconfig.Config,
 	occulus *occulus.Proxy,
 ) *AdminPingOcculus {
 	i := &AdminPingOcculus{
