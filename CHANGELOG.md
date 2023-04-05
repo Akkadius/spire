@@ -1,10 +1,14 @@
+## [3.0.5] 4/4/2023 - Spire Admin
+
+Fix issue with chat message returns bleeding into other telnet API command output
+
 ## [3.0.4] 4/3/2023 - Spire Admin
 
-* Fix a regression with Spells and Items editor where changing tabs would wipe out edits made in other tabs
+Fix a regression with Spells and Items editor where changing tabs would wipe out edits made in other tabs
 
 ## [3.0.3] 4/3/2023 - Spire Admin
 
-* Fix an issue during Spire initialization with older MySQL installs and a collation, index size issue
+Fix an issue during Spire initialization with older MySQL installs and a collation, index size issue
 
 ## [3.0.2] 4/3/2023 - Spire Admin
 

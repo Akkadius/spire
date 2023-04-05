@@ -102,7 +102,7 @@ func (c *Client) Connect() error {
 		expect(c.t, ">")
 		_ = sendln(c.t, "echo off")
 		expect(c.t, ">")
-		_ = sendln(c.t, "acceptmessages on")
+		_ = sendln(c.t, "acceptmessages off")
 		expect(c.t, ">")
 	}
 
