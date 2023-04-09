@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/updater"
 	"log"
 	"os"
@@ -14,12 +15,18 @@ import (
 
 func main() {
 	// self update service
-	if len(os.Args) == 1 {
-		updater.NewService(packageJson).CheckForUpdates()
+	if len(os.Args) == 1 && len(os.Getenv("SKIP_UPDATE_CHECK")) == 0 {
+		updater.NewUpdaterService(packageJson).CheckForUpdates()
 	}
 
 	// default
 	_ = os.Setenv("APP_ENV", "local")
+
+	// installer logic
+	if len(os.Getenv("RUN_INSTALLER")) > 0 {
+		eqemuserver.NewInstaller().Install()
+		return
+	}
 
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
