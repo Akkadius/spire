@@ -67,11 +67,11 @@ func (a *Installer) Install() {
 	// install opcodes
 	// install binaries
 
-	//a.installOsPackages()
+	a.installOsPackages()
 	a.initMySQL()
-	//a.initializeDirectories()
-	//a.cloneEQEmuMaps()
-	//a.clonePeqQuests()
+	a.initializeDirectories()
+	a.cloneEQEmuMaps()
+	a.clonePeqQuests()
 }
 
 func (a *Installer) installOsPackages() {
@@ -278,49 +278,35 @@ func (a *Installer) initMySQL() {
 		DatabaseName:     "peq",
 		DatabaseUser:     "peq",
 		DatabasePassword: "peq",
-		RootPassword:     "root",
 	}
 
-	// update root password
-	a.logger.Infof("Updating root user password\n")
-	a.DbExecSafe(fmt.Sprintf("FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED BY '%v'", c.RootPassword))
-
 	// create a new database
+
+	var sql string
+
 	a.logger.Infof("Creating database [%v]\n", c.DatabaseName)
-	a.DbExec(c, fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName))
+	a.DbExec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName))
 
 	// create a new user
 	a.logger.Infof("Creating user [%v]\n", c.DatabaseUser)
-	a.DbExec(c, fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v'", c.DatabaseUser, c.DatabasePassword))
 
 	// grant privileges to the new user
 	a.logger.Infof("Granting privileges to user [%v]\n", c.DatabaseUser)
-	a.DbExec(c, fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost'", c.DatabaseName, c.DatabaseUser))
+	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v';", c.DatabaseUser, c.DatabasePassword)
+	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost';", c.DatabaseName, c.DatabaseUser)
 
 	// flush privileges
 	a.logger.Infoln("Flushing privileges")
-	a.DbExec(c, "FLUSH PRIVILEGES")
+	a.DbExec(fmt.Sprintf("FLUSH PRIVILEGES; %v", sql))
 
 	a.Exec("sudo", []string{"pkill", "-f", "-9", "mysql"})
-	a.Exec("sudo", []string{"service"})
+	a.Exec("sudo", []string{"service", "mariadb", "start"})
 
 	a.DoneBanner("Initializing MySQL")
 }
 
-func (a *Installer) DbExecSafe(statement string) {
+func (a *Installer) DbExec(statement string) {
 	a.Exec("mysql", []string{"-uroot", "-e", fmt.Sprintf("%v", statement)})
-}
-
-func (a *Installer) DbExec(c MysqlConfig, statement string) {
-	a.Exec(
-		"mysql",
-		[]string{
-			"-uroot",
-			fmt.Sprintf("-p%v", c.RootPassword),
-			"-e",
-			fmt.Sprintf("%v", statement),
-		},
-	)
 }
 
 func (a *Installer) Exec(command string, args []string) {
