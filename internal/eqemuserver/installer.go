@@ -574,12 +574,8 @@ func (a *Installer) symlinkPatchFiles() {
 		// get the symlink path
 		symlinkPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "assets", "patches", patchFileName)
 
-		// check if symlink is a valid symlink
 		// remove the symlink
-		err := os.Remove(symlinkPath)
-		if err != nil {
-			a.logger.Fatalf("could not remove symlink: %v", err)
-		}
+		_ = os.Remove(symlinkPath)
 
 		// check if the symlink exists
 		if _, err := os.Stat(symlinkPath); !os.IsNotExist(err) {
@@ -597,7 +593,7 @@ func (a *Installer) symlinkPatchFiles() {
 
 		// create the symlink
 		a.logger.Infof("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
-		err = os.Symlink(sourcePatchPath, symlinkPath)
+		err := os.Symlink(sourcePatchPath, symlinkPath)
 		if err != nil {
 			a.logger.Fatalf("could not create symlink: %v", err)
 		}
