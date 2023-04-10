@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 type Config struct {
@@ -183,7 +184,8 @@ func (e *Config) Save(c EQEmuConfigJson) error {
 		return err
 	}
 
-	err = os.WriteFile(e.pathmgmt.GetEQEmuServerConfigFilePath(), file, 0755)
+	path := filepath.Join(e.pathmgmt.GetEQEmuServerPath(), "eqemu_config.json")
+	err = os.WriteFile(path, file, 0755)
 	if err != nil {
 		return err
 	}

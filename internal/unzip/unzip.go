@@ -28,7 +28,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	err = os.MkdirAll(uz.Dest, 0755)
+	err = os.MkdirAll(uz.Dest, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -46,12 +46,12 @@ func (uz Unzip) Extract() error {
 		}
 
 		if f.FileInfo().IsDir() {
-			err := os.MkdirAll(path, f.Mode())
+			err := os.MkdirAll(path, os.ModePerm)
 			if err != nil {
 				return err
 			}
 		} else {
-			err := os.MkdirAll(filepath.Dir(path), f.Mode())
+			err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
 			if err != nil {
 				return err
 			}
@@ -94,7 +94,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	fmt.Printf("[Zip] Extracted (%v) files in [%v] to [%v]!\n\n", len(r.File), uz.Src, uz.Dest)
+	fmt.Printf("[Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
 
 	return nil
 }
