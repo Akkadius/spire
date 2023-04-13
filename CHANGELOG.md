@@ -1,3 +1,7 @@
+## [3.0.6] 4/12/2023 - Spire Admin
+
+Fix issue with NPC/Bots editors that were incorrectly sending types on save in the edit form 
+
 ## [3.0.5] 4/4/2023 - Spire Admin
 
 Fix issue with chat message returns bleeding into other telnet API command output

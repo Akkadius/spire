@@ -290,12 +290,12 @@ export default {
       editingSpellEntryFields: [
         { desc: "Spell Type", field: "type", fType: "select", selectData: NPC_SPELL_TYPES },
         { desc: "Priority", field: "priority", fType: "range", min: 0, max: 100 },
-        { desc: "Mana Cost", field: "manacost", fType: "text", spellField: 'mana' },
-        { desc: "Recast Delay", field: "recast_delay", fType: "text", spellField: 'recast_time' },
-        { desc: "Minimum Level", field: "minlevel", fType: "text" },
-        { desc: "Maximum Level", field: "maxlevel", fType: "text" },
-        { desc: "Min HP", field: "min_hp", fType: "text" },
-        { desc: "Max HP", field: "max_hp", fType: "text" },
+        { desc: "Mana Cost", field: "manacost", fType: "number", spellField: 'mana' },
+        { desc: "Recast Delay", field: "recast_delay", fType: "number", spellField: 'recast_time' },
+        { desc: "Minimum Level", field: "minlevel", fType: "number" },
+        { desc: "Maximum Level", field: "maxlevel", fType: "number" },
+        { desc: "Min HP", field: "min_hp", fType: "number" },
+        { desc: "Max HP", field: "max_hp", fType: "number" },
         { desc: "Resist Adjust", field: "resist_adjust", fType: "text" },
       ],
     }
