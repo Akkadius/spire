@@ -18,10 +18,14 @@ import (
 	"time"
 )
 
+const mapsRelease = "v1.0.0"
+
 type Installer struct {
 	pathmanager *pathmgmt.PathManagement
 	config      *eqemuserverconfig.Config
 	logger      *logrus.Logger
+	stepTime    time.Time
+	totalTime   time.Time
 }
 
 func getLogger() *logrus.Logger {
@@ -67,7 +71,7 @@ func (a *Installer) Install() {
 	// install prompt library for installation
 	// install debian packages
 	// install ubuntu packages (for ubuntu)
-
+	a.totalTime = time.Now()
 	a.installOsPackages()
 	a.initMySQL()
 	a.initializeDirectories()
@@ -81,6 +85,11 @@ func (a *Installer) Install() {
 	a.symlinkOpcodeFiles()
 	a.symlinkLoginOpcodeFiles()
 	a.symlinkPluginsAndModules()
+
+	a.logger.Println("")
+	a.logger.Println("----------------------------------------")
+	a.logger.Printf("| ✅ | Installation Complete (%v)\n", FormatDuration(time.Since(a.totalTime)))
+	a.logger.Println("----------------------------------------")
 }
 
 func (a *Installer) installOsPackages() {
@@ -140,11 +149,21 @@ func (a *Installer) Banner(s string) {
 	a.logger.Printf("> %v\n", s)
 	a.logger.Println("----------------------------------------")
 	//a.logger.Println("")
+	a.stepTime = time.Now()
+}
+
+func FormatDuration(d time.Duration) string {
+	scale := 100 * time.Second
+	// look for the max scale that is smaller than d
+	for scale > d {
+		scale = scale / 10
+	}
+	return d.Round(scale / 100).String()
 }
 
 func (a *Installer) DoneBanner(s string) {
 	a.logger.Println("----------------------------------------")
-	a.logger.Printf("| ✅ | %v\n", s)
+	a.logger.Printf("| ✅ | %v (%v)\n", s, FormatDuration(time.Since(a.stepTime)))
 	a.logger.Println("----------------------------------------")
 }
 
@@ -178,43 +197,31 @@ func (a *Installer) initializeDirectories() {
 func (a *Installer) cloneEQEmuMaps() {
 	a.Banner("Initializing Server Maps")
 
-	a.logger.Infof("Maps and navmesh files are large, please be patient if output is not updating\n")
-	a.logger.Infof("Cloning EQEmuMaps from github.com/Akkadius/EQEmuMaps.git\n")
+	a.logger.Infof("Downloading EQEmuMaps release %v\n", mapsRelease)
 
-	// clone the repository
-	path := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "maps")
-	_, err := git.PlainClone(path, false, &git.CloneOptions{
-		URL:      "https://github.com/Akkadius/EQEmuMaps.git",
-		Progress: a.logger.Writer(),
-	})
+	// zip file path
+	dumpZip := filepath.Join(os.TempDir(), "/maps.zip")
 
-	if err != nil && err != git.ErrRepositoryAlreadyExists {
-		a.logger.Errorf("Could not clone EQEmuMaps [%v]\n", err)
+	// download the zip file
+	err := download.WithProgress(
+		dumpZip,
+		"https://github.com/Akkadius/EQEmuMaps/releases/download/v1.0.0/maps.zip",
+	)
+	if err != nil {
+		a.logger.Fatalln(err)
 	}
 
-	// if the repository already exists, update it instead
-	if err == git.ErrRepositoryAlreadyExists {
-		a.logger.Infof("EQEmuMaps already exists, skipping clone and updating instead\n")
+	mapsPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "maps")
+	a.logger.Infof("Downloaded zip to [%v]\n", dumpZip)
+	err = unzip.New(dumpZip, mapsPath).Extract()
+	if err != nil {
+		a.logger.Fatalf("could not extract zip: %v", err)
+	}
 
-		// open the repository
-		r, err := git.PlainOpen(path)
-		if err != nil {
-			a.logger.Fatalf("could not open repository: %v", err)
-		}
-
-		// Get the working directory for the repository
-		w, err := r.Worktree()
-		if err != nil {
-			a.logger.Fatalf("could not get worktree: %v", err)
-		}
-
-		// Pull the latest changes from the origin remote and merge into the current branch
-		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.Writer()})
-		if err != nil && err != git.NoErrAlreadyUpToDate {
-			a.logger.Fatalf("could not pull: %v", err)
-		}
-
-		a.logger.Infof("EQEmuMaps updated successfully!\n")
+	// remove the zip file
+	err = os.Remove(dumpZip)
+	if err != nil {
+		a.logger.Fatalf("could not remove zip: %v", err)
 	}
 
 	a.DoneBanner("Initializing Server Maps")
