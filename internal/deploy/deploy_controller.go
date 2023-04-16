@@ -35,13 +35,21 @@ func (a *DeployController) deploy(c echo.Context) error {
 	if env.IsAppEnvProduction() &&
 		env.Get("DEPLOY_KEY", "") == c.Param("key") {
 
-		// run git pull
-		cmd := exec.Command("git", "pull", "origin", "master")
+		// run git stash
+		cmd := exec.Command("git", "stash")
 		output, err := cmd.Output()
 		if err != nil {
 			log.Println(err)
 		}
 
+		// run git pull
+		cmd = exec.Command("git", "pull", "origin", "master")
+		output, err = cmd.Output()
+		if err != nil {
+			log.Println(err)
+		}
+
+		// if git pull was successful, restart
 		if !strings.Contains(string(output), "Already up to date") {
 
 			// webhook
