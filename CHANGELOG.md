@@ -4,7 +4,7 @@
 * Fixed an issue with pre-flight checks where an optional service would keep the operator from booting the server
 * Fixed an issue where pre-flight checks would not clear between runs giving false reporting on checks
 
-![image](https://user-images.githubusercontent.com/3319450/232267138-9fafa0ef-7b77-495e-92ca-4b012441f6f1.png)
+![image](https://user-images.githubusercontent.com/3319450/232274332-a969242a-45ac-4da1-a284-b8f0854a742e.png)
 
 ## [3.0.6] 4/12/2023
 
