@@ -1,4 +1,12 @@
-## [3.0.6] 4/12/2023 - Spire Admin
+## [3.0.7] 4/15/2023 - Spire Admin
+
+* Added an asterisk to optional services in the pre-flight checks to make it more clear that they are optional
+* Fixed an issue with pre-flight checks where an optional service would keep the operator from booting the server
+* Fixed an issue where pre-flight checks would not clear between runs giving false reporting on checks
+
+![image](https://user-images.githubusercontent.com/3319450/232267138-9fafa0ef-7b77-495e-92ca-4b012441f6f1.png)
+
+## [3.0.6] 4/12/2023
 
 Fix issue with NPC/Bots editors that were incorrectly sending types on save in the edit form 
 

@@ -65,11 +65,15 @@
               <b-spinner small v-if="!p.checkSuccess && !p.message"/>
               <error-mark-animated v-if="!p.checkSuccess && p.message" style="height: 30px; width: 30px" class="ml-1"/>
             </td>
-            <td class="text-center">{{ p.name }}</td>
+            <td class="text-center">{{ p.name }} {{(!p.required ? '*' : '')}}</td>
             <td><span v-if="p.message" v-html="p.message"></span></td>
           </tr>
           </tbody>
         </table>
+
+        <div class="">
+          * denotes a process that is not required to start the server.
+        </div>
 
         <eq-tabs @on-selected="scrollPreflight($event)">
           <eq-tab :name="p.name" :selected="p.name === 'World'" v-for="p in processTypes" :key="p.name">
@@ -214,7 +218,7 @@ export default {
         { name: "World", checkSuccess: false, console: "", required: true },
         { name: "Zone", checkSuccess: false, console: "", required: true },
         { name: "Shared Memory", checkSuccess: false, console: "", required: true },
-        { name: "UCS", checkSuccess: false, console: "", required: true },
+        { name: "UCS (Chat)", checkSuccess: false, console: "", required: false },
         { name: "Loginserver", checkSuccess: false, console: "", required: false },
       ],
     }
@@ -270,6 +274,14 @@ export default {
       this.startModalSize = "xl"
       this.preflight      = true
 
+      // zero out the console and message
+      for (let [i, p] of this.processTypes.entries()) {
+        this.processTypes[i].checkSuccess = false
+        this.processTypes[i].console = ""
+        delete this.processTypes[i].message
+      }
+
+      // run the preflight checks
       for (let [i, p] of this.processTypes.entries()) {
         HttpStream.get("/api/v1/eqemuserver/pre-flight/" + p.name.toLowerCase()).then(async (r) => {
           for await (const m of HttpStream.read(r)) {
@@ -280,10 +292,15 @@ export default {
               }).join("\n")
             }
 
+            if (m.includes("no such file or directory")) {
+              this.processTypes[i].message = "Could not find the " + p.name + " executable. Please check your configuration."
+            }
+
             this.$forceUpdate()
             this.scrollPreflight(p.name)
           }
         }).finally(() => {
+          // if we have no message, then we succeeded
           if (!this.processTypes[i].message) {
             this.processTypes[i].checkSuccess = true
             this.processTypes[i].message      = "Checks succeeded"
