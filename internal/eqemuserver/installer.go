@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-const mapsRelease = "v1.0.0"
+const mapsVersion = "v1.0.0"
 
 type Installer struct {
 	pathmanager *pathmgmt.PathManagement
@@ -197,7 +197,7 @@ func (a *Installer) initializeDirectories() {
 func (a *Installer) cloneEQEmuMaps() {
 	a.Banner("Initializing Server Maps")
 
-	a.logger.Infof("Downloading EQEmuMaps release %v\n", mapsRelease)
+	a.logger.Infof("Downloading EQEmuMaps release %v\n", mapsVersion)
 
 	// zip file path
 	dumpZip := filepath.Join(os.TempDir(), "/maps.zip")
@@ -205,7 +205,7 @@ func (a *Installer) cloneEQEmuMaps() {
 	// download the zip file
 	err := download.WithProgress(
 		dumpZip,
-		"https://github.com/Akkadius/EQEmuMaps/releases/download/v1.0.0/maps.zip",
+		fmt.Sprintf("https://github.com/Akkadius/EQEmuMaps/releases/download/%v/maps.zip", mapsVersion),
 	)
 	if err != nil {
 		a.logger.Fatalln(err)
