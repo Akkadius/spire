@@ -312,13 +312,12 @@ func (a *Installer) initMySQL() {
 	//a.Exec("sudo", []string{"bash", "-c", "ps aux | grep mysql"})
 
 	c := MysqlConfig{
-		DatabaseName:     "peq",
+		DatabaseName:     a.installConfig.MysqlDatabaseName,
 		DatabaseUser:     a.installConfig.MysqlUsername,
 		DatabasePassword: a.installConfig.MysqlPassword,
 	}
 
 	// create a new database
-
 	var sql string
 
 	a.logger.Infof("Creating database [%v]\n", c.DatabaseName)
@@ -334,7 +333,7 @@ func (a *Installer) initMySQL() {
 
 	// flush privileges
 	a.logger.Infoln("Flushing privileges")
-	a.DbExec(fmt.Sprintf("FLUSH PRIVILEGES; %v", sql))
+	a.DbExec(fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql))
 
 	a.Exec("sudo", []string{"pkill", "-f", "-9", "mysql"})
 	a.Exec("sudo", []string{"service", "mariadb", "start"})
@@ -828,10 +827,13 @@ func (a *Installer) checkInstallConfig() {
 		IsConfirm: true,
 	}).Run()
 
+	fmt.Println("")
+
 	// check if we are using an existing mysql install
 	useExistingMysqlInstall := strings.Contains(strings.ToLower(useExistingMysqlInstallPrompt), "y")
 	if !useExistingMysqlInstall {
-		a.logger.Infof("Installing a new MySQL server")
+		a.logger.Infof("Installing a new MySQL server\n")
+		fmt.Println()
 	}
 
 	// if we are installing a new mysql server
@@ -852,8 +854,8 @@ func (a *Installer) checkInstallConfig() {
 	mysqlDbName = regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(mysqlDbName, "")
 	mysqlDbName = strings.ReplaceAll(mysqlDbName, " ", "_")
 
+	a.logger.Infof("MySQL Database Name [%v]\n", mysqlDbName)
 	fmt.Println("")
-	a.logger.Infof("MySQL Database Name [%v]", mysqlDbName)
 
 	// mysql username
 	mysqlUsername, err := (&promptui.Prompt{
@@ -864,8 +866,8 @@ func (a *Installer) checkInstallConfig() {
 		a.logger.Fatalf("Prompt failed %v\n", err)
 	}
 
+	a.logger.Infof("MySQL Username [%v]\n", mysqlUsername)
 	fmt.Println("")
-	a.logger.Infof("MySQL Username [%v]", mysqlUsername)
 
 	// mysql password
 	mysqlPassword, err := (&promptui.Prompt{
@@ -963,7 +965,6 @@ func (a *Installer) checkIfMapsAreUpToDate() bool {
 
 	// check if file exists
 	if _, err := os.Stat(file); os.IsNotExist(err) {
-		a.logger.Errorf("could not find package.json file: %v", err)
 		return false
 	}
 
