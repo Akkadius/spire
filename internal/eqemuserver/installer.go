@@ -214,9 +214,10 @@ func (a *Installer) initializeDirectories() {
 func (a *Installer) cloneEQEmuMaps() {
 	a.Banner("Initializing Server Maps")
 
-	// TODO: get latest release and compare with current version
-
-	a.logger.Infof("Downloading eqemu-maps release\n")
+	if a.checkIfMapsAreUpToDate() {
+		a.DoneBanner("Initializing Server Maps")
+		return
+	}
 
 	// zip file path
 	dumpZip := filepath.Join(os.TempDir(), "/maps.zip")
@@ -224,7 +225,7 @@ func (a *Installer) cloneEQEmuMaps() {
 	// download the zip file
 	err := download.WithProgress(
 		dumpZip,
-		"https://github.com/Akkadius/EQEmuMaps/releases/latest/download/maps.zip",
+		"https://github.com/Akkadius/eqemu-maps/releases/latest/download/maps.zip",
 	)
 	if err != nil {
 		a.logger.Fatalln(err)
@@ -866,7 +867,7 @@ func (a *Installer) checkInstallConfig() {
 	fmt.Println("")
 	a.logger.Infof("MySQL Username [%v]", mysqlUsername)
 
-	// mysql passsword
+	// mysql password
 	mysqlPassword, err := (&promptui.Prompt{
 		Label:   "MySQL Password (Leave blank for random password)",
 		Default: mysqlPasswordDefault,
@@ -923,4 +924,66 @@ func (a *Installer) GetRandomPassword() string {
 	}
 
 	return p
+}
+
+func (a *Installer) checkIfMapsAreUpToDate() bool {
+	type Release struct {
+		TagName string `json:"tag_name"`
+	}
+
+	// get latest release version
+	resp, err := http.Get("https://api.github.com/repos/Akkadius/eqemu-maps/releases/latest")
+	if err != nil {
+		a.logger.Fatalf("could not get latest release version: %v", err)
+	}
+
+	defer resp.Body.Close()
+
+	// read response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		a.logger.Fatalf("could not read response body: %v", err)
+	}
+
+	// bind body to struct
+	var release Release
+	err = json.Unmarshal(body, &release)
+	if err != nil {
+		a.logger.Fatalf("could not unmarshal response body: %v", err)
+	}
+
+	a.logger.Infof("Downloading eqemu-maps release\n")
+
+	type PackageJson struct {
+		Version string `json:"version"`
+	}
+
+	// get current version from package.json
+	file := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "maps", "package.json")
+
+	// check if file exists
+	if _, err := os.Stat(file); os.IsNotExist(err) {
+		a.logger.Errorf("could not find package.json file: %v", err)
+		return false
+	}
+
+	// read file package.json contents into PackageJson struct
+	packageJson, err := os.ReadFile(file)
+	if err != nil {
+		a.logger.Fatalf("could not read PackageJson file: %v", err)
+	}
+
+	var packageJsonStruct PackageJson
+	err = json.Unmarshal(packageJson, &packageJsonStruct)
+	if err != nil {
+		a.logger.Fatalf("could not unmarshal package.json: %v", err)
+	}
+
+	// check if current version is the same as the latest release version
+	if packageJsonStruct.Version == strings.ReplaceAll(release.TagName, "v", "") {
+		a.logger.Infof("Maps are up to date on version v%v\n", packageJsonStruct.Version)
+		return true
+	}
+
+	return false
 }
