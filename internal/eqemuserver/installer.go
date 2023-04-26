@@ -6,26 +6,39 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/password"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
+	"github.com/k0kubun/pp/v3"
+	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"time"
 )
 
-const mapsVersion = "v1.0.0"
+type InstallConfig struct {
+	MysqlUsername     string `yaml:"mysql_username"`
+	MysqlPassword     string `yaml:"mysql_password"`
+	MysqlDatabaseName string `yaml:"mysql_database_name"`
+	MysqlHost         string `yaml:"mysql_host"`
+	MysqlPort         string `yaml:"mysql_port"`
+}
 
 type Installer struct {
-	pathmanager *pathmgmt.PathManagement
-	config      *eqemuserverconfig.Config
-	logger      *logrus.Logger
-	stepTime    time.Time
-	totalTime   time.Time
+	pathmanager   *pathmgmt.PathManagement
+	config        *eqemuserverconfig.Config
+	logger        *logrus.Logger
+	stepTime      time.Time
+	totalTime     time.Time
+	installConfig *InstallConfig
 }
 
 func getLogger() *logrus.Logger {
@@ -53,9 +66,10 @@ func NewInstaller() *Installer {
 	logger := getLogger()
 	pathmanager := pathmgmt.NewPathManagement(logger)
 	i := &Installer{
-		logger:      logger,
-		pathmanager: pathmanager,
-		config:      eqemuserverconfig.NewConfig(logger, pathmanager),
+		logger:        logger,
+		pathmanager:   pathmanager,
+		config:        eqemuserverconfig.NewConfig(logger, pathmanager),
+		installConfig: &InstallConfig{},
 	}
 
 	cwd, err := os.Getwd()
@@ -68,6 +82,9 @@ func NewInstaller() *Installer {
 }
 
 func (a *Installer) Install() {
+
+	a.checkInstallConfig()
+
 	// install prompt library for installation
 	// install debian packages
 	// install ubuntu packages (for ubuntu)
@@ -197,7 +214,9 @@ func (a *Installer) initializeDirectories() {
 func (a *Installer) cloneEQEmuMaps() {
 	a.Banner("Initializing Server Maps")
 
-	a.logger.Infof("Downloading EQEmuMaps release %v\n", mapsVersion)
+	// TODO: get latest release and compare with current version
+
+	a.logger.Infof("Downloading eqemu-maps release\n")
 
 	// zip file path
 	dumpZip := filepath.Join(os.TempDir(), "/maps.zip")
@@ -205,7 +224,7 @@ func (a *Installer) cloneEQEmuMaps() {
 	// download the zip file
 	err := download.WithProgress(
 		dumpZip,
-		fmt.Sprintf("https://github.com/Akkadius/EQEmuMaps/releases/download/%v/maps.zip", mapsVersion),
+		"https://github.com/Akkadius/EQEmuMaps/releases/latest/download/maps.zip",
 	)
 	if err != nil {
 		a.logger.Fatalln(err)
@@ -293,8 +312,8 @@ func (a *Installer) initMySQL() {
 
 	c := MysqlConfig{
 		DatabaseName:     "peq",
-		DatabaseUser:     "peq",
-		DatabasePassword: "peq",
+		DatabaseUser:     a.installConfig.MysqlUsername,
+		DatabasePassword: a.installConfig.MysqlPassword,
 	}
 
 	// create a new database
@@ -437,11 +456,13 @@ func (a *Installer) initializeServerConfig() {
 	}
 
 	// TODO: make this configurable later
+
+	// set the installation config
 	c.Server.Database.Host = "127.0.0.1"
 	c.Server.Database.Port = "3306"
-	c.Server.Database.Username = "peq"
-	c.Server.Database.Password = "peq"
-	c.Server.Database.Db = "peq"
+	c.Server.Database.Username = a.installConfig.MysqlUsername
+	c.Server.Database.Password = a.installConfig.MysqlPassword
+	c.Server.Database.Db = a.installConfig.MysqlDatabaseName
 
 	// save the config file
 	err = a.config.Save(c)
@@ -485,10 +506,30 @@ func (a *Installer) sourcePeqDatabase() {
 	a.logger.Infof("Extracted zip to [%v]\n", filepath.Join(os.TempDir(), "/dump/peq-dump"))
 
 	extractPath := filepath.Join(os.TempDir(), "/dump/peq-dump")
+
 	a.logger.Infof("Sourcing database dump from [%v]\n", extractPath)
-	a.ExecPath(extractPath, "mysql", []string{"-upeq", "-ppeq", "peq", "-e", "source create_all_tables.sql"})
+	a.ExecPath(
+		extractPath,
+		"mysql",
+		[]string{
+			fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+			fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+			a.installConfig.MysqlDatabaseName,
+			"-e",
+			"source create_all_tables.sql",
+		},
+	)
 	a.logger.Infof("Sourced database dump from [%v]\n", extractPath)
-	a.Exec("mysql", []string{"-upeq", "-ppeq", "peq", "-e", "show tables"})
+	a.Exec(
+		"mysql",
+		[]string{
+			fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+			fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+			a.installConfig.MysqlDatabaseName,
+			"-e",
+			"show tables",
+		},
+	)
 
 	// cleanup the temp folder
 	a.logger.Infof("Cleaning up temp folder [%v]\n", filepath.Join(os.TempDir(), "/dump"))
@@ -729,4 +770,157 @@ func (a *Installer) symlinkPluginsAndModules() {
 	}
 
 	a.DoneBanner("Symlinking Plugins and Modules")
+}
+
+func (a *Installer) checkInstallConfig() {
+	a.Banner("Checking Install Config")
+
+	// check if the install config file exists
+	installConfigFile := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "install_config.yaml")
+	if _, err := os.Stat(installConfigFile); !os.IsNotExist(err) {
+		a.logger.Infof("Install config file already exists, loading it")
+		// get contents of install config file
+		installConfigContents, err := os.ReadFile(installConfigFile)
+		if err != nil {
+			a.logger.Fatalf("could not read install config file: %v", err)
+		}
+
+		a.logger.Infof("----------------------------------------\n")
+		a.logger.Infof("Install configuration\n")
+		a.logger.Infof("----------------------------------------\n")
+		a.logger.Infof("")
+
+		for _, s := range strings.Split(string(installConfigContents), "\n") {
+			a.logger.Infof("%v", s)
+		}
+
+		a.logger.Infof("----------------------------------------\n")
+
+		// mysql username
+		useExistingConfig, _ := (&promptui.Prompt{
+			Label:     "Use this configuration",
+			Default:   "Y",
+			IsConfirm: true,
+		}).Run()
+
+		if strings.Contains(strings.ToLower(useExistingConfig), "y") || len(useExistingConfig) == 0 {
+			a.logger.Infof("Using existing install config")
+
+			// load install config contents into struct
+			err = yaml.Unmarshal(installConfigContents, &a.installConfig)
+			if err != nil {
+				a.logger.Fatalf("could not unmarshal install config: %v", err)
+			}
+
+			return
+		}
+	}
+
+	// get the install config
+	mysqlUsernameDefault := ""
+	mysqlPasswordDefault := ""
+
+	// mysql username
+	useExistingMysqlInstallPrompt, _ := (&promptui.Prompt{
+		Label:     "Use an existing MySQL server",
+		Default:   "N",
+		IsConfirm: true,
+	}).Run()
+
+	// check if we are using an existing mysql install
+	useExistingMysqlInstall := strings.Contains(strings.ToLower(useExistingMysqlInstallPrompt), "y")
+	if !useExistingMysqlInstall {
+		a.logger.Infof("Installing a new MySQL server")
+	}
+
+	// if we are installing a new mysql server
+	generatedPassword := a.GetRandomPassword()
+	mysqlPasswordDefault = generatedPassword
+	mysqlUsernameDefault = "eqemu"
+
+	// mysql database name
+	mysqlDbName, err := (&promptui.Prompt{
+		Label:   "MySQL Database Name (all lowercase, no special characters)",
+		Default: "peq",
+	}).Run()
+	if err != nil {
+		a.logger.Fatalf("Prompt failed %v\n", err)
+	}
+
+	// remove special characters from the mysql database name
+	mysqlDbName = regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(mysqlDbName, "")
+	mysqlDbName = strings.ReplaceAll(mysqlDbName, " ", "_")
+
+	fmt.Println("")
+	a.logger.Infof("MySQL Database Name [%v]", mysqlDbName)
+
+	// mysql username
+	mysqlUsername, err := (&promptui.Prompt{
+		Label:   "MySQL Username",
+		Default: mysqlUsernameDefault,
+	}).Run()
+	if err != nil {
+		a.logger.Fatalf("Prompt failed %v\n", err)
+	}
+
+	fmt.Println("")
+	a.logger.Infof("MySQL Username [%v]", mysqlUsername)
+
+	// mysql passsword
+	mysqlPassword, err := (&promptui.Prompt{
+		Label:   "MySQL Password (Leave blank for random password)",
+		Default: mysqlPasswordDefault,
+		Mask:    '*',
+	}).Run()
+	if err != nil {
+		a.logger.Fatalf("Prompt failed %v\n", err)
+	}
+
+	// make sure passwords match if we manually entered it
+	if mysqlPassword != generatedPassword {
+		mysqlPasswordConfirm, err := (&promptui.Prompt{
+			Label: "MySQL Password (Confirm)",
+			Mask:  '*',
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
+
+		if mysqlPassword != mysqlPasswordConfirm {
+			a.logger.Fatalf("MySQL Passwords do not match")
+		}
+	}
+
+	// set the installation config
+	a.installConfig.MysqlDatabaseName = mysqlDbName
+	a.installConfig.MysqlUsername = mysqlUsername
+	a.installConfig.MysqlPassword = mysqlPassword
+
+	pp.Println(a.installConfig)
+
+	fmt.Println("")
+
+	// write a.installConfig to yaml config file called install_config.yaml
+	// marshal a.installConfig into yaml
+	installConfigYaml, err := yaml.Marshal(a.installConfig)
+	if err != nil {
+		a.logger.Fatalf("error: %v", err)
+	}
+
+	// write yaml to install_config.yaml
+	err = os.WriteFile(installConfigFile, installConfigYaml, 0644)
+	if err != nil {
+		a.logger.Fatalf("could not write install_config.yaml: %v", err)
+	}
+
+	a.DoneBanner("Checking Install Config")
+}
+
+func (a *Installer) GetRandomPassword() string {
+	p, err := password.Generate(32, 10, 0, false, false)
+	if err != nil {
+		a.logger.Fatalf("could not generate random password: %v", err)
+	}
+
+	return p
 }
