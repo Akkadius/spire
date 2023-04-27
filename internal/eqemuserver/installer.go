@@ -64,43 +64,38 @@ func NewInstaller() *Installer {
 }
 
 func (a *Installer) Install() {
-	a.checkInstallConfig()
 	a.setInstallerPath()
+	a.checkInstallConfig()
 
 	// install prompt library for installation
 	// install debian packages
 	// install ubuntu packages (for ubuntu)
 	a.totalTime = time.Now()
-	a.installOsPackages()
-	a.initMySQL()
-	a.initializeDirectories()
-	a.cloneEQEmuSource()
-	a.initializeServerConfig()
-	a.cloneEQEmuMaps()
-	a.clonePeqQuests()
-	a.sourcePeqDatabase()
-	a.installBinaries()
-	a.symlinkPatchFiles()
-	a.symlinkOpcodeFiles()
-	a.symlinkLoginOpcodeFiles()
-	a.symlinkPluginsAndModules()
+	//a.installOsPackages()
+	//a.initMySQL()
+	//a.initializeDirectories()
+	//a.cloneEQEmuSource()
+	//a.initializeServerConfig()
+	//a.cloneEQEmuMaps()
+	//a.clonePeqQuests()
+	//a.sourcePeqDatabase()
+	//a.installBinaries()
+	//a.symlinkPatchFiles()
+	//a.symlinkOpcodeFiles()
+	//a.symlinkLoginOpcodeFiles()
+	//a.symlinkPluginsAndModules()
+
+	a.createServerScripts()
 
 	// TODO make sure spire binary exists in the end
 	// Script initialization of Spire
 	// prompt for what port to start spire on
 	// put spire loader port in eqemu config
 	// auto add admin password via install config
-	// create start script for server
-	// create stop script for server
-	// create start script for spire
+
 	// add cron to start spire on start
-	// bash -c "while true; do nohup ./bin/eqemu-admin server-launcher >/dev/null 2>&1; sleep 1; done &" && echo Server started
-	// #!/usr/bin/env bash
-	//
-	// ./bin/eqemu-admin stop-server
-	//
-	// echo "Server stopped"
 	// crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo "@reboot {pathtospire}") | crontab -
+
 	// Spire: check if terminal is available during prompt any key to update / close
 	// add existing MySQL installation
 
@@ -583,7 +578,7 @@ func (a *Installer) installBinaries() {
 			return nil
 		}
 
-		a.logger.Infof("Making [%v] executable\n", path)
+		a.logger.Infof("|-- Making [%v] executable\n", path)
 
 		// make the file executable
 		err = os.Chmod(path, 0755)
@@ -846,4 +841,48 @@ func (a *Installer) setInstallerPath() {
 		a.logger.Fatalf("could not get current working directory: %v", err)
 	}
 	a.pathmanager.SetServerPath(cwd)
+}
+
+func (a *Installer) createServerScripts() {
+	a.Banner("Creating Server Scripts")
+
+	// create a map of scripts
+	serverScripts := map[string]string{
+		"start": "bash -c \"while true; do nohup $(find ./bin -name 'occulus*' | head -1) server-launcher >/dev/null 2>&1; sleep 1; done &\" && echo Server started",
+		"stop":  "$(find ./bin -name 'occulus*' | head -1) stop-server; echo \"Server stopped\"",
+	}
+
+	for s := range serverScripts {
+
+		// get the f name
+		file := filepath.Join(a.pathmanager.GetEQEmuServerPath(), s)
+
+		a.logger.Infof("Creating script [%v]\n", file)
+
+		// create file
+		f, err := os.Create(file)
+		if err != nil {
+			a.logger.Fatalf("could not create f: %v", err)
+		}
+
+		// write contents to f
+		contents := fmt.Sprintf("#!/usr/bin/env bash\n%v\n", serverScripts[s])
+		_, err = f.WriteString(contents)
+		if err != nil {
+			a.logger.Fatalf("could not write to f: %v", err)
+		}
+
+		// close file
+		_ = f.Close()
+
+		a.logger.Infof("|-- Making file [%v] executable\n", file)
+
+		// make file executable
+		err = os.Chmod(file, 0755)
+		if err != nil {
+			a.logger.Fatalf("could not chmod f: %v", err)
+		}
+	}
+
+	a.DoneBanner("Creating Server Scripts")
 }
