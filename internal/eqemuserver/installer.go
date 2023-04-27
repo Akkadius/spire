@@ -438,11 +438,9 @@ func (a *Installer) initializeServerConfig() {
 		a.logger.Fatalln(err)
 	}
 
-	// TODO: make this configurable later
-
 	// set the installation config
-	c.Server.Database.Host = "127.0.0.1"
-	c.Server.Database.Port = "3306"
+	c.Server.Database.Host = a.installConfig.MysqlHost
+	c.Server.Database.Port = a.installConfig.MysqlPort
 	c.Server.Database.Username = a.installConfig.MysqlUsername
 	c.Server.Database.Password = a.installConfig.MysqlPassword
 	c.Server.Database.Db = a.installConfig.MysqlDatabaseName

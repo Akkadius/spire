@@ -133,6 +133,12 @@ func (a *Installer) checkInstallConfig() {
 
 	a.installConfig.MysqlPassword = mysqlPassword
 
+	// set defaults if we're not using an existing mysql install
+	if !useExistingMysqlInstall {
+		a.installConfig.MysqlHost = "127.0.0.1"
+		a.installConfig.MysqlPort = "3306"
+	}
+
 	// write a.installConfig to yaml config file called install_config.yaml
 	// marshal a.installConfig into yaml
 	installConfigYaml, err := yaml.Marshal(a.installConfig)
