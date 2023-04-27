@@ -113,7 +113,7 @@ type EQEmuConfigJson struct {
 			RunLoginserver   bool   `json:"runLoginserver"`
 			RunQueryServ     bool   `json:"runQueryServ"`
 			IsRunning        bool   `json:"isRunning"`
-			MinZoneProcesses int    `json:"minZoneProcesses"`
+			MinZoneProcesses int    `json:"minZoneProcesses,omitempty"`
 			StaticZones      string `json:"staticZones,omitempty"`
 		} `json:"launcher,omitempty"`
 		Quests struct {

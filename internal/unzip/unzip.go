@@ -20,7 +20,6 @@ func New(src string, dest string) Unzip {
 }
 
 func (uz Unzip) Extract() error {
-
 	fmt.Println("[Zip] Extraction of [" + uz.Src + "] started!")
 
 	r, err := zip.OpenReader(uz.Src)
