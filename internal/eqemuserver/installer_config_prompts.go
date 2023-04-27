@@ -206,6 +206,8 @@ func (a *Installer) loadInstallConfigIfExists() bool {
 			a.logger.Fatalf("could not unmarshal install config: %v", err)
 		}
 
+		a.pathmanager.SetServerPath(a.installConfig.ServerPath)
+
 		return true
 	}
 

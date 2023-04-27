@@ -85,6 +85,8 @@ func (a *Installer) Install() {
 	a.symlinkLoginOpcodeFiles()
 	a.symlinkPluginsAndModules()
 
+	// TODO make sure spire binary exists in the end
+
 	a.logger.Println("")
 	a.logger.Println("----------------------------------------")
 	a.logger.Printf("| ✅ | Installation Complete (%v)\n", FormatDuration(time.Since(a.totalTime)))
@@ -617,8 +619,7 @@ func (a *Installer) symlinkPatchFiles() {
 			}
 		}
 
-		// TODO: this is temp I will go back and fix this later
-		sourcePatchPath := filepath.Join(os.TempDir(), "code", "utils", "patches", patchFile)
+		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "utils", "patches", patchFile)
 
 		// create the symlink
 		a.logger.Infof("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
@@ -662,8 +663,7 @@ func (a *Installer) symlinkOpcodeFiles() {
 			}
 		}
 
-		// TODO: this is temp I will go back and fix this later
-		sourcePatchPath := filepath.Join(os.TempDir(), "code", "utils", "patches", opcodeFile)
+		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "utils", "patches", opcodeFile)
 
 		// create the symlink
 		a.logger.Infof("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
