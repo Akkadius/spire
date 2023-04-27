@@ -10,27 +10,15 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
-	"github.com/k0kubun/pp/v3"
-	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 )
-
-type InstallConfig struct {
-	MysqlUsername     string `yaml:"mysql_username"`
-	MysqlPassword     string `yaml:"mysql_password"`
-	MysqlDatabaseName string `yaml:"mysql_database_name"`
-	MysqlHost         string `yaml:"mysql_host"`
-	MysqlPort         string `yaml:"mysql_port"`
-}
 
 type Installer struct {
 	pathmanager   *pathmgmt.PathManagement
@@ -72,18 +60,12 @@ func NewInstaller() *Installer {
 		installConfig: &InstallConfig{},
 	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		logger.Fatalf("could not get current working directory: %v", err)
-	}
-	i.pathmanager.SetServerPath(cwd)
-
 	return i
 }
 
 func (a *Installer) Install() {
-
 	a.checkInstallConfig()
+	a.setInstallerPath()
 
 	// install prompt library for installation
 	// install debian packages
@@ -393,8 +375,7 @@ func (a *Installer) cloneEQEmuSource() {
 	a.logger.Infof("Cloning from https://github.com/EQEmu/Server.git\n")
 
 	// clone the repository
-	// TODO: make this configurable
-	path := filepath.Join(os.TempDir(), "code")
+	path := a.installConfig.CodePath
 	_, err := git.PlainClone(path, false, &git.CloneOptions{
 		URL:      "https://github.com/EQEmu/Server.git",
 		Progress: a.logger.Writer(),
@@ -772,153 +753,6 @@ func (a *Installer) symlinkPluginsAndModules() {
 	a.DoneBanner("Symlinking Plugins and Modules")
 }
 
-func (a *Installer) checkInstallConfig() {
-	a.Banner("Checking Install Config")
-
-	// check if the install config file exists
-	installConfigFile := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "install_config.yaml")
-	if _, err := os.Stat(installConfigFile); !os.IsNotExist(err) {
-		a.logger.Infof("Install config file already exists, loading it")
-		// get contents of install config file
-		installConfigContents, err := os.ReadFile(installConfigFile)
-		if err != nil {
-			a.logger.Fatalf("could not read install config file: %v", err)
-		}
-
-		a.logger.Infof("----------------------------------------\n")
-		a.logger.Infof("Install configuration\n")
-		a.logger.Infof("----------------------------------------\n")
-		a.logger.Infof("")
-
-		for _, s := range strings.Split(string(installConfigContents), "\n") {
-			a.logger.Infof("%v", s)
-		}
-
-		a.logger.Infof("----------------------------------------\n")
-
-		// mysql username
-		useExistingConfig, _ := (&promptui.Prompt{
-			Label:     "Use this configuration",
-			Default:   "Y",
-			IsConfirm: true,
-		}).Run()
-
-		if strings.Contains(strings.ToLower(useExistingConfig), "y") || len(useExistingConfig) == 0 {
-			a.logger.Infof("Using existing install config")
-
-			// load install config contents into struct
-			err = yaml.Unmarshal(installConfigContents, &a.installConfig)
-			if err != nil {
-				a.logger.Fatalf("could not unmarshal install config: %v", err)
-			}
-
-			return
-		}
-	}
-
-	// get the install config
-	mysqlUsernameDefault := ""
-	mysqlPasswordDefault := ""
-
-	// mysql username
-	useExistingMysqlInstallPrompt, _ := (&promptui.Prompt{
-		Label:     "Use an existing MySQL server",
-		Default:   "N",
-		IsConfirm: true,
-	}).Run()
-
-	fmt.Println("")
-
-	// check if we are using an existing mysql install
-	useExistingMysqlInstall := strings.Contains(strings.ToLower(useExistingMysqlInstallPrompt), "y")
-	if !useExistingMysqlInstall {
-		a.logger.Infof("Installing a new MySQL server\n")
-		fmt.Println()
-	}
-
-	// if we are installing a new mysql server
-	generatedPassword := a.GetRandomPassword()
-	mysqlPasswordDefault = generatedPassword
-	mysqlUsernameDefault = "eqemu"
-
-	// mysql database name
-	mysqlDbName, err := (&promptui.Prompt{
-		Label:   "MySQL Database Name (all lowercase, no special characters)",
-		Default: "peq",
-	}).Run()
-	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
-	}
-
-	// remove special characters from the mysql database name
-	mysqlDbName = regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(mysqlDbName, "")
-	mysqlDbName = strings.ReplaceAll(mysqlDbName, " ", "_")
-
-	a.logger.Infof("MySQL Database Name [%v]\n", mysqlDbName)
-	fmt.Println("")
-
-	// mysql username
-	mysqlUsername, err := (&promptui.Prompt{
-		Label:   "MySQL Username",
-		Default: mysqlUsernameDefault,
-	}).Run()
-	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
-	}
-
-	a.logger.Infof("MySQL Username [%v]\n", mysqlUsername)
-	fmt.Println("")
-
-	// mysql password
-	mysqlPassword, err := (&promptui.Prompt{
-		Label:   "MySQL Password (Leave blank for random password)",
-		Default: mysqlPasswordDefault,
-		Mask:    '*',
-	}).Run()
-	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
-	}
-
-	// make sure passwords match if we manually entered it
-	if mysqlPassword != generatedPassword {
-		mysqlPasswordConfirm, err := (&promptui.Prompt{
-			Label: "MySQL Password (Confirm)",
-			Mask:  '*',
-		}).Run()
-		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
-		}
-
-		if mysqlPassword != mysqlPasswordConfirm {
-			a.logger.Fatalf("MySQL Passwords do not match")
-		}
-	}
-
-	// set the installation config
-	a.installConfig.MysqlDatabaseName = mysqlDbName
-	a.installConfig.MysqlUsername = mysqlUsername
-	a.installConfig.MysqlPassword = mysqlPassword
-
-	pp.Println(a.installConfig)
-
-	fmt.Println("")
-
-	// write a.installConfig to yaml config file called install_config.yaml
-	// marshal a.installConfig into yaml
-	installConfigYaml, err := yaml.Marshal(a.installConfig)
-	if err != nil {
-		a.logger.Fatalf("error: %v", err)
-	}
-
-	// write yaml to install_config.yaml
-	err = os.WriteFile(installConfigFile, installConfigYaml, 0644)
-	if err != nil {
-		a.logger.Fatalf("could not write install_config.yaml: %v", err)
-	}
-
-	a.DoneBanner("Checking Install Config")
-}
-
 func (a *Installer) GetRandomPassword() string {
 	p, err := password.Generate(32, 10, 0, false, false)
 	if err != nil {
@@ -987,4 +821,12 @@ func (a *Installer) checkIfMapsAreUpToDate() bool {
 	}
 
 	return false
+}
+
+func (a *Installer) setInstallerPath() {
+	cwd, err := os.Getwd()
+	if err != nil {
+		a.logger.Fatalf("could not get current working directory: %v", err)
+	}
+	a.pathmanager.SetServerPath(cwd)
 }
