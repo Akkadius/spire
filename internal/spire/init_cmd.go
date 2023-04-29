@@ -87,6 +87,6 @@ func (c *InitCommand) Handle(_ *cobra.Command, args []string) {
 		},
 	)
 	if err != nil {
-		c.logger.Fatal(err)
+		c.logger.Info(err)
 	}
 }

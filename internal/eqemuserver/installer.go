@@ -95,10 +95,10 @@ func (a *Installer) Install() {
 		a.injectSpireStartCronJob()
 	}
 
-	a.installSpire()
+	a.installSpireBinary()
+	a.initSpire()
 
 	// TODO make sure spire binary exists in the end
-	// Script initialization of Spire
 	// prompt for what port to start spire on
 	// put spire loader port in eqemu config
 	// auto add admin password via install config
@@ -906,7 +906,7 @@ func (a *Installer) injectSpireStartCronJob() {
 	a.DoneBanner("Injecting Spire Start Cron Job")
 }
 
-func (a *Installer) installSpire() {
+func (a *Installer) installSpireBinary() {
 	a.Banner("Installing Spire")
 
 	// check if spire is already installed
@@ -984,4 +984,20 @@ func (a *Installer) installSpire() {
 	}
 
 	a.DoneBanner("Installing Spire")
+}
+
+func (a *Installer) initSpire() {
+	a.Banner("Initializing Spire")
+
+	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+	a.Exec(
+		spirePath,
+		[]string{
+			"spire:init",
+			a.installConfig.SpireAdminUser,
+			a.installConfig.SpireAdminPassword,
+		},
+	)
+
+	a.DoneBanner("Initializing Spire")
 }
