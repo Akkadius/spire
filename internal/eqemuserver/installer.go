@@ -73,7 +73,9 @@ func (a *Installer) Install() {
 	// install ubuntu packages (for ubuntu)
 	a.totalTime = time.Now()
 	a.installOsPackages()
-	a.initMySQL()
+	if runtime.GOOS == "linux" {
+		a.initMySQL()
+	}
 	a.initializeDirectories()
 	a.cloneEQEmuSource()
 	a.initializeServerConfig()
@@ -85,10 +87,10 @@ func (a *Installer) Install() {
 	a.symlinkOpcodeFiles()
 	a.symlinkLoginOpcodeFiles()
 	a.symlinkPluginsAndModules()
-	a.createServerScripts()
-
 	if runtime.GOOS == "linux" {
+		a.createLinuxServerScripts()
 		a.injectSpireStartCronJob()
+
 	}
 
 	// TODO make sure spire binary exists in the end
@@ -846,7 +848,7 @@ func (a *Installer) setInstallerPath() {
 	a.pathmanager.SetServerPath(cwd)
 }
 
-func (a *Installer) createServerScripts() {
+func (a *Installer) createLinuxServerScripts() {
 	a.Banner("Creating Server Scripts")
 
 	// create a map of scripts
