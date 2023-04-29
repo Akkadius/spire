@@ -304,14 +304,15 @@ func (a *Installer) initMySQL() {
 	a.Banner("Initializing MySQL")
 
 	// change root password
-	a.Exec("sudo", []string{"apt", "install", "-y", "-m", "mariadb-server"})
-	a.Exec("sudo", []string{"pkill", "-f", "-9", "mysql"})
+
+	a.Exec(ExecConfig{command: "sudo", args: []string{"apt", "install", "-y", "-m", "mariadb-server"}})
+	a.Exec(ExecConfig{command: "sudo", args: []string{"pkill", "-f", "-9", "mysql"}})
+
 	time.Sleep(1 * time.Second)
 	go func() {
-		a.Exec("sudo", []string{"mysqld_safe", "--skip-grant-tables", "--skip-networking"})
+		a.Exec(ExecConfig{command: "sudo", args: []string{"mysqld_safe", "--skip-grant-tables", "--skip-networking"}})
 	}()
 	time.Sleep(1 * time.Second)
-	//a.Exec("sudo", []string{"bash", "-c", "ps aux | grep mysql"})
 
 	c := MysqlConfig{
 		DatabaseName:     a.installConfig.MysqlDatabaseName,
@@ -323,7 +324,7 @@ func (a *Installer) initMySQL() {
 	var sql string
 
 	a.logger.Infof("Creating database [%v]\n", c.DatabaseName)
-	a.DbExec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName))
+	a.DbExec(DbExecConfig{statement: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName)})
 
 	// create a new user
 	a.logger.Infof("Creating user [%v]\n", c.DatabaseUser)
@@ -335,53 +336,27 @@ func (a *Installer) initMySQL() {
 
 	// flush privileges
 	a.logger.Infoln("Flushing privileges")
-	a.DbExec(fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), c.DatabasePassword)
+	a.DbExec(DbExecConfig{statement: fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), hidestring: c.DatabasePassword})
 
-	a.Exec("sudo", []string{"pkill", "-f", "-9", "mysql"})
-	a.Exec("sudo", []string{"service", "mariadb", "start"})
+	a.Exec(ExecConfig{command: "sudo", args: []string{"pkill", "-f", "-9", "mysql"}})
+	a.Exec(ExecConfig{command: "sudo", args: []string{"service", "mariadb", "start"}})
 
 	a.DoneBanner("Initializing MySQL")
 }
 
-func (a *Installer) DbExec(statement string, hidestring ...interface{}) {
-	a.Exec("mysql", []string{"-uroot", "-e", fmt.Sprintf("%v", statement)}, hidestring...)
+type DbExecConfig struct {
+	statement  string
+	hidestring string
 }
 
-func (a *Installer) Exec(command string, args []string, hidestring ...interface{}) string {
-	// create a new context with a timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
-	defer cancel()
-
-	// create the command
-	cmd := exec.CommandContext(ctx, command, args...)
-	cmd.Env = os.Environ()
-	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
-	}
-	cmd.Stderr = cmd.Stdout
-	err = cmd.Start()
-	if err != nil {
-		a.logger.Error(err)
-	}
-
-	argsPrint := strings.Join(args, " ")
-	if len(hidestring) > 0 {
-		hide := hidestring[0].(string)
-		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
-	}
-	a.logger.Infof("Running command [%v %v]\n", command, argsPrint)
-
-	merged := io.MultiReader(stdout)
-	scanner := bufio.NewScanner(merged)
-	output := ""
-	for scanner.Scan() {
-		a.logger.Infoln(scanner.Text())
-		output += scanner.Text() + "\n"
-	}
-
-	return output
+func (a *Installer) DbExec(c DbExecConfig) {
+	a.Exec(
+		ExecConfig{
+			command:    "mysql",
+			args:       []string{"-uroot", "-e", fmt.Sprintf("%v", c.statement)},
+			hidestring: c.hidestring,
+		},
+	)
 }
 
 type ExecConfig struct {
@@ -389,9 +364,10 @@ type ExecConfig struct {
 	args        []string // arguments to pass to the command
 	hidestring  string   // string to hide from the output
 	dieonoutput string   // string to die on if found in the output
+	execpath    string   // path to execute the command in
 }
 
-func (a *Installer) ExecV2(c ExecConfig) string {
+func (a *Installer) Exec(c ExecConfig) string {
 	// create a new context with a timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
@@ -400,16 +376,24 @@ func (a *Installer) ExecV2(c ExecConfig) string {
 	cmd := exec.CommandContext(ctx, c.command, c.args...)
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
+
+	// if we have an execpath, use it
+	if c.execpath != "" {
+		cmd.Dir = c.execpath
+	}
+
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		a.logger.Fatalf("could not get stdout pipe: %v", err)
 	}
+
 	cmd.Stderr = cmd.Stdout
 	err = cmd.Start()
 	if err != nil {
 		a.logger.Error(err)
 	}
 
+	// hide the password from the output
 	argsPrint := strings.Join(c.args, " ")
 	if len(c.hidestring) > 0 {
 		hide := c.hidestring
@@ -417,6 +401,7 @@ func (a *Installer) ExecV2(c ExecConfig) string {
 	}
 	a.logger.Infof("Running command [%v %v]\n", c.command, argsPrint)
 
+	// merge stdout and stderr
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
 	output := ""
@@ -433,34 +418,6 @@ func (a *Installer) ExecV2(c ExecConfig) string {
 	}
 
 	return output
-}
-
-func (a *Installer) ExecPath(path string, command string, args []string, hidestring ...interface{}) {
-	cmd := exec.Command(command, args...)
-	cmd.Env = os.Environ()
-	cmd.Dir = path
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
-	}
-	cmd.Stderr = cmd.Stdout
-	err = cmd.Start()
-	if err != nil {
-		a.logger.Error(err)
-	}
-
-	argsPrint := strings.Join(args, " ")
-	if len(hidestring) > 0 {
-		hide := hidestring[0].(string)
-		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
-	}
-	a.logger.Infof("Running command [%v %v]\n", command, argsPrint)
-
-	merged := io.MultiReader(stdout)
-	scanner := bufio.NewScanner(merged)
-	for scanner.Scan() {
-		a.logger.Infoln(scanner.Text())
-	}
 }
 
 func (a *Installer) cloneEQEmuSource() {
@@ -559,15 +516,17 @@ func (a *Installer) sourcePeqDatabase() {
 	a.Banner("Sourcing ProjectEQ Database")
 
 	tables := a.Exec(
-		"mysql",
-		[]string{
-			fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
-			fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
-			a.installConfig.MysqlDatabaseName,
-			"-e",
-			"show tables",
+		ExecConfig{
+			command: "mysql",
+			args: []string{
+				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+				a.installConfig.MysqlDatabaseName,
+				"-e",
+				"show tables",
+			},
+			hidestring: a.installConfig.MysqlPassword,
 		},
-		a.installConfig.MysqlPassword,
 	)
 	if len(strings.Split(tables, "\n")) > 0 {
 		// database already exists, skip
@@ -609,29 +568,36 @@ func (a *Installer) sourcePeqDatabase() {
 	extractPath := filepath.Join(os.TempDir(), "/dump/peq-dump")
 
 	a.logger.Infof("Sourcing database dump from [%v]\n", extractPath)
-	a.ExecPath(
-		extractPath,
-		"mysql",
-		[]string{
-			fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
-			fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
-			a.installConfig.MysqlDatabaseName,
-			"-e",
-			"source create_all_tables.sql",
-		},
-		a.installConfig.MysqlPassword,
-	)
-	a.logger.Infof("Sourced database dump from [%v]\n", extractPath)
+
 	a.Exec(
-		"mysql",
-		[]string{
-			fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
-			fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
-			a.installConfig.MysqlDatabaseName,
-			"-e",
-			"show tables",
+		ExecConfig{
+			command: "mysql",
+			args: []string{
+				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+				a.installConfig.MysqlDatabaseName,
+				"-e",
+				"source create_all_tables.sql",
+			},
+			hidestring: a.installConfig.MysqlPassword,
+			execpath:   extractPath,
 		},
-		a.installConfig.MysqlPassword,
+	)
+
+	a.logger.Infof("Sourced database dump from [%v]\n", extractPath)
+
+	a.Exec(
+		ExecConfig{
+			command: "mysql",
+			args: []string{
+				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+				a.installConfig.MysqlDatabaseName,
+				"-e",
+				"show tables",
+			},
+			hidestring: a.installConfig.MysqlPassword,
+		},
 	)
 
 	// cleanup the temp folder
@@ -1008,13 +974,17 @@ func (a *Installer) injectSpireStartCronJob() {
 
 	// get spire path
 	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+
 	a.Exec(
-		"bash",
-		[]string{
-			"-c",
-			fmt.Sprintf("crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot %v\") | crontab -", spirePath),
+		ExecConfig{
+			command: "bash",
+			args: []string{
+				"-c",
+				fmt.Sprintf("crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot %v\") | crontab -", spirePath),
+			},
 		},
 	)
+
 	a.DoneBanner("Injecting Spire Start Cron Job")
 }
 
@@ -1102,14 +1072,17 @@ func (a *Installer) initSpire() {
 	a.Banner("Initializing Spire")
 
 	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+
 	a.Exec(
-		spirePath,
-		[]string{
-			"spire:init",
-			a.installConfig.SpireAdminUser,
-			a.installConfig.SpireAdminPassword,
+		ExecConfig{
+			command: spirePath,
+			args: []string{
+				"spire:init",
+				a.installConfig.SpireAdminUser,
+				a.installConfig.SpireAdminPassword,
+			},
+			hidestring: a.installConfig.SpireAdminPassword,
 		},
-		a.installConfig.SpireAdminPassword,
 	)
 
 	a.DoneBanner("Initializing Spire")
