@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// command set
+// commandSet is a Wire provider set that returns a slice of commands
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
 	cmd.NewAdminPingOcculus,
@@ -23,11 +23,13 @@ var commandSet = wire.NewSet(
 	cmd.NewQuestExampleTestCommand,
 	cmd.NewGenerateRaceModelMapsCommand,
 	cmd.NewTestFilesystemCommand,
+	cmd.NewSpireInitCommand,
+	cmd.NewUserChangePasswordCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
 
-// commands provider
+// ProvideCommands is a Wire provider function that returns a slice of commands
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
 	adminPingOcculus *cmd.AdminPingOcculus,
@@ -43,6 +45,8 @@ func ProvideCommands(
 	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
 	changelogCmd *eqemuchangelog.ChangelogCommand,
 	testFilesystemCmd *cmd.TestFilesystemCommand,
+	spireInstallCmd *cmd.SpireInitCommand,
+	userChangePasswordCmd *cmd.UserChangePasswordCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		adminPingOcculus.Command(),
@@ -59,5 +63,7 @@ func ProvideCommands(
 		generateRaceModelMapsCommand.Command(),
 		changelogCmd.Command(),
 		testFilesystemCmd.Command(),
+		spireInstallCmd.Command(),
+		userChangePasswordCmd.Command(),
 	}
 }

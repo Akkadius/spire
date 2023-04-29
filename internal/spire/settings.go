@@ -63,7 +63,7 @@ func (o *Settings) InitSettings() {
 // LoadSettings will load settings into memory
 func (o *Settings) LoadSettings() {
 	var currentSettings []models.Setting
-	o.connections.SpireDbNoLog().Find(&currentSettings)
+	o.connections.SpireDb().Find(&currentSettings)
 	o.settings = currentSettings
 }
 

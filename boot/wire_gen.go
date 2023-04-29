@@ -335,7 +335,9 @@ func InitializeApplication() (App, error) {
 	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
-	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand)
+	spireInitCommand := cmd.NewSpireInitCommand(logger, init)
+	userChangePasswordCommand := cmd.NewUserChangePasswordCommand(databaseResolver, logger, encrypter, userService)
+	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand)
 	webBoot := desktop.NewWebBoot(logger, server, config)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil

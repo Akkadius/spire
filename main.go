@@ -49,9 +49,13 @@ func main() {
 
 func Fatal(err error) {
 	log.Println(err)
-	fmt.Print("Automatically shutting down in 10 seconds...")
-	time.Sleep(10 * time.Second)
-	os.Exit(1)
+
+	// only hang if we're not running a command
+	if len(os.Args) == 1 {
+		fmt.Print("Automatically shutting down in 10 seconds...")
+		time.Sleep(10 * time.Second)
+		os.Exit(1)
+	}
 }
 
 var (
