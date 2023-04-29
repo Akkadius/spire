@@ -9,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
+	"github.com/mattn/go-isatty"
 	"log"
 	"net/http"
 	"os"
@@ -18,22 +19,26 @@ import (
 	"time"
 )
 
-type UpdaterService struct {
+// Service is a service that checks for updates to the app
+type Service struct {
 	// this is the package.json embedded in the binary which contains the app version
 	packageJson []byte
 }
 
-func NewUpdaterService(packageJson []byte) *UpdaterService {
-	return &UpdaterService{
+// NewService creates a new updater service
+func NewService(packageJson []byte) *Service {
+	return &Service{
 		packageJson: packageJson,
 	}
 }
 
+// EnvResponse is the response from the env endpoint
 type EnvResponse struct {
 	Env     string `json:"env"`
 	Version string `json:"version"`
 }
 
+// PackageJson is the package.json file
 type PackageJson struct {
 	Name       string `json:"name"`
 	Version    string `json:"version"`
@@ -43,7 +48,8 @@ type PackageJson struct {
 	} `json:"repository"`
 }
 
-func (s UpdaterService) getAppVersion() (error, EnvResponse) {
+// getAppVersion gets the app version from the package.json embedded in the binary
+func (s Service) getAppVersion() (error, EnvResponse) {
 	var pkg PackageJson
 	err := json.Unmarshal(s.packageJson, &pkg)
 	if err != nil {
@@ -56,7 +62,8 @@ func (s UpdaterService) getAppVersion() (error, EnvResponse) {
 	}
 }
 
-func (s UpdaterService) CheckForUpdates() {
+// CheckForUpdates checks for updates to the app
+func (s Service) CheckForUpdates() {
 
 	// get executable name and path
 	executableName := filepath.Base(os.Args[0])
@@ -220,12 +227,18 @@ func (s UpdaterService) CheckForUpdates() {
 				}
 			}
 
-			fmt.Println("")
-			fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
-			fmt.Println("")
-			fmt.Print("Press [Enter] to exit spire...")
-			fmt.Println("")
-			bufio.NewReader(os.Stdin).ReadBytes('\n')
+			// if terminal, wait for user input
+			if isatty.IsTerminal(os.Stdout.Fd()) {
+				fmt.Println("")
+				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
+				fmt.Println("")
+				fmt.Print("Press [Enter] to exit spire...")
+				fmt.Println("")
+				bufio.NewReader(os.Stdin).ReadBytes('\n')
+			} else {
+				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
+			}
+
 			os.Exit(0)
 		}
 	}
