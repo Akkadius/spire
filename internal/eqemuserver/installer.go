@@ -72,7 +72,6 @@ func (a *Installer) Install() {
 	a.setInstallerPath()
 	a.checkInstallConfig()
 
-	// install prompt library for installation
 	// install debian packages
 	// install ubuntu packages (for ubuntu)
 	a.totalTime = time.Now()
@@ -528,7 +527,14 @@ func (a *Installer) sourcePeqDatabase() {
 			hidestring: a.installConfig.MysqlPassword,
 		},
 	)
-	if len(strings.Split(tables, "\n")) > 0 {
+
+	a.logger.Infof(
+		"Database [%v] has [%v] tables\n",
+		a.installConfig.MysqlDatabaseName,
+		len(strings.Split(tables, "\n")),
+	)
+
+	if len(strings.Split(tables, "\n")) > 200 {
 		// database already exists, skip
 		a.logger.Infof(
 			"Database [%v] already exists with [%v] tables, skipping source\n",
@@ -1078,6 +1084,18 @@ func (a *Installer) initSpire() {
 			command: spirePath,
 			args: []string{
 				"spire:init",
+				a.installConfig.SpireAdminUser,
+				a.installConfig.SpireAdminPassword,
+			},
+			hidestring: a.installConfig.SpireAdminPassword,
+		},
+	)
+
+	a.Exec(
+		ExecConfig{
+			command: spirePath,
+			args: []string{
+				"spire:occulus-update",
 				a.installConfig.SpireAdminUser,
 				a.installConfig.SpireAdminPassword,
 			},
