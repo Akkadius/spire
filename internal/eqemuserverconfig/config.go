@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -134,7 +133,7 @@ func (e *Config) Get() EQEmuConfigJson {
 	if len(cfg) > 0 {
 		e.debug("Reading eqemu config file [%v]", cfg)
 
-		body, err := ioutil.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
+		body, err := os.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
 		if err != nil {
 			e.logger.Fatalf("unable to read file: %v", err)
 		}
