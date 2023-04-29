@@ -16,7 +16,7 @@ import (
 func main() {
 	// self update service
 	if len(os.Args) == 1 && len(os.Getenv("SKIP_UPDATE_CHECK")) == 0 {
-		updater.NewUpdaterService(packageJson).CheckForUpdates()
+		updater.NewService(packageJson).CheckForUpdates()
 	}
 
 	// default
