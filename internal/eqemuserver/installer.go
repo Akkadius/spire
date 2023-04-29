@@ -2,6 +2,7 @@ package eqemuserver
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
@@ -10,11 +11,13 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
+	"github.com/google/go-github/v41/github"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -90,16 +93,15 @@ func (a *Installer) Install() {
 	if runtime.GOOS == "linux" {
 		a.createLinuxServerScripts()
 		a.injectSpireStartCronJob()
-
 	}
+
+	a.installSpire()
 
 	// TODO make sure spire binary exists in the end
 	// Script initialization of Spire
 	// prompt for what port to start spire on
 	// put spire loader port in eqemu config
 	// auto add admin password via install config
-
-	// Spire: check if terminal is available during prompt any key to update / close
 	// add existing MySQL installation
 
 	a.logger.Println("")
@@ -902,4 +904,84 @@ func (a *Installer) injectSpireStartCronJob() {
 		},
 	)
 	a.DoneBanner("Injecting Spire Start Cron Job")
+}
+
+func (a *Installer) installSpire() {
+	a.Banner("Installing Spire")
+
+	// check if spire is already installed
+	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+	if _, err := os.Stat(spirePath); !os.IsNotExist(err) {
+		// spire is already installed
+		a.logger.Infof("Spire is already installed at [%v]\n", spirePath)
+		a.DoneBanner("Installing Spire")
+		return
+	}
+
+	// check if spire is already installed
+	if _, err := os.Stat(spirePath); os.IsNotExist(err) {
+		client := github.NewClient(&http.Client{Timeout: 5 * time.Second})
+		release, _, err := client.Repositories.GetLatestRelease(
+			context.Background(),
+			"Akkadius",
+			"spire",
+		)
+		if err != nil {
+			a.logger.Fatalf("could not get latest release: %v", err)
+			return
+		}
+
+		for _, asset := range release.Assets {
+			assetName := *asset.Name
+			downloadUrl := *asset.BrowserDownloadURL
+			targetFileNameZipped := fmt.Sprintf("spire-%s-%s.zip", runtime.GOOS, runtime.GOARCH)
+			if runtime.GOOS == "windows" {
+				targetFileNameZipped = fmt.Sprintf("spire-%s-%s.exe.zip", runtime.GOOS, runtime.GOARCH)
+			}
+
+			targetFileName := fmt.Sprintf("spire-%s-%s", runtime.GOOS, runtime.GOARCH)
+
+			if assetName == targetFileNameZipped {
+				fmt.Printf("Found matching release [%s]\n", assetName)
+
+				// download
+				file := path.Base(downloadUrl)
+				downloadPath := filepath.Join(os.TempDir(), file)
+				err := download.WithProgress(downloadPath, downloadUrl)
+				if err != nil {
+					a.logger.Fatalf("could not download spire: %v", err)
+				}
+
+				// unzip
+				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
+				uz := unzip.New(tempFileZipped, a.pathmanager.GetEQEmuServerPath())
+				a.logger.Infof("|-- Unzipping file [%v] to [%v]\n", tempFileZipped, a.pathmanager.GetEQEmuServerPath())
+				err = uz.Extract()
+				if err != nil {
+					a.logger.Fatalf("could not unzip spire: %v", err)
+				}
+
+				// rename
+				src := filepath.Join(a.pathmanager.GetEQEmuServerPath(), targetFileName)
+				dst := spirePath
+
+				a.logger.Infof("|-- Renaming file [%v] to [%v]\n", src, dst)
+
+				err = os.Rename(src, dst)
+				if err != nil {
+					a.logger.Fatalf("could not rename spire: %v", err)
+				}
+
+				a.logger.Infof("|-- Making file [%v] executable\n", dst)
+
+				// make executable
+				err = os.Chmod(dst, 0755)
+				if err != nil {
+					a.logger.Fatalf("could not chmod spire: %v", err)
+				}
+			}
+		}
+	}
+
+	a.DoneBanner("Installing Spire")
 }
