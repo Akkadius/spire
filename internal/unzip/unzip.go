@@ -27,7 +27,7 @@ func New(src string, dest string, logger *logrus.Logger) Unzip {
 }
 
 func (uz Unzip) Extract() error {
-	uz.logger.Infoln("[Zip] Extraction of [" + uz.Src + "] started!")
+	uz.logger.Infoln("|-- [Zip] Extraction of [" + uz.Src + "] started!")
 
 	r, err := zip.OpenReader(uz.Src)
 	if err != nil {
@@ -100,7 +100,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	uz.logger.Infof("[Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
+	uz.logger.Infof("|-- [Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
 
 	return nil
 }
