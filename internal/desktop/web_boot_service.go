@@ -2,6 +2,8 @@ package desktop
 
 import (
 	"fmt"
+	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -18,10 +20,19 @@ import (
 type WebBoot struct {
 	logger *logrus.Logger
 	server *http.Server
+	config *eqemuserverconfig.Config
 }
 
-func NewWebBoot(logger *logrus.Logger, server *http.Server) *WebBoot {
-	return &WebBoot{logger: logger, server: server}
+func NewWebBoot(
+	logger *logrus.Logger,
+	server *http.Server,
+	config *eqemuserverconfig.Config,
+) *WebBoot {
+	return &WebBoot{
+		logger: logger,
+		server: server,
+		config: config,
+	}
 }
 
 func (c *WebBoot) Boot() {
@@ -34,6 +45,16 @@ func (c *WebBoot) Boot() {
 			port = i
 			break
 		}
+	}
+
+	// if we have a port set in the config, use that instead
+	if c.config.Get().Spire.HttpPort != 0 {
+		port = c.config.Get().Spire.HttpPort
+	}
+
+	// if we have a port set in the environment, use that instead
+	if len(os.Getenv("SPIRE_HTTP_PORT")) > 0 {
+		port = env.GetInt("SPIRE_HTTP_PORT", "3000")
 	}
 
 	if port == 0 {

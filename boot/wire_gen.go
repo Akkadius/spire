@@ -20,6 +20,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
@@ -31,7 +32,6 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
-	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/telnet"
@@ -51,8 +51,8 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	pathManagement := pathmgmt.NewPathManagement(logger)
-	eqEmuServerConfig := eqemuserverconfig.NewConfig(logger, pathManagement)
-	db, err := provideEQEmuLocalDatabase(eqEmuServerConfig)
+	config := eqemuserverconfig.NewConfig(logger, pathManagement)
+	db, err := provideEQEmuLocalDatabase(config)
 	if err != nil {
 		return App{}, err
 	}
@@ -60,10 +60,10 @@ func InitializeApplication() (App, error) {
 	mysql := backup.NewMysql(logger, pathManagement)
 	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, mysql, pathManagement)
 	processManagement := occulus.NewProcessManagement(pathManagement, logger)
-	proxy := occulus.NewProxy(logger, eqEmuServerConfig, processManagement)
-	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, proxy)
-	connections := provideAppDbConnections(eqEmuServerConfig, logger)
-	encrypter := encryption.NewEncrypter(logger, eqEmuServerConfig)
+	proxy := occulus.NewProxy(logger, config, processManagement)
+	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, config, proxy)
+	connections := provideAppDbConnections(config, logger)
+	encrypter := encryption.NewEncrypter(logger, config)
 	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
 	userService := spire.NewUserService(databaseResolver, logger, encrypter, cache)
 	userCreateCommand := cmd.NewUserCreateCommand(databaseResolver, logger, encrypter, userService)
@@ -79,7 +79,7 @@ func InitializeApplication() (App, error) {
 	pluralizeClient := pluralize.NewClient()
 	service := permissions.NewService(databaseResolver, cache, logger, pluralizeClient)
 	settings := spire.NewSettings(connections, logger)
-	init := spire.NewInit(connections, eqEmuServerConfig, logger, settings, cache, encrypter, dbConnectionCreateService, userService)
+	init := spire.NewInit(connections, config, logger, settings, cache, encrypter, dbConnectionCreateService, userService)
 	connectionsController := controllers.NewConnectionsController(databaseResolver, logger, cache, dbConnectionCreateService, dbConnectionCheckService, service, init, userService)
 	docsController := controllers.NewDocsController(databaseResolver, logger)
 	githubSourceDownloader := github.NewGithubSourceDownloader(logger, cache)
@@ -104,15 +104,15 @@ func InitializeApplication() (App, error) {
 	controller := occulus.NewController(logger, databaseResolver, proxy)
 	telnetClient := telnet.NewClient(logger)
 	eqemuserverClient := eqemuserver.NewClient(telnetClient)
-	updater := eqemuserver.NewUpdater(databaseResolver, logger, eqEmuServerConfig, settings, pathManagement)
-	eqemuserverController := eqemuserver.NewController(databaseResolver, logger, eqemuserverClient, eqEmuServerConfig, pathManagement, settings, updater)
-	publicController := eqemuserver.NewPublicController(databaseResolver, logger, eqemuserverClient, eqEmuServerConfig, pathManagement, settings, updater)
-	serverconfigController := eqemuserverconfig.NewController(logger, eqEmuServerConfig)
+	updater := eqemuserver.NewUpdater(databaseResolver, logger, config, settings, pathManagement)
+	eqemuserverController := eqemuserver.NewController(databaseResolver, logger, eqemuserverClient, config, pathManagement, settings, updater)
+	publicController := eqemuserver.NewPublicController(databaseResolver, logger, eqemuserverClient, config, pathManagement, settings, updater)
+	eqemuserverconfigController := eqemuserverconfig.NewController(logger, config)
 	backupController := backup.NewController(logger, mysql, pathManagement)
 	spireHandler := websocket.NewSpireHandler(logger, pathManagement)
 	websocketController := websocket.NewController(logger, pathManagement, spireHandler)
 	systemController := system.NewController(logger)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, settingsController, controller, eqemuserverController, publicController, serverconfigController, backupController, websocketController, systemController)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, settingsController, controller, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
@@ -336,7 +336,7 @@ func InitializeApplication() (App, error) {
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
 	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand)
-	webBoot := desktop.NewWebBoot(logger, server)
+	webBoot := desktop.NewWebBoot(logger, server, config)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil
 }
