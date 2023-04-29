@@ -76,9 +76,9 @@ func (a *Installer) Install() {
 	// install debian packages
 	// install ubuntu packages (for ubuntu)
 	a.totalTime = time.Now()
-	a.installOsPackages()
 	if runtime.GOOS == "linux" {
-		a.initMySQL()
+		a.installLinuxOsPackages()
+		a.initLinuxMysql()
 	}
 	a.initializeDirectories()
 	a.cloneEQEmuSource()
@@ -103,7 +103,7 @@ func (a *Installer) Install() {
 	a.runSharedMemory()
 	a.runWorldForDatabaseUpdates()
 
-	// add existing MySQL installation
+	// TODO: add existing MySQL installation
 
 	a.logger.Println("")
 	a.logger.Println("----------------------------------------")
@@ -111,7 +111,7 @@ func (a *Installer) Install() {
 	a.logger.Println("----------------------------------------")
 }
 
-func (a *Installer) installOsPackages() {
+func (a *Installer) installLinuxOsPackages() {
 	a.Banner("Installing OS Packages")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
@@ -304,7 +304,7 @@ type MysqlConfig struct {
 	RootPassword     string `json:"root_password"`
 }
 
-func (a *Installer) initMySQL() {
+func (a *Installer) initLinuxMysql() {
 	a.Banner("Initializing MySQL")
 
 	// change root password
@@ -487,6 +487,12 @@ func (a *Installer) cloneEQEmuSource() {
 
 func (a *Installer) initializeServerConfig() {
 	a.Banner("Initializing Server Config")
+
+	// check if eqemu_config.json exists
+	if _, err := os.Stat(a.pathmanager.GetEQEmuServerConfigFilePath()); err == nil {
+		a.logger.Infof("eqemu_config.json already exists, skipping\n")
+		return
+	}
 
 	// download the config file
 	res, err := http.Get("https://raw.githubusercontent.com/Akkadius/eqemu-install-v2/master/eqemu_config_docker.json")

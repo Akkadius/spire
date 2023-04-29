@@ -23,7 +23,9 @@ func main() {
 	_ = os.Setenv("APP_ENV", "local")
 
 	// installer logic
-	if len(os.Getenv("RUN_INSTALLER")) > 0 {
+	// check if eqemu_config.json exists in current directory
+	// if it doesn't exist, run the eqemu server installer
+	if _, err := os.Stat("eqemu_config.json"); os.IsNotExist(err) {
 		eqemuserver.NewInstaller().Install()
 		return
 	}
