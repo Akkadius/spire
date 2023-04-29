@@ -1,3 +1,10 @@
+## [3.0.8] 4/28/2023
+
+* Spire will now exit immediately after updating if no terminal is attached [#114](https://github.com/Akkadius/spire/pull/114)
+* Spire web interface port can now be configured using **eqemu_config.json** @ **spire.http_port** if it exists or environment variable `SPIRE_HTTP_PORT` if it exists [#112](https://github.com/Akkadius/spire/pull/114)
+* Add command `spire:init [username] [password] --auth-enabled=true` to initialize a new Spire install with a default admin [#113](https://github.com/Akkadius/spire/pull/114)
+* Add command `user:change-password [username] [password]` to change a user's password [#113](https://github.com/Akkadius/spire/pull/114)
+
 ## [3.0.7] 4/15/2023 - Spire Admin
 
 * Added an asterisk to optional services in the pre-flight checks to make it more clear that they are optional
