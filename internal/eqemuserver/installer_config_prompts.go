@@ -10,13 +10,15 @@ import (
 )
 
 type InstallConfig struct {
-	ServerPath        string `yaml:"server_path"`
-	CodePath          string `yaml:"code_path"`
-	MysqlUsername     string `yaml:"mysql_username"`
-	MysqlPassword     string `yaml:"mysql_password"`
-	MysqlDatabaseName string `yaml:"mysql_database_name"`
-	MysqlHost         string `yaml:"mysql_host"`
-	MysqlPort         string `yaml:"mysql_port"`
+	ServerPath         string `yaml:"server_path"`
+	CodePath           string `yaml:"code_path"`
+	MysqlUsername      string `yaml:"mysql_username"`
+	MysqlPassword      string `yaml:"mysql_password"`
+	MysqlDatabaseName  string `yaml:"mysql_database_name"`
+	MysqlHost          string `yaml:"mysql_host"`
+	MysqlPort          string `yaml:"mysql_port"`
+	SpireAdminUser     string `yaml:"spire_admin_user"`
+	SpireAdminPassword string `yaml:"spire_admin_password"`
 }
 
 const (
@@ -138,6 +140,27 @@ func (a *Installer) checkInstallConfig() {
 		a.installConfig.MysqlHost = "127.0.0.1"
 		a.installConfig.MysqlPort = "3306"
 	}
+
+	// prompt: spire admin user
+	spireAdminUser, err := (&promptui.Prompt{
+		Label:   "Spire Admin User",
+		Default: "admin",
+	}).Run()
+	if err != nil {
+		a.logger.Fatalf("Prompt failed %v\n", err)
+	}
+	a.installConfig.SpireAdminUser = spireAdminUser
+
+	// prompt: spire admin password
+	spireAdminPassword, err := (&promptui.Prompt{
+		Label:   "Spire Admin Password (Leave blank for random password)",
+		Default: a.GetRandomPassword(),
+		Mask:    '*',
+	}).Run()
+	if err != nil {
+		a.logger.Fatalf("Prompt failed %v\n", err)
+	}
+	a.installConfig.SpireAdminPassword = spireAdminPassword
 
 	// write a.installConfig to yaml config file called install_config.yaml
 	// marshal a.installConfig into yaml
