@@ -98,6 +98,9 @@ func (a *Installer) Install() {
 	a.installSpireBinary()
 	a.initSpire()
 
+	a.runSharedMemory()
+	a.runWorldForDatabaseUpdates()
+
 	// add existing MySQL installation
 
 	a.logger.Println("")
@@ -393,7 +396,7 @@ func (a *Installer) Exec(c ExecConfig) string {
 	}
 
 	// hide the password from the output
-	argsPrint := strings.Join(c.args, " ")
+	argsPrint := strings.TrimSpace(strings.Join(c.args, " "))
 	if len(c.hidestring) > 0 {
 		hide := c.hidestring
 		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
@@ -407,8 +410,9 @@ func (a *Installer) Exec(c ExecConfig) string {
 	for scanner.Scan() {
 		if len(c.dieonoutput) > 0 {
 			if strings.Contains(scanner.Text(), c.dieonoutput) {
-				a.logger.Fatalf("Found [%v] in output, exiting", c.dieonoutput)
+				a.logger.Infof("Found [%v] in output, exiting process", c.dieonoutput)
 				_ = cmd.Process.Kill()
+				break
 			}
 		}
 
@@ -1079,29 +1083,44 @@ func (a *Installer) initSpire() {
 
 	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
 
-	a.Exec(
-		ExecConfig{
-			command: spirePath,
-			args: []string{
-				"spire:init",
-				a.installConfig.SpireAdminUser,
-				a.installConfig.SpireAdminPassword,
-			},
-			hidestring: a.installConfig.SpireAdminPassword,
+	a.Exec(ExecConfig{
+		command: spirePath,
+		args: []string{
+			"spire:init",
+			a.installConfig.SpireAdminUser,
+			a.installConfig.SpireAdminPassword,
 		},
-	)
+		hidestring: a.installConfig.SpireAdminPassword,
+	})
 
-	a.Exec(
-		ExecConfig{
-			command: spirePath,
-			args: []string{
-				"spire:occulus-update",
-				a.installConfig.SpireAdminUser,
-				a.installConfig.SpireAdminPassword,
-			},
-			hidestring: a.installConfig.SpireAdminPassword,
-		},
-	)
+	a.Exec(ExecConfig{
+		command:    spirePath,
+		args:       []string{"spire:occulus-update"},
+		hidestring: a.installConfig.SpireAdminPassword,
+	})
 
 	a.DoneBanner("Initializing Spire")
+}
+
+func (a *Installer) runSharedMemory() {
+	a.Banner("Running Shared Memory")
+
+	a.Exec(ExecConfig{
+		execpath: a.pathmanager.GetEQEmuServerPath(),
+		command:  filepath.Join("bin", "shared_memory"),
+	})
+
+	a.DoneBanner("Running Shared Memory")
+}
+
+func (a *Installer) runWorldForDatabaseUpdates() {
+	a.Banner("Running World for Database Updates")
+
+	a.Exec(ExecConfig{
+		execpath:    a.pathmanager.GetEQEmuServerPath(),
+		command:     filepath.Join("bin", "world"),
+		dieonoutput: "Server (TCP) listener started on port",
+	})
+
+	a.DoneBanner("Running World for Database Updates")
 }
