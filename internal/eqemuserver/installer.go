@@ -20,6 +20,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -98,7 +99,6 @@ func (a *Installer) Install() {
 	a.installSpireBinary()
 	a.initSpire()
 
-	// TODO make sure spire binary exists in the end
 	// prompt for what port to start spire on
 	// put spire loader port in eqemu config
 	// auto add admin password via install config
@@ -330,12 +330,12 @@ func (a *Installer) initMySQL() {
 
 	// grant privileges to the new user
 	a.logger.Infof("Granting privileges to user [%v]\n", c.DatabaseUser)
-	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v';", c.DatabaseUser, c.DatabasePassword)
+	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v'; ", c.DatabaseUser, c.DatabasePassword)
 	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost';", c.DatabaseName, c.DatabaseUser)
 
 	// flush privileges
 	a.logger.Infoln("Flushing privileges")
-	a.DbExec(fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql))
+	a.DbExec(fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), c.DatabasePassword)
 
 	a.Exec("sudo", []string{"pkill", "-f", "-9", "mysql"})
 	a.Exec("sudo", []string{"service", "mariadb", "start"})
@@ -343,11 +343,11 @@ func (a *Installer) initMySQL() {
 	a.DoneBanner("Initializing MySQL")
 }
 
-func (a *Installer) DbExec(statement string) {
-	a.Exec("mysql", []string{"-uroot", "-e", fmt.Sprintf("%v", statement)})
+func (a *Installer) DbExec(statement string, hidestring ...interface{}) {
+	a.Exec("mysql", []string{"-uroot", "-e", fmt.Sprintf("%v", statement)}, hidestring...)
 }
 
-func (a *Installer) Exec(command string, args []string) {
+func (a *Installer) Exec(command string, args []string, hidestring ...interface{}) {
 	cmd := exec.Command(command, args...)
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
@@ -361,7 +361,12 @@ func (a *Installer) Exec(command string, args []string) {
 		a.logger.Error(err)
 	}
 
-	a.logger.Infof("Running command [%v %v]\n", command, strings.Join(args, " "))
+	argsPrint := strings.Join(args, " ")
+	if len(hidestring) > 0 {
+		hide := hidestring[0].(string)
+		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
+	}
+	a.logger.Infof("Running command [%v %v]\n", command, argsPrint)
 
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
@@ -464,6 +469,13 @@ func (a *Installer) initializeServerConfig() {
 	c.Server.Database.Username = a.installConfig.MysqlUsername
 	c.Server.Database.Password = a.installConfig.MysqlPassword
 	c.Server.Database.Db = a.installConfig.MysqlDatabaseName
+
+	// convert a.installConfig.SpireWebPort to int
+	spireWebPort, err := strconv.Atoi(a.installConfig.SpireWebPort)
+	if err != nil {
+		a.logger.Fatalln(err)
+	}
+	c.Spire.HttpPort = spireWebPort
 
 	// save the config file
 	err = a.config.Save(c)
@@ -896,11 +908,14 @@ func (a *Installer) createLinuxServerScripts() {
 
 func (a *Installer) injectSpireStartCronJob() {
 	a.Banner("Injecting Spire Start Cron Job")
+
+	// get spire path
+	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
 	a.Exec(
 		"bash",
 		[]string{
 			"-c",
-			"crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot {pathtospire}\") | crontab -",
+			fmt.Sprintf("crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot %v\") | crontab -", spirePath),
 		},
 	)
 	a.DoneBanner("Injecting Spire Start Cron Job")
@@ -997,6 +1012,7 @@ func (a *Installer) initSpire() {
 			a.installConfig.SpireAdminUser,
 			a.installConfig.SpireAdminPassword,
 		},
+		a.installConfig.SpireAdminPassword,
 	)
 
 	a.DoneBanner("Initializing Spire")
