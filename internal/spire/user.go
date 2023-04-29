@@ -96,3 +96,24 @@ func (s UserService) PurgeUserCache(userId uint) {
 	s.cache.Delete(fmt.Sprintf("active-connection-%v-eqemu_content", userId))
 	s.cache.Delete(fmt.Sprintf("active-user-db-connection-%v", userId))
 }
+
+func (s UserService) ChangeLocalUserPassword(username string, password string) error {
+	var user models.User
+	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LoginProviderLocal).First(&user)
+
+	if user.ID == 0 {
+		return errors.New("user does not exist")
+	}
+
+	hash, err := s.crypt.GeneratePassword(password)
+	if err != nil {
+		return err
+	}
+
+	user.Password = hash
+
+	// update
+	s.db.GetSpireDb().Save(&user)
+
+	return nil
+}

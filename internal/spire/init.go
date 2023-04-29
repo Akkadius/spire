@@ -1,6 +1,7 @@
 package spire
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/connection/contexts"
@@ -227,4 +228,74 @@ func (o *Init) GetEncKey(userId uint) string {
 
 func (o *Init) IsAuthEnabled() bool {
 	return o.settings.IsSettingEnabled(SettingAuthEnabled)
+}
+
+// InitAppRequest is the request object for initializing the app
+type InitAppRequest struct {
+	AuthEnabled int    `json:"auth_enabled"`
+	Username    string `json:"username"`
+	Password    string `json:"password"`
+}
+
+// InitApp will initialize the app
+// this is used for the initial setup of the app
+// will create the first user
+// setup the database connection
+// create the spire tables
+// set the auth enabled setting
+// re-initialize the app
+func (o *Init) InitApp(r *InitAppRequest) error {
+	// init spire tables
+	err := o.SourceSpireTables()
+	if err != nil {
+		return err
+	}
+
+	// validate
+	if len(r.Username) == 0 || len(r.Password) == 0 {
+		return errors.New("username and password are required")
+	}
+
+	if len(r.Password) < 8 {
+		return errors.New("password must be at least 8 characters")
+	}
+
+	if len(r.Username) < 4 {
+		return errors.New("username must be at least 4 characters")
+	}
+
+	if len(r.Username) > 32 {
+		return errors.New("username must be less than 32 characters")
+	}
+
+	// check if already initialized
+	if o.settings.GetSetting(SettingAuthEnabled).ID > 0 {
+		return errors.New("app is already initialized")
+	}
+
+	// auth
+	if r.AuthEnabled == 1 {
+		// new user
+		user := models.User{
+			UserName: r.Username,
+			FullName: r.Username,
+			Password: r.Password,
+			Provider: LoginProviderLocal,
+			IsAdmin:  true,
+		}
+
+		_, err := o.spireuser.CreateUser(user)
+		if err != nil {
+			return err
+		}
+
+		o.settings.EnableSetting(SettingAuthEnabled)
+	} else {
+		o.settings.DisableSetting(SettingAuthEnabled)
+	}
+
+	// re-initialize again as if we just started up the app
+	o.Init()
+
+	return nil
 }

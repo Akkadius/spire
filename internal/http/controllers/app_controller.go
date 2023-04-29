@@ -14,30 +14,33 @@ import (
 	"runtime"
 )
 
+// AppController is the controller for the app
 type AppController struct {
-	cache      *gocache.Cache
-	logger     *logrus.Logger
-	onboarding *spire.Init
-	spireuser  *spire.UserService
-	settings   *spire.Settings
+	cache     *gocache.Cache
+	logger    *logrus.Logger
+	spireinit *spire.Init
+	spireuser *spire.UserService
+	settings  *spire.Settings
 }
 
+// NewAppController returns a new app controller
 func NewAppController(
 	cache *gocache.Cache,
 	logger *logrus.Logger,
-	onboarding *spire.Init,
+	spireinit *spire.Init,
 	spireuser *spire.UserService,
 	settings *spire.Settings,
 ) *AppController {
 	return &AppController{
-		cache:      cache,
-		logger:     logger,
-		onboarding: onboarding,
-		spireuser:  spireuser,
-		settings:   settings,
+		cache:     cache,
+		logger:    logger,
+		spireinit: spireinit,
+		spireuser: spireuser,
+		settings:  settings,
 	}
 }
 
+// Routes returns the routes for the app controller
 func (d *AppController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "app/onboarding-info", d.getOnboardingInfo, nil),
@@ -56,6 +59,7 @@ type Features struct {
 	GithubAuthEnabled bool `json:"github_auth_enabled"`
 }
 
+// EnvResponse is a struct to hold the response for the env endpoint
 type EnvResponse struct {
 	Env              string           `json:"env"`
 	Version          string           `json:"version"`
@@ -65,6 +69,7 @@ type EnvResponse struct {
 	SpireInitialized bool             `json:"is_spire_initialized"`
 }
 
+// PackageJson is a struct to hold the package.json file
 type PackageJson struct {
 	Name       string `json:"name"`
 	Version    string `json:"version"`
@@ -74,6 +79,7 @@ type PackageJson struct {
 	} `json:"repository"`
 }
 
+// env returns the environment variables for the app
 func (d *AppController) env(c echo.Context) error {
 	data, _ := d.cache.Get("packageJson")
 	pJson, ok := data.([]byte)
@@ -92,7 +98,7 @@ func (d *AppController) env(c echo.Context) error {
 				GithubAuthEnabled: len(os.Getenv("GITHUB_CLIENT_ID")) > 0,
 			},
 			Settings:         d.settings.GetSettings(),
-			SpireInitialized: d.onboarding.IsInitialized(),
+			SpireInitialized: d.spireinit.IsInitialized(),
 		}
 
 		return c.JSON(http.StatusOK, echo.Map{"data": response})
@@ -101,59 +107,30 @@ func (d *AppController) env(c echo.Context) error {
 	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Unknown error"})
 }
 
+// getOnboardingInfo is used to get the spireinit info
 func (d *AppController) getOnboardingInfo(c echo.Context) error {
 	return c.JSON(http.StatusOK,
 		echo.Map{
 			"data": echo.Map{
-				"connection_info": d.onboarding.GetConnectionInfo(),
-				"tables":          d.onboarding.GetInstallationTables(),
+				"connection_info": d.spireinit.GetConnectionInfo(),
+				"tables":          d.spireinit.GetInstallationTables(),
 			},
 		},
 	)
 }
 
-type OnboardInitializeAppRequestStruct struct {
-	AuthEnabled int    `json:"auth_enabled"`
-	Username    string `json:"username"`
-	Password    string `json:"password"`
-}
-
+// initializeApp is used to initialize the app
 func (d *AppController) initializeApp(c echo.Context) error {
-	// body - bind
-	r := new(OnboardInitializeAppRequestStruct)
+	r := new(spire.InitAppRequest)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	// init spire tables
-	err := d.onboarding.SourceSpireTables()
+	// Initialize the app
+	err := d.spireinit.InitApp(r)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
 	}
-
-	// auth
-	if r.AuthEnabled == 1 {
-		// new user
-		user := models.User{
-			UserName: r.Username,
-			FullName: r.Username,
-			Password: r.Password,
-			Provider: spire.LoginProviderLocal,
-			IsAdmin:  true,
-		}
-
-		_, err := d.spireuser.CreateUser(user)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
-		}
-
-		d.settings.EnableSetting(spire.SettingAuthEnabled)
-	} else {
-		d.settings.DisableSetting(spire.SettingAuthEnabled)
-	}
-
-	// re-initialize again as if we just started up the app
-	d.onboarding.Init()
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }
