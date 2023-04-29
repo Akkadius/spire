@@ -70,92 +70,11 @@ func checkIfPortAvailable(port int) (status bool, err error) {
 }
 
 func (m *ProcessManagement) Run() error {
-	client := github.NewClient(nil)
-	if len(os.Getenv("GITHUB_TOKEN")) > 0 {
-		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
-		)
-		tc := &http.Client{
-			Timeout: 5 * time.Second,
-			Transport: &oauth2.Transport{
-				Source: ts,
-			},
-		}
-		client = github.NewClient(tc)
-	}
-
-	release, _, err := client.Repositories.GetLatestRelease(
-		context.Background(),
-		"Akkadius",
-		"Occulus",
-	)
-
-	var downloadPath string
-
+	// check if we have a binary
+	// if not, download it
+	downloadPath, err := m.FetchOcculusAndGetBinaryPath()
 	if err != nil {
-		m.logger.Error(err)
-		downloadPath, err = m.GetCurrentOcculusBinaryPath()
-		m.logger.Infof("[Occulus.ProcessManagement] Using existing download path @ [%v]\n", downloadPath)
-		if err != nil {
-			return err
-		}
-	}
-
-	isWindows := runtime.GOOS == "windows"
-
-	if err == nil && len(downloadPath) == 0 {
-		// build binary target name from asset name
-		// eg. occulus-v2-1-0
-		tagName := *release.TagName
-		binaryName := fmt.Sprintf("%v-%v", "occulus", tagName)
-		binaryName = strings.ReplaceAll(binaryName, ".", "-")
-
-		downloadPath = filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin", binaryName)
-
-		// kill existing
-		err = m.KillExistingRunningProcesses()
-		if err != nil {
-			return err
-		}
-
-		// cleanup
-		err = m.CleanupOldVersions(tagName)
-		if err != nil {
-			return err
-		}
-
-		if isWindows {
-			downloadPath += ".exe"
-		}
-
-		// check if binary exists before we try to download it
-		if _, err := os.Stat(downloadPath); errors.Is(err, os.ErrNotExist) {
-			// loop through latest release assets
-			for _, asset := range release.Assets {
-				releaseAssetName := *asset.Name
-				releaseDownloadUrl := *asset.BrowserDownloadURL
-
-				// Occulus assets use `-win` suffix
-				assetMatch := runtime.GOOS
-				if isWindows {
-					assetMatch = "win"
-				}
-
-				// find asset / release matching the operating system
-				if strings.Contains(releaseAssetName, assetMatch) {
-					m.logger.Infof("[Occulus.ProcessManagement] Downloading new binary @ [%v]\n", downloadPath)
-					err := download.WithProgress(downloadPath, releaseDownloadUrl)
-					if err != nil {
-						return err
-					}
-				}
-			}
-		}
-	}
-
-	// windows is a strange beast
-	if isWindows {
-		downloadPath = strings.ReplaceAll(downloadPath, ".exe", "")
+		return err
 	}
 
 	// run binary
@@ -300,4 +219,95 @@ func (m *ProcessManagement) KillExistingRunningProcesses() error {
 	}
 
 	return nil
+}
+
+func (m *ProcessManagement) FetchOcculusAndGetBinaryPath() (string, error) {
+	client := github.NewClient(nil)
+	if len(os.Getenv("GITHUB_TOKEN")) > 0 {
+		ts := oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
+		)
+		tc := &http.Client{
+			Timeout: 5 * time.Second,
+			Transport: &oauth2.Transport{
+				Source: ts,
+			},
+		}
+		client = github.NewClient(tc)
+	}
+
+	release, _, err := client.Repositories.GetLatestRelease(
+		context.Background(),
+		"Akkadius",
+		"Occulus",
+	)
+
+	var downloadPath string
+
+	if err != nil {
+		m.logger.Info(err)
+		downloadPath, err = m.GetCurrentOcculusBinaryPath()
+		m.logger.Infof("[Occulus.ProcessManagement] Using existing download path @ [%v]\n", downloadPath)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	isWindows := runtime.GOOS == "windows"
+	if err == nil && len(downloadPath) == 0 {
+		// build binary target name from asset name
+		// eg. occulus-v2-1-0
+		tagName := *release.TagName
+		binaryName := fmt.Sprintf("%v-%v", "occulus", tagName)
+		binaryName = strings.ReplaceAll(binaryName, ".", "-")
+
+		downloadPath = filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin", binaryName)
+
+		// kill existing
+		err = m.KillExistingRunningProcesses()
+		if err != nil {
+			return "", err
+		}
+
+		// cleanup
+		err = m.CleanupOldVersions(tagName)
+		if err != nil {
+			return "", err
+		}
+
+		if isWindows {
+			downloadPath += ".exe"
+		}
+
+		// check if binary exists before we try to download it
+		if _, err := os.Stat(downloadPath); errors.Is(err, os.ErrNotExist) {
+			// loop through latest release assets
+			for _, asset := range release.Assets {
+				releaseAssetName := *asset.Name
+				releaseDownloadUrl := *asset.BrowserDownloadURL
+
+				// Occulus assets use `-win` suffix
+				assetMatch := runtime.GOOS
+				if isWindows {
+					assetMatch = "win"
+				}
+
+				// find asset / release matching the operating system
+				if strings.Contains(releaseAssetName, assetMatch) {
+					m.logger.Infof("[Occulus.ProcessManagement] Downloading new binary @ [%v]\n", downloadPath)
+					err := download.WithProgress(downloadPath, releaseDownloadUrl)
+					if err != nil {
+						return "", err
+					}
+				}
+			}
+		}
+	}
+
+	// windows is a strange beast
+	if isWindows {
+		downloadPath = strings.ReplaceAll(downloadPath, ".exe", "")
+	}
+
+	return downloadPath, nil
 }

@@ -337,7 +337,8 @@ func InitializeApplication() (App, error) {
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
 	spireInitCommand := cmd.NewSpireInitCommand(logger, init)
 	userChangePasswordCommand := cmd.NewUserChangePasswordCommand(databaseResolver, logger, encrypter, userService)
-	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand)
+	spireOcculusUpdateCommand := cmd.NewSpireOcculusUpdateCommand(logger, processManagement)
+	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand, spireOcculusUpdateCommand)
 	webBoot := desktop.NewWebBoot(logger, server, config)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil
