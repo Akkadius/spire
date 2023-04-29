@@ -1002,12 +1002,14 @@ func (a *Installer) injectSpireStartCronJob() {
 	// get spire path
 	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
 
+	cronInject := fmt.Sprintf("while true; do nohup %s > %s/logs/spire.log 2>&1; sleep 1; done &", spirePath, a.pathmanager.GetEQEmuServerPath())
+
 	a.Exec(
 		ExecConfig{
 			command: "bash",
 			args: []string{
 				"-c",
-				fmt.Sprintf("crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot %v\") | crontab -", spirePath),
+				fmt.Sprintf("crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot %v\") | crontab -", cronInject),
 			},
 		},
 	)
@@ -1172,7 +1174,7 @@ func (a *Installer) startSpire() {
 			args: []string{
 				"-c",
 				fmt.Sprintf(
-					"while true; do nohup %s > %s/logs/spire 2>&1; sleep 1; done &",
+					"while true; do nohup %s > %s/logs/spire.log 2>&1; sleep 1; done &",
 					filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"),
 					a.pathmanager.GetEQEmuServerPath(),
 				),
@@ -1188,7 +1190,7 @@ func (a *Installer) startSpire() {
 	// 		args: []string{
 	// 			"/C",
 	// 			fmt.Sprintf(
-	// 				"start /b %s > %s/logs/spire 2>&1",
+	// 				"start /b %s > %s/logs/spire.log 2>&1",
 	// 				filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"),
 	// 				a.pathmanager.GetEQEmuServerPath(),
 	// 			),
