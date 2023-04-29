@@ -19,6 +19,7 @@ type InstallConfig struct {
 	MysqlPort          string `yaml:"mysql_port"`
 	SpireAdminUser     string `yaml:"spire_admin_user"`
 	SpireAdminPassword string `yaml:"spire_admin_password"`
+	SpireWebPort       string `yaml:"spire_web_port"`
 }
 
 const (
@@ -40,8 +41,9 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: server path
 	serverPath, err := (&promptui.Prompt{
-		Label:   "Server Installation Path (Recommended: ~/server)",
-		Default: filepath.Join(homedir, "server"),
+		Label:     "Server Installation Path (Recommended: ~/server)",
+		Default:   filepath.Join(homedir, "server"),
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
@@ -59,8 +61,9 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: server code path
 	codePath, err := (&promptui.Prompt{
-		Label:   "Server Code Path (Recommended: ~/code)",
-		Default: filepath.Join(homedir, "code"),
+		Label:     "Server Code Path (Recommended: ~/code)",
+		Default:   filepath.Join(homedir, "code"),
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
@@ -75,6 +78,7 @@ func (a *Installer) checkInstallConfig() {
 		Label:     "Use an existing MySQL server",
 		Default:   "N",
 		IsConfirm: true,
+		AllowEdit: true,
 	}).Run()
 
 	// check if we are using an existing mysql install
@@ -88,8 +92,9 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: mysql database name
 	mysqlDbName, err := (&promptui.Prompt{
-		Label:   "MySQL Database Name (all lowercase, no special characters)",
-		Default: "peq",
+		Label:     "MySQL Database Name (all lowercase, no special characters)",
+		Default:   "peq",
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
@@ -99,8 +104,9 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: mysql username
 	mysqlUsername, err := (&promptui.Prompt{
-		Label:   "MySQL Username",
-		Default: "eqemu",
+		Label:     "MySQL Username",
+		Default:   "eqemu",
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
@@ -109,9 +115,10 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: mysql password
 	mysqlPassword, err := (&promptui.Prompt{
-		Label:   "MySQL Password (Leave blank for random password)",
-		Default: generatedPassword,
-		Mask:    '*',
+		Label:     "MySQL Password (Leave blank for random password)",
+		Default:   generatedPassword,
+		Mask:      '*',
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
@@ -121,8 +128,9 @@ func (a *Installer) checkInstallConfig() {
 	if mysqlPassword != generatedPassword {
 		// prompt: mysql password (confirm)
 		mysqlPasswordConfirm, err := (&promptui.Prompt{
-			Label: "MySQL Password (Confirm)",
-			Mask:  '*',
+			Label:     "MySQL Password (Confirm)",
+			Mask:      '*',
+			AllowEdit: true,
 		}).Run()
 		if err != nil {
 			a.logger.Fatalf("Prompt failed %v\n", err)
@@ -143,8 +151,9 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: spire admin user
 	spireAdminUser, err := (&promptui.Prompt{
-		Label:   "Spire Admin User",
-		Default: "admin",
+		Label:     "Spire Admin User",
+		Default:   "admin",
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
@@ -153,14 +162,26 @@ func (a *Installer) checkInstallConfig() {
 
 	// prompt: spire admin password
 	spireAdminPassword, err := (&promptui.Prompt{
-		Label:   "Spire Admin Password (Leave blank for random password)",
-		Default: a.GetRandomPassword(),
-		Mask:    '*',
+		Label:     "Spire Admin Password (Leave blank for random password)",
+		Default:   a.GetRandomPassword(),
+		Mask:      '*',
+		AllowEdit: true,
 	}).Run()
 	if err != nil {
 		a.logger.Fatalf("Prompt failed %v\n", err)
 	}
 	a.installConfig.SpireAdminPassword = spireAdminPassword
+
+	// prompt: spire web port
+	spireWebPort, err := (&promptui.Prompt{
+		Label:     "Spire Web Port (Server Admin UI, Editing Tools, Default: 3007)",
+		Default:   "3007",
+		AllowEdit: true,
+	}).Run()
+	if err != nil {
+		a.logger.Fatalf("Prompt failed %v\n", err)
+	}
+	a.installConfig.SpireWebPort = spireWebPort
 
 	// write a.installConfig to yaml config file called install_config.yaml
 	// marshal a.installConfig into yaml
