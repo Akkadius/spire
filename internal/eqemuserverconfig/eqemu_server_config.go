@@ -122,6 +122,7 @@ type EQEmuConfigJson struct {
 	} `json:"web-admin,omitempty"`
 	Spire struct {
 		EncryptionKey string `json:"encryption_key,omitempty"`
+		HttpPort      int    `json:"http_port,omitempty"`
 	} `json:"spire,omitempty"`
 }
 
