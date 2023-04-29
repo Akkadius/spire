@@ -101,10 +101,12 @@ func (s UserService) ChangeLocalUserPassword(username string, password string) e
 	var user models.User
 	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LoginProviderLocal).First(&user)
 
+	// check if user exists
 	if user.ID == 0 {
 		return errors.New("user does not exist")
 	}
 
+	// hash password
 	hash, err := s.crypt.GeneratePassword(password)
 	if err != nil {
 		return err

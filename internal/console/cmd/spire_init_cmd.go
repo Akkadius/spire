@@ -16,8 +16,10 @@ func (c *SpireInitCommand) Command() *cobra.Command {
 	return c.command
 }
 
+// flagAuthEnabled is a flag that can be passed to the spire:init command
 var flagAuthEnabled bool
 
+// NewSpireInitCommand creates a new spire:init command
 func NewSpireInitCommand(
 	logger *logrus.Logger,
 	spireinit *spire.Init,
