@@ -235,7 +235,7 @@ func (a *Installer) cloneEQEmuMaps() {
 	// unzip the file
 	mapsPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "maps")
 	a.logger.Infof("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, mapsPath).Extract()
+	err = unzip.New(dumpZip, mapsPath, a.logger).Extract()
 	if err != nil {
 		a.logger.Fatalf("could not extract zip: %v", err)
 	}
@@ -377,6 +377,57 @@ func (a *Installer) Exec(command string, args []string, hidestring ...interface{
 	scanner := bufio.NewScanner(merged)
 	output := ""
 	for scanner.Scan() {
+		a.logger.Infoln(scanner.Text())
+		output += scanner.Text() + "\n"
+	}
+
+	return output
+}
+
+type ExecConfig struct {
+	command     string   // command to run
+	args        []string // arguments to pass to the command
+	hidestring  string   // string to hide from the output
+	dieonoutput string   // string to die on if found in the output
+}
+
+func (a *Installer) ExecV2(c ExecConfig) string {
+	// create a new context with a timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	// create the command
+	cmd := exec.CommandContext(ctx, c.command, c.args...)
+	cmd.Env = os.Environ()
+	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		a.logger.Fatalf("could not get stdout pipe: %v", err)
+	}
+	cmd.Stderr = cmd.Stdout
+	err = cmd.Start()
+	if err != nil {
+		a.logger.Error(err)
+	}
+
+	argsPrint := strings.Join(c.args, " ")
+	if len(c.hidestring) > 0 {
+		hide := c.hidestring
+		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
+	}
+	a.logger.Infof("Running command [%v %v]\n", c.command, argsPrint)
+
+	merged := io.MultiReader(stdout)
+	scanner := bufio.NewScanner(merged)
+	output := ""
+	for scanner.Scan() {
+		if len(c.dieonoutput) > 0 {
+			if strings.Contains(scanner.Text(), c.dieonoutput) {
+				a.logger.Fatalf("Found [%v] in output, exiting", c.dieonoutput)
+				_ = cmd.Process.Kill()
+			}
+		}
+
 		a.logger.Infoln(scanner.Text())
 		output += scanner.Text() + "\n"
 	}
@@ -548,7 +599,7 @@ func (a *Installer) sourcePeqDatabase() {
 	}
 
 	a.logger.Infof("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, filepath.Join(os.TempDir(), "/dump")).Extract()
+	err = unzip.New(dumpZip, filepath.Join(os.TempDir(), "/dump"), a.logger).Extract()
 	if err != nil {
 		a.logger.Fatalf("could not extract zip: %v", err)
 	}
@@ -584,7 +635,7 @@ func (a *Installer) sourcePeqDatabase() {
 	)
 
 	// cleanup the temp folder
-	a.logger.Infof("Cleaning up temp folder [%v]\n", filepath.Join(os.TempDir(), "/dump"))
+	a.logger.Infof("|-- Cleaning up temp folder [%v]\n", filepath.Join(os.TempDir(), "/dump"))
 	err = os.RemoveAll(filepath.Join(os.TempDir(), "/dump"))
 	if err != nil {
 		a.logger.Fatalf("could not remove directory: %v", err)
@@ -610,13 +661,13 @@ func (a *Installer) installBinaries() {
 	// extract the zip
 	extractTo := a.pathmanager.GetEQEmuServerBinPath()
 	a.logger.Infof("Extracting zip to [%v]\n", extractTo)
-	err = unzip.New(tempPath, extractTo).Extract()
+	err = unzip.New(tempPath, extractTo, a.logger).Extract()
 	if err != nil {
 		a.logger.Fatalf("could not extract zip: %v", err)
 	}
 
 	// cleanup the temp folder
-	a.logger.Infof("Cleaning up temp folder [%v]\n", tempPath)
+	a.logger.Infof("|-- Cleaning up temp folder [%v]\n", tempPath)
 	err = os.RemoveAll(tempPath)
 	if err != nil {
 		a.logger.Fatalf("could not remove directory: %v", err)
@@ -885,7 +936,14 @@ func (a *Installer) checkIfMapsAreUpToDate() bool {
 	}
 
 	// check if current version is the same as the latest release version
-	if packageJsonStruct.Version == strings.ReplaceAll(release.TagName, "v", "") {
+	remoteVersion := strings.ReplaceAll(release.TagName, "v", "")
+
+	if len(remoteVersion) == 0 {
+		a.logger.Infof("Could not retrieve latest [eqemu-maps] version, possibly rate limited, skipping\n")
+		return true
+	}
+
+	if len(remoteVersion) > 0 && packageJsonStruct.Version == remoteVersion {
 		a.logger.Infof("Maps are up to date on version v%v\n", packageJsonStruct.Version)
 		return true
 	}
@@ -981,7 +1039,7 @@ func (a *Installer) installSpireBinary() {
 			"spire",
 		)
 		if err != nil {
-			a.logger.Fatalf("could not get latest release: %v", err)
+			a.logger.Infof("could not get latest release: %v", err)
 			return
 		}
 
@@ -1008,7 +1066,7 @@ func (a *Installer) installSpireBinary() {
 
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, a.pathmanager.GetEQEmuServerPath())
+				uz := unzip.New(tempFileZipped, a.pathmanager.GetEQEmuServerPath(), a.logger)
 				a.logger.Infof("|-- Unzipping file [%v] to [%v]\n", tempFileZipped, a.pathmanager.GetEQEmuServerPath())
 				err = uz.Extract()
 				if err != nil {
