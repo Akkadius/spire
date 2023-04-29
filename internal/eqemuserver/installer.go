@@ -12,6 +12,7 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
+	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -97,6 +98,7 @@ func (a *Installer) Install() {
 
 	a.installSpireBinary()
 	a.initSpire()
+	a.startSpire()
 
 	a.runSharedMemory()
 	a.runWorldForDatabaseUpdates()
@@ -367,6 +369,7 @@ type ExecConfig struct {
 	hidestring  string   // string to hide from the output
 	dieonoutput string   // string to die on if found in the output
 	execpath    string   // path to execute the command in
+	detach      bool     // detach the process
 }
 
 func (a *Installer) Exec(c ExecConfig) string {
@@ -389,19 +392,33 @@ func (a *Installer) Exec(c ExecConfig) string {
 		a.logger.Fatalf("could not get stdout pipe: %v", err)
 	}
 
-	cmd.Stderr = cmd.Stdout
-	err = cmd.Start()
-	if err != nil {
-		a.logger.Error(err)
-	}
-
 	// hide the password from the output
 	argsPrint := strings.TrimSpace(strings.Join(c.args, " "))
 	if len(c.hidestring) > 0 {
 		hide := c.hidestring
 		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
 	}
-	a.logger.Infof("Running command [%v %v]\n", c.command, argsPrint)
+	if len(argsPrint) > 0 {
+		argsPrint = " " + argsPrint
+	}
+
+	a.logger.Infof("Running command [%v%v]\n", c.command, argsPrint)
+
+	cmd.Stderr = cmd.Stdout
+	err = cmd.Start()
+	if err != nil {
+		a.logger.Error(err)
+	}
+
+	// if we are detaching, release the process
+	if c.detach {
+		a.logger.Infof("Detaching process [%v%v]\n", c.command, argsPrint)
+		err = cmd.Process.Release()
+		if err != nil {
+			a.logger.Error(err)
+		}
+		return ""
+	}
 
 	// merge stdout and stderr
 	merged := io.MultiReader(stdout)
@@ -1123,4 +1140,62 @@ func (a *Installer) runWorldForDatabaseUpdates() {
 	})
 
 	a.DoneBanner("Running World for Database Updates")
+}
+
+func (a *Installer) startSpire() {
+	a.Banner("Starting Spire")
+
+	// kill any running spire processes
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		cmdline, err := p.Cmdline()
+		if err != nil {
+			a.logger.Errorf("could not get cmdline for process: %v", err)
+		}
+
+		// kill spire if it's running
+		// ignore spire processes that are running from /tmp
+		if strings.Contains(cmdline, "spire") && !strings.Contains(cmdline, "/tmp/") {
+			err := p.Kill()
+			if err != nil {
+				a.logger.Errorf("could not kill process: %v", err)
+			}
+		}
+	}
+
+	a.logger.Infof("starting spire [%v]", filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
+
+	// start spire in a loop
+	if runtime.GOOS == "linux" {
+		a.Exec(ExecConfig{
+			command: "bash",
+			args: []string{
+				"-c",
+				fmt.Sprintf(
+					"while true; do nohup %s > %s/logs/spire 2>&1; sleep 1; done &",
+					filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"),
+					a.pathmanager.GetEQEmuServerPath(),
+				),
+			},
+			detach: true,
+		})
+	}
+
+	// TODO: windows
+	// if runtime.GOOS == "windows" {
+	// 	a.Exec(ExecConfig{
+	// 		command: "cmd",
+	// 		args: []string{
+	// 			"/C",
+	// 			fmt.Sprintf(
+	// 				"start /b %s > %s/logs/spire 2>&1",
+	// 				filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"),
+	// 				a.pathmanager.GetEQEmuServerPath(),
+	// 			),
+	// 		},
+	// 		detach: true,
+	// 	})
+	// }
+
+	a.DoneBanner("Starting Spire")
 }
