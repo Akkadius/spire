@@ -1,3 +1,7 @@
+## [3.1.0] 4/29/2023
+
+* Improvements to how Spire acquires static assets
+
 ## [3.0.8] 4/28/2023
 
 * Spire will now exit immediately after updating if no terminal is attached [#114](https://github.com/Akkadius/spire/pull/114)

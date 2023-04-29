@@ -323,7 +323,7 @@ func InitializeApplication() (App, error) {
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(databaseResolver, logger, cache, service)
 	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(databaseResolver, logger, cache, settings, init)
-	spireAssets := assets.NewSpireAssets(logger, cache, githubSourceDownloader)
+	spireAssets := assets.NewSpireAssets(logger, pathManagement)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
 	server := http.NewServer(logger, router, processManagement)
 	httpServeCommand := cmd.NewHttpServeCommand(logger, server)
