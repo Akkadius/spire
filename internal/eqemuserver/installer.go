@@ -110,9 +110,12 @@ func (a *Installer) Install() {
 func (a *Installer) installOsPackages() {
 	a.Banner("Installing OS Packages")
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
 	// apt-get update
 	params := []string{"apt-get", "update"}
-	cmd := exec.Command("sudo", params...)
+	cmd := exec.CommandContext(ctx, "sudo", params...)
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
 	stdout, err := cmd.StdoutPipe()
@@ -134,7 +137,7 @@ func (a *Installer) installOsPackages() {
 	// apt-get install -y
 	params = []string{"apt-get", "install", "-y", "-m"}
 	params = append(params, getDebianPackages()...)
-	cmd = exec.Command("sudo", params...)
+	cmd = exec.CommandContext(ctx, "sudo", params...)
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
 	stdout, err = cmd.StdoutPipe()
@@ -344,8 +347,13 @@ func (a *Installer) DbExec(statement string, hidestring ...interface{}) {
 	a.Exec("mysql", []string{"-uroot", "-e", fmt.Sprintf("%v", statement)}, hidestring...)
 }
 
-func (a *Installer) Exec(command string, args []string, hidestring ...interface{}) {
-	cmd := exec.Command(command, args...)
+func (a *Installer) Exec(command string, args []string, hidestring ...interface{}) string {
+	// create a new context with a timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	// create the command
+	cmd := exec.CommandContext(ctx, command, args...)
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
 	stdout, err := cmd.StdoutPipe()
@@ -367,12 +375,16 @@ func (a *Installer) Exec(command string, args []string, hidestring ...interface{
 
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
+	output := ""
 	for scanner.Scan() {
 		a.logger.Infoln(scanner.Text())
+		output += scanner.Text() + "\n"
 	}
+
+	return output
 }
 
-func (a *Installer) ExecPath(path string, command string, args []string) {
+func (a *Installer) ExecPath(path string, command string, args []string, hidestring ...interface{}) {
 	cmd := exec.Command(command, args...)
 	cmd.Env = os.Environ()
 	cmd.Dir = path
@@ -385,6 +397,13 @@ func (a *Installer) ExecPath(path string, command string, args []string) {
 	if err != nil {
 		a.logger.Error(err)
 	}
+
+	argsPrint := strings.Join(args, " ")
+	if len(hidestring) > 0 {
+		hide := hidestring[0].(string)
+		argsPrint = strings.ReplaceAll(argsPrint, hide, "********")
+	}
+	a.logger.Infof("Running command [%v %v]\n", command, argsPrint)
 
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
@@ -488,6 +507,27 @@ func (a *Installer) initializeServerConfig() {
 func (a *Installer) sourcePeqDatabase() {
 	a.Banner("Sourcing ProjectEQ Database")
 
+	tables := a.Exec(
+		"mysql",
+		[]string{
+			fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+			fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+			a.installConfig.MysqlDatabaseName,
+			"-e",
+			"show tables",
+		},
+		a.installConfig.MysqlPassword,
+	)
+	if len(strings.Split(tables, "\n")) > 0 {
+		// database already exists, skip
+		a.logger.Infof(
+			"Database [%v] already exists with [%v] tables, skipping source\n",
+			a.installConfig.MysqlDatabaseName,
+			len(strings.Split(tables, "\n")),
+		)
+		return
+	}
+
 	// zip file path
 	dumpZip := filepath.Join(os.TempDir(), "/dump/peq.zip")
 
@@ -528,6 +568,7 @@ func (a *Installer) sourcePeqDatabase() {
 			"-e",
 			"source create_all_tables.sql",
 		},
+		a.installConfig.MysqlPassword,
 	)
 	a.logger.Infof("Sourced database dump from [%v]\n", extractPath)
 	a.Exec(
@@ -539,6 +580,7 @@ func (a *Installer) sourcePeqDatabase() {
 			"-e",
 			"show tables",
 		},
+		a.installConfig.MysqlPassword,
 	)
 
 	// cleanup the temp folder
