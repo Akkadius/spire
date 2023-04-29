@@ -16,6 +16,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -86,14 +87,15 @@ func (a *Installer) Install() {
 	a.symlinkPluginsAndModules()
 	a.createServerScripts()
 
+	if runtime.GOOS == "linux" {
+		a.injectSpireStartCronJob()
+	}
+
 	// TODO make sure spire binary exists in the end
 	// Script initialization of Spire
 	// prompt for what port to start spire on
 	// put spire loader port in eqemu config
 	// auto add admin password via install config
-
-	// add cron to start spire on start
-	// crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo "@reboot {pathtospire}") | crontab -
 
 	// Spire: check if terminal is available during prompt any key to update / close
 	// add existing MySQL installation
@@ -354,6 +356,8 @@ func (a *Installer) Exec(command string, args []string) {
 	if err != nil {
 		a.logger.Error(err)
 	}
+
+	a.logger.Infof("Running command [%v %v]\n", command, strings.Join(args, " "))
 
 	merged := io.MultiReader(stdout)
 	scanner := bufio.NewScanner(merged)
@@ -884,4 +888,16 @@ func (a *Installer) createServerScripts() {
 	}
 
 	a.DoneBanner("Creating Server Scripts")
+}
+
+func (a *Installer) injectSpireStartCronJob() {
+	a.Banner("Injecting Spire Start Cron Job")
+	a.Exec(
+		"bash",
+		[]string{
+			"-c",
+			"crontab -l | grep -qF 'spire' || (crontab -l 2>/dev/null; echo \"@reboot {pathtospire}\") | crontab -",
+		},
+	)
+	a.DoneBanner("Injecting Spire Start Cron Job")
 }
