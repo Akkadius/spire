@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
 	"github.com/mattn/go-isatty"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"os"
@@ -23,13 +24,30 @@ import (
 type Service struct {
 	// this is the package.json embedded in the binary which contains the app version
 	packageJson []byte
+	logger      *logrus.Logger
 }
 
 // NewService creates a new updater service
 func NewService(packageJson []byte) *Service {
 	return &Service{
 		packageJson: packageJson,
+		logger:      createLogger(),
 	}
+}
+
+func createLogger() *logrus.Logger {
+	baseLogger := logrus.New()
+	baseLogger.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp:          false,
+		TimestampFormat:        "2006-01-02 15:04:05",
+		ForceColors:            true,
+		DisableLevelTruncation: true,
+	})
+
+	// base level
+	baseLogger.SetLevel(logrus.InfoLevel)
+
+	return baseLogger
 }
 
 // EnvResponse is the response from the env endpoint
@@ -164,7 +182,7 @@ func (s Service) CheckForUpdates() {
 
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, os.TempDir())
+				uz := unzip.New(tempFileZipped, os.TempDir(), s.logger)
 				err = uz.Extract()
 				if err != nil {
 					log.Println(err)
@@ -199,7 +217,7 @@ func (s Service) CheckForUpdates() {
 			if runtime.GOOS == "windows" {
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s\\%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, os.TempDir())
+				uz := unzip.New(tempFileZipped, os.TempDir(), s.logger)
 				err = uz.Extract()
 				if err != nil {
 					log.Println(err)
