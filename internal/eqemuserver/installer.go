@@ -99,9 +99,6 @@ func (a *Installer) Install() {
 	a.installSpireBinary()
 	a.initSpire()
 
-	// prompt for what port to start spire on
-	// put spire loader port in eqemu config
-	// auto add admin password via install config
 	// add existing MySQL installation
 
 	a.logger.Println("")
@@ -331,7 +328,7 @@ func (a *Installer) initMySQL() {
 	// grant privileges to the new user
 	a.logger.Infof("Granting privileges to user [%v]\n", c.DatabaseUser)
 	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v'; ", c.DatabaseUser, c.DatabasePassword)
-	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost';", c.DatabaseName, c.DatabaseUser)
+	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost'", c.DatabaseName, c.DatabaseUser)
 
 	// flush privileges
 	a.logger.Infoln("Flushing privileges")
