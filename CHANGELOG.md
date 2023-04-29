@@ -1,3 +1,7 @@
+## [3.1.1] 4/29/2023
+
+* Add command `spire:occulus-update` to update Occulus to the latest version or install it if it doesn't exist [#116](https://github.com/Akkadius/spire/pull/116)
+
 ## [3.1.0] 4/29/2023
 
 * Improvements to how Spire acquires static assets
