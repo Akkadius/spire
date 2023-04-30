@@ -138,11 +138,26 @@ func (a *Installer) installLinuxOsPackages() {
 		a.logger.Infoln(scanner.Text())
 	}
 
+	// install packages
+	var packages []string
+	distro := a.getLinuxDistribution()
+	if distro == "ubuntu" {
+		packages = getUbuntuPackages()
+	} else if distro == "debian" {
+		packages = getDebianPackages()
+	} else {
+		a.logger.Fatalf("Unsupported distribution: %v", distro)
+	}
+
+	// get specific version of distribution
+	//version := a.getLinuxDistributionVersion()
+
 	// apt-get install -y
-	params = []string{"apt-get", "install", "-y", "-m"}
-	params = append(params, getDebianPackages()...)
+	params = []string{"apt-get", "install", "-yq", "-m", "--no-install-recommends"}
+	params = append(params, packages...)
 	cmd = exec.CommandContext(ctx, "sudo", params...)
 	cmd.Env = os.Environ()
+
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
 	stdout, err = cmd.StdoutPipe()
 	if err != nil {
@@ -1206,4 +1221,82 @@ func (a *Installer) startSpire() {
 	// }
 
 	a.DoneBanner("Starting Spire")
+}
+
+// getLinuxDistribution returns the linux distribution
+func (a *Installer) getLinuxDistribution() string {
+	// determine whether we're on ubuntu or debian
+	// read from /etc/os-release to determine which distro we're on
+	if _, err := os.Stat("/etc/os-release"); os.IsNotExist(err) {
+		a.logger.Fatalf("could not find /etc/os-release")
+	}
+
+	// get contents of /etc/os-release
+	osRelease, err := os.ReadFile("/etc/os-release")
+	if err != nil {
+		a.logger.Fatalf("could not read /etc/os-release: %v", err)
+	}
+
+	// parse /etc/os-release
+	for _, line := range strings.Split(string(osRelease), "\n") {
+
+		// skip empty lines
+		if len(line) == 0 {
+			continue
+		}
+
+		// split on "="
+		split := strings.Split(line, "=")
+		key := strings.TrimSpace(split[0])
+		value := strings.TrimSpace(split[1])
+
+		// if we find the NAME key, return the value
+		if key == "NAME" {
+			if strings.Contains(value, "Ubuntu") {
+				return "ubuntu"
+			} else if strings.Contains(value, "Debian") {
+				return "debian"
+			} else {
+				a.logger.Fatalf("unknown OS: %s", value)
+				return "unknown"
+			}
+		}
+	}
+
+	return "unknown"
+}
+
+// getLinuxDistributionVersion returns the linux distribution version
+func (a *Installer) getLinuxDistributionVersion() string {
+	// read from /etc/os-release to determine which version of the distro we're on
+	if _, err := os.Stat("/etc/os-release"); os.IsNotExist(err) {
+		a.logger.Fatalf("could not find /etc/os-release")
+	}
+
+	// get contents of /etc/os-release
+	osRelease, err := os.ReadFile("/etc/os-release")
+	if err != nil {
+		a.logger.Fatalf("could not read /etc/os-release: %v", err)
+	}
+
+	// parse /etc/os-release
+	for _, line := range strings.Split(string(osRelease), "\n") {
+
+		// skip empty lines
+		if len(line) == 0 {
+			continue
+		}
+
+		// split on "="
+		split := strings.Split(line, "=")
+		key := strings.TrimSpace(split[0])
+		value := strings.TrimSpace(split[1])
+
+		// if we find the VERSION_ID key, return the value
+		if key == "VERSION_ID" {
+			return value
+		}
+	}
+
+	return "unknown"
 }
