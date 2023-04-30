@@ -12,6 +12,7 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
+	"github.com/k0kubun/pp/v3"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -80,6 +81,12 @@ func (a *Installer) Install() {
 		a.installLinuxOsPackages()
 		a.initLinuxMysql()
 	}
+
+	if runtime.GOOS == "windows" {
+		a.initWindowsPerl()
+		a.initWindowsMysql()
+	}
+
 	a.initializeDirectories()
 	a.cloneEQEmuSource()
 	a.initializeServerConfig()
@@ -369,9 +376,19 @@ type DbExecConfig struct {
 }
 
 func (a *Installer) DbExec(c DbExecConfig) {
+	mysqlPath := "mysql"
+	if runtime.GOOS == "windows" {
+		mysqlPath = a.getWindowsMysqlPath()
+	}
+
+	// check if mysql is installed
+	if len(mysqlPath) == 0 {
+		a.logger.Fatalf("could not find mysql executable")
+	}
+
 	a.Exec(
 		ExecConfig{
-			command:    "mysql",
+			command:    mysqlPath,
 			args:       []string{"-uroot", "-e", fmt.Sprintf("%v", c.statement)},
 			hidestring: c.hidestring,
 		},
@@ -556,9 +573,14 @@ func (a *Installer) initializeServerConfig() {
 func (a *Installer) sourcePeqDatabase() {
 	a.Banner("Sourcing ProjectEQ Database")
 
+	mysqlPath := "mysql"
+	if runtime.GOOS == "windows" {
+		mysqlPath = a.getWindowsMysqlPath()
+	}
+
 	tables := a.Exec(
 		ExecConfig{
-			command: "mysql",
+			command: mysqlPath,
 			args: []string{
 				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
 				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
@@ -619,7 +641,7 @@ func (a *Installer) sourcePeqDatabase() {
 
 	a.Exec(
 		ExecConfig{
-			command: "mysql",
+			command: mysqlPath,
 			args: []string{
 				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
 				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
@@ -636,7 +658,7 @@ func (a *Installer) sourcePeqDatabase() {
 
 	a.Exec(
 		ExecConfig{
-			command: "mysql",
+			command: mysqlPath,
 			args: []string{
 				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
 				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
@@ -666,7 +688,7 @@ func (a *Installer) installBinaries() {
 	a.logger.Infof("Downloading binaries to [%v]\n", tempPath)
 	err := download.WithProgress(
 		tempPath,
-		"https://github.com/eqemu/server/releases/latest/download/eqemu-server-linux-x64.zip",
+		fmt.Sprintf("https://github.com/eqemu/server/releases/latest/download/eqemu-server-%v-x64.zip", runtime.GOOS),
 	)
 	if err != nil {
 		a.logger.Fatalln(err)
@@ -1042,7 +1064,11 @@ func (a *Installer) installSpireBinary() {
 	a.Banner("Installing Spire")
 
 	// check if spire is already installed
-	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+	spirePath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
+	if err != nil {
+		a.logger.Infof("could not find spire binary: %v", err)
+	}
+
 	if _, err := os.Stat(spirePath); !os.IsNotExist(err) {
 		// spire is already installed
 		a.logger.Infof("Spire is already installed at [%v]\n", spirePath)
@@ -1086,7 +1112,8 @@ func (a *Installer) installSpireBinary() {
 
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, a.pathmanager.GetEQEmuServerPath(), a.logger)
+				unzipPathTemp := filepath.Join(fmt.Sprintf("%s/spire-download", os.TempDir()))
+				uz := unzip.New(tempFileZipped, unzipPathTemp, a.logger)
 				a.logger.Infof("|-- Unzipping file [%v] to [%v]\n", tempFileZipped, a.pathmanager.GetEQEmuServerPath())
 				err = uz.Extract()
 				if err != nil {
@@ -1094,15 +1121,24 @@ func (a *Installer) installSpireBinary() {
 				}
 
 				// rename
-				src := filepath.Join(a.pathmanager.GetEQEmuServerPath(), targetFileName)
-				dst := spirePath
+				src, err := exec.LookPath(filepath.Join(unzipPathTemp, targetFileName))
+				if err != nil {
+					a.logger.Fatalf("could not find spire: %v", err)
+				}
+
+				// new spire path
+				newSpirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+				if runtime.GOOS == "windows" {
+					newSpirePath = filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire.exe")
+				}
+
+				// destination
+				dst := newSpirePath
 
 				a.logger.Infof("|-- Renaming file [%v] to [%v]\n", src, dst)
 
-				err = os.Rename(src, dst)
-				if err != nil {
-					a.logger.Fatalf("could not rename spire: %v", err)
-				}
+				// copy file from src to dst
+				a.Copy(src, dst)
 
 				a.logger.Infof("|-- Making file [%v] executable\n", dst)
 
@@ -1121,7 +1157,10 @@ func (a *Installer) installSpireBinary() {
 func (a *Installer) initSpire() {
 	a.Banner("Initializing Spire")
 
-	spirePath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire")
+	spirePath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
+	if err != nil {
+		a.logger.Fatalf("could not find spire binary: %v", err)
+	}
 
 	a.Exec(ExecConfig{
 		command: spirePath,
@@ -1156,6 +1195,8 @@ func (a *Installer) runSharedMemory() {
 func (a *Installer) runWorldForDatabaseUpdates() {
 	a.Banner("Running World for Database Updates")
 
+	// TODO: Windows is not aware of Perl yet at this stage because the PATH is not updated
+
 	a.Exec(ExecConfig{
 		execpath:    a.pathmanager.GetEQEmuServerPath(),
 		command:     filepath.Join("bin", "world"),
@@ -1178,7 +1219,8 @@ func (a *Installer) startSpire() {
 
 		// kill spire if it's running
 		// ignore spire processes that are running from /tmp
-		if strings.Contains(cmdline, "spire") && !strings.Contains(cmdline, "/tmp/") {
+		installerRan := strings.Contains(cmdline, "/tmp/") || strings.Contains(cmdline, "-install")
+		if strings.Contains(cmdline, "spire") && !installerRan {
 			err := p.Kill()
 			if err != nil {
 				a.logger.Errorf("could not kill process: %v", err)
@@ -1204,21 +1246,33 @@ func (a *Installer) startSpire() {
 		})
 	}
 
-	// TODO: windows
-	// if runtime.GOOS == "windows" {
-	// 	a.Exec(ExecConfig{
-	// 		command: "cmd",
-	// 		args: []string{
-	// 			"/C",
-	// 			fmt.Sprintf(
-	// 				"start /b %s > %s/logs/spire.log 2>&1",
-	// 				filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"),
-	// 				a.pathmanager.GetEQEmuServerPath(),
-	// 			),
-	// 		},
-	// 		detach: true,
-	// 	})
-	// }
+	if runtime.GOOS == "windows" {
+		spirePath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
+		if err != nil {
+			a.logger.Fatalf("could not find spire binary: %v", err)
+		}
+
+		pp.Println(spirePath)
+		pp.Println(a.pathmanager.GetEQEmuServerPath())
+		pp.Println(fmt.Sprintf(
+			"start /b %s > %s/logs/spire.log 2>&1",
+			spirePath,
+			a.pathmanager.GetEQEmuServerPath(),
+		))
+
+		a.Exec(ExecConfig{
+			command: "cmd",
+			args: []string{
+				"/c",
+				fmt.Sprintf(
+					"start /b %s > %s/logs/spire.log 2>&1",
+					spirePath,
+					a.pathmanager.GetEQEmuServerPath(),
+				),
+			},
+			detach: true,
+		})
+	}
 
 	a.DoneBanner("Starting Spire")
 }
@@ -1299,4 +1353,144 @@ func (a *Installer) getLinuxDistributionVersion() string {
 	}
 
 	return "unknown"
+}
+
+func (a *Installer) initWindowsMysql() {
+	a.Banner("Downloading MariaDB")
+
+	// download mariadb
+	// download the latest binaries
+	tempPath := filepath.Join(os.TempDir(), "mariadb.msi")
+	a.logger.Infof("Downloading binaries to [%v]\n", tempPath)
+	err := download.WithProgress(
+		tempPath,
+		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/mariadb-10.11.2-winx64.msi",
+	)
+	if err != nil {
+		a.logger.Fatalln(err)
+	}
+
+	// install mariadb
+	// start /wait msiexec /i mariadb-10.0.21-winx64.msi SERVICENAME=MySQL PORT=3306 PASSWORD=eqemu /qn
+	// TODO: make port configurable
+	// TODO: split out root user and eqemu user passwords
+	a.logger.Infof("Installing MariaDB")
+	a.Exec(ExecConfig{
+		command: "msiexec",
+		args: []string{
+			"/i",
+			tempPath,
+			"SERVICENAME=MySQL",
+			"PORT=3306",
+			"BUFFERPOOLSIZE=1024M",
+			fmt.Sprintf("PASSWORD=%s", a.installConfig.MysqlPassword),
+			"/qn",
+		},
+	})
+
+	c := MysqlConfig{
+		DatabaseName:     a.installConfig.MysqlDatabaseName,
+		DatabaseUser:     a.installConfig.MysqlUsername,
+		DatabasePassword: a.installConfig.MysqlPassword,
+	}
+
+	// create a new database
+	var sql string
+
+	a.logger.Infof("Creating database [%v]\n", c.DatabaseName)
+	a.DbExec(DbExecConfig{statement: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName)})
+
+	// create a new user
+	a.logger.Infof("Creating user [%v]\n", c.DatabaseUser)
+
+	// grant privileges to the new user
+	a.logger.Infof("Granting privileges to user [%v]\n", c.DatabaseUser)
+	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v'; ", c.DatabaseUser, c.DatabasePassword)
+	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost'", c.DatabaseName, c.DatabaseUser)
+
+	// flush privileges
+	a.logger.Infoln("Flushing privileges")
+	a.DbExec(DbExecConfig{statement: fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), hidestring: c.DatabasePassword})
+
+	a.DoneBanner("Downloading MariaDB")
+}
+
+func (a *Installer) initWindowsPerl() {
+	a.Banner("Downloading Perl")
+
+	// download mariadb
+	// download the latest binaries
+	tempPath := filepath.Join(os.TempDir(), "perl.msi")
+	a.logger.Infof("Downloading binaries to [%v]\n", tempPath)
+	err := download.WithProgress(
+		tempPath,
+		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/strawberry-perl-5.24.4.1-64bit.msi",
+	)
+	if err != nil {
+		a.logger.Fatalln(err)
+	}
+
+	// install perl
+	// start /wait msiexec /i strawberry-perl-5.24.4.1-64bit.msi PERL_PATH="Yes" /q
+	// start /wait msiexec /i mariadb-10.0.21-winx64.msi SERVICENAME=MySQL PORT=3306 PASSWORD=eqemu /qn
+	// TODO: make port configurable
+	// TODO: split out root user and eqemu user passwords
+	a.logger.Infof("Installing Perl")
+	a.Exec(ExecConfig{
+		command: "msiexec",
+		args: []string{
+			"/i",
+			tempPath,
+			"PERL_PATH=Yes",
+			"/q",
+		},
+	})
+
+	a.DoneBanner("Downloading Perl")
+}
+
+// initWindowsMysqlService installs and configures the mysql service
+func (a *Installer) getWindowsProgramFilesPath() string {
+	// get program files path
+	return strings.TrimSpace(a.Exec(ExecConfig{command: "cmd", args: []string{"/c", "echo", "%programfiles%"}}))
+}
+
+// getWindowsMysqlPath returns the path to the mysql installation
+func (a *Installer) getWindowsMysqlPath() string {
+	// get folders in folder using go
+	entries, err := os.ReadDir(filepath.Join(a.getWindowsProgramFilesPath()))
+	if err != nil {
+		a.logger.Fatal(err)
+	}
+
+	// first look for mariadb
+	for _, e := range entries {
+		if strings.Contains(strings.ToLower(e.Name()), "mariadb") {
+			return filepath.Join(a.getWindowsProgramFilesPath(), e.Name(), "bin", "mysql.exe")
+		}
+	}
+
+	// second look for mysql
+	for _, e := range entries {
+		if strings.Contains(strings.ToLower(e.Name()), "mysql") {
+			return filepath.Join(a.getWindowsProgramFilesPath(), e.Name(), "bin", "mysql.exe")
+		}
+	}
+
+	return ""
+}
+
+// Copy copies a file from src to dst
+func (a *Installer) Copy(src string, dst string) {
+	// read the file
+	bytesRead, err := os.ReadFile(src)
+	if err != nil {
+		a.logger.Fatal(err)
+	}
+
+	// write the file
+	err = os.WriteFile(dst, bytesRead, os.ModePerm)
+	if err != nil {
+		a.logger.Fatal(err)
+	}
 }
