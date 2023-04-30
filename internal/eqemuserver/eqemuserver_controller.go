@@ -901,11 +901,11 @@ type PreflightCheck struct {
 
 func (a *Controller) preflight(c echo.Context) error {
 	checks := []PreflightCheck{
-		{process: "world", assertion: "listener started on port", timeout: 10},
-		{process: "zone", assertion: "Zone bootup type", timeout: 10, args: []string{"soldungb"}},
-		{process: "shared_memory", assertion: "Loading base data", timeout: 10},
-		{process: "ucs", assertion: "LoadChatChannels", timeout: 10},
-		{process: "loginserver", assertion: "Server Started", timeout: 10},
+		{process: "world", assertion: "listener started on port", timeout: 120},
+		{process: "zone", assertion: "Zone bootup type", timeout: 5, args: []string{"soldungb"}},
+		{process: "shared_memory", assertion: "Loading base data", timeout: 5},
+		{process: "ucs", assertion: "LoadChatChannels", timeout: 5},
+		{process: "loginserver", assertion: "Server Started", timeout: 5},
 	}
 
 	p := strings.ReplaceAll(strings.ToLower(c.Param("process")), " ", "_")
@@ -923,8 +923,11 @@ func (a *Controller) preflight(c echo.Context) error {
 
 	c.Response().WriteHeader(http.StatusOK)
 
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(check.timeout)*time.Second)
+	defer cancel()
+
 	bin := filepath.Join(a.pathmgmt.GetEQEmuServerBinPath(), check.process)
-	cmd := exec.Command(bin, check.args...)
+	cmd := exec.CommandContext(ctx, bin, check.args...)
 	cmd.Env = os.Environ()
 	if runtime.GOOS == "linux" {
 		cmd.Env = append(cmd.Env, "IS_TTY=true")

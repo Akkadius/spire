@@ -1,4 +1,4 @@
-## [3.1.2] 4/30/2023
+## [3.1.3] 4/30/2023
 
 More improvements to pre-flight checks, they should fail pass-through now and not block the server from booting
 
