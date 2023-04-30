@@ -11,10 +11,12 @@ import (
 )
 
 func WithProgress(destinationPath, downloadUrl string) error {
+	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 	banner.Loading()
+	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 
-	fmt.Printf("[Downloading] URL [%v]\n", downloadUrl)
-	fmt.Printf("[Downloading] To [%v]\n\n", destinationPath)
+	fmt.Printf("[Downloading] URL  [%v]\n", downloadUrl)
+	fmt.Printf("[Downloading] To   [%v]\n", destinationPath)
 
 	//tempDestinationPath := destinationPath + ".tmp"
 	req, err := http.NewRequest("GET", downloadUrl, nil)
@@ -47,7 +49,7 @@ func WithProgress(destinationPath, downloadUrl string) error {
 		progressbar.OptionSetWidth(30),
 		progressbar.OptionThrottle(100*time.Millisecond),
 		progressbar.OptionOnCompletion(func() {
-			fmt.Fprint(os.Stderr, "\n")
+			fmt.Fprint(os.Stderr)
 		}),
 		progressbar.OptionSpinnerType(14),
 		progressbar.OptionSetRenderBlankState(true),
@@ -73,6 +75,7 @@ func WithProgress(destinationPath, downloadUrl string) error {
 	//	return err
 	//}
 
+	fmt.Printf("\n-------------------------------------------------------------------------------------------")
 	fmt.Printf("\n")
 
 	return nil

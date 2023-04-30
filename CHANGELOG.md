@@ -1,3 +1,7 @@
+## [3.1.2] 4/30/2023
+
+More improvements to pre-flight checks, they should fail pass-through now and not block the server from booting
+
 ## [3.1.1] 4/29/2023
 
 * Add command `spire:occulus-update` to update Occulus to the latest version or install it if it doesn't exist [#116](https://github.com/Akkadius/spire/pull/116)

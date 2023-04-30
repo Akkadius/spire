@@ -62,10 +62,10 @@
           <tr v-for="p in processTypes" :key="p.name">
             <td class="text-center">
               <check-mark-animated style="height: 20px; width: 20px" v-if="p.checkSuccess"/>
-              <b-spinner small v-if="!p.checkSuccess && !p.message"/>
-              <error-mark-animated v-if="!p.checkSuccess && p.message" style="height: 30px; width: 30px" class="ml-1"/>
+              <b-spinner small v-if="!p.checkSuccess && (!p.message || p.message.includes('Running'))"/>
+              <error-mark-animated v-if="!p.checkSuccess && (p.message && !p.message.includes('Running'))" style="height: 30px; width: 30px" class="ml-1"/>
             </td>
-            <td class="text-center">{{ p.name }} {{(!p.required ? '*' : '')}}</td>
+            <td class="text-center">{{ p.desc }} {{ (!p.required ? '*' : '') }}</td>
             <td><span v-if="p.message" v-html="p.message"></span></td>
           </tr>
           </tbody>
@@ -76,7 +76,7 @@
         </div>
 
         <eq-tabs @on-selected="scrollPreflight($event)">
-          <eq-tab :name="p.name" :selected="p.name === 'World'" v-for="p in processTypes" :key="p.name">
+          <eq-tab :name="p.desc" :selected="p.name === 'world'" v-for="p in processTypes" :key="p.name">
             <pre
               :id="'preflight-output-' + p.name"
               style="width: 100%; height: 40vh; word-wrap: break-word; white-space: pre-wrap; overflow-x: hidden"
@@ -215,11 +215,11 @@ export default {
 
       preflight: false,
       processTypes: [
-        { name: "World", checkSuccess: false, console: "", required: true },
-        { name: "Zone", checkSuccess: false, console: "", required: true },
-        { name: "Shared Memory", checkSuccess: false, console: "", required: true },
-        { name: "UCS (Chat)", checkSuccess: false, console: "", required: false },
-        { name: "Loginserver", checkSuccess: false, console: "", required: false },
+        { name: "world", desc: "World", checkSuccess: false, console: "", required: true },
+        { name: "zone", desc: "Zone", checkSuccess: false, console: "", required: true },
+        { name: "shared_memory", desc: "Shared Memory", checkSuccess: false, console: "", required: true },
+        { name: "ucs", desc: "UCS (Chat)", checkSuccess: false, console: "", required: false },
+        { name: "loginserver", desc: "Loginserver", checkSuccess: false, console: "", required: false },
       ],
     }
   },
@@ -277,37 +277,53 @@ export default {
       // zero out the console and message
       for (let [i, p] of this.processTypes.entries()) {
         this.processTypes[i].checkSuccess = false
-        this.processTypes[i].console = ""
+        this.processTypes[i].console      = ""
         delete this.processTypes[i].message
       }
 
       // run the preflight checks
       for (let [i, p] of this.processTypes.entries()) {
-        HttpStream.get("/api/v1/eqemuserver/pre-flight/" + p.name.toLowerCase()).then(async (r) => {
-          for await (const m of HttpStream.read(r)) {
-            this.processTypes[i].console += this.getStreamFormatted(m)
-            if (m.includes("QueryErr") || m.includes("Error")) {
-              this.processTypes[i].message = this.getStreamFormatted(m).split("\n").filter((e) => {
-                return e.includes("QueryErr") || e.includes("Error")
-              }).join("\n")
-            }
+        this.processTypes[i].message = "Running preflight checks..."
 
-            if (m.includes("no such file or directory")) {
-              this.processTypes[i].message = "Could not find the " + p.name + " executable. Please check your configuration."
-            }
+        try {
+          HttpStream.get("/api/v1/eqemuserver/pre-flight/" + p.name.toLowerCase()).then(async (r) => {
+            for await (const m of HttpStream.read(r)) {
+              this.processTypes[i].console += this.getStreamFormatted(m)
+              if (m.includes("QueryErr") || m.includes("Error")) {
+                this.processTypes[i].message = this.getStreamFormatted(m).split("\n").filter((e) => {
+                  return e.includes("QueryErr") || e.includes("Error")
+                }).join("\n")
+              } else if (m.includes("no such file or directory")) {
+                this.processTypes[i].message = "Could not find the " + p.name + " executable. Please check your configuration."
+              }
 
-            this.$forceUpdate()
-            this.scrollPreflight(p.name)
-          }
-        }).finally(() => {
-          // if we have no message, then we succeeded
+              this.$forceUpdate()
+              this.scrollPreflight(p.name)
+            }
+          })
+            .finally(() => {
+              // if we have no message, then we succeeded
+              if (!this.processTypes[i].message || this.processTypes[i].message.includes("Running")) {
+                this.processTypes[i].checkSuccess = true
+                this.processTypes[i].message      = "Checks succeeded"
+              }
+              this.$forceUpdate()
+            });
+        }
+        catch (e) {
+          // failed for some reason
           if (!this.processTypes[i].message) {
-            this.processTypes[i].checkSuccess = true
-            this.processTypes[i].message      = "Checks succeeded"
+            this.processTypes[i].checkSuccess = false
+            this.processTypes[i].message      = "Failed to run preflight checks"
+
+            if (e.response && e.response.data && e.response.data.error) {
+              this.processTypes[i].message += e.response.data.error
+            }
           }
           this.$forceUpdate()
-        });
+        }
       }
+
     },
 
     startServer(e) {
