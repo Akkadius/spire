@@ -59,6 +59,10 @@ func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string]
 			l = strings.ReplaceAll(l, "perl::scalar", "scalar")
 		}
 
+		if strings.Contains(l, " {") {
+			l = strings.ReplaceAll(l, " {", "")
+		}
+
 		lineSplit := strings.Split(l, " ")
 		if len(lineSplit) > 1 && len(lineSplit[1]) > 5 {
 			methodIdentifier := lineSplit[1][:5]
