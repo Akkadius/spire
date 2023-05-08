@@ -60,7 +60,7 @@ func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string]
 		}
 
 		if strings.Contains(l, "const int") {
-			l = strings.ReplaceAll(l, "const ", "int")
+			l = strings.ReplaceAll(l, "const int", "int")
 		}
 
 		lineSplit := strings.Split(l, " ")
