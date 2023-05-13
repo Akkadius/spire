@@ -35,15 +35,15 @@ func (a *DeployController) deploy(c echo.Context) error {
 	if env.IsAppEnvProduction() &&
 		env.Get("DEPLOY_KEY", "") == c.Param("key") {
 
-		// run git stash
-		cmd := exec.Command("git", "stash")
+		// run git fetch
+		cmd := exec.Command("git", "fetch")
 		output, err := cmd.Output()
 		if err != nil {
 			log.Println(err)
 		}
 
-		// run git pull
-		cmd = exec.Command("git", "pull", "origin", "master")
+		// run git reset
+		cmd = exec.Command("git", "reset", "--hard", "origin/master")
 		output, err = cmd.Output()
 		if err != nil {
 			log.Println(err)
