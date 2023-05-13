@@ -171,10 +171,9 @@
           <thead class="eq-table-floating-header">
           <tr>
             <th style="width: 150px">Event ID</th>
-            <th style="width: 150px" class="text-center">Player</th>
-            <th style="width: 230px">Zone</th>
-
             <th class="text-center" style="width: 175px">Event Type</th>
+            <th style="width: 150px" class="text-left">Player</th>
+            <th style="width: 230px" class="text-left">Zone</th>
             <th class="text-center">Event</th>
             <th style="width: 140px">Time</th>
           </tr>
@@ -186,7 +185,15 @@
             :key="e.id"
           >
             <td>{{ commify(e.id) }}</td>
-            <td :style="(characterId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
+            <td class="text-center" :style="(eventType ? 'background-color: rgba(123, 113, 74, .1);' : '')">
+              <a
+                class="ml-1"
+                @click="eventType = e.event_type_id; updateQueryState()"
+              >{{ e.event_type_name }}</a> ({{ e.event_type_id }})
+            </td>
+            <td
+              class="text-left"
+              :style="(characterId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
 
               <div class="avatar-list avatar-list-stacked">
                 <img
@@ -210,7 +217,10 @@
 
               </div>
             </td>
-            <td :style="(zoneId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
+
+            <td
+              class="text-left"
+              :style="(zoneId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
               <a
                 class="ml-1"
                 @click="zoneId = e.zone_id; updateQueryState()"
@@ -218,13 +228,6 @@
                 {{ getZoneLongName(e.zone_id) }}
               </a>
               ({{ e.zone_id }})
-            </td>
-
-            <td class="text-center" :style="(eventType ? 'background-color: rgba(123, 113, 74, .1);' : '')">
-              <a
-                class="ml-1"
-                @click="eventType = e.event_type_id; updateQueryState()"
-              >{{ e.event_type_name }}</a> ({{ e.event_type_id }})
             </td>
 
             <td
