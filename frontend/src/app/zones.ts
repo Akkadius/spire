@@ -41,6 +41,14 @@ export class Zones {
     return {}
   }
 
+  public static getZoneByIdSync(zoneId: number) {
+    if (this.zonesById[zoneId]) {
+      return this.zonesById[zoneId]
+    }
+
+    return {}
+  }
+
   public static async getZoneById(zoneId: number) {
     if (this.zonesById[zoneId]) {
       return this.zonesById[zoneId]

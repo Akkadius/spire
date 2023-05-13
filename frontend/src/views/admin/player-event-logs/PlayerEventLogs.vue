@@ -215,8 +215,9 @@
                 class="ml-1"
                 @click="zoneId = e.zone.zoneidnumber; updateQueryState()"
               >
-                {{ e.zone.long_name }}
-              </a>({{ e.zone.zoneidnumber }})
+                {{ getZoneLongName(e.zone_id) }}
+              </a>
+              ({{ e.zone_id }})
             </td>
 
             <td class="text-center" :style="(eventType ? 'background-color: rgba(123, 113, 74, .1);' : '')">
@@ -426,6 +427,12 @@ export default {
   },
   methods: {
 
+    getZoneLongName(zoneId) {
+      const z = Zones.getZoneByIdSync(zoneId)
+
+      return z ? z.long_name : ""
+    },
+
     deleteFilter(f) {
       this.filters = this.filters.filter((e) => {
         return e.key !== f.key
@@ -524,10 +531,6 @@ export default {
       }
 
       return util.format("{\n%s\n}", lines.join("\n"));
-    },
-
-    characterCacheExists(characterId) {
-      return this.characterCache[characterId]
     },
 
     paginate() {
@@ -664,7 +667,6 @@ export default {
         [
           "Account",
           "CharacterDatum",
-          "Zone",
         ]
       )
 
@@ -703,7 +705,13 @@ export default {
       try {
         // @ts-ignore
         this.requesting = true
-        const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs({}, { params: builder.get() })
+        const r         = await (new PlayerEventLogApi(...SpireApi.cfg()))
+          .listPlayerEventLogs(
+            {},
+            {
+              params: builder.get()
+            }
+          )
         if (r.status === 200) {
           events          = r.data
           this.requesting = false
@@ -799,7 +807,6 @@ export default {
           this.events         = events
           this.initialLoading = false
           this.loading        = false
-
         });
       } else {
         this.events         = events
@@ -839,8 +846,7 @@ export default {
     window.addEventListener("click", this.handleClick);
 
     // non-reactive
-    this.requesting     = false;
-    this.characterCache = {}
+    this.requesting = false;
 
     this.loadQueryState()
     const r = await (new PlayerEventLogSettingApi(...SpireApi.cfg())).listPlayerEventLogSettings()
