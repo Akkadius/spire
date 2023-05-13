@@ -172,8 +172,8 @@
           <tr>
             <th style="width: 150px">Event ID</th>
             <th class="text-center" style="width: 175px">Event Type</th>
-            <th style="width: 150px" class="text-left">Player</th>
-            <th style="width: 230px" class="text-left">Zone</th>
+            <th style="width: 190px" class="text-left">Player</th>
+            <th style="width: 290px" class="text-left">Zone</th>
             <th class="text-center">Event</th>
             <th style="width: 140px">Time</th>
           </tr>
