@@ -592,10 +592,14 @@ func (a *Installer) sourcePeqDatabase() {
 		},
 	)
 
+	// get the table count
+	// subtract 1 because it is the output header
+	tableCount := len(strings.Split(tables, "\n")) - 1
+
 	a.logger.Infof(
 		"Database [%v] has [%v] tables\n",
 		a.installConfig.MysqlDatabaseName,
-		len(strings.Split(tables, "\n")),
+		tableCount,
 	)
 
 	if len(strings.Split(tables, "\n")) > 200 {
@@ -603,7 +607,7 @@ func (a *Installer) sourcePeqDatabase() {
 		a.logger.Infof(
 			"Database [%v] already exists with [%v] tables, skipping source\n",
 			a.installConfig.MysqlDatabaseName,
-			len(strings.Split(tables, "\n")),
+			tableCount,
 		)
 		return
 	}
