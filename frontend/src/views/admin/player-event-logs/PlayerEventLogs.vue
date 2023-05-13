@@ -57,7 +57,7 @@
             />
           </div>
 
-          <div class="col-2 text-center font-weight-bold">
+          <div class="col-1 text-center font-weight-bold">
             Character ID
             <b-form-input
               type="text"
@@ -80,6 +80,18 @@
               </option>
 
             </select>
+          </div>
+
+          <div class="text-left col-1 font-weight-bold">
+            Refresh Enabled
+            <eq-checkbox
+              class="mt-3"
+              :fade-when-not-true="true"
+              :true-value="true"
+              :false-value="false"
+              @click.native="autoRefreshEnabled = !autoRefreshEnabled"
+              v-model="autoRefreshEnabled"
+            />
           </div>
 
           <div class="col-1">
@@ -193,7 +205,8 @@
             </td>
             <td
               class="text-left"
-              :style="(characterId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
+              :style="(characterId ? 'background-color: rgba(123, 113, 74, .1);' : '')"
+            >
 
               <div class="avatar-list avatar-list-stacked">
                 <img
@@ -220,7 +233,8 @@
 
             <td
               class="text-left"
-              :style="(zoneId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
+              :style="(zoneId ? 'background-color: rgba(123, 113, 74, .1);' : '')"
+            >
               <a
                 class="ml-1"
                 @click="zoneId = e.zone_id; updateQueryState()"
@@ -304,17 +318,18 @@ import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants"
 import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
 import {AA}                        from "@/app/aa";
 import {Zones}                     from "@/app/zones";
-import {Npcs}                      from "@/app/npcs";
-import {Items}                     from "@/app/items";
-import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-api";
-import Timer                       from "@/app/timer/timer";
-import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
-import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
-import hljs                        from "highlight.js";
-import {Navbar}                    from "@/app/navbar";
-import {Characters}                from "@/app/characters";
-import util                        from "util";
-import InfoErrorBanner             from "@/components/InfoErrorBanner.vue";
+import {Npcs}                     from "@/app/npcs";
+import {Items}                    from "@/app/items";
+import {PlayerEventLogSettingApi} from "@/app/api/api/player-event-log-setting-api";
+import Timer                      from "@/app/timer/timer";
+import EqProgressBar              from "@/components/eq-ui/EQProgressBar.vue";
+import LoaderFakeProgress         from "@/components/LoaderFakeProgress.vue";
+import hljs                       from "highlight.js";
+import {Navbar}                   from "@/app/navbar";
+import {Characters}               from "@/app/characters";
+import util                       from "util";
+import InfoErrorBanner            from "@/components/InfoErrorBanner.vue";
+import EqCheckbox                 from "@/components/eq-ui/EQCheckbox.vue";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -362,12 +377,13 @@ import InfoErrorBanner             from "@/components/InfoErrorBanner.vue";
 export default {
   name: "PlayerEventLogs",
   components: {
+    EqCheckbox,
     InfoErrorBanner,
     "v-runtime-template": () => import("v-runtime-template"),
     LoaderFakeProgress,
     EqProgressBar,
     PlayerEventDisplayComponent,
-    EqWindow
+    EqWindow,
   },
   data() {
     return {
@@ -380,6 +396,7 @@ export default {
       error: "",
 
       refreshInterval: 5000,
+      autoRefreshEnabled: true,
 
       showRaw: {},
 
@@ -824,7 +841,7 @@ export default {
       }
 
       Timer.timer['player-event-refresh'] = setInterval(async () => {
-        if (!document.hidden) {
+        if (!document.hidden && this.autoRefreshEnabled) {
           this.loadEvents();
         }
       }, this.refreshInterval)

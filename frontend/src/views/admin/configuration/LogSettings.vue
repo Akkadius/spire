@@ -287,17 +287,16 @@ export default {
       if (r.status === 200) {
         this.settings = r.data
       }
+
+      r = await (new DiscordWebhookApi(...SpireApi.cfg())).listDiscordWebhooks()
+      if (r.status === 200) {
+        this.discordWebhooks = r.data
+      }
     } catch (e) {
       // error notify
       if (e.response && e.response.data && e.response.data.error) {
         this.error = e.response.data.error
       }
-    }
-
-    r = await (new DiscordWebhookApi(...SpireApi.cfg())).listDiscordWebhooks()
-    if (r.status === 200) {
-      this.discordWebhooks = r.data
-      console.log(this.discordWebhooks)
     }
   },
   methods: {
