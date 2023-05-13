@@ -213,7 +213,7 @@
             <td :style="(zoneId ? 'background-color: rgba(123, 113, 74, .1);' : '')">
               <a
                 class="ml-1"
-                @click="zoneId = e.zone.zoneidnumber; updateQueryState()"
+                @click="zoneId = e.zone_id; updateQueryState()"
               >
                 {{ getZoneLongName(e.zone_id) }}
               </a>
