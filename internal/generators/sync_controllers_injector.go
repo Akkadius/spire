@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/iancoleman/strcase"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
 	"os"
 	"strings"
 	"text/template"
@@ -31,7 +30,7 @@ type injectHttpCrudControllerTmpl struct {
 // loop through existing controllers
 // inject crud controllers into ./boot/inject_http_crud_controllers.go
 func (s *SyncControllersToInjector) Sync() {
-	files, err := ioutil.ReadDir(crudControllerPath)
+	files, err := os.ReadDir(crudControllerPath)
 	if err != nil {
 		s.logger.Fatal(err)
 	}

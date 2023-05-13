@@ -76,7 +76,7 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 	}
 
 	zippedPath := ""
-	files, _ := ioutil.ReadDir(repoDir)
+	files, _ := os.ReadDir(repoDir)
 	if len(files) > 0 {
 		zippedPath = filepath.Join(repoDir, files[0].Name())
 	}

@@ -13,7 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
@@ -70,6 +69,12 @@ func checkIfPortAvailable(port int) (status bool, err error) {
 }
 
 func (m *ProcessManagement) Run() error {
+	// kill existing
+	err := m.KillExistingRunningProcesses()
+	if err != nil {
+		return err
+	}
+
 	// check if we have a binary
 	// if not, download it
 	downloadPath, err := m.FetchOcculusAndGetBinaryPath()
@@ -155,9 +160,10 @@ func (m *ProcessManagement) FindFreePort() int {
 	return port
 }
 
+// GetCurrentOcculusBinaryPath will return the path to the current occulus binary
 func (m *ProcessManagement) GetCurrentOcculusBinaryPath() (string, error) {
 	serverBinDirectory := filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin")
-	files, err := ioutil.ReadDir(serverBinDirectory)
+	files, err := os.ReadDir(serverBinDirectory)
 	if err != nil {
 		return "", err
 	}
@@ -173,6 +179,7 @@ func (m *ProcessManagement) GetCurrentOcculusBinaryPath() (string, error) {
 	return "", nil
 }
 
+// CleanupOldVersions will remove any old versions of occulus
 func (m *ProcessManagement) CleanupOldVersions(version string) error {
 	versionTag := strings.ReplaceAll(version, ".", "-")
 	currentBinaryName := fmt.Sprintf("%v-%v", "occulus", versionTag)
@@ -182,7 +189,7 @@ func (m *ProcessManagement) CleanupOldVersions(version string) error {
 	}
 	serverBinDirectory := filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin")
 
-	files, err := ioutil.ReadDir(serverBinDirectory)
+	files, err := os.ReadDir(serverBinDirectory)
 	if err != nil {
 		return err
 	}
@@ -200,6 +207,7 @@ func (m *ProcessManagement) CleanupOldVersions(version string) error {
 	return nil
 }
 
+// KillExistingRunningProcesses kills any existing running processes
 func (m *ProcessManagement) KillExistingRunningProcesses() error {
 	processes, _ := process.Processes()
 	for _, p := range processes {
@@ -221,6 +229,7 @@ func (m *ProcessManagement) KillExistingRunningProcesses() error {
 	return nil
 }
 
+// FetchOcculusAndGetBinaryPath fetches the latest occulus binary and returns the path
 func (m *ProcessManagement) FetchOcculusAndGetBinaryPath() (string, error) {
 	client := github.NewClient(nil)
 	if len(os.Getenv("GITHUB_TOKEN")) > 0 {
@@ -262,12 +271,6 @@ func (m *ProcessManagement) FetchOcculusAndGetBinaryPath() (string, error) {
 		binaryName = strings.ReplaceAll(binaryName, ".", "-")
 
 		downloadPath = filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin", binaryName)
-
-		// kill existing
-		err = m.KillExistingRunningProcesses()
-		if err != nil {
-			return "", err
-		}
 
 		// cleanup
 		err = m.CleanupOldVersions(tagName)

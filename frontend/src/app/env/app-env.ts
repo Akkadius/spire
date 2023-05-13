@@ -133,7 +133,7 @@ export class AppEnv {
 
       // if a local install is not using auth but somehow the user still
       // has a JWT stored locally, let's purge it
-      if (!this.isLocalAuthEnabled()) {
+      if (this.isAppLocal() && !this.isLocalAuthEnabled()) {
         UserContext.deleteAccessToken()
       }
 
