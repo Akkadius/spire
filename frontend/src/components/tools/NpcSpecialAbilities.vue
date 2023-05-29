@@ -469,38 +469,33 @@
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][0]" value="" placeholder="0"
             v-b-tooltip.hover title="chance to avoid melee via dodge/parray/riposte/block skills "
-          ></td>
+          >
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-            v-model="abilityParams[44][1]" value="" placeholder="0-100" v-b-tooltip.hover
-            title="Avoidance % (0-100)"
+            v-model="abilityParams[44][1]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Reduction to Riposte"
           >
         </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][2]" value="" placeholder="0" v-b-tooltip.hover
-            title="% Reduction to Riposte"
-          ></td>
-        <td>
-          <input
-            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-            v-model="abilityParams[44][3]" value="" placeholder="0" v-b-tooltip.hover
             title="% Reduction to Parry"
           >
         </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-            v-model="abilityParams[44][4]" value="" placeholder="0" v-b-tooltip.hover
+            v-model="abilityParams[44][3]" value="" placeholder="0" v-b-tooltip.hover
             title="% Reduction to Block"
           >
         </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-            v-model="abilityParams[44][5]" value="" placeholder="0" v-b-tooltip.hover
+            v-model="abilityParams[44][4]" value="" placeholder="0" v-b-tooltip.hover
             title="% Reduction to Dodge"
           >
         </td>
