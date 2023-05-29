@@ -468,7 +468,7 @@
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][0]" value="" placeholder="0"
-            v-b-tooltip.hover title="chance to avoid melee via dodge/parray/riposte/block skills "
+            v-b-tooltip.hover title="% Chance to avoid melee via Riposte, Parry, Block, or Dodge"
           >
         </td>
         <td>
