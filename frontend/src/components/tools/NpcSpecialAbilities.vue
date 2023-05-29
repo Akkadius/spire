@@ -468,7 +468,7 @@
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][0]" value="" placeholder="0"
-            v-b-tooltip.hover title="% Chance to avoid melee via Riposte, Parry, Block, and Dodge"
+            v-b-tooltip.hover title="% Reduction to avoid melee via Riposte, Parry, Block, and Dodge"
           >
         </td>
         <td>
@@ -497,6 +497,53 @@
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][4]" value="" placeholder="0" v-b-tooltip.hover
             title="% Reduction to Dodge"
+          >
+        </td>
+      </tr>
+      <tr>
+        <td class="ability-label-top">Modify Avoid Damage</td>
+        <td style="width:50px; text-align:center">
+
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[51]"
+            @input="calculateSpecialAbilities"
+          />
+
+        </td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[51][0]" value="" placeholder="0"
+            v-b-tooltip.hover title="% Addition to avoid melee via Riposte, Parry, Block, and Dodge"
+          >
+        </td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[51][1]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Addition to Riposte"
+          >
+        </td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[51][2]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Addition to Parry"
+          >
+        </td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[51][3]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Addition to Block"
+          >
+        </td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[51][4]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Addition to Dodge"
           >
         </td>
       </tr>
@@ -589,6 +636,13 @@ export default {
         { name: "Allow Beneficial", ability: 38 },
         { name: "Disable Melee", ability: 39 },
         { name: "Ignore Root Aggro", ability: 42 },
+        { name: "Proximity Aggro", ability: 45 },
+        { name: "Immune to Ranged Attacks", ability: 46 },
+        { name: "Immune to Client Damage", ability: 47 },
+        { name: "Immune to NPC Damage", ability: 48 },
+        { name: "Immune to Client Aggro", ability: 49 },
+        { name: "Immune to NPC Aggro", ability: 50 },
+        { name: "Immune to Memory Fades", ability: 52 },
       ]
     }
   },
