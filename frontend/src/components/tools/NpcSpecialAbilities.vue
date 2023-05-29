@@ -482,14 +482,14 @@
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][2]" value="" placeholder="0" v-b-tooltip.hover
-            title="% Reduction to Parry"
+            title="% Reduction to Block"
           >
         </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
             v-model="abilityParams[44][3]" value="" placeholder="0" v-b-tooltip.hover
-            title="% Reduction to Block"
+            title="% Reduction to Parry"
           >
         </td>
         <td>
