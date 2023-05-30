@@ -148,7 +148,6 @@
             type="text"
             @change="calculateSpecialAbilities"
             class="ability_check_sub form-control"
-
             v-model="abilityParams[4][2]"
             value=""
             placeholder="0"
