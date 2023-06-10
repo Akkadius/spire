@@ -125,7 +125,7 @@ func (a *Installer) installLinuxOsPackages() {
 	defer cancel()
 
 	// apt-get update
-	params := []string{"apt-get", "update"}
+	params := []string{"bash", "-c", "apt-get update && apt-get install -yq apt-utils; echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections"}
 	cmd := exec.CommandContext(ctx, "sudo", params...)
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
@@ -228,8 +228,8 @@ func (a *Installer) initializeDirectories() {
 
 	for _, dir := range directories {
 		a.logger.Printf("Creating directory [%v]", dir)
-		path := filepath.Join(a.pathmanager.GetEQEmuServerPath(), dir)
-		err := os.MkdirAll(path, os.ModePerm)
+		p := filepath.Join(a.pathmanager.GetEQEmuServerPath(), dir)
+		err := os.MkdirAll(p, os.ModePerm)
 		if err != nil {
 			a.logger.Fatalf("could not create directory: %v", err)
 		}
@@ -281,8 +281,8 @@ func (a *Installer) clonePeqQuests() {
 	a.logger.Infof("Cloning Quests from github.com/ProjectEQ/projecteqquests.git\n")
 
 	// clone the repository
-	path := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "quests")
-	_, err := git.PlainClone(path, false, &git.CloneOptions{
+	repoPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "quests")
+	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 		URL:      "https://github.com/ProjectEQ/projecteqquests.git",
 		Progress: a.logger.Writer(),
 	})
@@ -296,7 +296,7 @@ func (a *Installer) clonePeqQuests() {
 		a.logger.Infof("Quest repo already exists, skipping clone and updating instead\n")
 
 		// open the repository
-		r, err := git.PlainOpen(path)
+		r, err := git.PlainOpen(repoPath)
 		if err != nil {
 			a.logger.Fatalf("could not open repository: %v", err)
 		}
@@ -478,8 +478,8 @@ func (a *Installer) cloneEQEmuSource() {
 	a.logger.Infof("Cloning from https://github.com/EQEmu/Server.git\n")
 
 	// clone the repository
-	path := a.installConfig.CodePath
-	_, err := git.PlainClone(path, false, &git.CloneOptions{
+	repoPath := a.installConfig.CodePath
+	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 		URL:      "https://github.com/EQEmu/Server.git",
 		Progress: a.logger.Writer(),
 	})
@@ -494,7 +494,7 @@ func (a *Installer) cloneEQEmuSource() {
 		a.logger.Infof("repo already exists, skipping clone and updating instead\n")
 
 		// open the repository
-		r, err := git.PlainOpen(path)
+		r, err := git.PlainOpen(repoPath)
 		if err != nil {
 			a.logger.Fatalf("could not open repository: %v", err)
 		}
@@ -1385,7 +1385,7 @@ func (a *Installer) initWindowsMysql() {
 			"/i",
 			tempPath,
 			"SERVICENAME=MySQL",
-			"PORT=3306",
+			fmt.Sprintf("PORT=%v", a.installConfig.MysqlPort),
 			"BUFFERPOOLSIZE=1024M",
 			fmt.Sprintf("PASSWORD=%s", a.installConfig.MysqlPassword),
 			"/qn",
@@ -1437,8 +1437,6 @@ func (a *Installer) initWindowsPerl() {
 	// install perl
 	// start /wait msiexec /i strawberry-perl-5.24.4.1-64bit.msi PERL_PATH="Yes" /q
 	// start /wait msiexec /i mariadb-10.0.21-winx64.msi SERVICENAME=MySQL PORT=3306 PASSWORD=eqemu /qn
-	// TODO: make port configurable
-	// TODO: split out root user and eqemu user passwords
 	a.logger.Infof("Installing Perl")
 	a.Exec(ExecConfig{
 		command: "msiexec",
