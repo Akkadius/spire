@@ -1,3 +1,7 @@
+## [3.1.4] 6/10/2023
+
+Add command `spire:launcher [start|stop|restart]` to start, stop, or restart the launcher. This will be used in the future in tandem with installer v2 and utility scripts to manage the launcher
+
 ## [3.1.3] 4/30/2023
 
 More improvements to pre-flight checks, they should fail pass-through now and not block the server from booting

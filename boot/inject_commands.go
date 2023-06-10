@@ -26,6 +26,7 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireInitCommand,
 	cmd.NewUserChangePasswordCommand,
 	cmd.NewSpireOcculusUpdateCommand,
+	cmd.NewSpireServerLauncherCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -49,6 +50,7 @@ func ProvideCommands(
 	spireInstallCmd *cmd.SpireInitCommand,
 	userChangePasswordCmd *cmd.UserChangePasswordCommand,
 	spireOcculusUpdateCmd *cmd.SpireOcculusUpdateCommand,
+	spireServerLauncherCmd *cmd.SpireServerLauncherCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		adminPingOcculus.Command(),
@@ -68,5 +70,6 @@ func ProvideCommands(
 		spireInstallCmd.Command(),
 		userChangePasswordCmd.Command(),
 		spireOcculusUpdateCmd.Command(),
+		spireServerLauncherCmd.Command(),
 	}
 }
