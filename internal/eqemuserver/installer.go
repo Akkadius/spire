@@ -416,6 +416,7 @@ type ExecConfig struct {
 	dieonoutput string   // string to die on if found in the output
 	execpath    string   // path to execute the command in
 	detach      bool     // detach the process
+	silent      bool     // silent execution
 }
 
 func (a *Installer) Exec(c ExecConfig) string {
@@ -448,7 +449,9 @@ func (a *Installer) Exec(c ExecConfig) string {
 		argsPrint = " " + argsPrint
 	}
 
-	a.logger.Infof("Running command [%v%v]\n", c.command, argsPrint)
+	if !c.silent {
+		a.logger.Infof("Running command [%v%v]\n", c.command, argsPrint)
+	}
 
 	cmd.Stderr = cmd.Stdout
 	err = cmd.Start()
@@ -479,8 +482,10 @@ func (a *Installer) Exec(c ExecConfig) string {
 			}
 		}
 
-		a.logger.Infoln(scanner.Text())
-		output += scanner.Text() + "\n"
+		if !c.silent {
+			a.logger.Infoln(scanner.Text())
+			output += scanner.Text() + "\n"
+		}
 	}
 
 	return output
@@ -1469,7 +1474,7 @@ func (a *Installer) initWindowsPerl() {
 // initWindowsMysqlService installs and configures the mysql service
 func (a *Installer) getWindowsProgramFilesPath() string {
 	// get program files path
-	return strings.TrimSpace(a.Exec(ExecConfig{command: "cmd", args: []string{"/c", "echo", "%programfiles%"}}))
+	return strings.TrimSpace(a.Exec(ExecConfig{command: "cmd", args: []string{"/c", "echo", "%programfiles%"}, silent: true}))
 }
 
 // getWindowsMysqlPath returns the path to the mysql installation
