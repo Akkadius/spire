@@ -83,6 +83,7 @@ func (a *Installer) Install() {
 	}
 
 	if runtime.GOOS == "windows" {
+		a.initWindowsCommandPrompt()
 		a.initWindowsPerl()
 		a.initWindowsMysql()
 	}
@@ -115,9 +116,14 @@ func (a *Installer) Install() {
 
 	// TODO: add existing MySQL installation
 
+	checkmark := "✅"
+	if runtime.GOOS == "windows" {
+		checkmark = "√"
+	}
+
 	a.logger.Println("")
 	a.logger.Println("----------------------------------------")
-	a.logger.Printf("| ✅ | Installation Complete (%v)\n", FormatDuration(time.Since(a.totalTime)))
+	a.logger.Printf("| %s | Installation Complete (%v)\n", checkmark, FormatDuration(time.Since(a.totalTime)))
 	a.logger.Println("----------------------------------------")
 }
 
@@ -209,8 +215,13 @@ func FormatDuration(d time.Duration) string {
 }
 
 func (a *Installer) DoneBanner(s string) {
+	checkmark := "✅"
+	if runtime.GOOS == "windows" {
+		checkmark = "√"
+	}
+
 	a.logger.Println("----------------------------------------")
-	a.logger.Printf("| ✅ | %v (%v)\n", s, FormatDuration(time.Since(a.stepTime)))
+	a.logger.Printf("| %v | %v (%v)\n", checkmark, s, FormatDuration(time.Since(a.stepTime)))
 	a.logger.Println("----------------------------------------")
 }
 
@@ -1507,8 +1518,13 @@ func (a *Installer) createWindowsServerScripts() {
 
 	// create a map of scripts
 	serverScripts := map[string]string{
-		"start": "bash -c \"while true; do nohup $(find ./bin -name 'occulus*' | head -1) server-launcher >/dev/null 2>&1; sleep 1; done &\" && echo Server started",
-		"stop":  "$(find ./bin -name 'occulus*' | head -1) stop-server; echo \"Server stopped\"",
+		"server_restart.bat":         "spire.exe spire:launcher restart\n@echo off\necho Server is restarting\ntimeout /T 3 /NOBREAK > nul",
+		"server_start.bat":           "spire.exe spire:launcher start\n@echo off\necho Server is starting\ntimeout /T 3 /NOBREAK > nul",
+		"server_stop.bat":            "spire.exe spire:launcher stop\n@echo off\necho Server is stopping\ntimeout /T 3 /NOBREAK > nul",
+		"spire_start.bat":            "TASKKILL /IM spire.exe /F\nstart /min spire.exe > logs/spire.log 2>&1",
+		"spire_stop.bat":             "TASKKILL /IM spire.exe /F",
+		"spire_web.bat":              fmt.Sprintf("start http://localhost:%v", a.installConfig.SpireWebPort),
+		"spire_web_server_admin.bat": fmt.Sprintf("start http://localhost:%v/admin", a.installConfig.SpireWebPort),
 	}
 
 	for s := range serverScripts {
@@ -1525,7 +1541,7 @@ func (a *Installer) createWindowsServerScripts() {
 		}
 
 		// write contents to f
-		contents := fmt.Sprintf("#!/usr/bin/env bash\n%v\n", serverScripts[s])
+		contents := fmt.Sprintf("%v\n", serverScripts[s])
 		_, err = f.WriteString(contents)
 		if err != nil {
 			a.logger.Fatalf("could not write to f: %v", err)
@@ -1544,4 +1560,20 @@ func (a *Installer) createWindowsServerScripts() {
 	}
 
 	a.DoneBanner("Creating Server Scripts")
+}
+
+func (a *Installer) initWindowsCommandPrompt() {
+	cmd := exec.Command("chcp", "65001")
+	cmd.Env = os.Environ()
+	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		a.logger.Fatalf("could not get stdout pipe: %v", err)
+	}
+	err = cmd.Run()
+	if err != nil {
+		a.logger.Error(err)
+	}
+
+	fmt.Println(stdout)
 }
