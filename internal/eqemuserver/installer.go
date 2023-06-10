@@ -85,6 +85,7 @@ func (a *Installer) Install() {
 	if runtime.GOOS == "windows" {
 		a.initWindowsCommandPrompt()
 		a.initWindowsPerl()
+		a.initWindowsWget()
 		a.initWindowsMysql()
 	}
 
@@ -427,6 +428,7 @@ func (a *Installer) Exec(c ExecConfig) string {
 	// create the command
 	cmd := exec.CommandContext(ctx, c.command, c.args...)
 	cmd.Env = os.Environ()
+
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
 
 	// if we have an execpath, use it
@@ -482,10 +484,12 @@ func (a *Installer) Exec(c ExecConfig) string {
 			}
 		}
 
+		// don't print the output if we are silent
+		// still return
 		if !c.silent {
 			a.logger.Infoln(scanner.Text())
-			output += scanner.Text() + "\n"
 		}
+		output += scanner.Text() + "\n"
 	}
 
 	return output
@@ -1436,6 +1440,13 @@ func (a *Installer) initWindowsMysql() {
 	a.logger.Infoln("Flushing privileges")
 	a.DbExec(DbExecConfig{statement: fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), hidestring: c.DatabasePassword})
 
+	// update current notion of path temporarily since we don't have the updated path in the current cmd shell
+	// this is for world execution later
+	err = os.Setenv("PATH", fmt.Sprintf("%v;%v", os.Getenv("PATH"), filepath.Base(a.getWindowsMysqlPath())))
+	if err != nil {
+		a.logger.Fatalln(err)
+	}
+
 	a.DoneBanner("Downloading MariaDB")
 }
 
@@ -1468,7 +1479,31 @@ func (a *Installer) initWindowsPerl() {
 		},
 	})
 
+	// update current notion of path temporarily since we don't have the updated path in the current cmd shell
+	err = os.Setenv("PATH", fmt.Sprintf("%v;%v", os.Getenv("PATH"), a.getWindowsPerlPath()))
+	if err != nil {
+		a.logger.Fatalln(err)
+	}
+
 	a.DoneBanner("Downloading Perl")
+}
+
+// initWindowsWget downloads wget for windows (backwards compatibility)
+// TODO: remove this in the future
+func (a *Installer) initWindowsWget() {
+	a.Banner("Downloading Windows wget")
+
+	downloadPath := filepath.Join(a.pathmanager.GetEQEmuServerBinPath(), "wget.exe")
+	a.logger.Infof("Downloading binaries to [%v]\n", downloadPath)
+	err := download.WithProgress(
+		downloadPath,
+		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/wget.exe",
+	)
+	if err != nil {
+		a.logger.Fatalln(err)
+	}
+
+	a.DoneBanner("Downloading Windows wget")
 }
 
 // initWindowsMysqlService installs and configures the mysql service
@@ -1500,6 +1535,20 @@ func (a *Installer) getWindowsMysqlPath() string {
 	}
 
 	return ""
+}
+
+// getWindowsPerlPath returns the path to the mysql installation
+func (a *Installer) getWindowsPerlPath() string {
+	// cwd
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// get the first 3 letters of cwd
+	drive := cwd[0:3]
+
+	return filepath.Join(drive, "Strawberry", "perl", "bin")
 }
 
 // Copy copies a file from src to dst
