@@ -85,7 +85,6 @@ func (a *Installer) Install() {
 	if runtime.GOOS == "windows" {
 		a.initWindowsCommandPrompt()
 		a.initWindowsPerl()
-		a.initWindowsWget()
 		a.initWindowsMysql()
 	}
 
@@ -106,6 +105,8 @@ func (a *Installer) Install() {
 	}
 	if runtime.GOOS == "windows" {
 		a.createWindowsServerScripts()
+		// TODO: Remove this when perl utility script is deprecated from world
+		a.initWindowsWget()
 	}
 
 	a.installSpireBinary()
