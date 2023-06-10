@@ -102,6 +102,9 @@ func (a *Installer) Install() {
 		a.createLinuxServerScripts()
 		a.injectSpireStartCronJob()
 	}
+	if runtime.GOOS == "windows" {
+		a.createWindowsServerScripts()
+	}
 
 	a.installSpireBinary()
 	a.initSpire()
@@ -1218,7 +1221,8 @@ func (a *Installer) startSpire() {
 	for _, p := range processes {
 		cmdline, err := p.Cmdline()
 		if err != nil {
-			a.logger.Errorf("could not get cmdline for process: %v", err)
+			a.logger.Infof("could not get cmdline for process: %v", err)
+			continue
 		}
 
 		// kill spire if it's running
@@ -1495,4 +1499,49 @@ func (a *Installer) Copy(src string, dst string) {
 	if err != nil {
 		a.logger.Fatal(err)
 	}
+}
+
+// createWindowsServerScripts creates the server scripts
+func (a *Installer) createWindowsServerScripts() {
+	a.Banner("Creating Server Scripts")
+
+	// create a map of scripts
+	serverScripts := map[string]string{
+		"start": "bash -c \"while true; do nohup $(find ./bin -name 'occulus*' | head -1) server-launcher >/dev/null 2>&1; sleep 1; done &\" && echo Server started",
+		"stop":  "$(find ./bin -name 'occulus*' | head -1) stop-server; echo \"Server stopped\"",
+	}
+
+	for s := range serverScripts {
+
+		// get the f name
+		file := filepath.Join(a.pathmanager.GetEQEmuServerPath(), s)
+
+		a.logger.Infof("Creating script [%v]\n", file)
+
+		// create file
+		f, err := os.Create(file)
+		if err != nil {
+			a.logger.Fatalf("could not create f: %v", err)
+		}
+
+		// write contents to f
+		contents := fmt.Sprintf("#!/usr/bin/env bash\n%v\n", serverScripts[s])
+		_, err = f.WriteString(contents)
+		if err != nil {
+			a.logger.Fatalf("could not write to f: %v", err)
+		}
+
+		// close file
+		_ = f.Close()
+
+		a.logger.Infof("|-- Making file [%v] executable\n", file)
+
+		// make file executable
+		err = os.Chmod(file, 0755)
+		if err != nil {
+			a.logger.Fatalf("could not chmod f: %v", err)
+		}
+	}
+
+	a.DoneBanner("Creating Server Scripts")
 }
