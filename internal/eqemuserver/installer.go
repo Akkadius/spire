@@ -1288,7 +1288,7 @@ func (a *Installer) startSpire() {
 		}
 
 		pp.Println(fmt.Sprintf(
-			"start /b %s > %s/logs/spire.log 2>&1",
+			"start %s > %s/logs/spire.log 2>&1",
 			spirePath,
 			a.pathmanager.GetEQEmuServerPath(),
 		))
@@ -1298,7 +1298,7 @@ func (a *Installer) startSpire() {
 			args: []string{
 				"/c",
 				fmt.Sprintf(
-					"start /b %s > %s/logs/spire.log 2>&1",
+					"start %s > %s/logs/spire.log 2>&1",
 					spirePath,
 					a.pathmanager.GetEQEmuServerPath(),
 				),
