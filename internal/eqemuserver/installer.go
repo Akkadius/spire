@@ -1391,6 +1391,12 @@ func (a *Installer) getLinuxDistributionVersion() string {
 func (a *Installer) initWindowsMysql() {
 	a.Banner("Downloading MariaDB")
 
+	// check if a.getWindowsMysqlPath() exists
+	if _, err := os.Stat(a.getWindowsMysqlPath()); err == nil {
+		a.logger.Infof("MySQL already installed, skipping")
+		return
+	}
+
 	// download mariadb
 	// download the latest binaries
 	tempPath := filepath.Join(os.TempDir(), "mariadb.msi")
@@ -1452,6 +1458,12 @@ func (a *Installer) initWindowsMysql() {
 
 func (a *Installer) initWindowsPerl() {
 	a.Banner("Downloading Perl")
+
+	// check if a.getWindowsPerlPath() exists
+	if _, err := os.Stat(a.getWindowsPerlPath()); err == nil {
+		a.logger.Infof("Perl already installed, skipping")
+		return
+	}
 
 	// download mariadb
 	// download the latest binaries
