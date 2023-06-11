@@ -107,6 +107,10 @@ func (a *Installer) Install() {
 		a.createWindowsServerScripts()
 		// TODO: Remove this when perl utility script is deprecated from world
 		a.initWindowsWget()
+
+		// ensure these exist
+		a.setWindowsPerlPath()
+		a.setWindowsMysqlPath()
 	}
 
 	a.installSpireBinary()
@@ -394,7 +398,7 @@ type DbExecConfig struct {
 func (a *Installer) DbExec(c DbExecConfig) {
 	mysqlPath := "mysql"
 	if runtime.GOOS == "windows" {
-		mysqlPath = a.getWindowsMysqlPath()
+		mysqlPath = filepath.Join(a.getWindowsMysqlPath(), "mysql.exe")
 	}
 
 	// check if mysql is installed
@@ -599,7 +603,7 @@ func (a *Installer) sourcePeqDatabase() {
 
 	mysqlPath := "mysql"
 	if runtime.GOOS == "windows" {
-		mysqlPath = a.getWindowsMysqlPath()
+		mysqlPath = filepath.Join(a.getWindowsMysqlPath(), "mysql.exe")
 	}
 
 	tables := a.Exec(
@@ -1281,8 +1285,6 @@ func (a *Installer) startSpire() {
 			a.logger.Fatalf("could not find spire binary: %v", err)
 		}
 
-		pp.Println(spirePath)
-		pp.Println(a.pathmanager.GetEQEmuServerPath())
 		pp.Println(fmt.Sprintf(
 			"start /b %s > %s/logs/spire.log 2>&1",
 			spirePath,
@@ -1441,12 +1443,7 @@ func (a *Installer) initWindowsMysql() {
 	a.logger.Infoln("Flushing privileges")
 	a.DbExec(DbExecConfig{statement: fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), hidestring: c.DatabasePassword})
 
-	// update current notion of path temporarily since we don't have the updated path in the current cmd shell
-	// this is for world execution later
-	err = os.Setenv("PATH", fmt.Sprintf("%v;%v", os.Getenv("PATH"), filepath.Base(a.getWindowsMysqlPath())))
-	if err != nil {
-		a.logger.Fatalln(err)
-	}
+	a.setWindowsMysqlPath()
 
 	a.DoneBanner("Downloading MariaDB")
 }
@@ -1480,11 +1477,7 @@ func (a *Installer) initWindowsPerl() {
 		},
 	})
 
-	// update current notion of path temporarily since we don't have the updated path in the current cmd shell
-	err = os.Setenv("PATH", fmt.Sprintf("%v;%v", os.Getenv("PATH"), a.getWindowsPerlPath()))
-	if err != nil {
-		a.logger.Fatalln(err)
-	}
+	a.setWindowsPerlPath()
 
 	a.DoneBanner("Downloading Perl")
 }
@@ -1524,14 +1517,14 @@ func (a *Installer) getWindowsMysqlPath() string {
 	// first look for mariadb
 	for _, e := range entries {
 		if strings.Contains(strings.ToLower(e.Name()), "mariadb") {
-			return filepath.Join(a.getWindowsProgramFilesPath(), e.Name(), "bin", "mysql.exe")
+			return filepath.Join(a.getWindowsProgramFilesPath(), e.Name(), "bin")
 		}
 	}
 
 	// second look for mysql
 	for _, e := range entries {
 		if strings.Contains(strings.ToLower(e.Name()), "mysql") {
-			return filepath.Join(a.getWindowsProgramFilesPath(), e.Name(), "bin", "mysql.exe")
+			return filepath.Join(a.getWindowsProgramFilesPath(), e.Name(), "bin")
 		}
 	}
 
@@ -1631,4 +1624,70 @@ func (a *Installer) initWindowsCommandPrompt() {
 	}
 
 	fmt.Println(stdout)
+}
+
+func (a *Installer) setWindowsMysqlPath() {
+	// check if path already contains mysql
+	if !strings.Contains(os.Getenv("Path"), a.getWindowsMysqlPath()) {
+		a.logger.Infof("Updating PATH to include [%v]\n", a.getWindowsMysqlPath())
+		err := os.Setenv("Path", fmt.Sprintf("%v;%v", os.Getenv("Path"), a.getWindowsMysqlPath()))
+		if err != nil {
+			a.logger.Fatalln(err)
+		}
+
+		// exec command setx PATH "%PATH%;%FOO%"
+		cmd := exec.Command(
+			"setx",
+			"PATH",
+			fmt.Sprintf(
+				"%v;%v",
+				os.Getenv("PATH"),
+				a.getWindowsMysqlPath(),
+			),
+		)
+		cmd.Env = os.Environ()
+		cmd.Dir = a.pathmanager.GetEQEmuServerPath()
+
+		// tie command stdout to os stdout
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Run()
+		if err != nil {
+			a.logger.Error(err)
+		}
+	}
+}
+
+func (a *Installer) setWindowsPerlPath() {
+	// update current notion of path temporarily since we don't have the updated path in the current cmd shell
+	if !strings.Contains(os.Getenv("Path"), a.getWindowsPerlPath()) {
+		a.logger.Infof("Updating PATH to include [%v]\n", a.getWindowsPerlPath())
+		err := os.Setenv("Path", fmt.Sprintf("%v;%v", os.Getenv("Path"), a.getWindowsPerlPath()))
+		if err != nil {
+			a.logger.Fatalln(err)
+		}
+
+		// exec command setx PATH "%PATH%;%FOO%"
+		cmd := exec.Command(
+			"setx",
+			"PATH",
+			fmt.Sprintf(
+				"%v;%v",
+				os.Getenv("PATH"),
+				a.getWindowsPerlPath(),
+			),
+		)
+		cmd.Env = os.Environ()
+		cmd.Dir = a.pathmanager.GetEQEmuServerPath()
+
+		// tie command stdout to os stdout
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Run()
+		if err != nil {
+			a.logger.Error(err)
+		}
+	}
 }
