@@ -1635,14 +1635,12 @@ func (a *Installer) setWindowsMysqlPath() {
 			a.logger.Fatalln(err)
 		}
 
-		// exec command setx PATH "%PATH%;%FOO%"
 		cmd := exec.Command(
 			"setx",
 			"PATH",
 			fmt.Sprintf(
-				"%v;%v",
+				"%v",
 				os.Getenv("PATH"),
-				a.getWindowsMysqlPath(),
 			),
 		)
 		cmd.Env = os.Environ()
@@ -1673,9 +1671,8 @@ func (a *Installer) setWindowsPerlPath() {
 			"setx",
 			"PATH",
 			fmt.Sprintf(
-				"%v;%v",
+				"%v",
 				os.Getenv("PATH"),
-				a.getWindowsPerlPath(),
 			),
 		)
 		cmd.Env = os.Environ()
