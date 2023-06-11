@@ -97,7 +97,7 @@ type EQEmuConfigJson struct {
 			Opcodes string `json:"opcodes"`
 		} `json:"directories"`
 	} `json:"server"`
-	WebAdmin struct { // Occulus
+	WebAdmin *struct { // Occulus
 		Discord *struct {
 			CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
 		} `json:"discord,omitempty"`
@@ -167,7 +167,7 @@ func (e *Config) Exists() bool {
 
 // Save saves the *Config to disk
 func (e *Config) Save(c EQEmuConfigJson) error {
-	if c.WebAdmin.Discord != nil {
+	if c.WebAdmin != nil && c.WebAdmin.Discord != nil {
 		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
 			c.WebAdmin.Discord = nil
 		}

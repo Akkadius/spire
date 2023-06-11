@@ -117,6 +117,8 @@ func (a *Installer) Install() {
 	a.initSpire()
 	a.startSpire()
 
+	a.setPostInstallConfigValues()
+
 	a.runSharedMemory()
 	a.runWorldForDatabaseUpdates()
 
@@ -1686,5 +1688,23 @@ func (a *Installer) setWindowsPerlPath() {
 		if err != nil {
 			a.logger.Error(err)
 		}
+	}
+}
+
+func (a *Installer) setPostInstallConfigValues() {
+	// load the config
+	config := a.config.Get()
+
+	// set the post install config values
+	if config.WebAdmin != nil {
+		config.WebAdmin.Launcher.MinZoneProcesses = 10
+		config.WebAdmin.Launcher.RunSharedMemory = true
+		// boat zones mainly
+		config.WebAdmin.Launcher.StaticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,abysmal,firiona,overthere"
+	}
+
+	err := a.config.Save(config)
+	if err != nil {
+		a.logger.Fatalf("could not save config: %v", err)
 	}
 }
