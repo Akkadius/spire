@@ -12,7 +12,6 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
-	"github.com/k0kubun/pp/v3"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -1286,12 +1285,6 @@ func (a *Installer) startSpire() {
 		if err != nil {
 			a.logger.Fatalf("could not find spire binary: %v", err)
 		}
-
-		pp.Println(fmt.Sprintf(
-			"start %s > %s/logs/spire.log 2>&1",
-			spirePath,
-			a.pathmanager.GetEQEmuServerPath(),
-		))
 
 		a.Exec(ExecConfig{
 			command: "cmd",
