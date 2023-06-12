@@ -1396,7 +1396,7 @@ func (a *Installer) initWindowsMysql() {
 	a.logger.Infof("Downloading binaries to [%v]\n", tempPath)
 	err := download.WithProgress(
 		tempPath,
-		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/mariadb-10.11.2-winx64.msi",
+		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/mariadb-10.11.4-winx64.msi",
 	)
 	if err != nil {
 		a.logger.Fatalln(err)
