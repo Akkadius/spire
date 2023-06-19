@@ -9,12 +9,14 @@ import (
 	"path/filepath"
 )
 
+// Config is the struct type
 type Config struct {
 	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
 	config   EQEmuConfigJson
 }
 
+// NewConfig creates a new Config struct
 func NewConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *Config {
 	return &Config{
 		logger:   logger,
@@ -22,6 +24,7 @@ func NewConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *Config
 	}
 }
 
+// DatabaseConfig is the struct that represents the database configuration in eqemu_config.json
 type DatabaseConfig struct {
 	Db       string `json:"db,omitempty"`
 	Host     string `json:"host,omitempty"`
@@ -30,6 +33,7 @@ type DatabaseConfig struct {
 	Password string `json:"password,omitempty"`
 }
 
+// EQEmuConfigJson is the struct that represents the eqemu_config.json file
 type EQEmuConfigJson struct {
 	Server struct {
 		Zones struct {
@@ -127,6 +131,7 @@ type EQEmuConfigJson struct {
 	} `json:"spire,omitempty"`
 }
 
+// Get returns the eqemu config json
 func (e *Config) Get() EQEmuConfigJson {
 	cfg := e.pathmgmt.GetEQEmuServerConfigFilePath()
 	e.debug("path [%v]", cfg)
@@ -161,12 +166,12 @@ func (e *Config) debug(msg string, a ...interface{}) {
 	}
 }
 
-// Exists returns true if the *Config file exists
+// Exists will return true if the eqemu_config.json file exists
 func (e *Config) Exists() bool {
 	return len(e.pathmgmt.GetEQEmuServerConfigFilePath()) > 0
 }
 
-// Save saves the *Config to disk
+// Save will save the config to the eqemu_config.json file
 func (e *Config) Save(c EQEmuConfigJson) error {
 	if c.WebAdmin != nil && c.WebAdmin.Discord != nil {
 		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {

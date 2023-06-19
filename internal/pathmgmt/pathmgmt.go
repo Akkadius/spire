@@ -76,6 +76,12 @@ func (m *PathManagement) GetEQEmuServerConfigFilePath() string {
 	return ""
 }
 
+const loginConfigFile = "login.json"
+
+func (m *PathManagement) GetEqemuLoginServerConfigPath() string {
+	return filepath.Join(m.GetEQEmuServerPath(), loginConfigFile)
+}
+
 func (m *PathManagement) debug(msg string, a ...interface{}) {
 	if len(os.Getenv("DEBUG")) >= 3 {
 		if len(a) > 0 {

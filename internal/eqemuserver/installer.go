@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
+	"github.com/Akkadius/spire/internal/eqemuloginserverconfig"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/password"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -29,6 +30,7 @@ import (
 type Installer struct {
 	pathmanager   *pathmgmt.PathManagement
 	config        *eqemuserverconfig.Config
+	loginConfig   *eqemuloginserverconfig.Config
 	logger        *logrus.Logger
 	stepTime      time.Time
 	totalTime     time.Time
@@ -64,6 +66,7 @@ func NewInstaller() *Installer {
 		pathmanager:   pathmanager,
 		config:        eqemuserverconfig.NewConfig(logger, pathmanager),
 		installConfig: &InstallConfig{},
+		loginConfig:   eqemuloginserverconfig.NewConfig(logger, pathmanager),
 	}
 
 	return i
@@ -120,6 +123,9 @@ func (a *Installer) Install() {
 
 	a.runSharedMemory()
 	a.runWorldForDatabaseUpdates()
+	a.runZoneForDataInjections()
+
+	a.initLoginServer()
 
 	// TODO: add existing MySQL installation
 
@@ -849,17 +855,6 @@ func (a *Installer) symlinkOpcodeFiles() {
 		// remove the symlink, ignore errors
 		_ = os.Remove(symlinkPath)
 
-		// check if the symlink exists
-		if _, err := os.Stat(symlinkPath); !os.IsNotExist(err) {
-			a.logger.Infof("Symlink [%v] already exists, skipping\n", symlinkPath)
-
-			// remove the symlink
-			err = os.Remove(symlinkPath)
-			if err != nil {
-				a.logger.Fatalf("could not remove symlink: %v", err)
-			}
-		}
-
 		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "utils", "patches", opcodeFile)
 
 		// create the symlink
@@ -893,19 +888,7 @@ func (a *Installer) symlinkLoginOpcodeFiles() {
 		// remove the symlink, ignore errors
 		_ = os.Remove(symlinkPath)
 
-		// check if the symlink exists
-		if _, err := os.Stat(symlinkPath); !os.IsNotExist(err) {
-			a.logger.Infof("Symlink [%v] already exists, skipping\n", symlinkPath)
-
-			// remove the symlink
-			err = os.Remove(symlinkPath)
-			if err != nil {
-				a.logger.Fatalf("could not remove symlink: %v", err)
-			}
-		}
-
-		// TODO: this is temp I will go back and fix this later
-		sourcePatchPath := filepath.Join(os.TempDir(), "code", "loginserver", "login_util", opcodeFile)
+		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "loginserver", "login_util", opcodeFile)
 
 		// create the symlink
 		a.logger.Infof("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
@@ -1236,8 +1219,6 @@ func (a *Installer) runSharedMemory() {
 func (a *Installer) runWorldForDatabaseUpdates() {
 	a.Banner("Running World for Database Updates")
 
-	// TODO: Windows is not aware of Perl yet at this stage because the PATH is not updated
-
 	a.Exec(ExecConfig{
 		execpath:    a.pathmanager.GetEQEmuServerPath(),
 		command:     filepath.Join("bin", "world"),
@@ -1245,6 +1226,18 @@ func (a *Installer) runWorldForDatabaseUpdates() {
 	})
 
 	a.DoneBanner("Running World for Database Updates")
+}
+
+func (a *Installer) runZoneForDataInjections() {
+	a.Banner("Running Zone for Data Injections")
+
+	a.Exec(ExecConfig{
+		execpath:    a.pathmanager.GetEQEmuServerPath(),
+		command:     filepath.Join("bin", "zone"),
+		dieonoutput: "Entering sleep mode",
+	})
+
+	a.DoneBanner("Running Zone for Data Injections")
 }
 
 func (a *Installer) startSpire() {
@@ -1727,4 +1720,64 @@ func (a *Installer) setPostInstallConfigValues() {
 	if err != nil {
 		a.logger.Fatalf("could not save config: %v", err)
 	}
+}
+
+func (a *Installer) initLoginServer() {
+	a.Banner("Initializing Login Server")
+
+	// download the default login config
+	url := "https://raw.githubusercontent.com/EQEmu/Server/master/loginserver/login_util/login.json"
+	a.logger.Infof("Downloading default login config from [%v]\n", url)
+	err := download.WithProgress(a.pathmanager.GetEqemuLoginServerConfigPath(), url)
+	if err != nil {
+		a.logger.Fatalf("could not download login config: %v", err)
+	}
+
+	// hyrdrate the config
+	c := a.loginConfig.Get()
+	c.Database.Host = a.installConfig.MysqlHost
+	c.Database.Port = a.installConfig.MysqlPort
+	c.Database.User = a.installConfig.MysqlUsername
+	c.Database.Password = a.installConfig.MysqlPassword
+	c.Database.Db = a.installConfig.MysqlDatabaseName
+	c.ClientConfiguration.SodOpcodes = "assets/opcodes/login_opcodes_sod.conf"
+	c.ClientConfiguration.TitaniumOpcodes = "assets/opcodes/login_opcodes.conf"
+
+	// save the config
+	err = a.loginConfig.Save(c)
+	if err != nil {
+		a.logger.Fatalf("could not save login config: %v", err)
+	}
+
+	mysqlPath := "mysql"
+	if runtime.GOOS == "windows" {
+		mysqlPath = filepath.Join(a.getWindowsMysqlPath(), "mysql.exe")
+	}
+
+	// create the login server database tables
+	url = "https://raw.githubusercontent.com/EQEmu/Server/master/loginserver/login_util/login_schema.sql"
+	a.logger.Infof("Downloading login schema from [%v]\n", url)
+	err = download.WithProgress(filepath.Join(os.TempDir(), "login_schema.sql"), url)
+	if err != nil {
+		a.logger.Fatalf("could not download login config: %v", err)
+	}
+
+	a.logger.Infof("Creating login server database tables\n")
+
+	a.Exec(
+		ExecConfig{
+			command: mysqlPath,
+			args: []string{
+				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+				a.installConfig.MysqlDatabaseName,
+				"-e",
+				"source login_schema.sql",
+			},
+			hidestring: a.installConfig.MysqlPassword,
+			execpath:   os.TempDir(),
+		},
+	)
+
+	a.DoneBanner("Initializing Login Server")
 }
