@@ -164,10 +164,18 @@ func (a *Installer) installLinuxOsPackages() {
 	// install packages
 	var packages []string
 	distro := a.getLinuxDistribution()
+	version := a.getLinuxDistributionVersion()
+
+	a.logger.Println("----------------------------------------")
+	a.logger.Infof("> Installing packages for distro [%v] version [%v]\n", distro, version)
+	a.logger.Println("----------------------------------------")
+
 	if distro == "ubuntu" {
 		packages = getUbuntuPackages()
-	} else if distro == "debian" {
-		packages = getDebianPackages()
+	} else if distro == "debian" && version == 11 {
+		packages = getDebian11Packages()
+	} else if distro == "debian" && version >= 12 {
+		packages = getDebian12Packages()
 	} else {
 		a.logger.Fatalf("Unsupported distribution: %v", distro)
 	}
@@ -1347,7 +1355,7 @@ func (a *Installer) getLinuxDistribution() string {
 }
 
 // getLinuxDistributionVersion returns the linux distribution version
-func (a *Installer) getLinuxDistributionVersion() string {
+func (a *Installer) getLinuxDistributionVersion() int {
 	// read from /etc/os-release to determine which version of the distro we're on
 	if _, err := os.Stat("/etc/os-release"); os.IsNotExist(err) {
 		a.logger.Fatalf("could not find /etc/os-release")
@@ -1374,11 +1382,18 @@ func (a *Installer) getLinuxDistributionVersion() string {
 
 		// if we find the VERSION_ID key, return the value
 		if key == "VERSION_ID" {
-			return value
+			version := strings.ReplaceAll(value, "\"", "")
+			// conver to int
+			versionInt, err := strconv.Atoi(version)
+			if err != nil {
+				a.logger.Fatalf("could not convert version to int: %v", err)
+			}
+
+			return versionInt
 		}
 	}
 
-	return "unknown"
+	return 0
 }
 
 func (a *Installer) initWindowsMysql() {
