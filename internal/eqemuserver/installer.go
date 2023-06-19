@@ -178,16 +178,11 @@ func (a *Installer) installLinuxOsPackages() {
 
 	if distro == "ubuntu" {
 		packages = getUbuntuPackages()
-	} else if distro == "debian" && version == 11 {
+	} else if distro == "debian" && version >= 11 {
 		packages = getDebian11Packages()
-	} else if distro == "debian" && version >= 12 {
-		packages = getDebian12Packages()
 	} else {
 		a.logger.Fatalf("Unsupported distribution: %v", distro)
 	}
-
-	// get specific version of distribution
-	//version := a.getLinuxDistributionVersion()
 
 	// apt-get install -y
 	params = []string{"apt-get", "install", "-yq", "-m", "--no-install-recommends"}
