@@ -1,6 +1,6 @@
 package eqemuserver
 
-func getDebianPackages() []string {
+func getDebian12Packages() []string {
 	return []string{
 		"bash",
 		"build-essential",
