@@ -1,3 +1,9 @@
+## [3.1.6] 7/3/2023
+
+* Removed "Failed to connect to gameserver" error when navigating to server admin page "Zone Servers" and the server is offline
+* Removed "Failed to connect to gameserver" error when navigating to server admin page "Reloading (Global)" and the server is offline
+* Fix issue where server uptime can sometimes display a bunch of extra data
+
 ## [3.1.5] 7/2/2023
 
 * Add UI for managing static zone launcher `minZoneProcesses`

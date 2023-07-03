@@ -297,7 +297,11 @@ export default {
         // error notify
         if (e.response && e.response.data && e.response.data.error) {
           this.zoneList = []
-          this.error = e.response.data.error
+          if (e.response.data.error.includes("Failed to connect to gameserver")) {
+            this.error = ""
+          } else {
+            this.error = e.response.data.error
+          }
         }
       }
 

@@ -83,7 +83,11 @@ export default {
         }
       } catch (e) {
         if (e.response && e.response.data && e.response.data.error) {
-          this.error = e.response.data.error
+          if (e.response.data.error.includes("Failed to connect to gameserver")) {
+            this.error = ""
+          } else {
+            this.error = e.response.data.error
+          }
         }
       }
     },

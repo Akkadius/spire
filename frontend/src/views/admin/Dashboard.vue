@@ -12,7 +12,7 @@
       <div class="row row-cards" v-if="loaded">
         <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
         <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
-        <dashboard-counter name="Server Uptime" :counter="formatUptime(stats.uptime)"/>
+        <dashboard-counter name="Server Uptime" :counter="stats.uptime.includes('{') ? '' : formatUptime(stats.uptime)"/>
       </div>
 
       <div class="row row-cards">
