@@ -6,7 +6,7 @@
 * Fix an issue where the navbar collapse would not display correctly on mobile
 * Fix an issue where Spire release page notifications would appear on the bottom of the page versus the top
 * Fix an issue where the Spire release page would not function properly if `spire.akkadius.com` was offline (defaults to local if hosted is not online)
-* 
+
 
 ## [3.1.6] 7/3/2023
 
