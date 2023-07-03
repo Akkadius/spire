@@ -1,3 +1,14 @@
+## [3.1.8] 7/3/2023
+
+Ignore frequently called admin endpoints in the Spire console output to make it easier to see relevant endpoints being called
+
+```
+/api/v1/admin/system/cpu
+/api/v1/admin/system/resource-usage-summary
+/api/v1/eqemuserver/client-list
+/api/v1/eqemuserver/server-stats
+```
+
 ## [3.1.7] 7/3/2023
 
 * Fix issue where the login screen would be scrunched up on mobile devices
@@ -6,7 +17,6 @@
 * Fix an issue where the navbar collapse would not display correctly on mobile
 * Fix an issue where Spire release page notifications would appear on the bottom of the page versus the top
 * Fix an issue where the Spire release page would not function properly if `spire.akkadius.com` was offline (defaults to local if hosted is not online)
-
 
 ## [3.1.6] 7/3/2023
 

@@ -221,6 +221,17 @@ func LoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
 				return
 			}
 
+			// ignore logging for the below paths
+			ignoreLogPaths := []string{
+				"/api/v1/admin/system/cpu",
+				"/api/v1/admin/system/resource-usage-summary",
+				"/api/v1/eqemuserver/client-list",
+				"/api/v1/eqemuserver/server-stats",
+			}
+			if stringContains(ignoreLogPaths, c.Request().URL.Path) {
+				return
+			}
+
 			if config.Output == nil {
 				_, err = c.Logger().Output().Write(buf.Bytes())
 				return
