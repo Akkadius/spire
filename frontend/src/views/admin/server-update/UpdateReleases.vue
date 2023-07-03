@@ -121,7 +121,7 @@
 
       <div
         class="row justify-content-center"
-        style="position: absolute; bottom: -5%; z-index: 9999999; width: 100%"
+        style="position: absolute; top: -30px; z-index: 9999999; width: 100%"
       >
         <div class="col-6">
           <info-error-banner
@@ -216,8 +216,6 @@ export default {
         }
       }
 
-      console.log(release)
-
     },
 
     versionGreater(v1, v2) {
@@ -290,23 +288,51 @@ export default {
       window.open(util.format("http://spire.akkadius.com/dev/release/%s", r), 'release_' + r);
     },
     async loadCounts() {
-      const r = await axios.get(`http://spire.akkadius.com/api/v1/analytics/server-crash-report/counts`)
-      if (r.status === 200) {
-        this.counts    = r.data
-        this.selfBuilt = r.data.filter((e) => {
-          return e.server_version.includes("-dev")
-        }).sort((a, b) => {
-          return b.server_version.localeCompare(a.server_version);
-        });
-      }
+      return new Promise(async (resolve) => {
+        for (let url of SpireApi.getPublicWithLocalFallbacks()) {
+          try {
+            const r = await axios.get(`${url}/analytics/server-crash-report/counts`)
+            if (r.status === 200) {
+              this.counts = r.data
+
+              this.selfBuilt = r.data.filter((e) => {
+                // @ts-ignore
+                return e.server_version.includes("-dev")
+              }).sort((a, b) => {
+                return b.server_version.localeCompare(a.server_version);
+              });
+
+              return resolve()
+            }
+          } catch (e) {
+            if (e.response && e.response.data && e.response.data.error) {
+              this.error = e.response.data.error
+              return resolve()
+            }
+          }
+        }
+      });
     },
     async loadReleases() {
-      const r = await axios.get(`http://spire.akkadius.com/api/v1/analytics/releases`)
-      if (r.status === 200) {
-        this.releases = r.data.data.filter((e) => {
-          return e.name.split(".").length === 3
-        })
+      return new Promise(async (resolve) => {
+      for (let url of SpireApi.getPublicWithLocalFallbacks()) {
+        try {
+          const r = await axios.get(`${url}/analytics/releases`)
+          if (r.status === 200) {
+            this.releases = r.data.data.filter((e) => {
+              return e.name.split(".").length === 3
+            })
+          }
+
+          return resolve()
+        } catch (e) {
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = e.response.data.error
+            return resolve()
+          }
+        }
       }
+      });
     },
     getWindowsDownloads(r) {
       const f = r.assets.find((e) => {
@@ -354,7 +380,6 @@ export default {
     },
     getCrashCount(r) {
       const version = r.name.replaceAll("v", "")
-
       for (let v of this.counts) {
         if (v.server_version === version) {
           return v.crash_count;

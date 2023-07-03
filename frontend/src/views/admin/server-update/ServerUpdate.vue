@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-3">
+      <div class="col-lg-3 col-sm-12">
         <eq-window title="Current Version" style="height: 100%" class="p-0">
           <table class="eq-table eq-highlight-rows bordered m-0 mt-3" v-if="version">
             <tbody>
@@ -34,7 +34,7 @@
 
         </eq-window>
       </div>
-      <div class="col-9">
+      <div class="col-lg-9 col-sm-12">
         <eq-window title="Update Settings" style="height: 100%">
           <div class="row">
             <div class="col-3 text-right mt-3">

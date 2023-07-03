@@ -2,7 +2,7 @@
   <content-area class="text-center fade-in">
 
     <div class="row justify-content-center mt-7">
-      <div class="col-3">
+      <div class="col-lg-3 col-sm-12 col-md-12">
 
         <router-link class="ml-3 mt-3 mb-3" :to="ROUTE.HOME">
           <h1
@@ -22,7 +22,7 @@
         </router-link>
 
         <div class="card fade-in" v-if="hasAuthOptions()">
-          <div class="card-body ">
+          <div class="card-body">
             <form
               class="m-0 p-0"
               style="top:50%;"

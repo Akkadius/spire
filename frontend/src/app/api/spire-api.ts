@@ -4,11 +4,20 @@ import Debug from "@/app/debug/debug";
 import {ROUTE} from "@/routes";
 
 
+const PUBLIC_SPIRE = "http://spire.akkadius.com/api/v1";
+
 export class SpireApi {
   static getBasePath() {
     return process.env.VUE_APP_BACKEND_BASE_URL && process.env.NODE_ENV !== 'production' ?
       process.env.VUE_APP_BACKEND_BASE_URL :
       window.location.origin
+  }
+
+  static getPublicWithLocalFallbacks(): Array<any> {
+    return [
+      PUBLIC_SPIRE,
+      this.getBasePath() + "/api/v1",
+    ]
   }
 
   static getBaseV1Path() {

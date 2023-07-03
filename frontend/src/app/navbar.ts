@@ -28,6 +28,11 @@ export class Navbar {
   }
 
   public static collapse() {
+    // check if we're on mobile
+    if (window.innerWidth < 768) {
+      return
+    }
+
     let elements = [
       "main-content",
       "navbar",

@@ -539,3 +539,15 @@ html, body{
     height: 300px !important;
     width: 100%;
 }
+
+/*mobile helpers*/
+@media (max-width: 767px) {
+    .mt-3-mobile {
+        margin-top: 0.75rem !important;
+    }
+}
+@media (min-width: 767px) {
+    .text-right-no-mobile {
+        text-align: right !important;
+    }
+}
