@@ -55,7 +55,8 @@
                     :title="tag"
                     :disabled="disabled"
                     variant="info"
-                  >{{ tag }}</b-form-tag>
+                  >{{ tag }}
+                  </b-form-tag>
                 </li>
               </ul>
               <b-form-select
@@ -66,7 +67,8 @@
                 :options="availableOptions"
               >
                 <template
-                  #first>
+                  #first
+                >
                   <!-- This is required to prevent bugs with Safari -->
                   <option disabled value="">Choose a zone...</option>
                 </template>
@@ -76,72 +78,90 @@
         </b-form-group>
 
       </div>
+
+      <div class="mt-3">
+        <div>
+        Min Zone Processes (Ready)
+        </div>
+
+        <div>
+        <p class="text-muted">
+          This is the number of zones that Occulus will attempt to keep running <b>without</b> players. For example: if you have 10 zones with players in it and your minZoneProcesses is set to 10, you will have 20 total zones booted.
+        </p>
+        </div>
+        <b-form-input
+          type="number"
+          v-model="launcher.minZoneProcesses"
+          @change="saveLauncherOptions()"
+        />
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
-  import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-  import {Zones}         from "@/app/zones";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {Zones}         from "@/app/zones";
 
-  export default {
-    name: 'LauncherOptions',
-    props: ['launcherConfig'],
-    data () {
-      return {
-        launcher: {
-          runSharedMemory: false,
-          runLoginserver: false,
-          runQueryServ: false,
-          staticZones: ""
-        },
+export default {
+  name: 'LauncherOptions',
+  props: ['launcherConfig'],
+  data() {
+    return {
+      launcher: {
+        runSharedMemory: false,
+        runLoginserver: false,
+        runQueryServ: false,
+        staticZones: ""
+      },
 
-        staticZones: [],
-        availableZoneOptions: []
-      }
-    },
-    async created() {
-      this.launcher = this.launcherConfig
+      staticZones: [],
+      availableZoneOptions: []
+    }
+  },
+  async created() {
+    this.launcher = this.launcherConfig
 
-      if (this.launcher.staticZones && this.launcher.staticZones.length > 0) {
-        this.staticZones = this.launcher.staticZones.split(",")
-      }
+    if (this.launcher.staticZones && this.launcher.staticZones.length > 0) {
+      this.staticZones = this.launcher.staticZones.split(",")
+    }
 
-      // zone options
-      let options = []
-      const zones = await Zones.getZones()
-      for (let z of zones) {
-        options.push(z.short_name)
-      }
-      this.availableZoneOptions = options
-    },
-    watch: {
-      launcherConfig: function (newValue) {
-        this.launcher = newValue
-      }
-    },
-    computed: {
-      availableOptions() {
-        return this.availableZoneOptions.filter(opt => this.staticZones.indexOf(opt) === -1)
-      }
-    },
-    methods: {
-      saveLauncherOptions () {
-        setTimeout(() => {
-          console.log(this.staticZones)
+    // zone options
+    let options = []
+    const zones = await Zones.getZones()
+    for (let z of zones) {
+      options.push(z.short_name)
+    }
+    this.availableZoneOptions = options
+  },
+  watch: {
+    launcherConfig: function (newValue) {
+      this.launcher = newValue
+    }
+  },
+  computed: {
+    availableOptions() {
+      return this.availableZoneOptions.filter(opt => this.staticZones.indexOf(opt) === -1)
+    }
+  },
+  methods: {
+    saveLauncherOptions() {
+      setTimeout(() => {
+        console.log(this.staticZones)
 
-          if (this.staticZones && this.staticZones.length > 0) {
-            this.launcher.staticZones = this.staticZones.join(",")
-            console.log("lel")
-          }
+        if (this.staticZones && this.staticZones.length > 0) {
+          this.launcher.staticZones = this.staticZones.join(",")
+          console.log("lel")
+        }
 
-          console.log(this.launcher)
+        console.log(this.launcher)
 
-          OcculusClient.postLauncherConfig(this.launcher)
-        }, 100)
-      }
+        OcculusClient.postLauncherConfig(this.launcher)
+      }, 100)
     }
   }
+}
 </script>
 
 <style scoped>

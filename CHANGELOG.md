@@ -1,3 +1,10 @@
+## [3.1.5] 7/2/2023
+
+* Add UI for managing static zone launcher `minZoneProcesses`
+* When `minZoneProcesses` is set to 0, the Spire will set it to 10 by default. This is to prevent the server from booting with no zone processes
+
+![image](https://github.com/EQEmu/Server/assets/3319450/63f6395b-b4c4-46eb-8fbe-aa6ea4ca6893)
+
 ## [3.1.4] 6/10/2023
 
 Add command `spire:launcher [start|stop|restart]` to start, stop, or restart the launcher. This will be used in the future in tandem with installer v2 and utility scripts to manage the launcher

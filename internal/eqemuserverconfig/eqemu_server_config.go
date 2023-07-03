@@ -107,7 +107,7 @@ type EQEmuConfigJson struct {
 				Password string `json:"password,omitempty"`
 			} `json:"admin,omitempty"`
 		} `json:"application,omitempty"`
-		Launcher struct {
+		Launcher *struct {
 			RunSharedMemory  bool   `json:"runSharedMemory"`
 			RunLoginserver   bool   `json:"runLoginserver"`
 			RunQueryServ     bool   `json:"runQueryServ"`
@@ -126,7 +126,7 @@ type EQEmuConfigJson struct {
 	} `json:"spire,omitempty"`
 }
 
-func (e Config) Get() EQEmuConfigJson {
+func (e *Config) Get() EQEmuConfigJson {
 	cfg := e.pathmgmt.GetEQEmuServerConfigFilePath()
 	e.debug("path [%v]", cfg)
 
@@ -160,14 +160,21 @@ func (e *Config) debug(msg string, a ...interface{}) {
 	}
 }
 
-func (e Config) Exists() bool {
+// Exists returns true if the *Config file exists
+func (e *Config) Exists() bool {
 	return len(e.pathmgmt.GetEQEmuServerConfigFilePath()) > 0
 }
 
-func (e Config) Save(c EQEmuConfigJson) error {
+// Save saves the *Config to disk
+func (e *Config) Save(c EQEmuConfigJson) error {
 	if c.WebAdmin.Discord != nil {
 		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
 			c.WebAdmin.Discord = nil
+		}
+	}
+	if c.WebAdmin.Launcher != nil {
+		if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
+			c.WebAdmin.Launcher.MinZoneProcesses = 10
 		}
 	}
 
