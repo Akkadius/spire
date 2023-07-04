@@ -33,6 +33,15 @@ type DatabaseConfig struct {
 	Password string `json:"password,omitempty"`
 }
 
+type WebAdminLauncherConfig struct {
+	RunSharedMemory  bool   `json:"runSharedMemory"`
+	RunLoginserver   bool   `json:"runLoginserver"`
+	RunQueryServ     bool   `json:"runQueryServ"`
+	IsRunning        bool   `json:"isRunning"`
+	MinZoneProcesses int    `json:"minZoneProcesses,omitempty"`
+	StaticZones      string `json:"staticZones,omitempty"`
+}
+
 // EQEmuConfigJson is the struct that represents the eqemu_config.json file
 type EQEmuConfigJson struct {
 	Server struct {
@@ -112,15 +121,8 @@ type EQEmuConfigJson struct {
 				Password string `json:"password,omitempty"`
 			} `json:"admin,omitempty"`
 		} `json:"application,omitempty"`
-		Launcher *struct {
-			RunSharedMemory  bool   `json:"runSharedMemory"`
-			RunLoginserver   bool   `json:"runLoginserver"`
-			RunQueryServ     bool   `json:"runQueryServ"`
-			IsRunning        bool   `json:"isRunning"`
-			MinZoneProcesses int    `json:"minZoneProcesses,omitempty"`
-			StaticZones      string `json:"staticZones,omitempty"`
-		} `json:"launcher,omitempty"`
-		Quests struct {
+		Launcher *WebAdminLauncherConfig `json:"launcher,omitempty"`
+		Quests   struct {
 			HotReload bool `json:"hotReload"`
 		} `json:"quests"`
 		ServerCodePath string `json:"serverCodePath,omitempty"`
@@ -177,10 +179,10 @@ func (e *Config) Save(c EQEmuConfigJson) error {
 		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
 			c.WebAdmin.Discord = nil
 		}
-	}
-	if c.WebAdmin.Launcher != nil {
-		if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
-			c.WebAdmin.Launcher.MinZoneProcesses = 10
+		if c.WebAdmin.Launcher != nil {
+			if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
+				c.WebAdmin.Launcher.MinZoneProcesses = 10
+			}
 		}
 	}
 
