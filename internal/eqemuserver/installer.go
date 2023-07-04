@@ -1705,6 +1705,12 @@ func (a *Installer) setPostInstallConfigValues() {
 
 	// set the post install config values
 	if config.WebAdmin != nil {
+
+		// initialize the launcher config if it doesn't exist
+		if config.WebAdmin.Launcher == nil {
+			config.WebAdmin.Launcher = &eqemuserverconfig.WebAdminLauncherConfig{}
+		}
+
 		config.WebAdmin.Launcher.MinZoneProcesses = 10
 		config.WebAdmin.Launcher.RunSharedMemory = true
 		// boat zones mainly
