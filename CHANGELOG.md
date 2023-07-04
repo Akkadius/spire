@@ -1,3 +1,7 @@
+## [3.1.8] 7/3/2023
+
+* Fix issue where `minZoneProcesses` is being sent as a string instead of a number in the launcher window
+
 ## [3.1.7] 7/3/2023
 
 * Fix issue where the login screen would be scrunched up on mobile devices

@@ -91,7 +91,7 @@
         </div>
         <b-form-input
           type="number"
-          v-model="launcher.minZoneProcesses"
+          v-model.number="launcher.minZoneProcesses"
           @change="saveLauncherOptions()"
         />
       </div>
