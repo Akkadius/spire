@@ -1035,8 +1035,9 @@ func (a *Installer) createLinuxServerScripts() {
 
 	// create a map of scripts
 	serverScripts := map[string]string{
-		"start": "bash -c \"while true; do nohup $(find ./bin -name 'occulus*' | head -1) server-launcher >/dev/null 2>&1; sleep 1; done &\" && echo Server started",
-		"stop":  "$(find ./bin -name 'occulus*' | head -1) stop-server; echo \"Server stopped\"",
+		"start":   "./spire spire:launcher start && echo \"Server started\"",
+		"stop":    "./spire spire:launcher stop; echo \"Server stopped\"",
+		"restart": "./spire spire:launcher restart; echo \"Server restarting\"",
 	}
 
 	for s := range serverScripts {
