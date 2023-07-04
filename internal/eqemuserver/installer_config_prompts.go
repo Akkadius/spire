@@ -1,7 +1,7 @@
 package eqemuserver
 
 import (
-	"github.com/manifoldco/promptui"
+	"github.com/Akkadius/spire/internal/promptui"
 	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
