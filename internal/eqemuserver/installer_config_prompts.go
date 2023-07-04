@@ -20,6 +20,8 @@ type InstallConfig struct {
 	SpireAdminUser     string `yaml:"spire_admin_user"`
 	SpireAdminPassword string `yaml:"spire_admin_password"`
 	SpireWebPort       string `yaml:"spire_web_port"`
+	BotsEnabled        bool   `yaml:"bots_enabled"`
+	MercsEnabled       bool   `yaml:"mercs_enabled"`
 }
 
 const (
@@ -182,6 +184,22 @@ func (a *Installer) checkInstallConfig() {
 		a.logger.Fatalf("Prompt failed %v\n", err)
 	}
 	a.installConfig.SpireWebPort = spireWebPort
+
+	// prompt: bots enabled
+	botsEnabled, _ := (&promptui.Prompt{
+		Label:     "Enable bots? (Default: N) Want to play on your server solo? You can build a group and/or raid of bots to play with! (These are not mercenaries)",
+		Default:   "N",
+		IsConfirm: true,
+	}).Run()
+	a.installConfig.BotsEnabled = strings.ToLower(botsEnabled) == "y"
+
+	// prompt: mercs enabled
+	mercsEnabled, _ := (&promptui.Prompt{
+		Label:     "Enable mercenaries? (Default: N) Mercenaries (BETA) are NPC's that you can hire to help you in your adventures. They are not bots.",
+		Default:   "N",
+		IsConfirm: true,
+	}).Run()
+	a.installConfig.MercsEnabled = strings.ToLower(mercsEnabled) == "y"
 
 	// write a.installConfig to yaml config file called install_config.yaml
 	// marshal a.installConfig into yaml
