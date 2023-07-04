@@ -106,6 +106,7 @@ func (a *Installer) Install() {
 		a.injectSpireStartCronJob()
 	}
 	if runtime.GOOS == "windows" {
+		a.disableQuickEdit()
 		a.createWindowsServerScripts()
 		// TODO: Remove this when perl utility script is deprecated from world
 		a.initWindowsWget()
@@ -1781,4 +1782,37 @@ func (a *Installer) initLoginServer() {
 	)
 
 	a.DoneBanner("Initializing Login Server")
+}
+
+// disableQuickEdit disables quick edit mode in the windows console
+func (a *Installer) disableQuickEdit() {
+	a.Banner("Disabling Quick Edit")
+
+	cmd := exec.Command(
+		"cmd.exe",
+		"/C",
+		"REG",
+		"ADD",
+		"HKCU\\CONSOLE",
+		"/v",
+		"QuickEdit",
+		"/t",
+		"REG_DWORD",
+		"/d",
+		"0",
+		"/f",
+	)
+	cmd.Env = os.Environ()
+	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
+
+	// tie command stdout to os stdout
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		a.logger.Error(err)
+	}
+
+	a.DoneBanner("Disabling Quick Edit")
 }
