@@ -1,3 +1,8 @@
+## [3.1.10] 7/4/2023
+
+* Fix display issue with Spire Admin header when sized to different sizes
+* Fix edge case issue on Windows with telnet connections to world causing state issues in the dashboard, such as not showing zone list
+
 ## [3.1.9] 7/3/2023
 
 * Display warning to windows users during server start about windows spawning

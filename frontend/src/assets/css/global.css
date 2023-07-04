@@ -546,7 +546,8 @@ html, body{
         margin-top: 0.75rem !important;
     }
 }
-@media (min-width: 767px) {
+
+@media (min-width: 990px) {
     .text-right-no-mobile {
         text-align: right !important;
     }

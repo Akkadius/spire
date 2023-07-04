@@ -3,7 +3,7 @@
     <div class="card-body pl-4 pr-4 pt-3 pb-3">
 
       <div class="row align-items-center">
-        <div class="col-lg-6 col-sm-12">
+        <div class="col-lg-4 col-sm-12">
           <h6 class="header-pretitle">
             {{ pageName }}
           </h6>
@@ -13,98 +13,98 @@
           </h1>
         </div>
 
-        <div class="col-lg-6 col-sm-12 pl-0 pr-0">
+        <div class="col-lg-8 col-sm-12 pl-0 pr-0">
 
           <div class="row align-items-center text-center mt-3-mobile">
 
-          <!-- Resource Utilization -->
-          <div class="col-lg-2 col-sm-12 pl-0 pr-0">
-<!--            <small-->
-<!--              style="position: absolute; top: 25px; left: 0px;"-->
-<!--              class="text-muted text-uppercase"-->
-<!--            >Resources</small>-->
+            <!-- Resource Utilization -->
+            <div class="col-lg-auto col-sm-12 pl-0 pr-0">
+              <!--            <small-->
+              <!--              style="position: absolute; top: 25px; left: 0px;"-->
+              <!--              class="text-muted text-uppercase"-->
+              <!--            >Resources</small>-->
 
-            <vue-ellipse-progress
-              :progress="cpuPercent"
-              animation="default 300 0"
-              thickness="4"
-              :legend-formatter="({ currentValue }) => `${currentValue}%`"
-              :size="60"
-              :color="getCpuLoadColor(cpuPercent)"
-              empty-color="#95aac9"
-              empty-thickness="1"
-              font-size=".8rem"
-              font-color="#95aac9"
-            >
+              <vue-ellipse-progress
+                :progress="cpuPercent"
+                animation="default 300 0"
+                thickness="4"
+                :legend-formatter="({ currentValue }) => `${currentValue}%`"
+                :size="60"
+                :color="getCpuLoadColor(cpuPercent)"
+                empty-color="#95aac9"
+                empty-thickness="1"
+                font-size=".8rem"
+                font-color="#95aac9"
+              >
             <span
               slot="legend-caption"
               class="text-muted font-weight-bold"
               style="font-size: 10px"
             > CPU </span>
-            </vue-ellipse-progress>
+              </vue-ellipse-progress>
 
-            <vue-ellipse-progress
-              class="ml-3"
-              :progress="memoryPercent"
-              animation="loop 600 0"
-              thickness="4"
-              :legend-formatter="({ currentValue }) => `${currentValue}%`"
-              :size="60"
-              color="#2c7be5"
-              empty-color="#95aac9"
-              empty-thickness="1"
-              font-size=".8rem"
-              font-color="#95aac9"
-            >
+              <vue-ellipse-progress
+                class="ml-3"
+                :progress="memoryPercent"
+                animation="loop 600 0"
+                thickness="4"
+                :legend-formatter="({ currentValue }) => `${currentValue}%`"
+                :size="60"
+                color="#2c7be5"
+                empty-color="#95aac9"
+                empty-thickness="1"
+                font-size=".8rem"
+                font-color="#95aac9"
+              >
             <span
               slot="legend-caption"
               class="text-muted font-weight-bold"
               style="font-size: 10px"
             > MEM</span>
-            </vue-ellipse-progress>
-          </div>
+              </vue-ellipse-progress>
+            </div>
 
-          <div class="col-lg-auto col-sm-12">
-            <small class="text-muted text-uppercase mr-1">Launcher</small>
-            <span
-              :class="`badge badge-${stats.launcher_online ? 'success' : 'danger'} ml-3`"
-              style="font-size: 12px"
-            >{{ stats.launcher_online ? 'Online' : 'Offline' }}</span>
-          </div>
+            <div class="col-lg-auto col-sm-12">
+              <small class="text-muted text-uppercase mr-1">Launcher</small>
+              <span
+                :class="`badge badge-${stats.launcher_online ? 'success' : 'danger'} ml-3`"
+                style="font-size: 12px"
+              >{{ stats.launcher_online ? 'Online' : 'Offline' }}</span>
+            </div>
 
-          <div class="col-lg-auto col-sm-12">
-            <small class="text-muted text-uppercase mr-1">World</small>
-            <span
-              :class="`badge badge-${stats.world_online ? 'success' : 'danger'} ml-3`"
-              style="font-size: 12px"
-            >{{ stats.world_online ? 'Online' : 'Offline' }}</span>
-          </div>
+            <div class="col-lg-auto col-sm-12">
+              <small class="text-muted text-uppercase mr-1">World</small>
+              <span
+                :class="`badge badge-${stats.world_online ? 'success' : 'danger'} ml-3`"
+                style="font-size: 12px"
+              >{{ stats.world_online ? 'Online' : 'Offline' }}</span>
+            </div>
 
-          <div class="col-lg-auto col-sm-12">
-            <small class="text-muted text-uppercase mr-1">UCS</small>
-            <span
-              :class="`badge badge-${stats.ucs_online ? 'success' : 'danger'} ml-3`"
-              style="font-size: 12px"
-            >{{ stats.ucs_online ? 'Online' : 'Offline' }}</span>
-          </div>
+            <div class="col-lg-auto col-sm-12">
+              <small class="text-muted text-uppercase mr-1">UCS</small>
+              <span
+                :class="`badge badge-${stats.ucs_online ? 'success' : 'danger'} ml-3`"
+                style="font-size: 12px"
+              >{{ stats.ucs_online ? 'Online' : 'Offline' }}</span>
+            </div>
 
-          <div class="col-lg-auto col-sm-12">
-            <small class="text-muted text-uppercase">Zoneservers</small>
-            <span class="h2 mb-0 ml-3">
+            <div class="col-lg-auto col-sm-12">
+              <small class="text-muted text-uppercase">Zoneservers</small>
+              <span class="h2 mb-0 ml-3">
             {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
           </span>
-          </div>
+            </div>
 
-          <div class="col-lg-auto col-sm-12">
-            <small class="text-muted text-uppercase mr-1">Players Online</small>
-            <span class="h2 mb-0 ml-3">
+            <div class="col-lg-auto col-sm-12">
+              <small class="text-muted text-uppercase mr-1">Players Online</small>
+              <span class="h2 mb-0 ml-3">
             {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
           </span>
-          </div>
+            </div>
 
-          <div class="col-lg-2 col-sm-12 text-right-no-mobile">
-            <server-process-button-component/>
-          </div>
+            <div class="col-lg-1 col-sm-12 text-right-no-mobile">
+              <server-process-button-component/>
+            </div>
           </div>
 
         </div>

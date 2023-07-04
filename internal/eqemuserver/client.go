@@ -41,7 +41,9 @@ type WorldZoneList struct {
 }
 
 func (c *Client) GetZoneList() (WorldZoneList, error) {
-	o, err := c.telnet.Command("api get_zone_list")
+	o, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "api get_zone_list", EnforceJson: true},
+	)
 	if err != nil {
 		return WorldZoneList{}, err
 	}
@@ -112,7 +114,7 @@ type WorldClientList struct {
 }
 
 func (c *Client) GetWorldClientList() (WorldClientList, error) {
-	o, err := c.telnet.Command("api get_client_list")
+	o, err := c.telnet.Command(telnet.CommandConfig{Command: "api get_client_list", EnforceJson: true})
 	if err != nil {
 		return WorldClientList{}, err
 	}
@@ -134,7 +136,9 @@ type ReloadResponse struct {
 }
 
 func (c *Client) Reload(reloadType string) (ReloadResponse, error) {
-	o, err := c.telnet.Command(fmt.Sprintf("api reload %v", reloadType))
+	o, err := c.telnet.Command(
+		telnet.CommandConfig{Command: fmt.Sprintf("api reload %v", reloadType), EnforceJson: true},
+	)
 	if err != nil {
 		return ReloadResponse{}, err
 	}
@@ -158,7 +162,9 @@ type ReloadTypesResponse struct {
 }
 
 func (c *Client) GetReloadTypes() (ReloadTypesResponse, error) {
-	o, err := c.telnet.Command("api get_reload_types")
+	o, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "api get_reload_types", EnforceJson: true},
+	)
 	if err != nil {
 		return ReloadTypesResponse{}, err
 	}
@@ -172,7 +178,9 @@ func (c *Client) GetReloadTypes() (ReloadTypesResponse, error) {
 }
 
 func (c *Client) GetWorldUptime() (string, error) {
-	o, err := c.telnet.Command("uptime 0")
+	o, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "uptime 0"},
+	)
 	if err != nil {
 		return "", err
 	}

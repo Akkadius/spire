@@ -109,7 +109,14 @@ func (c *Client) Connect() error {
 	return nil
 }
 
-func (c *Client) Command(cmd string) (string, error) {
+// CommandConfig is a configuration for a command
+type CommandConfig struct {
+	Command     string // the command to send
+	EnforceJson bool   // error the connection if the response is not a json
+}
+
+// Command sends a command to the telnet server and returns the output
+func (c *Client) Command(cmd CommandConfig) (string, error) {
 	var err error
 
 	c.mu.Lock()
@@ -130,7 +137,7 @@ func (c *Client) Command(cmd string) (string, error) {
 		return "", err
 	}
 
-	sendln(c.t, cmd)
+	sendln(c.t, cmd.Command)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -156,6 +163,15 @@ func (c *Client) Command(cmd string) (string, error) {
 		if strings.Contains(output, linebreak) {
 			output = strings.Replace(output, linebreak, "", 1)
 			c.debug("[Output] %v", output)
+
+			// if we are enforcing json, make sure the output is json
+			if cmd.EnforceJson {
+				if !strings.HasPrefix(output, "{") && !strings.HasSuffix(output, "}") {
+					c.Close()
+					return "", fmt.Errorf("response was not json: %v", output)
+				}
+			}
+
 			return output, nil
 		}
 	}
