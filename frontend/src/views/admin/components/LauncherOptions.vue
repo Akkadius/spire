@@ -96,6 +96,10 @@
         />
       </div>
 
+      <b-alert show variant="danger" class="mt-3" v-if="isWindows()">
+        <i class="fa fa-times"></i> Warning! Windows users the more zone processes you have configured both dynamic and static you will see more command windows spawn during initial server boot. Don't be alarmed!
+      </b-alert>
+
     </div>
   </div>
 </template>
@@ -103,6 +107,7 @@
 <script>
 import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import {Zones}         from "@/app/zones";
+import {AppEnv}        from "@/app/env/app-env";
 
 export default {
   name: 'LauncherOptions',
@@ -146,6 +151,9 @@ export default {
     }
   },
   methods: {
+    isWindows() {
+      return AppEnv.getOS().includes("windows")
+    },
     saveLauncherOptions() {
       setTimeout(() => {
         console.log(this.staticZones)

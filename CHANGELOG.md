@@ -1,3 +1,7 @@
+## [3.1.9] 7/3/2023
+
+* Display warning to windows users during server start about windows spawning
+
 ## [3.1.8] 7/3/2023
 
 * Fix issue where `minZoneProcesses` is being sent as a string instead of a number in the launcher window
