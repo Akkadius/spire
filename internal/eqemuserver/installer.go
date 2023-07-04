@@ -126,6 +126,13 @@ func (a *Installer) Install() {
 	a.runWorldForDatabaseUpdates()
 	a.runZoneForDataInjections()
 
+	if a.installConfig.BotsEnabled {
+		a.enableBots()
+	}
+	if a.installConfig.MercsEnabled {
+		a.enableMercenaries()
+	}
+
 	a.initLoginServer()
 
 	// TODO: add existing MySQL installation
@@ -1182,6 +1189,7 @@ func (a *Installer) initSpire() {
 		a.logger.Fatalf("could not find spire binary: %v", err)
 	}
 
+	// --compile-build-location=/home/eqemu/code/build/ --compile-server=true
 	a.Exec(ExecConfig{
 		command: spirePath,
 		args: []string{
@@ -1215,9 +1223,14 @@ func (a *Installer) runSharedMemory() {
 func (a *Installer) runWorldForDatabaseUpdates() {
 	a.Banner("Running World for Database Updates")
 
+	worldPath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", "world"))
+	if err != nil {
+		a.logger.Infof("could not find world binary: %v", err)
+	}
+
 	a.Exec(ExecConfig{
 		execpath:    a.pathmanager.GetEQEmuServerPath(),
-		command:     filepath.Join("bin", "world"),
+		command:     worldPath,
 		dieonoutput: "Server (TCP) listener started on port",
 	})
 
@@ -1815,4 +1828,40 @@ func (a *Installer) disableQuickEdit() {
 	}
 
 	a.DoneBanner("Disabling Quick Edit")
+}
+
+// enableBots enables bots on the server
+func (a *Installer) enableBots() {
+	a.Banner("Enabling Bots")
+
+	worldPath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", "world"))
+	if err != nil {
+		a.logger.Infof("could not find world binary: %v", err)
+	}
+
+	a.Exec(ExecConfig{
+		execpath: a.pathmanager.GetEQEmuServerPath(),
+		command:  worldPath,
+		args:     []string{"bots:enable"},
+	})
+
+	a.DoneBanner("Enabling Bots")
+}
+
+// enableMercs enables bots on the server
+func (a *Installer) enableMercenaries() {
+	a.Banner("Enabling Mercenaries")
+
+	worldPath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", "world"))
+	if err != nil {
+		a.logger.Infof("could not find world binary: %v", err)
+	}
+
+	a.Exec(ExecConfig{
+		execpath: a.pathmanager.GetEQEmuServerPath(),
+		command:  worldPath,
+		args:     []string{"mercs:enable"},
+	})
+
+	a.DoneBanner("Enabling Mercenaries")
 }
