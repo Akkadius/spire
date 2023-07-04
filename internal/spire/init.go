@@ -14,6 +14,7 @@ import (
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	gormMysql "gorm.io/driver/mysql"
+	"strconv"
 )
 
 // Init is a type responsible for bootstrapping and initializing the application
@@ -232,9 +233,12 @@ func (o *Init) IsAuthEnabled() bool {
 
 // InitAppRequest is the request object for initializing the app
 type InitAppRequest struct {
-	AuthEnabled int    `json:"auth_enabled"`
-	Username    string `json:"username"`
-	Password    string `json:"password"`
+	AuthEnabled   int    `json:"auth_enabled"`
+	Username      string `json:"username"`
+	Password      string `json:"password"`
+	SelfCompiled  bool   `json:"self_compiled"`  // if eqemu server is self-compiled (linux)
+	BuildLocation string `json:"build_location"` // if eqemu server is self-compiled (linux)
+	BuildCores    int    `json:"build_cores"`    // if eqemu server is self-compiled (linux)
 }
 
 // InitApp will initialize the app
@@ -292,6 +296,23 @@ func (o *Init) InitApp(r *InitAppRequest) error {
 		o.settings.EnableSetting(SettingAuthEnabled)
 	} else {
 		o.settings.DisableSetting(SettingAuthEnabled)
+	}
+
+	// self-compiled
+	if r.SelfCompiled {
+		o.settings.SetSetting(SettingUpdateType, UpdateTypeSelfCompiled)
+
+		// build location
+		if len(r.BuildLocation) > 0 {
+			o.settings.SetSetting(SettingBuildLocation, r.BuildLocation)
+		}
+
+		// build cores
+		if r.BuildCores > 0 {
+			o.settings.SetSetting(SettingBuildCores, strconv.Itoa(r.BuildCores))
+		}
+	} else {
+		o.settings.SetSetting(SettingUpdateType, UpdateTypeRelease)
 	}
 
 	// re-initialize again as if we just started up the app

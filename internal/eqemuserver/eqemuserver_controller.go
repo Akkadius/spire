@@ -269,6 +269,26 @@ func (a *Controller) serverVersion(c echo.Context) error {
 }
 
 func (a *Controller) installRelease(c echo.Context) error {
+	// validation: check if server is online
+	online := false
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		cmdline, err := p.Cmdline()
+		if err != nil {
+			return err
+		}
+		if strings.Contains(cmdline, "world") {
+			online = true
+		}
+	}
+
+	if online {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": "You cannot issue an update while the server is online, please shut the server off before trying to update"},
+		)
+	}
+
 	release := c.Param("release")
 
 	err := a.updater.InstallRelease(release)

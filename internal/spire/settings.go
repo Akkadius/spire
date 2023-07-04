@@ -7,7 +7,15 @@ import (
 )
 
 const (
-	SettingAuthEnabled = "AUTH_ENABLED"
+	SettingAuthEnabled   = "AUTH_ENABLED"
+	SettingUpdateType    = "SERVER_UPDATE_TYPE"
+	SettingBuildLocation = "BUILD_LOCATION"
+	SettingBuildCores    = "BUILD_CORES"
+)
+
+const (
+	UpdateTypeRelease      = "release"
+	UpdateTypeSelfCompiled = "self-compiled"
 )
 
 type Settings struct {

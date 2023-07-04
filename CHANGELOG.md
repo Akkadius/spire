@@ -1,3 +1,8 @@
+## [3.2.0] 7/4/2023
+
+* When updating server binaries, inform users that they need to power off their server before attempting to update binaries
+* Extend `spire:init` command to take two new flags `--compile-build-location=/home/eqemu/code/build/` and `--compile-server=true|false`. This is used during the eqemu server installer to determine whether Linux users want to initialize their server configuration with `release` or `self-compiled`
+
 ## [3.1.10] 7/4/2023
 
 * Fix display issue with Spire Admin header when sized to different sizes
