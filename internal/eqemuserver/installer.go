@@ -13,6 +13,7 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
+	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -96,7 +97,13 @@ func (a *Installer) Install() {
 	a.cloneEQEmuMaps()
 	a.clonePeqQuests()
 	a.sourcePeqDatabase()
-	a.installBinaries()
+
+	if runtime.GOOS == "linux" && a.installConfig.CompileBinaries {
+		a.compileBinaries()
+	} else {
+		a.installBinaries()
+	}
+
 	a.symlinkPatchFiles()
 	a.symlinkOpcodeFiles()
 	a.symlinkLoginOpcodeFiles()
@@ -526,8 +533,9 @@ func (a *Installer) cloneEQEmuSource() {
 	// clone the repository
 	repoPath := a.installConfig.CodePath
 	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
-		URL:      "https://github.com/EQEmu/Server.git",
-		Progress: a.logger.Writer(),
+		URL:               "https://github.com/EQEmu/Server.git",
+		Progress:          a.logger.Writer(),
+		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 	})
 
 	// if the repository already exists, update it instead
@@ -1184,19 +1192,28 @@ func (a *Installer) installSpireBinary() {
 func (a *Installer) initSpire() {
 	a.Banner("Initializing Spire")
 
+	// check if spire is already installed
 	spirePath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
 	if err != nil {
 		a.logger.Fatalf("could not find spire binary: %v", err)
 	}
 
-	// --compile-build-location=/home/eqemu/code/build/ --compile-server=true
+	args := []string{
+		"spire:init",
+		a.installConfig.SpireAdminUser,
+		a.installConfig.SpireAdminPassword,
+	}
+
+	// if we're compiling binaries
+	if a.installConfig.CompileBinaries {
+		buildPath := filepath.Join(a.installConfig.CodePath, "build")
+		args = append(args, "--compile-server=true")
+		args = append(args, fmt.Sprintf("--compile-build-location=%v", buildPath))
+	}
+
 	a.Exec(ExecConfig{
-		command: spirePath,
-		args: []string{
-			"spire:init",
-			a.installConfig.SpireAdminUser,
-			a.installConfig.SpireAdminPassword,
-		},
+		command:    spirePath,
+		args:       args,
 		hidestring: a.installConfig.SpireAdminPassword,
 	})
 
@@ -1864,4 +1881,124 @@ func (a *Installer) enableMercenaries() {
 	})
 
 	a.DoneBanner("Enabling Mercenaries")
+}
+
+// compileBinaries compiles the server binaries
+func (a *Installer) compileBinaries() {
+	a.Banner("Compiling Binaries")
+
+	// get the build path
+	codeBuildPath := filepath.Join(a.installConfig.CodePath, "build")
+
+	// create the build directory
+	err := os.MkdirAll(codeBuildPath, 0755)
+	if err != nil {
+		a.logger.Fatalf("could not create build directory: %v", err)
+	}
+
+	args := []string{
+		"-DEQEMU_BUILD_LOGIN=ON",
+		"-DEQEMU_BUILD_LUA=ON",
+	}
+
+	// get user home directory
+	homedir, err := os.UserHomeDir()
+	if err != nil {
+		a.logger.Fatalf("could not get user home directory: %v", err)
+	}
+
+	// check if system has ccache installed
+	hasCcache := false
+	ccacheDir := filepath.Join(homedir, ".ccache")
+	if _, err := os.Stat(ccacheDir); err == nil {
+		hasCcache = true
+	}
+
+	// use ccache if available
+	if hasCcache {
+		args = append(args, "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache")
+	}
+
+	// compile with debug symbols and no optimization
+	if a.installConfig.CompileDevelop {
+		args = append(args, "-DCMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING='-O0 -g -DNDEBUG'")
+	}
+
+	args = append(args, "-G", "Unix Makefiles", "..")
+
+	a.Exec(ExecConfig{
+		execpath: codeBuildPath,
+		command:  "cmake",
+		args:     args,
+	})
+
+	cores := 1
+
+	// get system memory available
+	memory, err := mem.VirtualMemory()
+	if err != nil {
+		a.logger.Fatal(err)
+	}
+
+	// get system memory available in GB
+	memoryAvailableGb := memory.Available / 1024 / 1024 / 1024
+	if memoryAvailableGb >= 10 {
+		cores = runtime.NumCPU() - 4
+		if cores < 1 {
+			cores = 1
+		}
+	} else if memoryAvailableGb >= 6 {
+		cores = 4
+	}
+
+	a.Exec(ExecConfig{
+		execpath: filepath.Join(a.installConfig.CodePath, "build"),
+		command:  "make",
+		args:     []string{"-j", strconv.Itoa(cores)},
+	})
+
+	a.DoneBanner("Compiling binaries")
+
+	a.Banner("Symlinking compiled binaries")
+
+	// symlink the binaries
+	// loop through bin path
+	binPath := filepath.Join(a.installConfig.CodePath, "build", "bin")
+	err = filepath.Walk(binPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			a.logger.Error(err)
+			return nil
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		// get the file name
+		fileName := info.Name()
+
+		// skip .a extension files
+		if filepath.Ext(fileName) == ".a" {
+			return nil
+		}
+
+		a.logger.Infof("Symlinking [%v] to [%v] in server bin directory", fileName, filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", fileName))
+
+		source := filepath.Join(binPath, fileName)
+		destination := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", fileName)
+
+		// remove symlink
+		_ = os.Remove(destination)
+
+		// symlink the file into server bin directory
+		err = os.Symlink(source, destination)
+		if err != nil {
+			a.logger.Error(err)
+			return nil
+		}
+
+		return nil
+	})
+
+	a.DoneBanner("Symlinking compiled binaries")
 }

@@ -6,12 +6,15 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 )
 
 type InstallConfig struct {
 	ServerPath         string `yaml:"server_path"`
 	CodePath           string `yaml:"code_path"`
+	CompileBinaries    bool   `yaml:"compile_binaries"`
+	CompileDevelop     bool   `yaml:"compile_develop"`
 	MysqlUsername      string `yaml:"mysql_username"`
 	MysqlPassword      string `yaml:"mysql_password"`
 	MysqlDatabaseName  string `yaml:"mysql_database_name"`
@@ -71,6 +74,26 @@ func (a *Installer) checkInstallConfig() {
 		a.logger.Fatalf("Prompt failed %v\n", err)
 	}
 	a.installConfig.CodePath = codePath
+
+	// prompt: compile binaries
+	if runtime.GOOS == "linux" {
+		compileBinaries, _ := (&promptui.Prompt{
+			Label:     "Compile binaries? (Default: N) By default we use pre-compiled binaries. If you plan on developing on your server you might want this enabled.",
+			Default:   "N",
+			IsConfirm: true,
+		}).Run()
+		a.installConfig.CompileBinaries = strings.ToLower(compileBinaries) == "y"
+
+		// prompt: compile for development
+		if a.installConfig.CompileBinaries {
+			compileDevelop, _ := (&promptui.Prompt{
+				Label:     "Compile for development? (Default: N) Do not enable this in production. If you want compiles to be faster, enable this",
+				Default:   "N",
+				IsConfirm: true,
+			}).Run()
+			a.installConfig.CompileDevelop = strings.ToLower(compileDevelop) == "y"
+		}
+	}
 
 	// set the installer path
 	a.pathmanager.SetServerPath(serverPath)
