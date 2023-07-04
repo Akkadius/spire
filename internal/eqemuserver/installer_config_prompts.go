@@ -1,6 +1,7 @@
 package eqemuserver
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/promptui"
 	"gopkg.in/yaml.v3"
 	"os"
@@ -109,51 +110,108 @@ func (a *Installer) checkInstallConfig() {
 	// check if we are using an existing mysql install
 	useExistingMysqlInstall := strings.Contains(strings.ToLower(useExistingMysqlInstallPrompt), "y")
 	if useExistingMysqlInstall {
-		// TODO: handle
-	}
+		a.logger.Infof("Using existing MySQL install, please specify your MySQL connection details.")
 
-	// if we are installing a new mysql server
-	generatedPassword := a.GetRandomPassword()
+		// prompt: mysql host
+		mysqlHost, err := (&promptui.Prompt{
+			Label:     "MySQL Host",
+			Default:   "127.0.0.1",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
 
-	// prompt: mysql database name
-	mysqlDbName, err := (&promptui.Prompt{
-		Label:     "MySQL Database Name (all lowercase, no special characters)",
-		Default:   "peq",
-		AllowEdit: true,
-	}).Run()
-	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
-	}
-	mysqlDbName = a.stripSpecialCharacters(mysqlDbName)
-	a.installConfig.MysqlDatabaseName = mysqlDbName
+		// prompt: mysql port
+		mysqlPort, err := (&promptui.Prompt{
+			Label:     "MySQL Port",
+			Default:   "3306",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
 
-	// prompt: mysql username
-	mysqlUsername, err := (&promptui.Prompt{
-		Label:     "MySQL Username",
-		Default:   "eqemu",
-		AllowEdit: true,
-	}).Run()
-	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
-	}
-	a.installConfig.MysqlUsername = mysqlUsername
+		// prompt: mysql database name
+		mysqlDbName, err := (&promptui.Prompt{
+			Label:     "MySQL Database Name (all lowercase, no special characters) (This will be a new database that doesn't exist already)",
+			Default:   "peq",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
 
-	// prompt: mysql password
-	mysqlPassword, err := (&promptui.Prompt{
-		Label:     "MySQL Password (Leave blank for random password)",
-		Default:   generatedPassword,
-		Mask:      '*',
-		AllowEdit: true,
-	}).Run()
-	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
-	}
+		// prompt: mysql username
+		mysqlUsername, err := (&promptui.Prompt{
+			Label:     "MySQL Username",
+			Default:   "eqemu",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
 
-	// validate: passwords match if we manually entered it
-	if mysqlPassword != generatedPassword {
-		// prompt: mysql password (confirm)
-		mysqlPasswordConfirm, err := (&promptui.Prompt{
-			Label:     "MySQL Password (Confirm)",
+		// prompt: mysql password
+		mysqlPassword, err := (&promptui.Prompt{
+			Label:     "MySQL Password",
+			Default:   "eqemu",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
+
+		// validate the mysql connection
+		a.logger.Infof("Validating MySQL connection...")
+		err = a.validateMysqlConnection(
+			mysqlHost,
+			mysqlPort,
+			mysqlDbName,
+			mysqlUsername,
+			mysqlPassword,
+		)
+		if err != nil {
+			a.logger.Fatalf("Failed to validate MySQL connection: %v", err)
+		}
+
+		// set installation variables
+		a.installConfig.MysqlHost = mysqlHost
+		a.installConfig.MysqlPort = mysqlPort
+		a.installConfig.MysqlDatabaseName = mysqlDbName
+		a.installConfig.MysqlUsername = mysqlUsername
+		a.installConfig.MysqlPassword = mysqlPassword
+	} else {
+		// if we are installing a new mysql server
+		generatedPassword := a.GetRandomPassword()
+
+		// prompt: mysql database name
+		mysqlDbName, err := (&promptui.Prompt{
+			Label:     "MySQL Database Name (all lowercase, no special characters)",
+			Default:   "peq",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
+		mysqlDbName = a.stripSpecialCharacters(mysqlDbName)
+		a.installConfig.MysqlDatabaseName = mysqlDbName
+
+		// prompt: mysql username
+		mysqlUsername, err := (&promptui.Prompt{
+			Label:     "MySQL Username",
+			Default:   "eqemu",
+			AllowEdit: true,
+		}).Run()
+		if err != nil {
+			a.logger.Fatalf("Prompt failed %v\n", err)
+		}
+		a.installConfig.MysqlUsername = mysqlUsername
+
+		// prompt: mysql password
+		mysqlPassword, err := (&promptui.Prompt{
+			Label:     "MySQL Password (Leave blank for random password)",
+			Default:   generatedPassword,
 			Mask:      '*',
 			AllowEdit: true,
 		}).Run()
@@ -161,15 +219,25 @@ func (a *Installer) checkInstallConfig() {
 			a.logger.Fatalf("Prompt failed %v\n", err)
 		}
 
-		if mysqlPassword != mysqlPasswordConfirm {
-			a.logger.Fatalf("MySQL Passwords do not match")
+		// validate: passwords match if we manually entered it
+		if mysqlPassword != generatedPassword {
+			// prompt: mysql password (confirm)
+			mysqlPasswordConfirm, err := (&promptui.Prompt{
+				Label:     "MySQL Password (Confirm)",
+				Mask:      '*',
+				AllowEdit: true,
+			}).Run()
+			if err != nil {
+				a.logger.Fatalf("Prompt failed %v\n", err)
+			}
+
+			if mysqlPassword != mysqlPasswordConfirm {
+				a.logger.Fatalf("MySQL Passwords do not match")
+			}
 		}
-	}
 
-	a.installConfig.MysqlPassword = mysqlPassword
+		a.installConfig.MysqlPassword = mysqlPassword
 
-	// set defaults if we're not using an existing mysql install
-	if !useExistingMysqlInstall {
 		a.installConfig.MysqlHost = "127.0.0.1"
 		a.installConfig.MysqlPort = "3306"
 	}
@@ -309,4 +377,50 @@ func (a *Installer) stripSpecialCharacters(name string) string {
 	name = regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(name, "")
 	name = strings.ReplaceAll(name, " ", "_")
 	return name
+}
+
+// validateMysqlConnection validates the mysql connection
+func (a *Installer) validateMysqlConnection(host string, port string, name string, username string, mysqlPassword string) error {
+	mysqlAdminBin := "mysqladmin"
+	if runtime.GOOS == "windows" {
+		mysqlAdminBin = filepath.Join(a.getWindowsMysqlPath(), "mysqladmin.exe")
+	}
+
+	mysqlBin := "mysql"
+	if runtime.GOOS == "windows" {
+		mysqlBin = filepath.Join(a.getWindowsMysqlPath(), "mysql.exe")
+	}
+
+	// check if mysql is running
+	res := a.Exec(ExecConfig{
+		command: mysqlAdminBin,
+		args: []string{
+			"ping",
+			"-h" + host,
+			"-P" + port,
+			"-u" + username,
+			"-p" + mysqlPassword,
+		},
+	})
+	if !strings.Contains(res, "mysqld is alive") {
+		return fmt.Errorf("could not connect to mysql: %v", res)
+	}
+
+	// check if database exists and has data
+	res = a.Exec(ExecConfig{
+		command: mysqlBin,
+		args: []string{
+			"-h" + host,
+			"-P" + port,
+			"-u" + username,
+			"-p" + mysqlPassword,
+			"-e",
+			"show databases like '" + name + "';",
+		},
+	})
+	if len(res) > 0 {
+		return fmt.Errorf("database already exists: %v", res)
+	}
+
+	return nil
 }
