@@ -81,6 +81,8 @@ func (o *Init) Init() {
 		var adminUser models.User
 		o.connections.SpireDbNoLog().Where("is_admin = 1").First(&adminUser)
 
+		o.SyncDbName()
+
 		if adminUser.ID > 0 {
 			o.CreateDefaultDatabaseConnectionFromConfig(adminUser)
 		}
@@ -147,6 +149,7 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 	var c models.ServerDatabaseConnection
 	db.Where("id = 1").First(&c)
 	if c.ID > 0 {
+		c.Name = cfg.Server.World.Longname
 		c.DbHost = cfg.Server.Database.Host
 		c.DbPort = cfg.Server.Database.Port
 		c.DbName = cfg.Server.Database.Db
@@ -319,4 +322,16 @@ func (o *Init) InitApp(r *InitAppRequest) error {
 	o.Init()
 
 	return nil
+}
+
+// SyncDbName will sync the db name with the server config
+func (o *Init) SyncDbName() {
+	db := o.connections.SpireDbNoLog()
+	var c models.ServerDatabaseConnection
+	db.Where("id = 1").First(&c)
+	cfg := o.serverconfig.Get()
+	if c.ID > 0 {
+		c.Name = cfg.Server.World.Longname
+		db.Save(&c)
+	}
 }

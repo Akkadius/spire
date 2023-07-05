@@ -588,6 +588,7 @@ import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import {SpireApi}      from "@/app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import EqWindowComplex from "@/components/eq-ui/EQWindowComplex.vue";
+import {AppEnv}        from "@/app/env/app-env";
 
 export default {
   name: "ServerConfig",
@@ -702,6 +703,11 @@ export default {
         if (e.response && e.response.data && e.response.data.error) {
           this.error = e.response.data.error
         }
+      }
+
+      // hack to sync the db name for now in local setups
+      if (AppEnv.isAppLocal()) {
+        await SpireApi.v1().post('app/sync')
       }
     },
     switchPasswordVisibility() {

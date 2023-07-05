@@ -1,3 +1,8 @@
+## [3.2.1] 7/5/2023
+
+* Spire local setups will now update the database connection name in the connections page on bootup when the server long name has changed
+* Spire local setups will now update the database connection name in the connections page when the server long name has changed and the server is running
+
 ## [3.2.0] 7/4/2023
 
 * When updating server binaries, inform users that they need to power off their server before attempting to update binaries

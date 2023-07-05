@@ -47,6 +47,7 @@ func (d *AppController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "app/onboard-initialize", d.initializeApp, nil),
 		routes.RegisterRoute(http.MethodGet, "app/changelog", d.changelog, nil),
 		routes.RegisterRoute(http.MethodGet, "app/env", d.env, nil),
+		routes.RegisterRoute(http.MethodPost, "app/sync", d.sync, nil),
 	}
 }
 
@@ -131,6 +132,15 @@ func (d *AppController) initializeApp(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
 	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
+}
+
+// sync is used to sync the db name
+// used for local setups
+// eventually replace this with something better
+func (d *AppController) sync(c echo.Context) error {
+	d.spireinit.SyncDbName()
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }
