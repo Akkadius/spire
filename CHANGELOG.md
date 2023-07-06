@@ -6,7 +6,7 @@ Fix an issue where the task list wasn't being refreshed when a task was saved
 
 ### General
 
-* Fix an issue with the free id fetcher logic when a table uses completely contiguous ranges, we will default to the max id if there are no ranges available
+Fix an issue with the free id fetcher logic when a table uses completely contiguous ranges, we will default to the max id if there are no ranges available
 
 ## [3.2.1] 7/5/2023
 
