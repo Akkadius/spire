@@ -1806,6 +1806,10 @@ export default {
         if (r.status === 200) {
           EditFormFieldUtil.resetFieldEditedStatus()
           this.notification = "Task updated!";
+
+          // reload task list
+          this.tasks = []
+          this.loadTasks()
         }
       } catch (err) {
         if (err.response && err.response.data && err.response.data.error) {

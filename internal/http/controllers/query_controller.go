@@ -69,6 +69,8 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 		q.logger.Warn(err)
 	}
 
+	maxId := 0
+
 	// scan ids
 	ids := []string{}
 	idMap := map[string]bool{}
@@ -81,6 +83,10 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 
 		ids = append(ids, Id)
 		idMap[Id] = true
+
+		// set max id
+		id, _ := strconv.Atoi(Id)
+		maxId = id
 	}
 
 	gapSize := 10
@@ -127,6 +133,14 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 					endId = 0
 				}
 			}
+		}
+
+		// if there are no free ranges, use the max ID
+		if len(ranges) == 0 {
+			ranges = append(ranges, StartEndRange{
+				StartId: fmt.Sprintf("%v", maxId+1),
+				EndId:   fmt.Sprintf("%v", maxId+1),
+			})
 		}
 
 		return c.JSON(http.StatusOK, echo.Map{"data": ranges})
