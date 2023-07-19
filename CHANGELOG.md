@@ -1,3 +1,7 @@
+## [3.3.0] 7/19/2023
+
+Fix a critical issue where saving new entities (items or spells for example) would also duplicate all relational data 
+
 ## [3.2.2] 7/6/2023
 
 ### Tasks

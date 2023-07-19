@@ -239,30 +239,6 @@ bot_data:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: ""
-bot_group_members:
-  - column: group_members_index
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-bot_groups:
-  - column: groups_index
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-bot_guild_members:
-  - column: bot_id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
 bot_heal_rotation_members:
   - column: member_index
     data_type: int
@@ -916,6 +892,14 @@ character_tasks:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+character_tribute:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
 chatchannel_reserved_names:
   - column: id
     data_type: int
@@ -925,13 +909,13 @@ chatchannel_reserved_names:
     column_type: int(11)
     column_default: ""
 chatchannels:
-  - column: name
-    data_type: varchar
+  - column: id
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: varchar(64)
-    column_default: ''''''
+    column_type: int(11)
+    column_default: ""
 command_settings:
   - column: command
     data_type: varchar
@@ -940,6 +924,14 @@ command_settings:
     is_nullable: "NO"
     column_type: varchar(128)
     column_default: ''''''
+command_subsettings:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 completed_shared_task_activity_state:
   - column: shared_task_id
     data_type: bigint
@@ -1033,11 +1025,11 @@ data_buckets:
     column_default: ""
 db_str:
   - column: id
-    data_type: bigint
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: bigint(20)
+    column_type: int(10)
     column_default: ""
   - column: type
     data_type: int
@@ -1087,14 +1079,6 @@ dynamic_zone_templates:
     column_type: int(10) unsigned
     column_default: ""
 dynamic_zones:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-eventlog:
   - column: id
     data_type: int
     column_key: PRI
@@ -1346,14 +1330,6 @@ guilds:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11)
-    column_default: ""
-hackers:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(4)
     column_default: ""
 horses:
   - column: id
@@ -1716,6 +1692,20 @@ npc_scale_global_base:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+  - column: zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: instance_version
+    data_type: int
+    column_key: PRI
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
 npc_spells:
   - column: id
     data_type: int
@@ -1904,13 +1894,13 @@ raid_details:
     column_type: int(4)
     column_default: "0"
 raid_members:
-  - column: charid
-    data_type: int
+  - column: id
+    data_type: bigint
     column_key: PRI
-    ordinal_position: "2"
+    ordinal_position: "1"
     is_nullable: "NO"
-    column_type: int(4)
-    column_default: "0"
+    column_type: bigint(20) unsigned
+    column_default: ""
 reports:
   - column: id
     data_type: int

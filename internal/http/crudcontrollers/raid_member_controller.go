@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -34,12 +35,12 @@ func NewRaidMemberController(
 
 func (e *RaidMemberController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "raid_member/:charid", e.getRaidMember, nil),
+		routes.RegisterRoute(http.MethodGet, "raid_member/:id", e.getRaidMember, nil),
 		routes.RegisterRoute(http.MethodGet, "raid_members", e.listRaidMembers, nil),
 		routes.RegisterRoute(http.MethodGet, "raid_members/count", e.getRaidMembersCount, nil),
 		routes.RegisterRoute(http.MethodPut, "raid_member", e.createRaidMember, nil),
-		routes.RegisterRoute(http.MethodDelete, "raid_member/:charid", e.deleteRaidMember, nil),
-		routes.RegisterRoute(http.MethodPatch, "raid_member/:charid", e.updateRaidMember, nil),
+		routes.RegisterRoute(http.MethodDelete, "raid_member/:id", e.deleteRaidMember, nil),
+		routes.RegisterRoute(http.MethodPatch, "raid_member/:id", e.updateRaidMember, nil),
 		routes.RegisterRoute(http.MethodPost, "raid_members/bulk", e.getRaidMembersBulk, nil),
 	}
 }
@@ -91,12 +92,12 @@ func (e *RaidMemberController) getRaidMember(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charid, err := strconv.Atoi(c.Param("charid"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Charid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, charid)
-	keys = append(keys, "charid = ?")
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
 	var result models.RaidMember
@@ -112,7 +113,7 @@ func (e *RaidMemberController) getRaidMember(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.Charid == 0 {
+	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
@@ -145,12 +146,12 @@ func (e *RaidMemberController) updateRaidMember(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charid, err := strconv.Atoi(c.Param("charid"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Charid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, charid)
-	keys = append(keys, "charid = ?")
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
 	var result models.RaidMember
@@ -213,7 +214,14 @@ func (e *RaidMemberController) createRaidMember(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.RaidMember{}, c).Model(&models.RaidMember{}).Create(&raidMember).Error
+	db := e.db.Get(models.RaidMember{}, c).Model(&models.RaidMember{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&raidMember).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -231,7 +239,7 @@ func (e *RaidMemberController) createRaidMember(c echo.Context) error {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [RaidMember] [%v] data [%v]", raidMember.Charid, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [RaidMember] [%v] data [%v]", raidMember.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
@@ -244,7 +252,7 @@ func (e *RaidMemberController) createRaidMember(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags RaidMember
-// @Param id path int true "charid"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
@@ -255,12 +263,12 @@ func (e *RaidMemberController) deleteRaidMember(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charid, err := strconv.Atoi(c.Param("charid"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
-	params = append(params, charid)
-	keys = append(keys, "charid = ?")
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
 	var result models.RaidMember
@@ -289,7 +297,7 @@ func (e *RaidMemberController) deleteRaidMember(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [RaidMember] [%v] keys [%v]", result.Charid, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [RaidMember] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -235,7 +236,14 @@ func (e *AdventureTemplateEntryController) createAdventureTemplateEntry(c echo.C
 		)
 	}
 
-	err := e.db.Get(models.AdventureTemplateEntry{}, c).Model(&models.AdventureTemplateEntry{}).Create(&adventureTemplateEntry).Error
+	db := e.db.Get(models.AdventureTemplateEntry{}, c).Model(&models.AdventureTemplateEntry{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&adventureTemplateEntry).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

@@ -6,7 +6,7 @@ import (
 
 type BotPet struct {
 	PetsIndex  uint        `json:"pets_index" gorm:"Column:pets_index"`
-	PetId      uint        `json:"pet_id" gorm:"Column:pet_id"`
+	SpellId    uint        `json:"spell_id" gorm:"Column:spell_id"`
 	BotId      uint        `json:"bot_id" gorm:"Column:bot_id"`
 	Name       null.String `json:"name" gorm:"Column:name"`
 	Mana       int         `json:"mana" gorm:"Column:mana"`

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -109,6 +110,28 @@ func (e *NpcScaleGlobalBaseController) getNpcScaleGlobalBase(c echo.Context) err
 		keys = append(keys, "level = ?")
 	}
 
+	// key param [zone_id] position [3] type [int]
+	if len(c.QueryParam("zone_id")) > 0 {
+		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneIdParam)
+		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_version] position [4] type [int]
+	if len(c.QueryParam("instance_version")) > 0 {
+		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceVersionParam)
+		keys = append(keys, "instance_version = ?")
+	}
+
 	// query builder
 	var result models.NpcScaleGlobalBase
 	query := e.db.QueryContext(models.NpcScaleGlobalBase{}, c)
@@ -174,6 +197,28 @@ func (e *NpcScaleGlobalBaseController) updateNpcScaleGlobalBase(c echo.Context) 
 		keys = append(keys, "level = ?")
 	}
 
+	// key param [zone_id] position [3] type [int]
+	if len(c.QueryParam("zone_id")) > 0 {
+		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneIdParam)
+		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_version] position [4] type [int]
+	if len(c.QueryParam("instance_version")) > 0 {
+		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceVersionParam)
+		keys = append(keys, "instance_version = ?")
+	}
+
 	// query builder
 	var result models.NpcScaleGlobalBase
 	query := e.db.QueryContext(models.NpcScaleGlobalBase{}, c)
@@ -235,7 +280,14 @@ func (e *NpcScaleGlobalBaseController) createNpcScaleGlobalBase(c echo.Context) 
 		)
 	}
 
-	err := e.db.Get(models.NpcScaleGlobalBase{}, c).Model(&models.NpcScaleGlobalBase{}).Create(&npcScaleGlobalBase).Error
+	db := e.db.Get(models.NpcScaleGlobalBase{}, c).Model(&models.NpcScaleGlobalBase{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&npcScaleGlobalBase).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -293,6 +345,28 @@ func (e *NpcScaleGlobalBaseController) deleteNpcScaleGlobalBase(c echo.Context) 
 
 		params = append(params, levelParam)
 		keys = append(keys, "level = ?")
+	}
+
+	// key param [zone_id] position [3] type [int]
+	if len(c.QueryParam("zone_id")) > 0 {
+		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneIdParam)
+		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_version] position [4] type [int]
+	if len(c.QueryParam("instance_version")) > 0 {
+		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceVersionParam)
+		keys = append(keys, "instance_version = ?")
 	}
 
 	// query builder

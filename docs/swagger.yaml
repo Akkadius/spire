@@ -492,6 +492,8 @@ definitions:
         type: integer
       bot_id:
         type: integer
+      caster_range:
+        type: integer
       cha:
         type: integer
       class:
@@ -736,9 +738,9 @@ definitions:
         type: integer
       name:
         type: string
-      pet_id:
-        type: integer
       pets_index:
+        type: integer
+      spell_id:
         type: integer
     type: object
   models.BotPetBuff:
@@ -1274,9 +1276,17 @@ definitions:
         type: integer
       corpse_id:
         type: integer
+      custom_data:
+        type: string
       equip_slot:
         type: integer
       item_id:
+        type: integer
+      ornament_hero_model:
+        type: integer
+      ornamenticon:
+        type: integer
+      ornamentidfile:
         type: integer
     type: object
   models.CharacterCurrency:
@@ -1951,6 +1961,8 @@ definitions:
     type: object
   models.CharacterTribute:
     properties:
+      character_id:
+        type: integer
       id:
         type: integer
       tier:
@@ -1958,11 +1970,37 @@ definitions:
       tribute:
         type: integer
     type: object
+  models.Chatchannel:
+    properties:
+      id:
+        type: integer
+      minstatus:
+        type: integer
+      name:
+        type: string
+      owner:
+        type: string
+      password:
+        type: string
+    type: object
   models.ChatchannelReservedName:
     properties:
       id:
         type: integer
       name:
+        type: string
+    type: object
+  models.CommandSubsetting:
+    properties:
+      access_level:
+        type: integer
+      id:
+        type: integer
+      parent_command:
+        type: string
+      sub_command:
+        type: string
+      top_level_aliases:
         type: string
     type: object
   models.CompletedSharedTask:
@@ -2033,12 +2071,18 @@ definitions:
     type: object
   models.DataBucket:
     properties:
+      bot_id:
+        type: integer
+      character_id:
+        type: integer
       expires:
         type: integer
       id:
         type: integer
       key:
         type: string
+      npc_id:
+        type: integer
       value:
         type: string
     type: object
@@ -3934,6 +3978,8 @@ definitions:
         type: integer
       attack_delay:
         type: integer
+      avoidance:
+        type: integer
       charisma:
         type: integer
       cold_resist:
@@ -3948,10 +3994,18 @@ definitions:
         type: integer
       heal_scale:
         type: integer
+      heroic_strikethrough:
+        type: integer
       hp:
+        type: integer
+      hp_regen_per_second:
         type: integer
       hp_regen_rate:
         type: integer
+      instance_version:
+        type: integer
+      instance_version_list:
+        type: string
       intelligence:
         type: integer
       level:
@@ -3980,6 +4034,10 @@ definitions:
         type: integer
       wisdom:
         type: integer
+      zone_id:
+        type: integer
+      zone_id_list:
+        type: string
     type: object
   models.NpcSpell:
     properties:
@@ -4725,6 +4783,12 @@ definitions:
         type: integer
       loottype:
         type: integer
+      marked_npc_1:
+        type: integer
+      marked_npc_2:
+        type: integer
+      marked_npc_3:
+        type: integer
       motd:
         type: string
       raid_leaders:
@@ -4765,9 +4829,17 @@ definitions:
     properties:
       _class:
         type: integer
+      bot_id:
+        type: integer
       charid:
         type: integer
       groupid:
+        type: integer
+      id:
+        type: integer
+      is_assister:
+        type: integer
+      is_marker:
         type: integer
       isgroupleader:
         type: integer
@@ -4778,6 +4850,8 @@ definitions:
       level:
         type: integer
       name:
+        type: string
+      note:
         type: string
       raidid:
         type: integer
@@ -27848,6 +27922,420 @@ paths:
       summary: Counts CharacterTasks
       tags:
       - CharacterTask
+  /character_tribute:
+    put:
+      consumes:
+      - application/json
+      operationId: createCharacterTribute
+      parameters:
+      - description: CharacterTribute
+        in: body
+        name: character_tribute
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterTribute'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTribute'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates CharacterTribute
+      tags:
+      - CharacterTribute
+  /character_tribute/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteCharacterTribute
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes CharacterTribute
+      tags:
+      - CharacterTribute
+    get:
+      consumes:
+      - application/json
+      operationId: getCharacterTribute
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTribute'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterTribute
+      tags:
+      - CharacterTribute
+    patch:
+      consumes:
+      - application/json
+      operationId: updateCharacterTribute
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CharacterTribute
+        in: body
+        name: character_tribute
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterTribute'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTribute'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates CharacterTribute
+      tags:
+      - CharacterTribute
+  /character_tributes:
+    get:
+      consumes:
+      - application/json
+      operationId: listCharacterTributes
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTribute'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists CharacterTributes
+      tags:
+      - CharacterTribute
+  /character_tributes/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterTributesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTribute'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterTributes in bulk
+      tags:
+      - CharacterTribute
+  /character_tributes/count:
+    get:
+      consumes:
+      - application/json
+      operationId: getCharacterTributesCount
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTribute'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Counts CharacterTributes
+      tags:
+      - CharacterTribute
+  /chatchannel:
+    put:
+      consumes:
+      - application/json
+      operationId: createChatchannel
+      parameters:
+      - description: Chatchannel
+        in: body
+        name: chatchannel
+        required: true
+        schema:
+          $ref: '#/definitions/models.Chatchannel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Chatchannel'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates Chatchannel
+      tags:
+      - Chatchannel
+  /chatchannel/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteChatchannel
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes Chatchannel
+      tags:
+      - Chatchannel
+    get:
+      consumes:
+      - application/json
+      operationId: getChatchannel
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Chatchannel'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Chatchannel
+      tags:
+      - Chatchannel
+    patch:
+      consumes:
+      - application/json
+      operationId: updateChatchannel
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Chatchannel
+        in: body
+        name: chatchannel
+        required: true
+        schema:
+          $ref: '#/definitions/models.Chatchannel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Chatchannel'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates Chatchannel
+      tags:
+      - Chatchannel
   /chatchannel_reserved_name:
     put:
       consumes:
@@ -28130,6 +28618,438 @@ paths:
       summary: Counts ChatchannelReservedNames
       tags:
       - ChatchannelReservedName
+  /chatchannels:
+    get:
+      consumes:
+      - application/json
+      operationId: listChatchannels
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Chatchannel'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists Chatchannels
+      tags:
+      - Chatchannel
+  /chatchannels/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getChatchannelsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Chatchannel'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Chatchannels in bulk
+      tags:
+      - Chatchannel
+  /chatchannels/count:
+    get:
+      consumes:
+      - application/json
+      operationId: getChatchannelsCount
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Chatchannel'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Counts Chatchannels
+      tags:
+      - Chatchannel
+  /command_subsetting:
+    put:
+      consumes:
+      - application/json
+      operationId: createCommandSubsetting
+      parameters:
+      - description: CommandSubsetting
+        in: body
+        name: command_subsetting
+        required: true
+        schema:
+          $ref: '#/definitions/models.CommandSubsetting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommandSubsetting'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates CommandSubsetting
+      tags:
+      - CommandSubsetting
+  /command_subsetting/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteCommandSubsetting
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes CommandSubsetting
+      tags:
+      - CommandSubsetting
+    get:
+      consumes:
+      - application/json
+      operationId: getCommandSubsetting
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommandSubsetting'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CommandSubsetting
+      tags:
+      - CommandSubsetting
+    patch:
+      consumes:
+      - application/json
+      operationId: updateCommandSubsetting
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CommandSubsetting
+        in: body
+        name: command_subsetting
+        required: true
+        schema:
+          $ref: '#/definitions/models.CommandSubsetting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommandSubsetting'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates CommandSubsetting
+      tags:
+      - CommandSubsetting
+  /command_subsettings:
+    get:
+      consumes:
+      - application/json
+      operationId: listCommandSubsettings
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommandSubsetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists CommandSubsettings
+      tags:
+      - CommandSubsetting
+  /command_subsettings/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCommandSubsettingsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommandSubsetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CommandSubsettings in bulk
+      tags:
+      - CommandSubsetting
+  /command_subsettings/count:
+    get:
+      consumes:
+      - application/json
+      operationId: getCommandSubsettingsCount
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommandSubsetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Counts CommandSubsettings
+      tags:
+      - CommandSubsetting
   /completed_shared_task:
     put:
       consumes:
@@ -52653,7 +53573,7 @@ paths:
       - application/json
       operationId: deleteRaidMember
       parameters:
-      - description: charid
+      - description: id
         in: path
         name: id
         required: true

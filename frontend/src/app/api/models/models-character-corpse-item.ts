@@ -8,6 +8,10 @@ export interface ModelsCharacterCorpseItem {
     aug_6?: number;
     charges?: number;
     corpse_id?: number;
+    custom_data?: string;
     equip_slot?: number;
     item_id?: number;
+    ornament_hero_model?: number;
+    ornamenticon?: number;
+    ornamentidfile?: number;
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -213,7 +214,14 @@ func (e *GraveyardController) createGraveyard(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).Create(&graveyard).Error
+	db := e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&graveyard).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

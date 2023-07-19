@@ -4,6 +4,7 @@ export interface ModelsNpcScaleGlobalBase {
     agility?: number;
     attack?: number;
     attack_delay?: number;
+    avoidance?: number;
     charisma?: number;
     cold_resist?: number;
     corruption_resist?: number;
@@ -11,8 +12,12 @@ export interface ModelsNpcScaleGlobalBase {
     disease_resist?: number;
     fire_resist?: number;
     heal_scale?: number;
+    heroic_strikethrough?: number;
     hp?: number;
+    hp_regen_per_second?: number;
     hp_regen_rate?: number;
+    instance_version?: number;
+    instance_version_list?: string;
     intelligence?: number;
     level?: number;
     magic_resist?: number;
@@ -27,4 +32,6 @@ export interface ModelsNpcScaleGlobalBase {
     strength?: number;
     type?: number;
     wisdom?: number;
+    zone_id?: number;
+    zone_id_list?: string;
 }

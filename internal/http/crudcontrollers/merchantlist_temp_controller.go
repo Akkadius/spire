@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -279,7 +280,14 @@ func (e *MerchantlistTempController) createMerchantlistTemp(c echo.Context) erro
 		)
 	}
 
-	err := e.db.Get(models.MerchantlistTemp{}, c).Model(&models.MerchantlistTemp{}).Create(&merchantlistTemp).Error
+	db := e.db.Get(models.MerchantlistTemp{}, c).Model(&models.MerchantlistTemp{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&merchantlistTemp).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

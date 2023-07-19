@@ -77,7 +77,10 @@ api/character-skill-api.ts
 api/character-spell-api.ts
 api/character-task-api.ts
 api/character-task-timer-api.ts
+api/character-tribute-api.ts
+api/chatchannel-api.ts
 api/chatchannel-reserved-name-api.ts
+api/command-subsetting-api.ts
 api/completed-shared-task-activity-state-api.ts
 api/completed-shared-task-api.ts
 api/completed-shared-task-member-api.ts
@@ -289,6 +292,8 @@ models/models-character-task-timer.ts
 models/models-character-task.ts
 models/models-character-tribute.ts
 models/models-chatchannel-reserved-name.ts
+models/models-chatchannel.ts
+models/models-command-subsetting.ts
 models/models-completed-shared-task-activity-state.ts
 models/models-completed-shared-task-member.ts
 models/models-completed-shared-task.ts

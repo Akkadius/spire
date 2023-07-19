@@ -31716,6 +31716,621 @@ const docTemplate = `{
                 }
             }
         },
+        "/character_tribute": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Creates CharacterTribute",
+                "operationId": "createCharacterTribute",
+                "parameters": [
+                    {
+                        "description": "CharacterTribute",
+                        "name": "character_tribute",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterTribute"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTribute"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_tribute/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Gets CharacterTribute",
+                "operationId": "getCharacterTribute",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTribute"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Deletes CharacterTribute",
+                "operationId": "deleteCharacterTribute",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Updates CharacterTribute",
+                "operationId": "updateCharacterTribute",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CharacterTribute",
+                        "name": "character_tribute",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterTribute"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTribute"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_tributes": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Lists CharacterTributes",
+                "operationId": "listCharacterTributes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTribute"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_tributes/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Gets CharacterTributes in bulk",
+                "operationId": "getCharacterTributesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTribute"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_tributes/count": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTribute"
+                ],
+                "summary": "Counts CharacterTributes",
+                "operationId": "getCharacterTributesCount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTribute"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chatchannel": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Creates Chatchannel",
+                "operationId": "createChatchannel",
+                "parameters": [
+                    {
+                        "description": "Chatchannel",
+                        "name": "chatchannel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Chatchannel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Chatchannel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chatchannel/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Gets Chatchannel",
+                "operationId": "getChatchannel",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Chatchannel"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Deletes Chatchannel",
+                "operationId": "deleteChatchannel",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Updates Chatchannel",
+                "operationId": "updateChatchannel",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Chatchannel",
+                        "name": "chatchannel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Chatchannel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Chatchannel"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/chatchannel_reserved_name": {
             "put": {
                 "consumes": [
@@ -32121,6 +32736,642 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.ChatchannelReservedName"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chatchannels": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Lists Chatchannels",
+                "operationId": "listChatchannels",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Chatchannel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chatchannels/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Gets Chatchannels in bulk",
+                "operationId": "getChatchannelsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Chatchannel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chatchannels/count": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatchannel"
+                ],
+                "summary": "Counts Chatchannels",
+                "operationId": "getChatchannelsCount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Chatchannel"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/command_subsetting": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Creates CommandSubsetting",
+                "operationId": "createCommandSubsetting",
+                "parameters": [
+                    {
+                        "description": "CommandSubsetting",
+                        "name": "command_subsetting",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CommandSubsetting"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CommandSubsetting"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/command_subsetting/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Gets CommandSubsetting",
+                "operationId": "getCommandSubsetting",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CommandSubsetting"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Deletes CommandSubsetting",
+                "operationId": "deleteCommandSubsetting",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Updates CommandSubsetting",
+                "operationId": "updateCommandSubsetting",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CommandSubsetting",
+                        "name": "command_subsetting",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CommandSubsetting"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CommandSubsetting"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/command_subsettings": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Lists CommandSubsettings",
+                "operationId": "listCommandSubsettings",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CommandSubsetting"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/command_subsettings/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Gets CommandSubsettings in bulk",
+                "operationId": "getCommandSubsettingsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CommandSubsetting"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/command_subsettings/count": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CommandSubsetting"
+                ],
+                "summary": "Counts CommandSubsettings",
+                "operationId": "getCommandSubsettingsCount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CommandSubsetting"
                             }
                         }
                     },
@@ -68464,7 +69715,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "charid",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -85362,6 +86613,9 @@ const docTemplate = `{
                 "bot_id": {
                     "type": "integer"
                 },
+                "caster_range": {
+                    "type": "integer"
+                },
                 "cha": {
                     "type": "integer"
                 },
@@ -85733,10 +86987,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "pet_id": {
+                "pets_index": {
                     "type": "integer"
                 },
-                "pets_index": {
+                "spell_id": {
                     "type": "integer"
                 }
             }
@@ -86551,10 +87805,22 @@ const docTemplate = `{
                 "corpse_id": {
                     "type": "integer"
                 },
+                "custom_data": {
+                    "type": "string"
+                },
                 "equip_slot": {
                     "type": "integer"
                 },
                 "item_id": {
+                    "type": "integer"
+                },
+                "ornament_hero_model": {
+                    "type": "integer"
+                },
+                "ornamenticon": {
+                    "type": "integer"
+                },
+                "ornamentidfile": {
                     "type": "integer"
                 }
             }
@@ -87578,6 +88844,9 @@ const docTemplate = `{
         "models.CharacterTribute": {
             "type": "object",
             "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -87589,6 +88858,26 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Chatchannel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "minstatus": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ChatchannelReservedName": {
             "type": "object",
             "properties": {
@@ -87596,6 +88885,26 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CommandSubsetting": {
+            "type": "object",
+            "properties": {
+                "access_level": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "parent_command": {
+                    "type": "string"
+                },
+                "sub_command": {
+                    "type": "string"
+                },
+                "top_level_aliases": {
                     "type": "string"
                 }
             }
@@ -87705,6 +89014,12 @@ const docTemplate = `{
         "models.DataBucket": {
             "type": "object",
             "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "character_id": {
+                    "type": "integer"
+                },
                 "expires": {
                     "type": "integer"
                 },
@@ -87713,6 +89028,9 @@ const docTemplate = `{
                 },
                 "key": {
                     "type": "string"
+                },
+                "npc_id": {
+                    "type": "integer"
                 },
                 "value": {
                     "type": "string"
@@ -90588,6 +91906,9 @@ const docTemplate = `{
                 "attack_delay": {
                     "type": "integer"
                 },
+                "avoidance": {
+                    "type": "integer"
+                },
                 "charisma": {
                     "type": "integer"
                 },
@@ -90609,11 +91930,23 @@ const docTemplate = `{
                 "heal_scale": {
                     "type": "integer"
                 },
+                "heroic_strikethrough": {
+                    "type": "integer"
+                },
                 "hp": {
+                    "type": "integer"
+                },
+                "hp_regen_per_second": {
                     "type": "integer"
                 },
                 "hp_regen_rate": {
                     "type": "integer"
+                },
+                "instance_version": {
+                    "type": "integer"
+                },
+                "instance_version_list": {
+                    "type": "string"
                 },
                 "intelligence": {
                     "type": "integer"
@@ -90656,6 +91989,12 @@ const docTemplate = `{
                 },
                 "wisdom": {
                     "type": "integer"
+                },
+                "zone_id": {
+                    "type": "integer"
+                },
+                "zone_id_list": {
+                    "type": "string"
                 }
             }
         },
@@ -91784,6 +93123,15 @@ const docTemplate = `{
                 "loottype": {
                     "type": "integer"
                 },
+                "marked_npc_1": {
+                    "type": "integer"
+                },
+                "marked_npc_2": {
+                    "type": "integer"
+                },
+                "marked_npc_3": {
+                    "type": "integer"
+                },
                 "motd": {
                     "type": "string"
                 },
@@ -91845,10 +93193,22 @@ const docTemplate = `{
                 "_class": {
                     "type": "integer"
                 },
+                "bot_id": {
+                    "type": "integer"
+                },
                 "charid": {
                     "type": "integer"
                 },
                 "groupid": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_assister": {
+                    "type": "integer"
+                },
+                "is_marker": {
                     "type": "integer"
                 },
                 "isgroupleader": {
@@ -91864,6 +93224,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "note": {
                     "type": "string"
                 },
                 "raidid": {

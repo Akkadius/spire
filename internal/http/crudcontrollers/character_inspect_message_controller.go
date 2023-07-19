@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -213,7 +214,14 @@ func (e *CharacterInspectMessageController) createCharacterInspectMessage(c echo
 		)
 	}
 
-	err := e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{}).Create(&characterInspectMessage).Error
+	db := e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&characterInspectMessage).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

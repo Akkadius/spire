@@ -9,7 +9,7 @@ type BotInventory struct {
 	BotId               uint        `json:"bot_id" gorm:"Column:bot_id"`
 	SlotId              uint32      `json:"slot_id" gorm:"Column:slot_id"`
 	ItemId              null.Uint   `json:"item_id" gorm:"Column:item_id"`
-	InstCharges         null.Uint8  `json:"inst_charges" gorm:"Column:inst_charges"`
+	InstCharges         null.Uint16 `json:"inst_charges" gorm:"Column:inst_charges"`
 	InstColor           uint        `json:"inst_color" gorm:"Column:inst_color"`
 	InstNoDrop          uint8       `json:"inst_no_drop" gorm:"Column:inst_no_drop"`
 	InstCustomData      null.String `json:"inst_custom_data" gorm:"Column:inst_custom_data"`

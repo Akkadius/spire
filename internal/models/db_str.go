@@ -1,7 +1,7 @@
 package models
 
 type DbStr struct {
-	ID    int64  `json:"id" gorm:"Column:id"`
+	ID    int    `json:"id" gorm:"Column:id"`
 	Type  int    `json:"type" gorm:"Column:type"`
 	Value string `json:"value" gorm:"Column:value"`
 }

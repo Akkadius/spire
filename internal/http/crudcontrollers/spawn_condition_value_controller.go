@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -257,7 +258,14 @@ func (e *SpawnConditionValueController) createSpawnConditionValue(c echo.Context
 		)
 	}
 
-	err := e.db.Get(models.SpawnConditionValue{}, c).Model(&models.SpawnConditionValue{}).Create(&spawnConditionValue).Error
+	db := e.db.Get(models.SpawnConditionValue{}, c).Model(&models.SpawnConditionValue{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&spawnConditionValue).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

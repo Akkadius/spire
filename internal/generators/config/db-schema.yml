@@ -1730,121 +1730,13 @@ bot_data:
     is_nullable: "NO"
     column_type: tinyint(2) unsigned
     column_default: "0"
-bot_group_members:
-  - column: group_members_index
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-  - column: groups_index
-    data_type: int
-    column_key: MUL
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: bot_id
-    data_type: int
-    column_key: MUL
-    ordinal_position: "3"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-bot_groups:
-  - column: groups_index
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-  - column: group_leader_id
-    data_type: int
-    column_key: MUL
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: group_name
-    data_type: varchar
-    column_key: ""
-    ordinal_position: "3"
-    is_nullable: "NO"
-    column_type: varchar(64)
-    column_default: ""
-  - column: auto_spawn
-    data_type: tinyint
-    column_key: ""
-    ordinal_position: "4"
-    is_nullable: "NO"
-    column_type: tinyint(1) unsigned
-    column_default: "0"
-bot_guild_members:
-  - column: bot_id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
-  - column: guild_id
-    data_type: mediumint
-    column_key: ""
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: mediumint(8) unsigned
-    column_default: "0"
-  - column: rank
-    data_type: tinyint
-    column_key: ""
-    ordinal_position: "3"
-    is_nullable: "NO"
-    column_type: tinyint(3) unsigned
-    column_default: "0"
-  - column: tribute_enable
-    data_type: tinyint
-    column_key: ""
-    ordinal_position: "4"
-    is_nullable: "NO"
-    column_type: tinyint(3) unsigned
-    column_default: "0"
-  - column: total_tribute
+  - column: caster_range
     data_type: int
     column_key: ""
-    ordinal_position: "5"
+    ordinal_position: "51"
     is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: last_tribute
-    data_type: int
-    column_key: ""
-    ordinal_position: "6"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: banker
-    data_type: tinyint
-    column_key: ""
-    ordinal_position: "7"
-    is_nullable: "NO"
-    column_type: tinyint(3) unsigned
-    column_default: "0"
-  - column: public_note
-    data_type: text
-    column_key: ""
-    ordinal_position: "8"
-    is_nullable: "YES"
-    column_type: text
-    column_default: "NULL"
-  - column: alt
-    data_type: tinyint
-    column_key: ""
-    ordinal_position: "9"
-    is_nullable: "NO"
-    column_type: tinyint(3) unsigned
-    column_default: "0"
+    column_type: int(11) unsigned
+    column_default: "300"
 bot_heal_rotation_members:
   - column: member_index
     data_type: int
@@ -2047,11 +1939,11 @@ bot_inventories:
     column_type: int(11) unsigned
     column_default: "0"
   - column: inst_charges
-    data_type: tinyint
+    data_type: smallint
     column_key: ""
     ordinal_position: "5"
     is_nullable: "YES"
-    column_type: tinyint(3) unsigned
+    column_type: smallint(3) unsigned
     column_default: "0"
   - column: inst_color
     data_type: int
@@ -2225,7 +2117,7 @@ bot_pets:
     is_nullable: "NO"
     column_type: int(10) unsigned
     column_default: ""
-  - column: pet_id
+  - column: spell_id
     data_type: int
     column_key: ""
     ordinal_position: "2"
@@ -3531,6 +3423,34 @@ character_corpse_items:
     ordinal_position: "11"
     is_nullable: "NO"
     column_type: smallint(5)
+    column_default: "0"
+  - column: custom_data
+    data_type: text
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "YES"
+    column_type: text
+    column_default: "NULL"
+  - column: ornamenticon
+    data_type: int
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: ornamentidfile
+    data_type: int
+    column_key: ""
+    ordinal_position: "14"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: ornament_hero_model
+    data_type: int
+    column_key: ""
+    ordinal_position: "15"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
     column_default: "0"
 character_corpses:
   - column: id
@@ -5392,22 +5312,29 @@ character_tasks:
 character_tribute:
   - column: id
     data_type: int
-    column_key: MUL
+    column_key: PRI
     ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: character_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "2"
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
   - column: tier
     data_type: tinyint
     column_key: ""
-    ordinal_position: "2"
+    ordinal_position: "3"
     is_nullable: "NO"
     column_type: tinyint(11) unsigned
     column_default: "0"
   - column: tribute
     data_type: int
     column_key: ""
-    ordinal_position: "3"
+    ordinal_position: "4"
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
@@ -5427,31 +5354,38 @@ chatchannel_reserved_names:
     column_type: varchar(64)
     column_default: ""
 chatchannels:
-  - column: name
-    data_type: varchar
+  - column: id
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: name
+    data_type: varchar
+    column_key: UNI
+    ordinal_position: "2"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
   - column: owner
     data_type: varchar
     column_key: ""
-    ordinal_position: "2"
+    ordinal_position: "3"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
   - column: password
     data_type: varchar
     column_key: ""
-    ordinal_position: "3"
+    ordinal_position: "4"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
   - column: minstatus
     data_type: int
     column_key: ""
-    ordinal_position: "4"
+    ordinal_position: "5"
     is_nullable: "NO"
     column_type: int(5)
     column_default: "0"
@@ -5477,6 +5411,42 @@ command_settings:
     is_nullable: "NO"
     column_type: varchar(256)
     column_default: ''''''
+command_subsettings:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+  - column: parent_command
+    data_type: varchar
+    column_key: MUL
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: varchar(32)
+    column_default: ""
+  - column: sub_command
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: varchar(32)
+    column_default: ""
+  - column: access_level
+    data_type: int
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: top_level_aliases
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: varchar(255)
+    column_default: ""
 completed_shared_task_activity_state:
   - column: shared_task_id
     data_type: bigint
@@ -5680,13 +5650,34 @@ data_buckets:
     is_nullable: "YES"
     column_type: int(11) unsigned
     column_default: "0"
+  - column: character_id
+    data_type: bigint
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: bigint(11)
+    column_default: "0"
+  - column: npc_id
+    data_type: bigint
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "NO"
+    column_type: bigint(11)
+    column_default: "0"
+  - column: bot_id
+    data_type: bigint
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "NO"
+    column_type: bigint(11)
+    column_default: "0"
 db_str:
   - column: id
-    data_type: bigint
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: bigint(20)
+    column_type: int(10)
     column_default: ""
   - column: type
     data_type: int
@@ -6414,77 +6405,6 @@ eqtime:
     data_type: int
     column_key: ""
     ordinal_position: "6"
-    is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
-eventlog:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-  - column: accountname
-    data_type: varchar
-    column_key: ""
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: varchar(30)
-    column_default: ''''''
-  - column: accountid
-    data_type: int
-    column_key: ""
-    ordinal_position: "3"
-    is_nullable: "YES"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: status
-    data_type: int
-    column_key: ""
-    ordinal_position: "4"
-    is_nullable: "NO"
-    column_type: int(5)
-    column_default: "0"
-  - column: charname
-    data_type: varchar
-    column_key: ""
-    ordinal_position: "5"
-    is_nullable: "NO"
-    column_type: varchar(64)
-    column_default: ''''''
-  - column: target
-    data_type: varchar
-    column_key: ""
-    ordinal_position: "6"
-    is_nullable: "YES"
-    column_type: varchar(64)
-    column_default: '''None'''
-  - column: time
-    data_type: timestamp
-    column_key: ""
-    ordinal_position: "7"
-    is_nullable: "NO"
-    column_type: timestamp
-    column_default: current_timestamp()
-  - column: descriptiontype
-    data_type: varchar
-    column_key: ""
-    ordinal_position: "8"
-    is_nullable: "NO"
-    column_type: varchar(50)
-    column_default: ''''''
-  - column: description
-    data_type: text
-    column_key: ""
-    ordinal_position: "9"
-    is_nullable: "NO"
-    column_type: text
-    column_default: ""
-  - column: event_nid
-    data_type: int
-    column_key: ""
-    ordinal_position: "10"
     is_nullable: "NO"
     column_type: int(11)
     column_default: "0"
@@ -7714,49 +7634,6 @@ guilds:
     is_nullable: "NO"
     column_type: varchar(512)
     column_default: ''''''
-hackers:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(4)
-    column_default: ""
-  - column: account
-    data_type: text
-    column_key: ""
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: text
-    column_default: ""
-  - column: name
-    data_type: text
-    column_key: ""
-    ordinal_position: "3"
-    is_nullable: "NO"
-    column_type: text
-    column_default: ""
-  - column: hacked
-    data_type: text
-    column_key: ""
-    ordinal_position: "4"
-    is_nullable: "NO"
-    column_type: text
-    column_default: ""
-  - column: zone
-    data_type: text
-    column_key: ""
-    ordinal_position: "5"
-    is_nullable: "YES"
-    column_type: text
-    column_default: "NULL"
-  - column: date
-    data_type: timestamp
-    column_key: ""
-    ordinal_position: "6"
-    is_nullable: "NO"
-    column_type: timestamp
-    column_default: current_timestamp()
 horses:
   - column: id
     data_type: int
@@ -11263,188 +11140,237 @@ npc_scale_global_base:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+  - column: zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: instance_version
+    data_type: int
+    column_key: PRI
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: zone_id_list
+    data_type: text
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: text
+    column_default: ""
+  - column: instance_version_list
+    data_type: text
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "NO"
+    column_type: text
+    column_default: ""
   - column: ac
     data_type: int
     column_key: ""
-    ordinal_position: "3"
-    is_nullable: "YES"
+    ordinal_position: "7"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: hp
-    data_type: int
+    data_type: bigint
     column_key: ""
-    ordinal_position: "4"
-    is_nullable: "YES"
-    column_type: int(11)
-    column_default: "NULL"
+    ordinal_position: "8"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: "0"
   - column: accuracy
     data_type: int
     column_key: ""
-    ordinal_position: "5"
-    is_nullable: "YES"
+    ordinal_position: "9"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: slow_mitigation
     data_type: int
     column_key: ""
-    ordinal_position: "6"
-    is_nullable: "YES"
+    ordinal_position: "10"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: attack
     data_type: int
     column_key: ""
-    ordinal_position: "7"
-    is_nullable: "YES"
+    ordinal_position: "11"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: strength
     data_type: int
     column_key: ""
-    ordinal_position: "8"
-    is_nullable: "YES"
+    ordinal_position: "12"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: stamina
     data_type: int
     column_key: ""
-    ordinal_position: "9"
-    is_nullable: "YES"
+    ordinal_position: "13"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: dexterity
     data_type: int
     column_key: ""
-    ordinal_position: "10"
-    is_nullable: "YES"
+    ordinal_position: "14"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: agility
     data_type: int
     column_key: ""
-    ordinal_position: "11"
-    is_nullable: "YES"
+    ordinal_position: "15"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: intelligence
     data_type: int
     column_key: ""
-    ordinal_position: "12"
-    is_nullable: "YES"
+    ordinal_position: "16"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: wisdom
     data_type: int
     column_key: ""
-    ordinal_position: "13"
-    is_nullable: "YES"
+    ordinal_position: "17"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: charisma
     data_type: int
     column_key: ""
-    ordinal_position: "14"
-    is_nullable: "YES"
+    ordinal_position: "18"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: magic_resist
     data_type: int
     column_key: ""
-    ordinal_position: "15"
-    is_nullable: "YES"
+    ordinal_position: "19"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: cold_resist
     data_type: int
     column_key: ""
-    ordinal_position: "16"
-    is_nullable: "YES"
+    ordinal_position: "20"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: fire_resist
     data_type: int
     column_key: ""
-    ordinal_position: "17"
-    is_nullable: "YES"
+    ordinal_position: "21"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: poison_resist
     data_type: int
     column_key: ""
-    ordinal_position: "18"
-    is_nullable: "YES"
+    ordinal_position: "22"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: disease_resist
     data_type: int
     column_key: ""
-    ordinal_position: "19"
-    is_nullable: "YES"
+    ordinal_position: "23"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: corruption_resist
     data_type: int
     column_key: ""
-    ordinal_position: "20"
-    is_nullable: "YES"
+    ordinal_position: "24"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: physical_resist
     data_type: int
     column_key: ""
-    ordinal_position: "21"
-    is_nullable: "YES"
+    ordinal_position: "25"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: min_dmg
     data_type: int
     column_key: ""
-    ordinal_position: "22"
-    is_nullable: "YES"
+    ordinal_position: "26"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: max_dmg
     data_type: int
     column_key: ""
-    ordinal_position: "23"
-    is_nullable: "YES"
+    ordinal_position: "27"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: hp_regen_rate
-    data_type: int
+    data_type: bigint
     column_key: ""
-    ordinal_position: "24"
-    is_nullable: "YES"
-    column_type: int(11)
-    column_default: "NULL"
+    ordinal_position: "28"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: "0"
+  - column: hp_regen_per_second
+    data_type: bigint
+    column_key: ""
+    ordinal_position: "29"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: "0"
   - column: attack_delay
     data_type: int
     column_key: ""
-    ordinal_position: "25"
-    is_nullable: "YES"
+    ordinal_position: "30"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: spell_scale
     data_type: int
     column_key: ""
-    ordinal_position: "26"
-    is_nullable: "YES"
+    ordinal_position: "31"
+    is_nullable: "NO"
     column_type: int(11)
     column_default: "100"
   - column: heal_scale
     data_type: int
     column_key: ""
-    ordinal_position: "27"
-    is_nullable: "YES"
+    ordinal_position: "32"
+    is_nullable: "NO"
     column_type: int(11)
     column_default: "100"
+  - column: avoidance
+    data_type: int
+    column_key: ""
+    ordinal_position: "33"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: heroic_strikethrough
+    data_type: int
+    column_key: ""
+    ordinal_position: "34"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
   - column: special_abilities
     data_type: text
     column_key: ""
-    ordinal_position: "28"
-    is_nullable: "YES"
+    ordinal_position: "35"
+    is_nullable: "NO"
     column_type: text
-    column_default: "NULL"
+    column_default: ""
 npc_spells:
   - column: id
     data_type: int
@@ -13698,6 +13624,48 @@ raid_details:
     is_nullable: "YES"
     column_type: varchar(1024)
     column_default: "NULL"
+  - column: marked_npc_1
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
+  - column: marked_npc_2
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
+  - column: marked_npc_3
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
+  - column: markedNPC1
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "8"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
+  - column: markedNPC2
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "9"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
+  - column: markedNPC3
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "10"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
 raid_leaders:
   - column: gid
     data_type: int
@@ -13763,69 +13731,104 @@ raid_leaders:
     column_type: int(4)
     column_default: "0"
 raid_members:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
   - column: raidid
     data_type: int
     column_key: ""
-    ordinal_position: "1"
+    ordinal_position: "2"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: charid
     data_type: int
-    column_key: PRI
-    ordinal_position: "2"
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(4)
+    column_default: "0"
+  - column: bot_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "4"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: groupid
     data_type: int
     column_key: ""
-    ordinal_position: "3"
+    ordinal_position: "5"
     is_nullable: "NO"
     column_type: int(4) unsigned
     column_default: "0"
   - column: _class
     data_type: tinyint
     column_key: ""
-    ordinal_position: "4"
+    ordinal_position: "6"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "0"
   - column: level
     data_type: tinyint
     column_key: ""
-    ordinal_position: "5"
+    ordinal_position: "7"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "0"
   - column: name
     data_type: varchar
-    column_key: ""
-    ordinal_position: "6"
+    column_key: UNI
+    ordinal_position: "8"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
   - column: isgroupleader
     data_type: tinyint
     column_key: ""
-    ordinal_position: "7"
+    ordinal_position: "9"
     is_nullable: "NO"
     column_type: tinyint(1)
     column_default: "0"
   - column: israidleader
     data_type: tinyint
     column_key: ""
-    ordinal_position: "8"
+    ordinal_position: "10"
     is_nullable: "NO"
     column_type: tinyint(1)
     column_default: "0"
   - column: islooter
     data_type: tinyint
     column_key: ""
-    ordinal_position: "9"
+    ordinal_position: "11"
     is_nullable: "NO"
     column_type: tinyint(1)
     column_default: "0"
+  - column: is_marker
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "0"
+  - column: is_assister
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "0"
+  - column: note
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "14"
+    is_nullable: "NO"
+    column_type: varchar(64)
+    column_default: ''''''
 reports:
   - column: id
     data_type: int

@@ -51,6 +51,7 @@ type BotDatum struct {
 	ExpansionBitmask       int     `json:"expansion_bitmask" gorm:"Column:expansion_bitmask"`
 	EnforceSpellSettings   uint8   `json:"enforce_spell_settings" gorm:"Column:enforce_spell_settings"`
 	ArcherySetting         uint8   `json:"archery_setting" gorm:"Column:archery_setting"`
+	CasterRange            uint    `json:"caster_range" gorm:"Column:caster_range"`
 }
 
 func (BotDatum) TableName() string {

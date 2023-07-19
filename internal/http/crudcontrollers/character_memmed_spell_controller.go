@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -235,7 +236,14 @@ func (e *CharacterMemmedSpellController) createCharacterMemmedSpell(c echo.Conte
 		)
 	}
 
-	err := e.db.Get(models.CharacterMemmedSpell{}, c).Model(&models.CharacterMemmedSpell{}).Create(&characterMemmedSpell).Error
+	db := e.db.Get(models.CharacterMemmedSpell{}, c).Model(&models.CharacterMemmedSpell{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&characterMemmedSpell).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

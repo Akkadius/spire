@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -213,7 +214,14 @@ func (e *Spawn2Controller) createSpawn2(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Create(&spawn2).Error
+	db := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&spawn2).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -235,7 +236,14 @@ func (e *CompletedSharedTaskMemberController) createCompletedSharedTaskMember(c 
 		)
 	}
 
-	err := e.db.Get(models.CompletedSharedTaskMember{}, c).Model(&models.CompletedSharedTaskMember{}).Create(&completedSharedTaskMember).Error
+	db := e.db.Get(models.CompletedSharedTaskMember{}, c).Model(&models.CompletedSharedTaskMember{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&completedSharedTaskMember).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

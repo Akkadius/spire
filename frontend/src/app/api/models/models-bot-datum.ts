@@ -6,6 +6,7 @@ export interface ModelsBotDatum {
     beard?: number;
     beard_color?: number;
     bot_id?: number;
+    caster_range?: number;
     cha?: number;
     _class?: number;
     cold?: number;

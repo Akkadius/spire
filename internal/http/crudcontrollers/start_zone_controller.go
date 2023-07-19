@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -279,7 +280,14 @@ func (e *StartZoneController) createStartZone(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.StartZone{}, c).Model(&models.StartZone{}).Create(&startZone).Error
+	db := e.db.Get(models.StartZone{}, c).Model(&models.StartZone{})
+
+	// save associations
+	if c.QueryParam("save_associations") != "true" {
+        db = db.Omit(clause.Associations)
+    }
+
+	err := db.Create(&startZone).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
