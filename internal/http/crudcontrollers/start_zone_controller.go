@@ -284,8 +284,8 @@ func (e *StartZoneController) createStartZone(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&startZone).Error
 	if err != nil {

@@ -262,8 +262,8 @@ func (e *GroupIdController) createGroupId(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&groupId).Error
 	if err != nil {

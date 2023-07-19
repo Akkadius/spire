@@ -218,8 +218,8 @@ func (e *BotInspectMessageController) createBotInspectMessage(c echo.Context) er
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&botInspectMessage).Error
 	if err != nil {

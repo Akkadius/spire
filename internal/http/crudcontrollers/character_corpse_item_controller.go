@@ -240,8 +240,8 @@ func (e *CharacterCorpseItemController) createCharacterCorpseItem(c echo.Context
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterCorpseItem).Error
 	if err != nil {

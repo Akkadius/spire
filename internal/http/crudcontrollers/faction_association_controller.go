@@ -218,8 +218,8 @@ func (e *FactionAssociationController) createFactionAssociation(c echo.Context) 
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&factionAssociation).Error
 	if err != nil {

@@ -240,8 +240,8 @@ func (e *CharacterDisciplineController) createCharacterDiscipline(c echo.Context
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterDiscipline).Error
 	if err != nil {

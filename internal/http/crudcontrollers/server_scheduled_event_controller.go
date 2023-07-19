@@ -218,8 +218,8 @@ func (e *ServerScheduledEventController) createServerScheduledEvent(c echo.Conte
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&serverScheduledEvent).Error
 	if err != nil {

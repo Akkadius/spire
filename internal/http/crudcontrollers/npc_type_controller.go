@@ -218,8 +218,8 @@ func (e *NpcTypeController) createNpcType(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&npcType).Error
 	if err != nil {

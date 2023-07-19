@@ -218,8 +218,8 @@ func (e *TradeskillRecipeController) createTradeskillRecipe(c echo.Context) erro
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&tradeskillRecipe).Error
 	if err != nil {

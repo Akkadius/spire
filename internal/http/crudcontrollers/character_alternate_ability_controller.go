@@ -240,8 +240,8 @@ func (e *CharacterAlternateAbilityController) createCharacterAlternateAbility(c 
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterAlternateAbility).Error
 	if err != nil {

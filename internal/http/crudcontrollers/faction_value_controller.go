@@ -240,8 +240,8 @@ func (e *FactionValueController) createFactionValue(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&factionValue).Error
 	if err != nil {

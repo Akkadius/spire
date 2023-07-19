@@ -240,8 +240,8 @@ func (e *CharacterSkillController) createCharacterSkill(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterSkill).Error
 	if err != nil {

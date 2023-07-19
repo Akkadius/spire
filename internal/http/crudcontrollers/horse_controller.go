@@ -218,8 +218,8 @@ func (e *HorseController) createHorse(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&horse).Error
 	if err != nil {

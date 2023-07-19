@@ -218,8 +218,8 @@ func (e *ChatchannelReservedNameController) createChatchannelReservedName(c echo
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&chatchannelReservedName).Error
 	if err != nil {

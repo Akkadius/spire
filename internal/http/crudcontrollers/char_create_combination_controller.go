@@ -284,8 +284,8 @@ func (e *CharCreateCombinationController) createCharCreateCombination(c echo.Con
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&charCreateCombination).Error
 	if err != nil {

@@ -240,8 +240,8 @@ func (e *CharacterMaterialController) createCharacterMaterial(c echo.Context) er
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterMaterial).Error
 	if err != nil {

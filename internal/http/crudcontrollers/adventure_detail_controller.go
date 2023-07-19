@@ -218,8 +218,8 @@ func (e *AdventureDetailController) createAdventureDetail(c echo.Context) error 
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&adventureDetail).Error
 	if err != nil {

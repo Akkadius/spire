@@ -240,8 +240,8 @@ func (e *VeteranRewardTemplateController) createVeteranRewardTemplate(c echo.Con
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&veteranRewardTemplate).Error
 	if err != nil {

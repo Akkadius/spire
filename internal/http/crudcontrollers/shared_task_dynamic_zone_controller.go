@@ -240,8 +240,8 @@ func (e *SharedTaskDynamicZoneController) createSharedTaskDynamicZone(c echo.Con
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&sharedTaskDynamicZone).Error
 	if err != nil {

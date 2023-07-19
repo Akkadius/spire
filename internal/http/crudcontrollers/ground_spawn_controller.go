@@ -218,8 +218,8 @@ func (e *GroundSpawnController) createGroundSpawn(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&groundSpawn).Error
 	if err != nil {

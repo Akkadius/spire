@@ -240,8 +240,8 @@ func (e *SharedTaskMemberController) createSharedTaskMember(c echo.Context) erro
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&sharedTaskMember).Error
 	if err != nil {

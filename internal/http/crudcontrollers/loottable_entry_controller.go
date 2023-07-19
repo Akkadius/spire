@@ -240,8 +240,8 @@ func (e *LoottableEntryController) createLoottableEntry(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&loottableEntry).Error
 	if err != nil {

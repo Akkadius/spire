@@ -218,8 +218,8 @@ func (e *CharCreatePointAllocationController) createCharCreatePointAllocation(c 
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&charCreatePointAllocation).Error
 	if err != nil {

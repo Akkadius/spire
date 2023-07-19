@@ -218,8 +218,8 @@ func (e *AlternateCurrencyController) createAlternateCurrency(c echo.Context) er
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&alternateCurrency).Error
 	if err != nil {

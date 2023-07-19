@@ -284,8 +284,8 @@ func (e *MerchantlistTempController) createMerchantlistTemp(c echo.Context) erro
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&merchantlistTemp).Error
 	if err != nil {

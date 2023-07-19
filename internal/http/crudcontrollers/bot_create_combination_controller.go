@@ -218,8 +218,8 @@ func (e *BotCreateCombinationController) createBotCreateCombination(c echo.Conte
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&botCreateCombination).Error
 	if err != nil {

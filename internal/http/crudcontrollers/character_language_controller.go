@@ -240,8 +240,8 @@ func (e *CharacterLanguageController) createCharacterLanguage(c echo.Context) er
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterLanguage).Error
 	if err != nil {

@@ -240,8 +240,8 @@ func (e *SpawnConditionController) createSpawnCondition(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&spawnCondition).Error
 	if err != nil {

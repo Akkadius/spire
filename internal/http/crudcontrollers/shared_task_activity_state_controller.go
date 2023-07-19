@@ -240,8 +240,8 @@ func (e *SharedTaskActivityStateController) createSharedTaskActivityState(c echo
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&sharedTaskActivityState).Error
 	if err != nil {

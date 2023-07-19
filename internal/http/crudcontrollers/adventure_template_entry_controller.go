@@ -240,8 +240,8 @@ func (e *AdventureTemplateEntryController) createAdventureTemplateEntry(c echo.C
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&adventureTemplateEntry).Error
 	if err != nil {

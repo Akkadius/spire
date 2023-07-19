@@ -218,8 +218,8 @@ func (e *PerlEventExportSettingController) createPerlEventExportSetting(c echo.C
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&perlEventExportSetting).Error
 	if err != nil {

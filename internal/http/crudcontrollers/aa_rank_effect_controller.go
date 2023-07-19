@@ -240,8 +240,8 @@ func (e *AaRankEffectController) createAaRankEffect(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&aaRankEffect).Error
 	if err != nil {

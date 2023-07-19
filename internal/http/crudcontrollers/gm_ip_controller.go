@@ -240,8 +240,8 @@ func (e *GmIpController) createGmIp(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&gmIp).Error
 	if err != nil {

@@ -218,8 +218,8 @@ func (e *PlayerEventLogController) createPlayerEventLog(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&playerEventLog).Error
 	if err != nil {

@@ -262,8 +262,8 @@ func (e *CharacterBandolierController) createCharacterBandolier(c echo.Context) 
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterBandolier).Error
 	if err != nil {

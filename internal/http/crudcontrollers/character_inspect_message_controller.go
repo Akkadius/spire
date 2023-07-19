@@ -218,8 +218,8 @@ func (e *CharacterInspectMessageController) createCharacterInspectMessage(c echo
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterInspectMessage).Error
 	if err != nil {

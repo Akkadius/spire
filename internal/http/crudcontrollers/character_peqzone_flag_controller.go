@@ -240,8 +240,8 @@ func (e *CharacterPeqzoneFlagController) createCharacterPeqzoneFlag(c echo.Conte
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&characterPeqzoneFlag).Error
 	if err != nil {

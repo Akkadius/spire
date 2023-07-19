@@ -218,8 +218,8 @@ func (e *FactionListModController) createFactionListMod(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&factionListMod).Error
 	if err != nil {

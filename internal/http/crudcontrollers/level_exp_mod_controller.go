@@ -218,8 +218,8 @@ func (e *LevelExpModController) createLevelExpMod(c echo.Context) error {
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
-        db = db.Omit(clause.Associations)
-    }
+		db = db.Omit(clause.Associations)
+	}
 
 	err := db.Create(&levelExpMod).Error
 	if err != nil {
