@@ -140,6 +140,16 @@
             </div>
 
             <div class="col-auto">
+              <router-link
+                class="text-muted"
+                style="font-size:12px"
+                :to="'zoneservers/' +zone.client_port + '/logs'"
+              >
+                <i class="fa fa-eye"></i> Logs
+              </router-link>
+            </div>
+
+            <div class="col-auto">
               <a
                 class="text-muted"
                 href="javascript:void(0)"

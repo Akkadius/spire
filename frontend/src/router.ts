@@ -285,6 +285,11 @@ const router = new Router({
           meta: {title: "Zone Servers"},
         },
         {
+          path: 'zoneservers/:port/logs',
+          component: () => import('./views/admin/ZoneLogs.vue'),
+          meta: {title: "Zone Logs"},
+        },
+        {
           path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
           component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
           meta: {title: "Discord Crash Webhook", occulus: true},

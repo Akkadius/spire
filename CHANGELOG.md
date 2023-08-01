@@ -1,3 +1,7 @@
+## [3.3.1] 7/31/2023
+
+Add zone log streaming back into admin panel zone servers page
+
 ## [3.3.0] 7/19/2023
 
 Fix a critical issue where saving new entities (items or spells for example) would also duplicate all relational data 
