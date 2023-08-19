@@ -281,12 +281,16 @@
 
         </div>
 
-        <iframe
-          frameborder="0"
-          allowtransparency="true"
-          style="width: 100%; height: 75vh; border-radius: 10px"
-          src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"
-        />
+        <a href="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview" target="_blank">
+          <img src="https://github.com/EQEmu/Server/assets/3319450/55d8a923-47d8-4584-aede-f3aa9220fbaa" style="width: 100%; border-radius: 10px">
+        </a>
+
+<!--        <iframe-->
+<!--          frameborder="0"-->
+<!--          allowtransparency="true"-->
+<!--          style="width: 100%; height: 75vh; border-radius: 10px"-->
+<!--          src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"-->
+<!--        />-->
 
       </div>
     </div>

@@ -1,3 +1,7 @@
+## [3.3.2] 8/19/2023
+
+Replace Quest API explorer VSCode extension embed with a static image that links to the extension in marketplace
+
 ## [3.3.1] 7/31/2023
 
 Add zone log streaming back into admin panel zone servers page
