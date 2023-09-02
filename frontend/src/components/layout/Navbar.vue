@@ -82,7 +82,7 @@
           </h6>
 
           <ul class="navbar-nav mb-md-3">
-            <nav-section-component :config="botNav" v-if="alphaEnabled"/>
+            <nav-section-component :config="botNav"/>
             <nav-section-component :config="calculatorNav"/>
 
             <li class="nav-item">
@@ -99,7 +99,7 @@
               </router-link>
             </li>
 
-            <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
+            <nav-section-component :config="npcNav"/>
 
             <li class="nav-item">
               <router-link class="nav-link " to="/quest-api-explorer">
@@ -128,7 +128,7 @@
             </li>
             <nav-section-component :config="viewerNav"/>
 
-            <li class="nav-item" v-if="alphaEnabled">
+            <li class="nav-item">
               <router-link class="nav-link " to="/zones">
                 <i class="ra ra-wooden-sign mr-2"></i> Zones
                 <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
@@ -261,7 +261,6 @@ export default {
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
-      alphaEnabled: App.ALPHA_TOOLS_ENABLED,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
       appFeatures: AppEnv.getFeatures(),
@@ -448,13 +447,11 @@ export default {
   created() {
     EventBus.$on("HIDE_NAVBAR", this.toggleNavbarCollapse);
     EventBus.$on("APP_ENV_LOADED", this.handleAppEnvLoaded);
-    EventBus.$on("ALPHA_ENABLED", this.handleAppAlphaEnabled);
     EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
   },
   destroyed() {
     EventBus.$off("HIDE_NAVBAR", this.toggleNavbarCollapse);
     EventBus.$off("APP_ENV_LOADED", this.handleAppEnvLoaded);
-    EventBus.$off("ALPHA_ENABLED", this.handleAppAlphaEnabled);
     EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
   },
 
@@ -633,9 +630,6 @@ export default {
 
     handleRouteChange() {
       this.setSidebarStyle()
-    },
-    handleAppAlphaEnabled() {
-      this.alphaEnabled = App.ALPHA_TOOLS_ENABLED
     },
     handleAppEnvLoaded() {
       this.appEnv      = AppEnv.getEnv();

@@ -4,7 +4,6 @@ import "fmt"
 
 func Print() {
 	fmt.Println(`                                                                                                    
-                                                                                            
                                               ^!!:                                          
        .^!????7~^.                           !BBBB^                                         
      :JPP555PBBBBY.                          .7YJ7.                                         

@@ -37,7 +37,6 @@ export const App = {
 
   // app level
   DEBUG: LocalSettings.get(Setting.DEBUG_MODE) === "true",
-  ALPHA_TOOLS_ENABLED: LocalSettings.get(Setting.ALPHA_ENABLED) === "true",
   SPELL_LEGACY_ICONS_ENABLED: LocalSettings.get(Setting.SPELL_LEGACY_ICONS) === "true",
   // DEBUG: true,
 }

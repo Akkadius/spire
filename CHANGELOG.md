@@ -1,3 +1,7 @@
+## [3.3.3] 9/2/2023
+
+Remove Alpha setting toggle and leave alpha tools on by default but still show their badge in navigation as alpha.
+
 ## [3.3.2] 8/19/2023
 
 Replace Quest API explorer VSCode extension embed with a static image that links to the extension in marketplace
