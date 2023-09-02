@@ -70,7 +70,15 @@ export default class VideoViewer {
             source.setAttribute("type", "video/mp4");
             video.appendChild(source);
             video.load();
-            video.play();
+            video.play().then(() => {
+              let videoId = video.getAttribute("data-video-id")
+              if (videoId) {
+                let videoEl = document.getElementById('overlay-' + videoId)
+                if (videoEl) {
+                  videoEl.style.display = "block";
+                }
+              }
+            });
 
             // @ts-ignore
             playing.push(video.getAttribute("id"))
@@ -99,10 +107,10 @@ export default class VideoViewer {
   }, 10);
 
   public static elementInViewport(elm, threshold = 0, mode = "visible") {
-    let rect = elm.getBoundingClientRect();
+    let rect       = elm.getBoundingClientRect();
     let viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
-    let above = rect.bottom - threshold < 0;
-    let below = rect.top - viewHeight + threshold >= 0;
+    let above      = rect.bottom - threshold < 0;
+    let below      = rect.top - viewHeight + threshold >= 0;
 
     return mode === 'above' ? above : (mode === 'below' ? below : !above && !below);
   }

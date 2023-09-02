@@ -89,12 +89,16 @@
                   muted
                   loop
                   :id="'spell-' + spell"
+                  :data-video-id="spell"
                   :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
-                  class="video-preview"
+                  class="video-preview spell-preview-video"
                   style="border-radius: 5px; width: 100%; height: auto"
                 >
                 </video>
-                <div style="position: absolute; bottom: 2px; left: 10px;">
+                <div
+                  :id="'overlay-' + spell"
+                  class="fade-in"
+                  style="position: absolute; bottom: 2px; left: 10px; display: none">
                   <h6 class="eq-header">{{ spell }}</h6>
                 </div>
               </div>
