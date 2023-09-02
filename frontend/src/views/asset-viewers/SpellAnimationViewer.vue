@@ -140,7 +140,7 @@ export default {
 
       SPELL_NIMBUSES: SPELL_NIMBUSES,
 
-      startVideoTime: 0,
+      startVideoTime: 3,
     }
   },
 
