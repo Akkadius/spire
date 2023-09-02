@@ -84,7 +84,7 @@
               :key="spell"
               class="sm-col-12 xs-col-12 md-col-4 lg-col-4 pr-1"
             >
-              <div style="position: relative; width: 100%">
+              <div style="position: relative; width: 100%;">
                 <video
                   muted
                   loop
@@ -92,7 +92,7 @@
                   :data-video-id="spell"
                   :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
                   class="video-preview spell-preview-video"
-                  style="border-radius: 5px; height: 25vh; width: 44vh"
+                  style="border-radius: 5px; height: 25vh; width: 44vh; background-color: black"
                 >
                 </video>
                 <div
