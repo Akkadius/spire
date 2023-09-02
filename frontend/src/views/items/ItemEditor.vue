@@ -2112,20 +2112,16 @@ export default {
           })
 
           if (createRes.status === 200) {
-            this.sendNotification("Created new Item! Redirecting to new item")
+            this.sendNotification("Created new Item!")
             EditFormFieldUtil.resetFieldEditedStatus()
 
-            setTimeout(() => {
-              this.$router.push(
-                {
-                  path: util.format(ROUTE.ITEM_EDIT, this.item.id)
-                }
-              ).catch(() => {
-              })
-            }, 3000)
-
-
+            this.$router.push(
+              {
+                path: util.format(ROUTE.ITEM_EDIT, this.item.id)
+              }
+            ).catch(() => { })
           }
+
           if (createRes.data.error) {
             this.error = result.data.error
           }

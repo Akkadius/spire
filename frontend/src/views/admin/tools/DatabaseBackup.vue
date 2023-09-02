@@ -168,12 +168,16 @@ export default {
     },
 
     checked(e) {
+      if (e.key === "compress") {
+        return
+      }
+
       this.disabled = {}
 
       // if we selected dump all again, reset everything else
       if (e.key === "dump_all_tables" && this.request[e.key]) {
         for (const [key, value] of Object.entries(this.request)) {
-          if (key !== "dump_all_tables") {
+          if (!["dump_all_tables", "compress"].includes(key)) {
             this.disabled[key] = 1
             this.request[key]  = false
           }
@@ -184,7 +188,7 @@ export default {
 
       let otherOptionsSet = false
       for (const [key, value] of Object.entries(this.request)) {
-        if (this.request[key]) {
+        if (this.request[key] && key !== "compress") {
           otherOptionsSet = true
         }
       }
@@ -193,8 +197,10 @@ export default {
       if (otherOptionsSet) {
         this.disabled["dump_all_tables"] = 1
         this.request["dump_all_tables"]  = false
+      } else {
+        this.disabled["dump_all_tables"] = 0
+        this.request["dump_all_tables"]  = true
       }
-
 
       this.$forceUpdate()
     },

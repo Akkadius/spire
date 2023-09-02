@@ -40,7 +40,6 @@
                 <div
                   class="col-2"
                   @click="drawFreeIdSelector(true)"
-                  @mouseover="drawFreeIdSelector(false)"
                 >
                   Id
                   <b-form-input id="id" v-model.number="spell.id"/>

@@ -28,7 +28,7 @@ export default class VideoViewer {
   }
 
   public static stopAll() {
-    let videos   = document.getElementsByClassName("video-preview");
+    let videos = document.getElementsByClassName("video-preview");
     for (let i = 0; i < videos.length; i++) {
       let video = <HTMLVideoElement>videos.item(i)
       if (video) {
@@ -41,23 +41,22 @@ export default class VideoViewer {
     // @ts-ignore
     VideoViewer.log("Render")
 
-    let playing  = []
-    let stopping = []
-    let videos   = document.getElementsByClassName("video-preview");
+    let unloading = []
+    let playing   = []
+    let videos    = document.getElementsByClassName("video-preview");
     for (let i = 0; i < videos.length; i++) {
       let video = <HTMLVideoElement>videos.item(i)
       if (video) {
-        let source  = document.createElement("source");
         let dataSrc = video.getAttribute("data-src")
 
         // Toggle playing
         if (VideoViewer.elementInViewport(video)) {
-          if (dataSrc) {
-
+          if (dataSrc && !VideoViewer.videoLoaded(video) && !VideoViewer.videoPlaying(video)) {
+            let source = document.createElement("source");
 
             // video.setAttribute("src", dataSrc);
-            video.removeAttribute("data-src");
-            video.pause()
+            // video.removeAttribute("data-src");
+            // video.pause()
             video.innerHTML = "";
             video.removeAttribute("src");
 
@@ -70,18 +69,13 @@ export default class VideoViewer {
             // @ts-ignore
             playing.push(video.getAttribute("id"))
           }
-
-          if (!VideoViewer.videoPlaying(video) && VideoViewer.videoLoaded(video)) {
-            video.play()
-            // @ts-ignore
-            playing.push(video.getAttribute("id"))
-          }
-        } else {
-          if (VideoViewer.videoPlaying(video) && VideoViewer.videoLoaded(video)) {
-            video.pause()
-            // @ts-ignore
-            stopping.push(video.getAttribute("id"))
-          }
+        } else if (VideoViewer.videoPlaying(video) && video.hasChildNodes()) {
+          // @ts-ignore
+          unloading.push(video.getAttribute("id"))
+          video.pause()
+          video.innerHTML = "";
+          video.removeAttribute("src");
+          video.load()
         }
       }
     }
@@ -89,8 +83,8 @@ export default class VideoViewer {
     if (playing.length > 0) {
       VideoViewer.log("Playing", playing)
     }
-    if (stopping.length > 0) {
-      VideoViewer.log("Stopping", stopping)
+    if (unloading.length > 0) {
+      VideoViewer.log("Unloading", unloading)
     }
   }, 10);
 
