@@ -2,6 +2,7 @@
 
 * **Spell Editor** ID selector input now only engages on input focus instead of hover.
 * **Video Renderer** Optimizations made to the video renderer to fully destroy video elements when out of view, not just stop them from playing. This will help with memory usage and performance. This will benefit all video render standalone utilities and sub-editor panes.
+* **Database Backup (Spire Admin)** Fix an issue with database backup form where compress would reset other selections.
 
 ## [3.3.3] 9/2/2023
 
