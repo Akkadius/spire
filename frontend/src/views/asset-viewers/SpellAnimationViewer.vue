@@ -69,41 +69,33 @@
       </div>
 
       <div
-        class="row "
+        class="row justify-content-center"
         v-on:scroll.passive="videoRender"
         style="height: 74vh; overflow-y: scroll; overflow-x: hidden; box-sizing: border-box;"
       >
-        <div class="col-12 ">
-          <div
-            v-for="chunk in Math.ceil(filteredAnimations.length / 3)"
-            class="row justify-content-center"
-            :key="'chunk-'+chunk"
-          >
-            <div
-              v-for="(spell) in filteredAnimations.slice((chunk - 1) * 3, chunk * 3)"
-              :key="spell"
-              class="sm-col-12 xs-col-12 md-col-4 lg-col-4 pr-1"
+        <div
+          v-for="(spell) in filteredAnimations"
+          :key="spell"
+          class="col-sm-12 col-xs-12 col-md-12 col-lg-6 col-xl-4"
+        >
+          <div style="position: relative; width: 100%;">
+            <video
+              muted
+              loop
+              :id="'spell-' + spell"
+              :data-video-id="spell"
+              :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
+              class="video-preview spell-preview-video"
+              style="border-radius: 5px; height: auto; width: 100%; background-color: black"
             >
-              <div style="position: relative; width: 100%;">
-                <video
-                  muted
-                  loop
-                  :id="'spell-' + spell"
-                  :data-video-id="spell"
-                  :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
-                  class="video-preview spell-preview-video"
-                  style="border-radius: 5px; height: 25vh; width: 44vh; background-color: black"
-                >
-                </video>
-                <div
-                  :id="'overlay-' + spell"
-                  class="fade-in"
-                  style="position: absolute; bottom: 2px; left: 50%; display: none">
-                  <h6 class="eq-header">{{ spell }}</h6>
-                </div>
-              </div>
+            </video>
+            <div
+              :id="'overlay-' + spell"
+              class="fade-in"
+              style="position: absolute; bottom: 2px; left: 50%; display: none"
+            >
+              <h6 class="eq-header">{{ spell }}</h6>
             </div>
-
           </div>
         </div>
 
