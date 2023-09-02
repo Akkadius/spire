@@ -75,7 +75,7 @@
       >
         <div class="col-12">
           <div
-            class="fade-in"
+            class="fade-in col-4 spell-preview-viewer"
             v-for="(spell) in filteredAnimations"
             :key="spell"
             style="display:inline-block; position: relative;"
@@ -308,6 +308,6 @@ export default {
 .overlay {
   position: absolute;
   bottom: 2px;
-  left: 9px;
+  left: 5%;
 }
 </style>
