@@ -188,7 +188,7 @@ export default {
 
       let otherOptionsSet = false
       for (const [key, value] of Object.entries(this.request)) {
-        if (this.request[key]) {
+        if (this.request[key] && key !== "compress") {
           otherOptionsSet = true
         }
       }
@@ -197,6 +197,9 @@ export default {
       if (otherOptionsSet) {
         this.disabled["dump_all_tables"] = 1
         this.request["dump_all_tables"]  = false
+      } else {
+        this.disabled["dump_all_tables"] = 0
+        this.request["dump_all_tables"]  = true
       }
 
       this.$forceUpdate()
