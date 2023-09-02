@@ -71,27 +71,35 @@
       <div
         class="row "
         v-on:scroll.passive="videoRender"
-        style="height: 74vh; overflow-y: scroll; box-sizing: border-box;"
+        style="height: 74vh; overflow-y: scroll; overflow-x: hidden; box-sizing: border-box;"
       >
-        <div class="col-12">
+        <div class="col-12 ">
           <div
-            class="fade-in col-4 spell-preview-viewer"
-            v-for="(spell) in filteredAnimations"
-            :key="spell"
-            style="display:inline-block; position: relative;"
+            v-for="chunk in Math.ceil(filteredAnimations.length / 3)"
+            class="row justify-content-center"
+            :key="'chunk-'+chunk"
           >
-            <video
-              muted
-              loop
-              style="background-color: black;"
-              :id="'spell-' + spell"
-              :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
-              class="video-preview spell-preview-viewer"
+            <div
+              v-for="(spell) in filteredAnimations.slice((chunk - 1) * 3, chunk * 3)"
+              :key="spell"
+              class="sm-col-12 xs-col-12 md-col-4 lg-col-4 pr-1"
             >
-            </video>
-            <div class="overlay">
-              <h6 class="eq-header">{{ spell }}</h6>
+              <div style="position: relative;">
+                <video
+                  muted
+                  loop
+                  :id="'spell-' + spell"
+                  :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
+                  class="video-preview"
+                  style="border-radius: 5px; width: 100%; height: auto"
+                >
+                </video>
+                <div style="position: absolute; bottom: 2px; left: 10px;">
+                  <h6 class="eq-header">{{ spell }}</h6>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -288,26 +296,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.spell-preview-viewer {
-  /*height: 250px;*/
-  /*min-width: 150px;*/
-  /*max-width: 200px;*/
-
-  /*height: 262px;*/
-  /*width: 464px;*/
-
-  height: 25vh;
-  width: 44vh;
-
-  border-radius: 5px !important;
-  margin-right: 10px;
-}
-
-.overlay {
-  position: absolute;
-  bottom: 2px;
-  left: 5%;
-}
-</style>
