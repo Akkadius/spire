@@ -84,7 +84,7 @@
               :key="spell"
               class="sm-col-12 xs-col-12 md-col-4 lg-col-4 pr-1"
             >
-              <div style="position: relative;">
+              <div style="position: relative; width: 100%">
                 <video
                   muted
                   loop
@@ -92,13 +92,13 @@
                   :data-video-id="spell"
                   :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
                   class="video-preview spell-preview-video"
-                  style="border-radius: 5px; width: 100%; height: auto"
+                  style="border-radius: 5px; height: 25vh; width: 44vh"
                 >
                 </video>
                 <div
                   :id="'overlay-' + spell"
                   class="fade-in"
-                  style="position: absolute; bottom: 2px; left: 10px; display: none">
+                  style="position: absolute; bottom: 2px; left: 50%; display: none">
                   <h6 class="eq-header">{{ spell }}</h6>
                 </div>
               </div>
