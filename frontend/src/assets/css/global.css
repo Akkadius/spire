@@ -20,14 +20,6 @@
     background-clip: content-box;
 }
 
-.eq-window::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 1);
-}
-
-.eq-window {
-    scrollbar-gutter: stable;
-}
-
 ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, .8);
     border-radius: 20px;
