@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/gammazero/workerpool"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -16,6 +17,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type ImportEqTradersCommand struct {
@@ -319,6 +321,54 @@ func (c *ImportEqTradersCommand) Handle(cmd *cobra.Command, args []string) {
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=298&rsa=Jewelcraft&sb=item&sub=dron&menustr=080070000000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Pottery Recipes", Url: "https://www.eqtraders.com/recipes/pottery_recipe_page.php?article=299&rsa=Pottery&sb=item&sub=dron&menustr=080010000000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=297&rsa=Tinkering&sub=dron&sb=item&menustr=080120000000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Barbarian Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=301&rsa=Smithing&rc=BAR&sb=item&sub=Dron&menustr=080040010000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Barbarian Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=302&rsa=Tailoring&rc=BAR&sb=item&sub=Dron&menustr=080040010000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Dark Elf Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=324&rsa=Smithing&rc=DEF&sb=item&sub=dron&menustr=080040020030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Dark Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=325&rsa=Tailoring&rc=DEF&sb=item&sub=dron&menustr=080040020060"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Drakkin Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=278&rsa=Smithing&rc=DRK&sub=DRoN&sb=item&menustr=080040025040"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Drakkin Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=227&rsa=Tailoring&rc=DRK&sub=DRoN&sb=item&menustr=080040025000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Dwarven Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=326&rsa=Smithing&rc=DWF&sb=item&sub=dron&menustr=080040030080"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Erudite Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=330&rsa=Smithing&rc=ERU&sb=item&sub=dron&menustr=080040040030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Erudite Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=329&rsa=Tailoring&rc=ERU&sb=item&sub=dron&menustr=080040040120"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Froglok Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=313&rsa=Smithing&rc=FRG&sub=dron&sb=item&menustr=080040043020"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Froglok Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=314&rsa=Tailoring&rc=FRG&sb=item&menustr=080040043040"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Gnome Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=305&rsa=Tailoring&rc=GNM&sb=item&sub=dron&menustr=080040045060"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Gnome Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=304&rsa=Smithing&rc=GNM&sb=item&sub=dron&menustr=080040045020"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Half Elf Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=310&rsa=Smithing&rc=HEF&sb=item&sub=dron&menustr=080040048020"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Half Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=311&rsa=Tailoring&rc=HEF&sb=item&sub=dron&menustr=080040048040"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Halfling Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=331&rsa=Smithing&rc=HFL&sb=item&sub=dron&menustr=080040050030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Halfling Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=332&rsa=Tailoring&rc=HFL&sb=item&sub=dron&menustr=080040050060"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "High Elf Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=333&rsa=Smithing&rc=HIE&sb=item&sub=dron&menustr=080040060030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "High Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=334&rsa=Tailoring&rc=HIE&sb=item&sub=dron&menustr=080040060060"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Human Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=307&rsa=Smithing&rc=HUM&sb=item&sub=dron&menustr=080040070000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Human Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=308&rsa=Tailoring&rc=HUM&sb=item&sub=dron&menustr=080040070000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Iksar Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=269&rsa=Smithing&rc=IKS&sb=item&sub=dron&menustr=080040090030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Iksar Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=335&rsa=Tailoring&rc=IKS&sb=item&sub=dron&menustr=080040090060"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Ogre Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=316&rsa=Smithing&rc=OGR&sb=item&sub=dron&menustr=080040100030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Ogre Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=317&rsa=Tailoring&rc=OGR&sb=item&sub=dron&menustr=080040100040"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Troll Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=318&rsa=Smithing&rc=TRL&sb=item&sub=dron&menustr=080040110030"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Troll Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=320&rsa=Tailoring&rc=TRL&sb=item&sub=dron&menustr=080040110040"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Vah Shir Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=322&rsa=Smithing&rc=VAH&sub=DroN&sb=item&menustr=080040140020"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Vah Shir Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=323&rsa=Tailoring&rc=VAH&sub=DroN&sb=item&menustr=080040140040"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=336&rsa=Smithing&rc=ELF&sb=item&sub=dron&menustr=080040120050"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=337&rsa=Tailoring&rc=ELF&sb=item&sub=dron&menustr=080040120080"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Agnostic Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=agnostic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bertoxxulous Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=bertox&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Brell Serilis Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=brell&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bristlebane Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=bristlebane&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Cazic Thule Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=cazic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Erollisi Marr Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=erollisi&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Innoruuk Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=innoruuk&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Karana Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=karana&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Mithaniel Marr Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=mithaniel&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Prexus Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=prexus&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Quellious Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=quellious&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rallos Zek Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=rallos&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rodcet Nife Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=rodcet&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Solusek Ro Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=solusek&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "The Tribunal Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=tribunal&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Tunare Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=tunare&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=veeshan&menustr=080110235000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=346&rsa=Baking&sb=item&sub=dodh&menustr=080020220000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=347&rsa=Brewing&sb=item&sub=dodh&menustr=080030044000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Fletching Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=348&rsa=Fletching&sb=item&sub=dodh&menustr=080060030000"},
@@ -617,6 +667,8 @@ type Recipe struct {
 
 var recipes []Recipe
 
+var recipeWriteMutex = &sync.Mutex{}
+
 func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 	c.logger.Info("Parsing recipe page: ", r.Url+"&printer=normal")
 	resp, err := http.Get(r.Url + "&printer=normal")
@@ -641,201 +693,222 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		c.logger.Error(err)
 	}
 
+	wp := workerpool.New(50)
+
 	doc.Find("table tr").Each(func(i int, s *goquery.Selection) {
 		if i == 0 {
 			return
 		}
 
-		recipeName := strings.TrimSpace(s.Find("td a").First().Text())
-		recipeNameHtml, err := s.Find("td").First().Html()
-		if err != nil {
-			c.logger.Error(err)
-		}
-		recipe, err := s.Find("td").Next().Html()
-		if err != nil {
-			c.logger.Error(err)
-		}
+		wp.Submit(func() {
 
-		// second attempt to get recipe name
-		if recipeName == "" {
-			recipeName = strings.Split(recipeName, "\n")[0]
-		}
-
-		if recipeName == "" {
-			return
-		}
-
-		fmt.Println(recipeName)
-
-		// trivial
-		trivialInt := 0
-		trivial := s.Find("td").Next().Next().Text()
-		noFail := false
-		if strings.Contains(trivial, "(No-Fail)") {
-			trivial = strings.TrimSpace(strings.ReplaceAll(trivial, "(No-Fail)", ""))
-			noFail = true
-			trivialInt, err = strconv.Atoi(trivial)
+			recipeName := strings.TrimSpace(s.Find("td a").First().Text())
+			recipeNameHtml, err := s.Find("td").First().Html()
 			if err != nil {
-				c.logger.Errorf("error parsing trivial [%v] err [%v]", trivial, err.Error())
+				c.logger.Error(err)
 			}
-		} else if strings.Contains(trivial, "no fail") {
-			noFail = true
-			trivialInt = 0
-		}
+			recipe, err := s.Find("td").Next().Html()
+			if err != nil {
+				c.logger.Error(err)
+			}
 
-		components := c.getStringInBetween(recipe, "Components:", "In:")
-		in := c.getStringInBetween(recipe, "In:", "Yield:")
+			// second attempt to get recipe name
+			if recipeName == "" {
+				recipeName = strings.Split(recipeName, "\n")[0]
+			}
 
-		var componentsList []Item
-		for _, s := range strings.Split(components, ",") {
-			s = strings.ReplaceAll(s, "(temporary)", "")
-			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
-			s = strings.ReplaceAll(s, "(Legacy)", "")
-			s = strings.ReplaceAll(s, "(removed)", "")
+			if recipeName == "" {
+				return
+			}
 
-			quantity := 1
-			if strings.Contains(s, "(") {
-				qty := strings.TrimSpace(c.getStringInBetween(s, "(", ")"))
-
-				qty = strings.ReplaceAll(qty, "x", "")
-
-				quantity, err = strconv.Atoi(qty)
+			// trivial
+			trivialInt := 0
+			trivial := s.Find("td").Next().Next().Text()
+			noFail := false
+			if strings.Contains(trivial, "(No-Fail)") {
+				trivial = strings.TrimSpace(strings.ReplaceAll(trivial, "(No-Fail)", ""))
+				noFail = true
+				trivialInt, err = strconv.Atoi(trivial)
 				if err != nil {
-					c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+					c.logger.Errorf("error parsing trivial [%v] err [%v]", trivial, err.Error())
 				}
+			} else if strings.Contains(trivial, "no fail") {
+				noFail = true
+				trivialInt = 0
 			}
 
-			componentsList = append(componentsList, Item{
-				ItemId:   c.getItemIdFromHtml(s),
-				ItemName: c.getStringInBetween(s, ">", "<"),
-				Count:    quantity,
-			})
-		}
-		var inList []Item
-		for _, s := range strings.Split(in, ",") {
-			if strings.TrimSpace(s) == "" {
-				continue
+			components := c.getStringInBetween(recipe, "Components:", "In:")
+			in := c.getStringInBetween(recipe, "In:", "Yield:")
+
+			var componentsList []Item
+			for _, s := range strings.Split(components, ",") {
+				s = strings.ReplaceAll(s, "(temporary)", "")
+				s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+				s = strings.ReplaceAll(s, "(Legacy)", "")
+				s = strings.ReplaceAll(s, "(removed)", "")
+
+				quantity := 1
+				if strings.Contains(s, "(") {
+					qty := strings.TrimSpace(c.getStringInBetween(s, "(", ")"))
+
+					qty = strings.ReplaceAll(qty, "x", "")
+
+					quantity, err = strconv.Atoi(qty)
+					if err != nil {
+						c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+					}
+				}
+
+				componentsList = append(componentsList, Item{
+					ItemId:   c.getItemIdFromHtml(s),
+					ItemName: c.getStringInBetween(s, ">", "<"),
+					Count:    quantity,
+				})
 			}
-
-			i := c.getItemIdFromHtml(s)
-			if i == 0 {
-
-				// attempt to resolve to object type
-				name := c.getStringInBetween(s, ">", "<")
-				name = strings.ReplaceAll(name, " (Stationary)", "")
-				name = strings.ReplaceAll(name, " (Formerly Ak&#39;Anon Forge)", "")
-				name = strings.TrimSpace(name)
-
-				objectType := c.getObjectTypeFromName(name)
-				if objectType.Type > 0 {
-					//c.logger.Infof("world container [%v] resolved to object type [%v] for recipe [%v]", name, objectType.Type, recipeName)
-					inList = append(inList, Item{
-						ItemId:   objectType.Type,
-						ItemName: name,
-						Count:    1,
-					})
+			var inList []Item
+			for _, s := range strings.Split(in, ",") {
+				if strings.TrimSpace(s) == "" {
 					continue
 				}
-				c.logger.Infof("world container [%v] not found, attempting to resolve to object type for recipe [%v]", name, recipeName)
-				continue
+
+				i := c.getItemIdFromHtml(s)
+				if i == 0 {
+
+					// attempt to resolve to object type
+					name := c.getStringInBetween(s, ">", "<")
+					name = strings.ReplaceAll(name, " (Stationary)", "")
+					name = strings.ReplaceAll(name, " (Formerly Ak&#39;Anon Forge)", "")
+					name = strings.TrimSpace(name)
+
+					objectType := c.getObjectTypeFromName(name)
+					if objectType.Type > 0 {
+						//c.logger.Infof("world container [%v] resolved to object type [%v] for recipe [%v]", name, objectType.Type, recipeName)
+						inList = append(inList, Item{
+							ItemId:   objectType.Type,
+							ItemName: name,
+							Count:    1,
+						})
+						continue
+					}
+					c.logger.Infof("world container [%v] not found, attempting to resolve to object type for recipe [%v]", name, recipeName)
+					continue
+				}
+
+				inList = append(inList, Item{
+					ItemId:   i,
+					ItemName: c.getStringInBetween(s, ">", "<"),
+					Count:    1,
+				})
 			}
 
-			inList = append(inList, Item{
-				ItemId:   i,
-				ItemName: c.getStringInBetween(s, ">", "<"),
-				Count:    1,
-			})
-		}
-
-		// yield
-		yieldInt := 1
-		yield := strings.TrimSpace(strings.ReplaceAll(c.getStringInBetween(recipe, "Yield:", "<b"), "</b>", ""))
-		split := strings.Split(yield, "<")
-		if len(split) > 1 {
-			yield = split[0]
-		}
-		if len(yield) > 0 {
-			yieldInt, err = strconv.Atoi(yield)
-			if err != nil {
-				c.logger.Errorf("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
+			// yield
+			yieldInt := 1
+			yield := strings.TrimSpace(strings.ReplaceAll(c.getStringInBetween(recipe, "Yield:", "<b"), "</b>", ""))
+			split := strings.Split(yield, "<")
+			if len(split) > 1 {
+				yield = split[0]
 			}
-		}
-
-		// return items
-		returns := c.getStringInBetween(recipe, "Also Returns:", "On Failure Returns")
-		var returnItems []Item
-		for _, s := range strings.Split(returns, ",") {
-			i := c.getItemIdFromHtml(s)
-			if i == 0 {
-				continue
-			}
-
-			s = strings.ReplaceAll(s, "(temporary)", "")
-			s = strings.ReplaceAll(s, "(Pattern)", "")
-
-			quantity := 1
-			if strings.Contains(s, "(") {
-				qty := c.getStringInBetween(s, "(", ")")
-				quantity, err = strconv.Atoi(qty)
+			if len(yield) > 0 {
+				yieldInt, err = strconv.Atoi(yield)
 				if err != nil {
-					c.logger.Errorf("error parsing returns quantity [%v] err [%v]", qty, err.Error())
+					c.logger.Errorf("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
 				}
 			}
 
-			returnItems = append(returnItems, Item{
-				ItemId:   i,
-				ItemName: c.getStringInBetween(s, ">", "<"),
-				Count:    quantity,
-			})
-		}
-
-		onFailureReturns := c.getStringInBetween(recipe, "On Failure Returns:", ",")
-		var failureReturnItems []Item
-		for _, s := range strings.Split(onFailureReturns, ",") {
-			i := c.getItemIdFromHtml(s)
-			if i == 0 {
-				continue
-			}
-
-			s = strings.ReplaceAll(s, "(temporary)", "")
-			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
-
-			quantity := 1
-			if strings.Contains(s, "(") {
-				qty := c.getStringInBetween(s, "(", ")")
-				quantity, err = strconv.Atoi(qty)
-				if err != nil {
-					c.logger.Errorf("error parsing failure quantity [%v] err [%v]", qty, err.Error())
+			// return items
+			returns := c.getStringInBetween(recipe, "Also Returns:", "On Failure Returns")
+			var returnItems []Item
+			for _, s := range strings.Split(returns, ",") {
+				i := c.getItemIdFromHtml(s)
+				if i == 0 {
+					continue
 				}
+
+				s = strings.ReplaceAll(s, "(temporary)", "")
+				s = strings.ReplaceAll(s, "(Pattern)", "")
+
+				quantity := 1
+				if strings.Contains(s, "(") {
+					qty := c.getStringInBetween(s, "(", ")")
+					quantity, err = strconv.Atoi(qty)
+					if err != nil {
+						c.logger.Errorf("error parsing returns quantity [%v] err [%v]", qty, err.Error())
+					}
+				}
+
+				returnItems = append(returnItems, Item{
+					ItemId:   i,
+					ItemName: c.getStringInBetween(s, ">", "<"),
+					Count:    quantity,
+				})
 			}
 
-			failureReturnItems = append(failureReturnItems, Item{
-				ItemId:   i,
-				ItemName: c.getStringInBetween(s, ">", "<"),
-				Count:    quantity,
-			})
-		}
+			onFailureReturns := c.getStringInBetween(recipe, "On Failure Returns:", ",")
+			var failureReturnItems []Item
+			for _, s := range strings.Split(onFailureReturns, ",") {
+				i := c.getItemIdFromHtml(s)
+				if i == 0 {
+					continue
+				}
 
-		r := Recipe{
-			RecipeName:     recipeName,
-			Skill:          c.getSkillFromName(r.PageTitle),
-			ExpansionId:    r.ExpId,
-			ExpansionName:  r.ExpName,
-			Trivial:        trivialInt,
-			NoFail:         noFail,
-			RecipeItemId:   c.getItemIdFromHtml(recipeNameHtml),
-			Components:     componentsList,
-			In:             inList,
-			Yield:          yieldInt,
-			Returns:        returnItems,
-			FailureReturns: failureReturnItems,
-		}
+				s = strings.ReplaceAll(s, "(temporary)", "")
+				s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
 
-		//pp.Println(r)
-		//fmt.Println("")
+				// remove everything after Note: (if it exists)
+				s = strings.Split(s, "Note:")[0]
 
-		recipes = append(recipes, r)
+				quantity := 1
+				if strings.Contains(s, "(") {
+					qty := c.getStringInBetween(s, "(", ")")
+					quantity, err = strconv.Atoi(qty)
+					if err != nil {
+						c.logger.Errorf("error parsing failure quantity [%v] err [%v]", qty, err.Error())
+					}
+				}
+
+				failureReturnItems = append(failureReturnItems, Item{
+					ItemId:   i,
+					ItemName: c.getStringInBetween(s, ">", "<"),
+					Count:    quantity,
+				})
+			}
+
+			fmt.Printf(
+				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Components [%v] Containers [%v] Returns [%v] \n",
+				recipeName,
+				r.ExpName,
+				r.ExpId,
+				c.getSkillFromName(r.PageTitle).SkillName,
+				len(componentsList),
+				len(inList),
+				len(returnItems),
+			)
+
+			r := Recipe{
+				RecipeName:     recipeName,
+				Skill:          c.getSkillFromName(r.PageTitle),
+				ExpansionId:    r.ExpId,
+				ExpansionName:  r.ExpName,
+				Trivial:        trivialInt,
+				NoFail:         noFail,
+				RecipeItemId:   c.getItemIdFromHtml(recipeNameHtml),
+				Components:     componentsList,
+				In:             inList,
+				Yield:          yieldInt,
+				Returns:        returnItems,
+				FailureReturns: failureReturnItems,
+			}
+
+			//pp.Println(r)
+			//fmt.Println("")
+
+			recipeWriteMutex.Lock()
+			recipes = append(recipes, r)
+			recipeWriteMutex.Unlock()
+		})
 	})
+
+	wp.StopWait()
 }
 
 var itemLookupCache = make(map[string]int, 0)
