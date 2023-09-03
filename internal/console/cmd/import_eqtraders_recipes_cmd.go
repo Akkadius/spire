@@ -3,6 +3,8 @@ package cmd
 import (
 	"bytes"
 	"encoding/gob"
+	"encoding/json"
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
@@ -530,20 +532,37 @@ func (c *ImportEqTradersCommand) Handle(cmd *cobra.Command, args []string) {
 	}
 
 	expansion := os.Args[2]
-	expansionId, err := strconv.Atoi(expansion)
-	if err != nil {
-		c.logger.Error(err)
-	}
 
 	c.LoadItemCache()
 
-	for _, r := range list {
-		if r.ExpId == expansionId {
+	if expansion == "all" {
+		for _, r := range list {
 			c.parseRecipePage(r)
+			c.SaveItemCache()
+		}
+	} else {
+		expansionId, err := strconv.Atoi(expansion)
+		if err != nil {
+			c.logger.Error(err)
+		}
+		for _, r := range list {
+			if r.ExpId == expansionId {
+				c.parseRecipePage(r)
+			}
 		}
 	}
 
 	c.SaveItemCache()
+
+	// dump recipes to json file recipes.json
+	data, err := json.MarshalIndent(recipes, "", " ")
+	if err != nil {
+		c.logger.Error(err)
+	}
+	err = os.WriteFile("recipes.json", data, 0644)
+	if err != nil {
+		c.logger.Error(err)
+	}
 
 	//pp.Println(string(data))
 }
@@ -576,6 +595,29 @@ func (c *ImportEqTradersCommand) getStringInBetween(str, before, after string) s
 	return b[0][0 : len(b[0])-len(after)]
 }
 
+type Item struct {
+	ItemId   int    `json:"item_id"`
+	ItemName string `json:"item_name"`
+	Count    int    `json:"count"`
+}
+
+type Recipe struct {
+	RecipeName     string `json:"recipe_name"`
+	Skill          Skill  `json:"skill"`
+	ExpansionId    int    `json:"expansion_id"`
+	ExpansionName  string `json:"expansion_name"`
+	Trivial        int    `json:"trivial"`
+	NoFail         bool   `json:"no_fail"`
+	RecipeItemId   int    `json:"recipe_item_id"`
+	Components     []Item `json:"components"`
+	In             []Item `json:"in"`
+	Yield          int    `json:"yield"`
+	Returns        []Item `json:"returns"`
+	FailureReturns []Item `json:"failure_returns"`
+}
+
+var recipes []Recipe
+
 func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 	c.logger.Info("Parsing recipe page: ", r.Url+"&printer=normal")
 	resp, err := http.Get(r.Url + "&printer=normal")
@@ -595,23 +637,12 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		c.logger.Error(err)
 	}
 
-	type Result struct {
-		RecipeName     string
-		RecipeItemId   int
-		Components     []int
-		In             []int
-		Yield          int
-		Returns        int
-		ReturnCount    int
-		FailureReturns int
-	}
-
 	doc.Find("table tr").Each(func(i int, s *goquery.Selection) {
 		if i == 0 {
 			return
 		}
 
-		recipeName := s.Find("td").First().Text()
+		recipeName := strings.TrimSpace(s.Find("td").First().Text())
 		recipeNameHtml, err := s.Find("td").First().Html()
 		if err != nil {
 			c.logger.Error(err)
@@ -621,61 +652,149 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 			c.logger.Error(err)
 		}
 
+		if recipeName == "" {
+			return
+		}
+
+		// trivial
+		trivialInt := 0
+		trivial := s.Find("td").Next().Next().Text()
+		noFail := false
+		if strings.Contains(trivial, "(No-Fail)") {
+			trivial = strings.TrimSpace(strings.ReplaceAll(trivial, "(No-Fail)", ""))
+			noFail = true
+			trivialInt, err = strconv.Atoi(trivial)
+			if err != nil {
+				c.logger.Errorf("error parsing trivial [%v] err [%v]", trivial, err.Error())
+			}
+		} else if strings.Contains(trivial, "no fail") {
+			noFail = true
+			trivialInt = 0
+		}
+
 		components := c.getStringInBetween(recipe, "Components:", "In:")
 		in := c.getStringInBetween(recipe, "In:", "Yield:")
 
-		var componentsList []int
+		var componentsList []Item
 		for _, s := range strings.Split(components, ",") {
-			componentsList = append(componentsList, c.getItemIdFromHtml(s))
+			s = strings.ReplaceAll(s, "(temporary)", "")
+			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+
+			quantity := 1
+			if strings.Contains(s, "(") {
+				qty := strings.TrimSpace(c.getStringInBetween(s, "(", ")"))
+
+				quantity, err = strconv.Atoi(qty)
+				if err != nil {
+					c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+				}
+			}
+
+			componentsList = append(componentsList, Item{
+				ItemId:   c.getItemIdFromHtml(s),
+				ItemName: c.getStringInBetween(s, ">", "<"),
+				Count:    quantity,
+			})
 		}
-		var inList []int
+		var inList []Item
 		for _, s := range strings.Split(in, ",") {
 			i := c.getItemIdFromHtml(s)
 			if i == 0 {
 				continue
 			}
-			inList = append(inList, i)
+
+			inList = append(inList, Item{
+				ItemId:   i,
+				ItemName: c.getStringInBetween(s, ">", "<"),
+				Count:    1,
+			})
 		}
 
 		// yield
-		yield := strings.TrimSpace(strings.ReplaceAll(c.getStringInBetween(recipe, "Yield:", ","), "</b>", ""))
+		yield := strings.TrimSpace(strings.ReplaceAll(c.getStringInBetween(recipe, "Yield:", "<b"), "</b>", ""))
 		split := strings.Split(yield, "<")
 		if len(split) > 1 {
 			yield = split[0]
 		}
 		yieldInt, err := strconv.Atoi(yield)
 		if err != nil {
-			c.logger.Errorf("error parsing yield [%v] err [%v]", yield, err.Error())
+			c.logger.Errorf("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
 		}
 
 		// return items
 		returns := c.getStringInBetween(recipe, "Also Returns:", "On Failure Returns")
-		returnCount := c.getStringInBetween(returns, "(", ")")
-		returnCountInt := 0
-		if returnCount != "" {
-			returnCountInt, err = strconv.Atoi(returnCount)
-			if err != nil {
-				c.logger.Errorf("error parsing returnCount [%v] err [%v]", returnCount, err.Error())
+		var returnItems []Item
+		for _, s := range strings.Split(returns, ",") {
+			i := c.getItemIdFromHtml(s)
+			if i == 0 {
+				continue
 			}
+
+			s = strings.ReplaceAll(s, "(temporary)", "")
+			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+
+			quantity := 1
+			if strings.Contains(s, "(") {
+				qty := c.getStringInBetween(s, "(", ")")
+				quantity, err = strconv.Atoi(qty)
+				if err != nil {
+					c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+				}
+			}
+
+			returnItems = append(returnItems, Item{
+				ItemId:   i,
+				ItemName: c.getStringInBetween(s, ">", "<"),
+				Count:    quantity,
+			})
 		}
 
 		onFailureReturns := c.getStringInBetween(recipe, "On Failure Returns:", ",")
+		var failureReturnItems []Item
+		for _, s := range strings.Split(onFailureReturns, ",") {
+			i := c.getItemIdFromHtml(s)
+			if i == 0 {
+				continue
+			}
 
-		r := Result{
+			s = strings.ReplaceAll(s, "(temporary)", "")
+			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+
+			quantity := 1
+			if strings.Contains(s, "(") {
+				qty := c.getStringInBetween(s, "(", ")")
+				quantity, err = strconv.Atoi(qty)
+				if err != nil {
+					c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+				}
+			}
+
+			failureReturnItems = append(failureReturnItems, Item{
+				ItemId:   i,
+				ItemName: c.getStringInBetween(s, ">", "<"),
+				Count:    quantity,
+			})
+		}
+
+		r := Recipe{
 			RecipeName:     strings.Split(recipeName, "\n")[0],
+			Skill:          c.getSkillFromName(r.PageTitle),
+			ExpansionId:    r.ExpId,
+			ExpansionName:  r.ExpName,
+			Trivial:        trivialInt,
+			NoFail:         noFail,
 			RecipeItemId:   c.getItemIdFromHtml(recipeNameHtml),
 			Components:     componentsList,
 			In:             inList,
 			Yield:          yieldInt,
-			Returns:        c.getItemIdFromHtml(returns),
-			ReturnCount:    returnCountInt,
-			FailureReturns: c.getItemIdFromHtml(onFailureReturns),
+			Returns:        returnItems,
+			FailureReturns: failureReturnItems,
 		}
 
 		pp.Println(r)
+		fmt.Println("")
 
-		pp.Println("end row")
-
+		recipes = append(recipes, r)
 	})
 }
 
@@ -686,7 +805,7 @@ func (c *ImportEqTradersCommand) getItemIdFromHtml(html string) int {
 	tradersItemId := c.getStringInBetween(url, "item=", "&amp;")
 	val, ok := itemLookupCache[tradersItemId]
 	if ok {
-		c.logger.Info("Found item in cache: ", val)
+		//c.logger.Info("Found item in cache: ", val)
 		return val
 	}
 
@@ -752,4 +871,33 @@ func (c *ImportEqTradersCommand) LoadItemCache() {
 	if err != nil {
 		c.logger.Error(err)
 	}
+}
+
+type Skill struct {
+	SkillId   int    `json:"skill_id"`
+	SkillName string `json:"skill_name"`
+}
+
+var skills = []Skill{
+	{SkillId: 56, SkillName: "Make Poison"},
+	{SkillId: 57, SkillName: "Tinkering"},
+	{SkillId: 58, SkillName: "Research"},
+	{SkillId: 59, SkillName: "Alchemy"},
+	{SkillId: 60, SkillName: "Baking"},
+	{SkillId: 61, SkillName: "Tailoring"},
+	{SkillId: 63, SkillName: "Smithing"},
+	{SkillId: 64, SkillName: "Fletching"},
+	{SkillId: 65, SkillName: "Brewing"},
+	{SkillId: 68, SkillName: "Jewelcraft"},
+	{SkillId: 69, SkillName: "Pottery"},
+}
+
+func (c *ImportEqTradersCommand) getSkillFromName(name string) Skill {
+	for _, s := range skills {
+		if strings.Contains(name, s.SkillName) {
+			return s
+		}
+	}
+
+	return Skill{}
 }
