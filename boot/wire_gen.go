@@ -346,7 +346,8 @@ func InitializeApplication() (App, error) {
 	spireCrashAnalyticsFingerprintBackfillCommand := cmd.NewSpireCrashAnalyticsCommand(logger, pathManagement, databaseResolver)
 	processManager := eqemuserver.NewProcessManager(logger, config, settings, pathManagement)
 	eqEmuServerUpdateCommand := cmd.NewEQEmuServerUpdateCommand(logger, config, settings, pathManagement, processManager, updater)
-	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand, spireOcculusUpdateCommand, spireServerLauncherCommand, spireCrashAnalyticsFingerprintBackfillCommand, eqEmuServerUpdateCommand)
+	importEqTradersCommand := cmd.NewImportEqTradersCommand(db, logger)
+	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand, spireOcculusUpdateCommand, spireServerLauncherCommand, spireCrashAnalyticsFingerprintBackfillCommand, eqEmuServerUpdateCommand, importEqTradersCommand)
 	webBoot := desktop.NewWebBoot(logger, server, config)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil
