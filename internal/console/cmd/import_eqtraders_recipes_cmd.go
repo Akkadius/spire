@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -632,7 +631,12 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		c.logger.Error(err)
 	}
 
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(data))
+	// some pages are formatted strange and have an extra <td> beginning of the row
+	// https://www.eqtraders.com/recipes/pottery_recipe_page.php?article=1365&rsa=Pottery&sb=item&sub=ToL&printer=normal
+	contents := string(data)
+	contents = strings.ReplaceAll(contents, "<td>&nbsp;&nbsp;</td>", "")
+
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(contents)))
 	if err != nil {
 		c.logger.Error(err)
 	}
@@ -642,7 +646,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 			return
 		}
 
-		recipeName := strings.TrimSpace(s.Find("td").First().Text())
+		recipeName := strings.TrimSpace(s.Find("td a").First().Text())
 		recipeNameHtml, err := s.Find("td").First().Html()
 		if err != nil {
 			c.logger.Error(err)
@@ -652,9 +656,16 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 			c.logger.Error(err)
 		}
 
+		// second attempt to get recipe name
+		if recipeName == "" {
+			recipeName = strings.Split(recipeName, "\n")[0]
+		}
+
 		if recipeName == "" {
 			return
 		}
+
+		fmt.Println(recipeName)
 
 		// trivial
 		trivialInt := 0
@@ -679,10 +690,14 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		for _, s := range strings.Split(components, ",") {
 			s = strings.ReplaceAll(s, "(temporary)", "")
 			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+			s = strings.ReplaceAll(s, "(Legacy)", "")
+			s = strings.ReplaceAll(s, "(removed)", "")
 
 			quantity := 1
 			if strings.Contains(s, "(") {
 				qty := strings.TrimSpace(c.getStringInBetween(s, "(", ")"))
+
+				qty = strings.ReplaceAll(qty, "x", "")
 
 				quantity, err = strconv.Atoi(qty)
 				if err != nil {
@@ -698,8 +713,30 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		}
 		var inList []Item
 		for _, s := range strings.Split(in, ",") {
+			if strings.TrimSpace(s) == "" {
+				continue
+			}
+
 			i := c.getItemIdFromHtml(s)
 			if i == 0 {
+
+				// attempt to resolve to object type
+				name := c.getStringInBetween(s, ">", "<")
+				name = strings.ReplaceAll(name, " (Stationary)", "")
+				name = strings.ReplaceAll(name, " (Formerly Ak&#39;Anon Forge)", "")
+				name = strings.TrimSpace(name)
+
+				objectType := c.getObjectTypeFromName(name)
+				if objectType.Type > 0 {
+					//c.logger.Infof("world container [%v] resolved to object type [%v] for recipe [%v]", name, objectType.Type, recipeName)
+					inList = append(inList, Item{
+						ItemId:   objectType.Type,
+						ItemName: name,
+						Count:    1,
+					})
+					continue
+				}
+				c.logger.Infof("world container [%v] not found, attempting to resolve to object type for recipe [%v]", name, recipeName)
 				continue
 			}
 
@@ -711,14 +748,17 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		}
 
 		// yield
+		yieldInt := 1
 		yield := strings.TrimSpace(strings.ReplaceAll(c.getStringInBetween(recipe, "Yield:", "<b"), "</b>", ""))
 		split := strings.Split(yield, "<")
 		if len(split) > 1 {
 			yield = split[0]
 		}
-		yieldInt, err := strconv.Atoi(yield)
-		if err != nil {
-			c.logger.Errorf("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
+		if len(yield) > 0 {
+			yieldInt, err = strconv.Atoi(yield)
+			if err != nil {
+				c.logger.Errorf("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
+			}
 		}
 
 		// return items
@@ -731,14 +771,14 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 
 			s = strings.ReplaceAll(s, "(temporary)", "")
-			s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+			s = strings.ReplaceAll(s, "(Pattern)", "")
 
 			quantity := 1
 			if strings.Contains(s, "(") {
 				qty := c.getStringInBetween(s, "(", ")")
 				quantity, err = strconv.Atoi(qty)
 				if err != nil {
-					c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+					c.logger.Errorf("error parsing returns quantity [%v] err [%v]", qty, err.Error())
 				}
 			}
 
@@ -765,7 +805,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 				qty := c.getStringInBetween(s, "(", ")")
 				quantity, err = strconv.Atoi(qty)
 				if err != nil {
-					c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+					c.logger.Errorf("error parsing failure quantity [%v] err [%v]", qty, err.Error())
 				}
 			}
 
@@ -777,7 +817,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 		}
 
 		r := Recipe{
-			RecipeName:     strings.Split(recipeName, "\n")[0],
+			RecipeName:     recipeName,
 			Skill:          c.getSkillFromName(r.PageTitle),
 			ExpansionId:    r.ExpId,
 			ExpansionName:  r.ExpName,
@@ -791,8 +831,8 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 			FailureReturns: failureReturnItems,
 		}
 
-		pp.Println(r)
-		fmt.Println("")
+		//pp.Println(r)
+		//fmt.Println("")
 
 		recipes = append(recipes, r)
 	})
@@ -900,4 +940,68 @@ func (c *ImportEqTradersCommand) getSkillFromName(name string) Skill {
 	}
 
 	return Skill{}
+}
+
+type ObjectType struct {
+	Type         int      `json:"type"`
+	Name         string   `json:"name"`
+	Skill        int      `json:"skill"`
+	TradersNames []string `json:"traders_names"`
+}
+
+var objectTypes = []ObjectType{
+	{Type: 10, Name: "Tinkering", Skill: 57, TradersNames: []string{"Tinkering Table"}},
+	{Type: 12, Name: "Mortar and Pestle", Skill: 56, TradersNames: []string{"Poisoncrafting Table"}},
+	{Type: 15, Name: "Baking", Skill: 60, TradersNames: []string{"Oven", "Tanaan Oven", "Spit", "Ice Cream Churn", "Mixing Bowl"}},
+	{Type: 16, Name: "Tailoring", Skill: 61, TradersNames: []string{"Loom", "Tanaan Loom"}},
+	{Type: 17, Name: "Blacksmithing", Skill: 63, TradersNames: []string{"Tanaan Forge", "Half Elf Forge", "Crystalwing Forge", "Shar Vahl Forge"}},
+	{Type: 18, Name: "Fletching", Skill: 64},
+	{Type: 19, Name: "Brewing", Skill: 65, TradersNames: []string{"Brew Barrel", "Tanaan Brew Barrel"}},
+	{Type: 20, Name: "Jewelry Making", Skill: 68},
+	{Type: 21, Name: "Pottery", Skill: 69},
+	{Type: 22, Name: "Kiln", Skill: 69},
+	{Type: 24, Name: "Lexicon Wiz", Skill: 58},
+	{Type: 25, Name: "Lexicon Mage", Skill: 58, TradersNames: []string{"Spell Research Table"}}, // observed in PoK
+	{Type: 26, Name: "Lexicon Nec", Skill: 58},
+	{Type: 27, Name: "Lexicon Enc", Skill: 58},
+	{Type: 29, Name: "Lexicon Practice", Skill: 58},
+	{Type: 30, Name: "Alchemy", Skill: 59},
+	{Type: 31, Name: "High Elf Forge", Skill: 63, TradersNames: []string{"Koada&#39;dal Forge"}},
+	{Type: 32, Name: "Dark Elf Forge", Skill: 63, TradersNames: []string{"Teir`Dal Forge"}},
+	{Type: 33, Name: "Ogre Forge", Skill: 63, TradersNames: []string{"Ogre Forge"}},
+	{Type: 34, Name: "Dwarf Forge", Skill: 63, TradersNames: []string{"Stormguard Forge"}},
+	{Type: 35, Name: "Gnome Forge", Skill: 63, TradersNames: []string{"Clockwork Forge"}},
+	{Type: 36, Name: "Barbarian Forge", Skill: 63, TradersNames: []string{"Northman Forge"}},
+	{Type: 37, Name: "Iksar Forge", Skill: 63},
+	{Type: 38, Name: "Iksar Forge", Skill: 63, TradersNames: []string{"Iksar Forge"}},
+	{Type: 39, Name: "Human Forge", Skill: 63},
+	{Type: 40, Name: "Halfling Forge", Skill: 63, TradersNames: []string{"Antonican Forge"}},
+	//{Type: 41, Name: "Halfling Forge", Skill: 63},
+	//{Type: 42, Name: "Erudite Forge", Skill: 63},
+	//{Type: 43, Name: "Wood Elf Forge", Skill: 63},
+	//{Type: 44, Name: "Wood Elf Forge", Skill: 63},
+	{Type: 45, Name: "Iksar Pottery", Skill: 69},
+	{Type: 47, Name: "Troll Forge", Skill: 63, TradersNames: []string{"Troll Forge"}},
+	{Type: 48, Name: "Wood Elf Forge", Skill: 63, TradersNames: []string{"Feir`Dal Forge"}},
+	{Type: 49, Name: "Halfling Forge", Skill: 63, TradersNames: []string{"Vale Forge"}},
+	{Type: 50, Name: "Erudite Forge", Skill: 63, TradersNames: []string{"Erud Forge"}},
+	{Type: 52, Name: "Froglok Forge", Skill: 63, TradersNames: []string{"Froglok Forge", "Guktan Forge"}},
+}
+
+func (c *ImportEqTradersCommand) getObjectTypeFromName(name string) ObjectType {
+	for _, o := range objectTypes {
+		if strings.Contains(name, o.Name) {
+			return o
+		}
+	}
+
+	for _, o := range objectTypes {
+		for _, n := range o.TradersNames {
+			if strings.Contains(name, n) {
+				return o
+			}
+		}
+	}
+
+	return ObjectType{}
 }
