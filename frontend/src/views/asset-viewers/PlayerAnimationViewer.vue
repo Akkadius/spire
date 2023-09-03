@@ -10,27 +10,38 @@
       </div>
 
       <div
-        class="row "
+        class="row justify-content-center"
         v-on:scroll.passive="videoRender"
         style="height: 90vh; overflow-y: scroll;"
       >
-        <div class="col-12">
-      <div v-for="(preview) in filteredPreviews" style="display:inline-block; position: relative;">
-        <video
-          muted
-          loop
-          :id="'preview-' + preview"
-          style="background-color: black;"
-          :data-src="previewBaseUrl + preview + '.mp4'"
-          class="video-preview player-anim-preview"
+        <div
+          v-for="(preview) in filteredPreviews"
+          class="col-sm-12 col-xs-12 col-md-12 col-lg-6 col-xl-4"
         >
-        </video>
-        <div class="overlay">
-          <h6 class="eq-header">{{ preview }}</h6>
+          <div style="position: relative; width: 100%;">
+            <video
+              muted
+              loop
+              :data-video-id="preview"
+              :id="'preview-' + preview"
+              style="border-radius: 5px; height: auto; width: 100%; background-color: black"
+              :data-src="previewBaseUrl + preview + '.mp4'"
+              class="video-preview"
+            >
+            </video>
+            <div
+              :id="'overlay-' + preview"
+              class="fade-in"
+              style="position: absolute; bottom: 2px; width: 100%; display: none"
+            >
+              <h6 class="eq-header">{{ preview }}</h6>
+            </div>
+          </div>
         </div>
+
+        <div class="col-12 mt-3 d-block">Videos Credits @DeadZergling</div>
       </div>
-      <div class="mt-3">Videos Credits @DeadZergling</div>
-        </div></div>
+
     </eq-window>
   </div>
 </template>
@@ -119,31 +130,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.player-anim-preview {
-  /*height: 270px;*/
-  /*width: 480px;*/
-
-  /*height: 180px;*/
-  /*width: 320px;*/
-
-  /*height: 144px;*/
-  /*width: 256px;*/
-
-  /*height: 135px;*/
-  /*width: 240px;*/
-
-  height: 25vh;
-  width: 44vh;
-
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.overlay {
-  position: absolute;
-  bottom: 6px;
-  left: 9px;
-}
-</style>

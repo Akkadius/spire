@@ -92,7 +92,7 @@
             <div
               :id="'overlay-' + spell"
               class="fade-in"
-              style="position: absolute; bottom: 2px; left: 50%; display: none"
+              style="position: absolute; bottom: 2px; width: 100%; display: none"
             >
               <h6 class="eq-header">{{ spell }}</h6>
             </div>
@@ -222,7 +222,7 @@ export default {
         animationPreviewExists[animationId] = 1
       })
 
-      this.spellAnimations = await EqAssets.getSpellAnimationFileIds()
+      this.spellAnimations = r
       this.loaded          = true
 
       setTimeout(() => {
@@ -258,7 +258,8 @@ export default {
       // filter on nimbuses if filter is set
       if (this.filterNimbuses) {
         filteredAnimations = []
-        EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+
+        this.spellAnimations.forEach((animationId) => {
           if (SPELL_NIMBUSES.includes(animationId)) {
             filteredAnimations.push(animationId)
             foundAnim[animationId] = 1

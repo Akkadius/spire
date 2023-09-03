@@ -17,21 +17,26 @@
             v-for="(animationId) in filteredAnimations"
             :key="animationId"
             style="display:inline-block; position: relative;"
-            class="d-inline-block"
+            class="col-sm-12 col-xs-12 col-md-12 col-lg-6 col-xl-6 d-inline-block"
           >
             <video
               muted
               loop
-              style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;"
+              style="height: auto; width: 100%; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;"
               :id="'spell-' + animationId"
+              :data-video-id="animationId"
               :data-src="animBaseUrl + animationId + '.mp4'"
               @mousedown="selectSpellAnim(animationId)"
               :class="'video-preview ' + classIsPulsating(animationId)"
             >
             </video>
 
-            <div class="overlay-spell-anim-selector">
-              <h6 class="eq-header" style="font-size: 21px; ">{{ animationId }}</h6>
+            <div
+              :id="'overlay-' + animationId"
+              class="fade-in"
+              style="position: absolute; bottom: 2px; left: 48%; display: none"
+            >
+              <h6 class="eq-header" style="font-size: 26px;">{{ animationId }}</h6>
             </div>
 
           </div>
@@ -144,10 +149,3 @@ export default {
 }
 </script>
 
-<style>
-.overlay-spell-anim-selector {
-  position: absolute;
-  bottom: 1px;
-  left: 11px;
-}
-</style>
