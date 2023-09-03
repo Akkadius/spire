@@ -912,16 +912,16 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 }
 
 var itemLookupCache = make(map[string]int, 0)
+var itemLookupReadOnlyCache = make(map[string]int, 0) // conncurent
 
-var lookupReadMutex = &sync.Mutex{}
+var lookupWriteMutex = &sync.Mutex{}
 
 func (c *ImportEqTradersCommand) getItemIdFromHtml(html string) int {
-	lookupReadMutex.Lock()
 	url := c.getStringInBetween(html, "href=\"", "\">")
 	tradersItemId := c.getStringInBetween(url, "item=", "&amp;")
-	val, ok := itemLookupCache[tradersItemId]
+
+	val, ok := itemLookupReadOnlyCache[tradersItemId]
 	if ok {
-		//c.logger.Info("Found item in cache: ", val)
 		return val
 	}
 
@@ -946,9 +946,9 @@ func (c *ImportEqTradersCommand) getItemIdFromHtml(html string) int {
 		return 0
 	}
 
+	lookupWriteMutex.Lock()
 	itemLookupCache[tradersItemId] = i
-
-	lookupReadMutex.Unlock()
+	lookupWriteMutex.Unlock()
 
 	return i
 }
@@ -988,6 +988,11 @@ func (c *ImportEqTradersCommand) LoadItemCache() {
 	err = d.Decode(&itemLookupCache)
 	if err != nil {
 		c.logger.Error(err)
+	}
+
+	// copy to read only cache
+	for k, v := range itemLookupCache {
+		itemLookupReadOnlyCache[k] = v
 	}
 }
 
