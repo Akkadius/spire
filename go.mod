@@ -53,6 +53,8 @@ require (
 	github.com/deepmap/oapi-codegen v1.11.0 // indirect
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/friendsofgo/errors v0.9.2 // indirect
+	github.com/gammazero/deque v0.2.0 // indirect
+	github.com/gammazero/workerpool v1.1.3 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
