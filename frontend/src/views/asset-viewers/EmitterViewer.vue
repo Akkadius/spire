@@ -11,23 +11,28 @@
       <div
         v-on:scroll.passive="videoRender"
         style="height: 90vh; overflow-y: scroll;"
-        class="row"
+        class="row justify-content-center"
       >
-        <div class="col-12">
-          <div
-            v-for="(preview) in filteredPreviews"
-            style="display:inline-block; position: relative;"
-          >
+        <div
+          v-for="(preview) in filteredPreviews"
+          class="col-sm-12 col-xs-12 col-md-12 col-lg-6 col-xl-4"
+        >
+          <div style="position: relative; width: 100%;">
             <video
               muted
               loop
-              style="background-color: black;"
+              :data-video-id="preview"
               :id="'preview-' + preview"
               :data-src="animBaseUrl + preview + '.mp4'"
-              class="video-preview emitter-preview"
+              class="video-preview "
+              style="border-radius: 5px; height: auto; width: 100%; background-color: black"
             >
             </video>
-            <div class="emitter-overlay">
+            <div
+              :id="'overlay-' + preview"
+              class="fade-in"
+              style="position: absolute; bottom: 2px; left: 50%; display: none"
+            >
               <h6 class="eq-header">{{ preview }}</h6>
             </div>
           </div>
@@ -120,34 +125,3 @@ export default {
 }
 </script>
 
-<style>
-.emitter-preview {
-  /*height: 270px;*/
-  /*width: 480px;*/
-
-  /*height: 180px;*/
-  /*width: 320px;*/
-
-  /*height: 162px;*/
-  /*width: 288px;*/
-
-  /*height: 262px;*/
-  /*width: 464px;*/
-
-  height: 25vh;
-  width: 44vh;
-
-  /*height: 135px;*/
-  /*width: 240px;*/
-
-  border-radius: 5px !important;
-  margin: 1px;
-  margin-right: 10px;
-}
-
-.emitter-overlay {
-  position: absolute;
-  bottom: 2px;
-  left: 9px;
-}
-</style>

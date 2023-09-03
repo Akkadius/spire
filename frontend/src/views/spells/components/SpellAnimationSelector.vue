@@ -31,21 +31,26 @@
           <div
             v-for="(animationId) in filteredAnimations"
             :key="animationId"
-            style="display:inline-block; position: relative; "
-            class="d-inline-block"
+            style="display:inline-block; position: relative;"
+            class="col-sm-12 col-xs-12 col-md-12 col-lg-6 col-xl-6 d-inline-block"
           >
             <video
               muted
               loop
-              style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;"
+              style="height: auto; width: 100%; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;"
               :id="'spell-' + animationId"
+              :data-video-id="animationId"
               :data-src="animBaseUrl + animationId + '.mp4#t=3'"
               @mousedown="selectSpellAnim(animationId)"
               :class="'video-preview ' + classIsPulsating(animationId)"
             >
             </video>
 
-            <div class="overlay-spell-anim-selector">
+            <div
+              :id="'overlay-' + animationId"
+              class="fade-in"
+              style="position: absolute; bottom: 2px; width: 100%; display: none"
+            >
               <h6 class="eq-header" style="font-size: 21px; ">{{ animationId }}</h6>
             </div>
 
@@ -60,13 +65,13 @@
 </template>
 
 <script>
-import PageHeader        from "@/components/layout/PageHeader";
-import {App}             from "@/constants/app";
-import EqWindow          from "@/components/eq-ui/EQWindow";
-import * as util         from "util";
-import VideoViewer       from "@/app/video-viewer/video-viewer";
-import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
-import EqAssets          from "@/app/eq-assets/eq-assets";
+import PageHeader     from "@/components/layout/PageHeader";
+import {App}          from "@/constants/app";
+import EqWindow       from "@/components/eq-ui/EQWindow";
+import * as util      from "util";
+import VideoViewer    from "@/app/video-viewer/video-viewer";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
+import EqAssets       from "@/app/eq-assets/eq-assets";
 
 let animationPreviewExists = {}
 
@@ -191,11 +196,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.overlay-spell-anim-selector {
-  position: absolute;
-  bottom: 1px;
-  left: 11px;
-}
-</style>

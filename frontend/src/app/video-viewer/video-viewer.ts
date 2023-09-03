@@ -43,15 +43,21 @@ export default class VideoViewer {
 
     let unloading = []
     let playing   = []
+    let loaded    = []
     let videos    = document.getElementsByClassName("video-preview");
     for (let i = 0; i < videos.length; i++) {
       let video = <HTMLVideoElement>videos.item(i)
       if (video) {
         let dataSrc = video.getAttribute("data-src")
 
+        if (VideoViewer.videoLoaded(video)) {
+          // @ts-ignore
+          loaded.push(video.getAttribute("id"))
+        }
+
         // Toggle playing
-        if (VideoViewer.elementInViewport(video)) {
-          if (dataSrc && !VideoViewer.videoLoaded(video) && !VideoViewer.videoPlaying(video)) {
+        if (VideoViewer.elementInViewport(video, -500)) {
+          if (dataSrc && !VideoViewer.videoLoaded(video)) {
             let source = document.createElement("source");
 
             // video.setAttribute("src", dataSrc);
@@ -64,7 +70,15 @@ export default class VideoViewer {
             source.setAttribute("type", "video/mp4");
             video.appendChild(source);
             video.load();
-            video.play();
+            video.play().then(() => {
+              let videoId = video.getAttribute("data-video-id")
+              if (videoId) {
+                let videoEl = document.getElementById('overlay-' + videoId)
+                if (videoEl) {
+                  videoEl.style.display = "block";
+                }
+              }
+            });
 
             // @ts-ignore
             playing.push(video.getAttribute("id"))
@@ -86,37 +100,19 @@ export default class VideoViewer {
     if (unloading.length > 0) {
       VideoViewer.log("Unloading", unloading)
     }
+    if (loaded.length > 0) {
+      VideoViewer.log("Loaded", loaded)
+    }
+
   }, 10);
 
-  public static elementInViewport(elem) {
-    // if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
+  public static elementInViewport(elm, threshold = 0, mode = "visible") {
+    let rect       = elm.getBoundingClientRect();
+    let viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    let above      = rect.bottom - threshold < 0;
+    let below      = rect.top - viewHeight + threshold >= 0;
 
-
-    const style = getComputedStyle(elem);
-    if (style.display === 'none') return false;
-    if (style.visibility !== 'visible') return false;
-    // @ts-ignore
-    if (style.opacity < 0.1) return false;
-    // @ts-ignore
-    if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
-      elem.getBoundingClientRect().width === 0) {
-      return false;
-    }
-    const elemCenter = {
-      x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
-      y: elem.getBoundingClientRect().top + elem.offsetHeight / 4
-    };
-    if (elemCenter.x < 0) return false;
-    if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
-    if (elemCenter.y < 0) return false;
-    if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
-    let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
-    // @ts-ignore
-    do {
-      if (pointContainer === elem) return true;
-    } while (pointContainer && pointContainer === pointContainer.parentNode);
-
-    return false;
+    return mode === 'above' ? above : (mode === 'below' ? below : !above && !below);
   }
 
   public static videoPlaying(el) {
@@ -124,7 +120,17 @@ export default class VideoViewer {
   }
 
   public static videoLoaded(el) {
-    return el.readyState === 4
+
+    const src = el.getElementsByTagName("source")
+    if (!src) {
+      return false
+    }
+
+    if (src.length === 0) {
+      return false
+    }
+
+    return el.getElementsByTagName("source")[0].src.length > 0
   }
 
   public static addScrollListener() {

@@ -69,27 +69,31 @@
       </div>
 
       <div
-        class="row "
+        class="row justify-content-center"
         v-on:scroll.passive="videoRender"
-        style="height: 74vh; overflow-y: scroll; box-sizing: border-box;"
+        style="height: 74vh; overflow-y: scroll; overflow-x: hidden; box-sizing: border-box;"
       >
-        <div class="col-12">
-          <div
-            class="fade-in"
-            v-for="(spell) in filteredAnimations"
-            :key="spell"
-            style="display:inline-block; position: relative;"
-          >
+        <div
+          v-for="(spell) in filteredAnimations"
+          :key="spell"
+          class="col-sm-12 col-xs-12 col-md-12 col-lg-6 col-xl-4"
+        >
+          <div style="position: relative; width: 100%;">
             <video
               muted
               loop
-              style="background-color: black;"
               :id="'spell-' + spell"
+              :data-video-id="spell"
               :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
-              class="video-preview spell-preview-viewer"
+              class="video-preview spell-preview-video"
+              style="border-radius: 5px; height: auto; width: 100%; background-color: black"
             >
             </video>
-            <div class="overlay">
+            <div
+              :id="'overlay-' + spell"
+              class="fade-in"
+              style="position: absolute; bottom: 2px; width: 100%; display: none"
+            >
               <h6 class="eq-header">{{ spell }}</h6>
             </div>
           </div>
@@ -218,7 +222,7 @@ export default {
         animationPreviewExists[animationId] = 1
       })
 
-      this.spellAnimations = await EqAssets.getSpellAnimationFileIds()
+      this.spellAnimations = r
       this.loaded          = true
 
       setTimeout(() => {
@@ -254,7 +258,8 @@ export default {
       // filter on nimbuses if filter is set
       if (this.filterNimbuses) {
         filteredAnimations = []
-        EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+
+        this.spellAnimations.forEach((animationId) => {
           if (SPELL_NIMBUSES.includes(animationId)) {
             filteredAnimations.push(animationId)
             foundAnim[animationId] = 1
@@ -288,26 +293,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.spell-preview-viewer {
-  /*height: 250px;*/
-  /*min-width: 150px;*/
-  /*max-width: 200px;*/
-
-  /*height: 262px;*/
-  /*width: 464px;*/
-
-  height: 25vh;
-  width: 44vh;
-
-  border-radius: 5px !important;
-  margin-right: 10px;
-}
-
-.overlay {
-  position: absolute;
-  bottom: 2px;
-  left: 9px;
-}
-</style>

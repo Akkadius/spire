@@ -1,3 +1,7 @@
+## [3.3.5] 9/2/2023
+
+* **Video Renderer** Additional performance, responsiveness, memory, and stability improvements to the video renderer.
+
 ## [3.3.4] 9/2/2023
 
 * **Spell Editor** ID selector input now only engages on input focus instead of hover.
