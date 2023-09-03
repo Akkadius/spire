@@ -27,6 +27,7 @@ var commandSet = wire.NewSet(
 	cmd.NewUserChangePasswordCommand,
 	cmd.NewSpireOcculusUpdateCommand,
 	cmd.NewSpireServerLauncherCommand,
+	cmd.NewImportEqTradersCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -51,6 +52,7 @@ func ProvideCommands(
 	userChangePasswordCmd *cmd.UserChangePasswordCommand,
 	spireOcculusUpdateCmd *cmd.SpireOcculusUpdateCommand,
 	spireServerLauncherCmd *cmd.SpireServerLauncherCommand,
+	importEqTradersCmd *cmd.ImportEqTradersCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		adminPingOcculus.Command(),
@@ -71,5 +73,6 @@ func ProvideCommands(
 		userChangePasswordCmd.Command(),
 		spireOcculusUpdateCmd.Command(),
 		spireServerLauncherCmd.Command(),
+		importEqTradersCmd.Command(),
 	}
 }
