@@ -742,12 +742,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 
 			var componentsList []Item
 			for _, s := range strings.Split(components, ",") {
-				s = strings.ReplaceAll(s, "(temporary)", "")
-				s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
-				s = strings.ReplaceAll(s, "(Legacy)", "")
-				s = strings.ReplaceAll(s, "(removed)", "")
-				s = strings.ReplaceAll(s, "(foraged)", "")
-				s = strings.ReplaceAll(s, "(looted)", "")
+				s = c.stripTradersComments(s)
 
 				quantity := 1
 				if strings.Contains(s, "(") {
@@ -826,8 +821,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 					continue
 				}
 
-				s = strings.ReplaceAll(s, "(temporary)", "")
-				s = strings.ReplaceAll(s, "(Pattern)", "")
+				s = c.stripTradersComments(s)
 
 				quantity := 1
 				if strings.Contains(s, "(") {
@@ -853,8 +847,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 					continue
 				}
 
-				s = strings.ReplaceAll(s, "(temporary)", "")
-				s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+				s = c.stripTradersComments(s)
 
 				// remove everything after Notes: (if it exists)
 				s = strings.Split(s, "Notes:")[0]
@@ -1089,4 +1082,15 @@ func (c *ImportEqTradersCommand) getObjectTypeFromName(name string) ObjectType {
 	}
 
 	return ObjectType{}
+}
+
+func (c *ImportEqTradersCommand) stripTradersComments(s string) string {
+	s = strings.ReplaceAll(s, "(temporary)", "")
+	s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
+	s = strings.ReplaceAll(s, "(Legacy)", "")
+	s = strings.ReplaceAll(s, "(removed)", "")
+	s = strings.ReplaceAll(s, "(foraged)", "")
+	s = strings.ReplaceAll(s, "(looted)", "")
+	s = strings.ReplaceAll(s, "(Pattern)", "")
+	return s
 }
