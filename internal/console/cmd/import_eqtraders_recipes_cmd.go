@@ -746,6 +746,8 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 				s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
 				s = strings.ReplaceAll(s, "(Legacy)", "")
 				s = strings.ReplaceAll(s, "(removed)", "")
+				s = strings.ReplaceAll(s, "(foraged)", "")
+				s = strings.ReplaceAll(s, "(looted)", "")
 
 				quantity := 1
 				if strings.Contains(s, "(") {
@@ -755,7 +757,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 
 					quantity, err = strconv.Atoi(qty)
 					if err != nil {
-						c.logger.Errorf("error parsing quantity [%v] err [%v]", qty, err.Error())
+						c.logger.Errorf("error parsing component quantity [%v] err [%v]", qty, err.Error())
 					}
 				}
 
@@ -854,8 +856,8 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 				s = strings.ReplaceAll(s, "(temporary)", "")
 				s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
 
-				// remove everything after Note: (if it exists)
-				s = strings.Split(s, "Note:")[0]
+				// remove everything after Notes: (if it exists)
+				s = strings.Split(s, "Notes:")[0]
 
 				quantity := 1
 				if strings.Contains(s, "(") {
