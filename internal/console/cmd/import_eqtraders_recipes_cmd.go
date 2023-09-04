@@ -250,6 +250,8 @@ type ExpansionRecipe struct {
 // Handle implementation of the Command interface
 func (c *ImportEqTradersCommand) Handle(cmd *cobra.Command, args []string) {
 	list := []ExpansionRecipe{
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=337&rsa=Tailoring&rc=ELF&sb=item&sub=dron&menustr=080040120080"},
+
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=velluc&sb=item&menustr=080020040000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=SoV&menustr=080110120000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=SoV&sb=item&menustr=080070000000"},
@@ -663,6 +665,7 @@ type Recipe struct {
 	Yield          int    `json:"yield"`
 	Returns        []Item `json:"returns"`
 	FailureReturns []Item `json:"failure_returns"`
+	LearnedByItem  Item   `json:"learned_by_item"`
 }
 
 var recipes []Recipe
@@ -711,6 +714,7 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 			if err != nil {
 				c.logger.Error(err)
 			}
+			recipeText := s.Find("td").Next().Text()
 
 			// second attempt to get recipe name
 			if recipeName == "" {
@@ -866,6 +870,34 @@ func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
 					ItemName: c.getStringInBetween(s, ">", "<"),
 					Count:    quantity,
 				})
+			}
+
+			notesSplit := strings.Split(recipeText, "Notes:")
+			var notes string
+			if len(notesSplit) > 1 {
+				notes = strings.TrimSpace(notesSplit[1])
+				notes = strings.ReplaceAll(notes, "&#39;", "")
+				notes = strings.ReplaceAll(notes, "&#39;", "")
+
+				learnedItem := ""
+				if strings.Contains(notes, "You may need to purchase and scribe") {
+					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You may need to purchase and scribe", "in order to perform this combine"))
+				} else if strings.Contains(notes, "You must purchase and scribe") && strings.Contains(notes, "from") {
+					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You must purchase and scribe", "from"))
+				} else if strings.Contains(notes, "You must purchase and scribe") {
+					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You must purchase and scribe", "in order to perform this combine"))
+				} else if strings.Contains(notes, "You can purchase and scribe") {
+					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You can purchase and scribe", "in order to learn this recipe"))
+				}
+
+				// extract Simple Charms from Can scribe to Learn:
+				if strings.Contains(notes, "Can scribe to Learn:") {
+					learnedItem = strings.TrimSpace(strings.Split(notes, "Can scribe to Learn:")[1])
+				}
+
+				if len(learnedItem) > 0 {
+					c.logger.Infof("learned item [%v] for recipe [%v]", learnedItem, recipeName)
+				}
 			}
 
 			fmt.Printf(
