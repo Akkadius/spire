@@ -21,7 +21,7 @@ func (i *Importer) getDatabase(g *gorm.DB) *sql.DB {
 	// get database instance
 	db, err := g.DB()
 	if err != nil {
-		i.logger.Fatal(err)
+		i.logger.Warn(err)
 	}
 
 	return db

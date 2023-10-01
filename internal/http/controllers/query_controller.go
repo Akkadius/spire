@@ -78,7 +78,7 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 		var Id string
 		err := rows.Scan(&Id)
 		if err != nil {
-			q.logger.Fatal(err)
+			q.logger.Warn(err)
 		}
 
 		ids = append(ids, Id)

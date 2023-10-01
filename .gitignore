@@ -33,3 +33,6 @@ eqemu_config.json
 eqemu_config.json*
 
 *.syso
+
+itemLookupCache.gob
+recipes.json

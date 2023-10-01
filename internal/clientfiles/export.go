@@ -22,7 +22,7 @@ func (e *Exporter) getDatabase(g *gorm.DB) *sql.DB {
 	// get database instance
 	db, err := g.DB()
 	if err != nil {
-		e.logger.Fatal(err)
+		e.logger.Warn(err)
 	}
 
 	return db
@@ -34,7 +34,7 @@ func (e *Exporter) ExportSpells(db *gorm.DB) string {
 
 	columns, err := database.GetTableSchema(db, "spells_new")
 	if err != nil {
-		e.logger.Fatal(err)
+		e.logger.Warn(err)
 	}
 
 	var rows []string
@@ -56,7 +56,7 @@ func (e *Exporter) ExportDbStr(db *gorm.DB) string {
 
 	columns, err := database.GetTableSchema(db, "db_str")
 	if err != nil {
-		e.logger.Fatal(err)
+		e.logger.Warn(err)
 	}
 
 	var rows []string
