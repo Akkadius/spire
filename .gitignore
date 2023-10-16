@@ -36,3 +36,4 @@ eqemu_config.json*
 
 itemLookupCache.gob
 recipes.json
+cpu.prof

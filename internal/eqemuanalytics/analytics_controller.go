@@ -1,13 +1,17 @@
 package eqemuanalytics
 
 import (
+	"fmt"
+	"github.com/Akkadius/spire/internal/crashreporting"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/discord"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -86,7 +90,49 @@ func (a *AnalyticsController) serverCrashReport(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
 
+	r.Fingerprint = crashreporting.FingerPrint(r.CrashReport)
+
+	// check database if fingerprint exists
+	count := int64(-1)
+	isReleaseVersion := !strings.Contains(r.ServerVersion, "-dev")
+
+	if isReleaseVersion {
+		a.db.GetSpireDb().
+			Model(&models.CrashReport{}).
+			Where("fingerprint = ?", r.Fingerprint).
+			Count(&count)
+	}
+
 	a.db.GetSpireDb().Create(r)
+
+	// if count is 0, then this is a new crash
+	if count == 0 && isReleaseVersion {
+		// send discord webhook
+		go func() {
+
+			// format web link
+			link := fmt.Sprintf(
+				"%s/dev/release/%s?id=%d",
+				os.Getenv("VUE_APP_FRONTEND_BASE_URL"),
+				r.ServerVersion,
+				r.ID,
+			)
+
+			err := discord.SendDiscordWebhook(
+				os.Getenv("DISCORD_CRASH_REPORT_WEBHOOK_URL"),
+				fmt.Sprintf(
+					"Version **%v** New crash fingerprint **%v** created by server **%v** can be viewed at %v",
+					r.ServerVersion,
+					r.Fingerprint,
+					r.ServerName,
+					link,
+				),
+			)
+			if err != nil {
+				a.logger.Error(err)
+			}
+		}()
+	}
 
 	return c.JSON(http.StatusOK, "Invalid request")
 }
@@ -128,10 +174,21 @@ func (a *AnalyticsController) listServerCrashReports(c echo.Context) error {
 	return c.JSON(http.StatusOK, entries)
 }
 
+type CrashReportResponse struct {
+	CrashReportCounts []CrashReportCounts       `json:"crash_report_counts"`
+	UniqueCrashCounts []CrashUniqueReportCounts `json:"unique_crash_counts"`
+}
+
 type CrashReportCounts struct {
 	ServerVersion string `json:"server_version"`
 	CompileDate   string `json:"compile_date"`
 	CrashCount    int    `json:"crash_count"`
+}
+
+type CrashUniqueReportCounts struct {
+	ServerVersion    string `json:"server_version"`
+	Fingerprint      string `json:"fingerprint"`
+	UniqueCrashCount int    `json:"unique_crash_count"`
 }
 
 func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
@@ -145,7 +202,7 @@ func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 		return err
 	}
 
-	counts := []CrashReportCounts{}
+	var counts []CrashReportCounts
 	for rows.Next() {
 		var r CrashReportCounts
 		err = rows.Scan(&r.ServerVersion, &r.CompileDate, &r.CrashCount)
@@ -155,7 +212,28 @@ func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 		counts = append(counts, r)
 	}
 
-	return c.JSON(http.StatusOK, counts)
+	rows, err = db.Query("select server_version, fingerprint, count(*) as crash_count from spire_crash_reports group by server_version, fingerprint order by server_version")
+	if err != nil {
+		return err
+	}
+
+	var uniqueCounts []CrashUniqueReportCounts
+	for rows.Next() {
+		var r CrashUniqueReportCounts
+		err = rows.Scan(&r.ServerVersion, &r.Fingerprint, &r.UniqueCrashCount)
+		if err != nil {
+			return err
+		}
+		uniqueCounts = append(uniqueCounts, r)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		CrashReportResponse{
+			CrashReportCounts: counts,
+			UniqueCrashCounts: uniqueCounts,
+		},
+	)
 }
 
 func (a *AnalyticsController) getReleases(c echo.Context) error {
