@@ -337,6 +337,7 @@ export default {
       this.filterType = ""
       this.stopLogStream()
       this.fileToWatch = ""
+      this.fileCursor = 0
       this.searchAllString = ""
       this.searchResults = []
       this.updateQueryState()
@@ -463,8 +464,6 @@ export default {
     },
 
     startLogStream() {
-
-
       if (this.watchTimer) {
         clearInterval(this.watchTimer);
       }
@@ -609,6 +608,13 @@ export default {
       } catch (e) {
         if (e.response && e.response.data && e.response.data.error) {
           this.fileError = e.response.data.error
+
+          // if error is "makeslice: len out of range" then restart the log stream
+          if (this.fileError.includes("makeslice: len out of range")) {
+            console.log("len out of range, restart log stream")
+            this.stopLogStream()
+            this.startLogStream()
+          }
         }
       }
     },

@@ -1,7 +1,8 @@
-## [3.4.3] 10/16/2023
+## [3.4.4] 10/16/2023
 
 * **Zip** Ignore zip deletion errors when deleting old zips
 * **Spire Admin** Fix race condition when rendering server header card
+* **Spire Admin** Fix race condition during log file streaming when switching between files
 
 ## [3.4.1] 10/16/2023
 
