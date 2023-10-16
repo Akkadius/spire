@@ -21,6 +21,7 @@
       title="Release Version Analytics"
       class="p-3"
       v-if="!loading"
+
     >
       <eq-tabs
         :selected="tabSelected"
@@ -30,7 +31,7 @@
           class="fade-in"
           :name="`Official Releases`"
         >
-          <div style="max-height:95vh; overflow-y: scroll">
+          <div style="max-height:85vh; overflow-y: scroll">
             <table
               class="eq-table bordered eq-highlight-rows"
             >
@@ -52,7 +53,8 @@
                   <i class="fa fa-download"></i>
                   Download Links
                 </th>
-                <th class="text-center">Crash Count</th>
+                <th class="text-center">Unique Crashes</th>
+                <th class="text-center">Total Crashes</th>
                 <th></th>
               </tr>
               </thead>
@@ -95,6 +97,9 @@
                   </a>
                 </td>
                 <td class="text-center">
+                  {{ getUniqueCrashCount(r) }}
+                </td>
+                <td class="text-center">
                   {{ getCrashCount(r) }}
                 </td>
                 <td class="text-center">
@@ -118,7 +123,7 @@
           class="fade-in"
           :name="`Self Built`"
         >
-          <div style="max-height:95vh; overflow-y: scroll">
+          <div style="max-height:85vh; overflow-y: scroll">
             <table
               class="eq-table bordered eq-highlight-rows"
             >
@@ -192,6 +197,7 @@ export default {
       releases: [],
 
       counts: [],
+      uniqueCounts: [],
       selfBuilt: []
     }
   },
@@ -267,8 +273,9 @@ export default {
     async loadCounts() {
       const r = await SpireApi.v1().get(`analytics/server-crash-report/counts`)
       if (r.status === 200) {
-        this.counts = r.data
-        this.selfBuilt = r.data.filter((e) => {
+        this.counts = r.data.crash_report_counts
+        this.uniqueCounts = r.data.unique_crash_counts
+        this.selfBuilt = r.data.crash_report_counts.filter((e) => {
           return e.server_version.includes("-dev")
         }).sort((a, b) => {
           return b.server_version.localeCompare(a.server_version);
@@ -337,6 +344,18 @@ export default {
       }
 
       return 0
+    },
+    getUniqueCrashCount(r) {
+      const version = r.name.replaceAll("v", "")
+
+      let total = 0;
+      for (let v of this.uniqueCounts) {
+        if (v.server_version === version) {
+          total++;
+        }
+      }
+
+      return total
     }
   },
   async mounted() {

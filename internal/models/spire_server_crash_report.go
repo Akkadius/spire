@@ -19,6 +19,7 @@ type CrashReport struct {
 	ServerName      string    `json:"server_name" gorm:"server_name;type:varchar(200)"`
 	ServerShortName string    `json:"server_short_name" gorm:"server_short_name;type:varchar(200)"`
 	ServerVersion   string    `json:"server_version" gorm:"server_version;type:varchar(50);index:version"`
+	Fingerprint     string    `json:"fingerprint" gorm:"fingerprint;type:varchar(100);index:fingerprint"`
 	Uptime          int       `json:"uptime" gorm:"uptime"`
 	CreatedAt       time.Time `json:"created_at" gorm:"Column:created_at"`
 }

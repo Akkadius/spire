@@ -47,6 +47,7 @@ func (c *GenerateModelsCommand) Handle(cmd *cobra.Command, args []string) {
 		c.logger,
 		c.db,
 	).Generate()
+
 }
 
 func (c *GenerateModelsCommand) Validate(cmd *cobra.Command, _ []string) error {

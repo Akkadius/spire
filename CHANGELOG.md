@@ -1,3 +1,11 @@
+## [3.4.0] 10/15/2023
+
+* **Crash Analytics** Added fingerprinting to crash analytics to help identify duplicate crashes.
+* **Crash Analytics** Add Discord webhook to crash analytics to notify developers of new unique crashes.
+* **Server Updater** Added unique crash counts to the server updater page within Spire Admin
+
+![image](https://github.com/EQEmu/Server/assets/3319450/3d7dd8ec-2269-4041-a22a-afb57395a56c)
+
 ## [3.3.5] 9/2/2023
 
 * **Video Renderer** Additional performance, responsiveness, memory, and stability improvements to the video renderer.

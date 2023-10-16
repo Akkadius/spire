@@ -22,7 +22,7 @@
       class="p-3"
       v-if="!loading"
     >
-      <div style="max-height:95vh; overflow-y: scroll">
+      <div style="max-height:60vh; overflow-y: scroll">
         <table
           class="eq-table bordered eq-highlight-rows fade-in"
         >
@@ -46,7 +46,8 @@
               <i class="fa fa-download"></i>
               Download Links
             </th>
-            <th class="text-center">Crash Count</th>
+            <th class="text-center">Unique Crashes</th>
+            <th class="text-center">Total Crashes</th>
             <th></th>
           </tr>
           </thead>
@@ -99,6 +100,9 @@
               >
                 <i class="fa fa-linux"></i> Linux (x64)
               </a>
+            </td>
+            <td class="text-center">
+              {{ getUniqueCrashCount(r) }}
             </td>
             <td class="text-center">
               {{ getCrashCount(r) }}
@@ -180,6 +184,7 @@ export default {
       releases: [],
 
       counts: [],
+      uniqueCounts: [],
       selfBuilt: [],
 
       // notification / errors
@@ -293,9 +298,10 @@ export default {
           try {
             const r = await axios.get(`${url}/analytics/server-crash-report/counts`)
             if (r.status === 200) {
-              this.counts = r.data
+              this.counts = r.data.crash_report_counts
+              this.uniqueCounts = r.data.unique_crash_counts
 
-              this.selfBuilt = r.data.filter((e) => {
+              this.selfBuilt = r.data.crash_report_counts.filter((e) => {
                 // @ts-ignore
                 return e.server_version.includes("-dev")
               }).sort((a, b) => {
@@ -387,6 +393,16 @@ export default {
       }
 
       return 0
+    },
+    getUniqueCrashCount(r) {
+      const version = r.name.replaceAll("v", "")
+      let total = 0;
+      for (let v of this.uniqueCounts) {
+        if (v.server_version === version) {
+          total++;
+        }
+      }
+      return total
     }
   },
   async mounted() {

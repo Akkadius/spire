@@ -11,7 +11,7 @@
       </div>
 
       <div
-        :style="'max-height: ' + (highlightedId ? 35 : 95) + 'vh; overflow-y: scroll'"
+        :style="'max-height: ' + (highlightedId ? 35 : 95) + 'vh; overflow-y: scroll; '"
         v-if="crashes.length > 0"
       >
         <table
@@ -22,6 +22,7 @@
           <tr>
             <th></th>
             <th>ID</th>
+            <th>Fingerprint</th>
             <th>Compile Time</th>
             <th>Server Name</th>
             <th>Process</th>
@@ -29,7 +30,6 @@
             <th>OS</th>
             <th>Lines</th>
             <th>Created</th>
-            <th>Origin</th>
           </tr>
           </thead>
           <tbody>
@@ -50,6 +50,8 @@
               </b-button>
             </td>
             <td>{{ c.id }}</td>
+            <td style="text-align: center">{{ c.fingerprint.substr(0, 5) }}</td>
+
             <td>{{ c.compile_date }} {{ c.compile_time }}</td>
             <td>{{ c.server_name }} ({{ c.server_short_name }})</td>
             <td>{{ c.platform_name }}</td>
@@ -57,7 +59,6 @@
             <td>{{ c.os_sysname }} ({{ c.os_machine }})</td>
             <td>{{ c.crash_report.split("\n").length }}</td>
             <td>{{ c.created_at ? c.created_at : "" }}</td>
-            <td>{{ c.origination_info }}</td>
           </tr>
           </tbody>
         </table>
@@ -69,9 +70,15 @@
       :title="`Crash Stack (${highlightedId})`"
       v-if="crash"
     >
+      <div class="pb-3">
+        <b>Fingerprint</b> {{ crash.fingerprint }}
+        <b>OS</b> {{ crash.os_version }} ({{ crash.os_machine }}) {{ crash.os_release }}
+        <b v-if="crash.origination_info">Origination</b> {{ crash.origination_info }}
+      </div>
+
       <pre
         style="width: 100%; height: 50vh; overflow-y: scroll"
-      >{{ crash }}</pre>
+      >{{ crash.crash_report }}</pre>
     </eq-window>
   </div>
 </template>
@@ -91,7 +98,7 @@ export default {
 
       crashes: [],
 
-      crash: "",
+      crash: {},
       highlightedId: 0
     }
   },
@@ -122,19 +129,19 @@ export default {
   },
   methods: {
     reset() {
-      this.crash         = ""
+      this.crash         = {}
       this.highlightedId = 0
     },
 
     async load() {
       for (let r of this.crashes) {
         if (r.id === this.highlightedId) {
-          this.crash = r.crash_report
+          this.crash = r
         }
       }
     },
     viewCrash(e) {
-      this.crash         = e.crash_report
+      this.crash         = e
       this.highlightedId = e.id
       this.updateQueryState()
     },
