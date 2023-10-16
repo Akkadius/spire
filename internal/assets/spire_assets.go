@@ -94,10 +94,7 @@ func (a SpireAssets) downloadAssets(cachedir string) {
 	}
 
 	// remove the zip file
-	err = os.Remove(dumpZip)
-	if err != nil {
-		a.logger.Fatalf("could not remove zip: %v", err)
-	}
+	_ = os.Remove(dumpZip)
 }
 
 func (a SpireAssets) getCacheDir() string {

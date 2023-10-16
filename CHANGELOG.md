@@ -1,3 +1,7 @@
+## [3.4.2] 10/16/2023
+
+* **Zip** Ignore zip deletion errors when deleting old zips
+
 ## [3.4.1] 10/16/2023
 
 * **Crash Analytics** Fix fingerprinting false positives in windows crash analytics
