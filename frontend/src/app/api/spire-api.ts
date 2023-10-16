@@ -79,6 +79,19 @@ export class SpireApi {
     client.interceptors.response.use(response => {
       return response;
     }, error => {
+
+      // check if jwt signature invalid
+      // { "error": "Code=401, message=invalid or expired jwt, internal=signature is invalid" }
+      if (error.response.data && error.response.data.error) {
+        if (error.response.data.error.includes("invalid or expired jwt")) {
+          UserContext.deleteAccessToken()
+          // when we're not authorized (logged in)
+          // redirect to login screen
+          window.location.href = ROUTE.LOGIN
+          return
+        }
+      }
+
       console.log("401 error", error)
       if (error.response.status === 401) {
         console.log("401 error", error.response)

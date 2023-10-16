@@ -1,3 +1,9 @@
+## [3.4.1] 10/16/2023
+
+* **Crash Analytics** Fix fingerprinting false positives in windows crash analytics
+* **Crash Analytics** Add loader to page
+* **Auth** Log users out in cases where their token is invalid. Also catches cases where encryption key was changed.
+
 ## [3.4.0] 10/15/2023
 
 * **Crash Analytics** Added fingerprinting to crash analytics to help identify duplicate crashes.

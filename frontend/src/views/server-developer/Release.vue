@@ -1,8 +1,11 @@
 <template>
   <div>
+    <app-loader :is-loading="loading"/>
+
     <eq-window
       :title="`Release Version (${release})`"
       class="p-0"
+      v-if="!loading"
     >
       <div class="p-4 text-center" v-if="crashes.length === 0">
         <span class="font-weight-bold ">
@@ -68,7 +71,7 @@
     <eq-window
       class="mt-4"
       :title="`Crash Stack (${highlightedId})`"
-      v-if="crash"
+      v-if="crash && crash.id"
     >
       <div class="pb-3">
         <b>Fingerprint</b> {{ crash.fingerprint }}
@@ -96,6 +99,8 @@ export default {
     return {
       release: "",
 
+      loading: false,
+
       crashes: [],
 
       crash: {},
@@ -114,6 +119,8 @@ export default {
   async mounted() {
     this.loadQueryState()
 
+    this.loading = true
+
     const r = await SpireApi.v1().get(`analytics/server-crash-reports`, {
       params: {
         version: this.$route.params.version
@@ -126,6 +133,8 @@ export default {
     this.release = this.$route.params.version
 
     this.load()
+
+    this.loading = false
   },
   methods: {
     reset() {

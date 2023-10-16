@@ -40,6 +40,9 @@ func NewSpireCrashAnalyticsCommand(
 		},
 	}
 
+	// flag for ignoring existing fingerprints
+	i.command.Flags().Bool("ignore-existing", false, "Ignore existing fingerprints and re-calculate them")
+
 	i.command.Run = i.Handle
 
 	return i
@@ -58,8 +61,11 @@ func (c *SpireCrashAnalyticsFingerprintBackfillCommand) Handle(_ *cobra.Command,
 	var crashes []models.CrashReport
 	c.db.GetSpireDb().Model(&models.CrashReport{}).Find(&crashes)
 
+	// get ignore existing flag
+	ignoreExisting, _ := c.command.Flags().GetBool("ignore-existing")
+
 	for _, crash := range crashes {
-		if crash.Fingerprint != "" {
+		if crash.Fingerprint != "" && !ignoreExisting {
 			continue
 		}
 
