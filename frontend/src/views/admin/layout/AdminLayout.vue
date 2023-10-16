@@ -41,11 +41,9 @@ export default {
       isLocal: false,
     }
   },
-  mounted() {
-    setTimeout(() => {
-      // @ts-ignore
-      this.isLocal = AppEnv.isAppLocal()
-    }, 100)
+  async mounted() {
+    await AppEnv.init()
+    this.isLocal = AppEnv.isAppLocal()
   },
 }
 </script>
