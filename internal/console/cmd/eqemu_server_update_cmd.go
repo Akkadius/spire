@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
-	"github.com/hashicorp/go-version"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
@@ -160,6 +159,11 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 		fmt.Printf(" %*s | %v\n", padSize, "Latest Release", latestVer)
 
 		c.LineBreak()
+
+		// if server version is empty, set to 0.0.0
+		if info.ServerVersion == "" {
+			info.ServerVersion = "0.0.0"
+		}
 
 		localVersion, err := version.NewVersion(info.ServerVersion)
 		if err != nil {
