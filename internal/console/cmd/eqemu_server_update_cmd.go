@@ -139,10 +139,7 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 	if updateType == spire.UpdateTypeSelfCompiled {
 		fmt.Printf(" %*s | %v\n", padSize, "Build Location", c.updater.GetBuildLocation())
 	}
-	info, err := c.updater.GetVersionInfo()
-	if err != nil {
-		c.logger.Fatal(err)
-	}
+	info, _ := c.updater.GetVersionInfo()
 
 	fmt.Printf(
 		" %*s | %v\n",
@@ -227,10 +224,7 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 		fmt.Println("Starting")
 		c.LineBreak()
 
-		info, err := c.updater.GetBuildInfo()
-		if err != nil {
-			c.logger.Fatal(err)
-		}
+		info, _ := c.updater.GetBuildInfo()
 
 		fmt.Println("git pull")
 		c.LineBreak()
@@ -238,7 +232,7 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 		cmd := exec.Command("git", "pull")
 		cmd.Stdout = os.Stdout
 		cmd.Dir = info.SourceDirectory
-		err = cmd.Run()
+		err := cmd.Run()
 		if err != nil {
 			log.Println(err)
 		}
