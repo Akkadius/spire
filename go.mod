@@ -13,12 +13,14 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/go-github/v41 v41.0.0
 	github.com/google/wire v0.5.0
+	github.com/hashicorp/go-version v1.6.0
 	github.com/iancoleman/strcase v0.2.0
 	github.com/influxdata/influxdb-client-go/v2 v2.11.0
 	github.com/joho/godotenv v1.4.0
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.4.0
+	github.com/mattn/go-isatty v0.0.16
 	github.com/mholt/archiver/v4 v4.0.0-alpha.7
 	github.com/muesli/termenv v0.13.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -63,7 +65,6 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -75,7 +76,6 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/nwaples/rardecode/v2 v2.0.0-beta.2 // indirect

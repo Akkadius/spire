@@ -10,12 +10,31 @@ import (
 	"time"
 )
 
+const maxRetries = 3
+
 func WithProgress(destinationPath, downloadUrl string) error {
+	attempt := 1
+	for {
+		err := download(destinationPath, downloadUrl, attempt)
+		if err != nil {
+			if attempt < maxRetries {
+				attempt++
+				continue
+			}
+			return err
+		}
+		break
+	}
+
+	return nil
+}
+
+func download(destinationPath, downloadUrl string, attempt int) error {
 	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 	banner.Loading()
 	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 
-	fmt.Printf("[Downloading] URL  [%v]\n", downloadUrl)
+	fmt.Printf("[Downloading] URL  [%v] Attempt (%v of %v)\n", downloadUrl, attempt, maxRetries)
 	fmt.Printf("[Downloading] To   [%v]\n", destinationPath)
 
 	//tempDestinationPath := destinationPath + ".tmp"
@@ -70,10 +89,10 @@ func WithProgress(destinationPath, downloadUrl string) error {
 		return err
 	}
 
-	//err = os.Rename(tempDestinationPath, destinationPath)
-	//if err != nil {
-	//	return err
-	//}
+	// check if file destinationPath exists
+	if _, err := os.Stat(destinationPath); os.IsNotExist(err) {
+		return fmt.Errorf("could not download file [%v]", destinationPath)
+	}
 
 	fmt.Printf("\n-------------------------------------------------------------------------------------------")
 	fmt.Printf("\n")
