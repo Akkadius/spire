@@ -2,6 +2,7 @@ package assets
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/env"
@@ -74,6 +75,26 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 func (a SpireAssets) downloadAssets(cachedir string) {
 	a.logger.Infof("Downloading [eq-asset-preview] latest release\n")
 
+	attempt := 1
+	for {
+		err := a.doDownloadAssets(cachedir)
+		if err != nil {
+			if attempt < 3 {
+				attempt++
+				continue
+			}
+			a.logger.Fatal(err)
+		}
+		break
+	}
+
+	dumpZip := filepath.Join(os.TempDir(), "/build.zip")
+
+	// remove the zip file
+	_ = os.Remove(dumpZip)
+}
+
+func (a SpireAssets) doDownloadAssets(cachedir string) error {
 	// zip file path
 	dumpZip := filepath.Join(os.TempDir(), "/build.zip")
 
@@ -83,18 +104,17 @@ func (a SpireAssets) downloadAssets(cachedir string) {
 		fmt.Sprintf("https://github.com/%v/releases/latest/download/build.zip", assetRepo),
 	)
 	if err != nil {
-		a.logger.Fatalln(err)
+		return err
 	}
 
 	// unzip the file
 	a.logger.Infof("Downloaded zip to [%v]\n", dumpZip)
 	err = unzip.New(dumpZip, cachedir).Extract()
 	if err != nil {
-		a.logger.Fatalf("could not extract zip: %v", err)
+		return errors.New(fmt.Sprintf("could not extract zip: %v", err))
 	}
 
-	// remove the zip file
-	_ = os.Remove(dumpZip)
+	return nil
 }
 
 func (a SpireAssets) getCacheDir() string {
