@@ -34,6 +34,7 @@ func (c *EQEmuServerUpdateCommand) Command() *cobra.Command {
 }
 
 var useReleaseBinaries bool
+var auto bool
 
 // NewEQEmuServerUpdateCommand creates a new spire:init command
 func NewEQEmuServerUpdateCommand(
@@ -64,6 +65,7 @@ func NewEQEmuServerUpdateCommand(
 	i.command.PersistentFlags().BoolVarP(&useReleaseBinaries, "release-binaries", "r", false, "Whether or not to use release binaries")
 	i.command.PersistentFlags().BoolVarP(&compileServer, "compile-server", "c", false, "Whether or not the server should be compiled (default: false - uses releases)")
 	i.command.PersistentFlags().StringVarP(&compileLocation, "compile-build-location", "l", "~/code/build", "Determines where the binaries should be built")
+	i.command.PersistentFlags().BoolVarP(&auto, "auto", "a", false, "Automatically update wihout prompts (default: false)")
 
 	i.command.Run = i.Handle
 
@@ -181,14 +183,20 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 			os.Exit(0)
 		} else if online {
 			fmt.Println("Server is online, in order to update you need to stop the server first")
-			// prompt user to stop server y/n
-			// if yes, stop server
-			var answer string
-			fmt.Printf("Stop server? [y/n] ")
-			fmt.Scanln(&answer)
-			fmt.Printf("\n")
 
-			if answer == "y" {
+			if !auto {
+				// prompt user to stop server y/n
+				// if yes, stop server
+				var answer string
+				fmt.Printf("Stop server? [y/n] ")
+				fmt.Scanln(&answer)
+				fmt.Printf("\n")
+
+				if answer == "y" {
+					fmt.Println("Stopping server")
+					c.processmanager.Stop()
+				}
+			} else {
 				fmt.Println("Stopping server")
 				c.processmanager.Stop()
 			}
@@ -206,12 +214,17 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 				c.logger.Fatal(err)
 			}
 
-			var answer string
-			fmt.Printf("Start server? [y/n] ")
-			fmt.Scanln(&answer)
-			fmt.Printf("\n")
+			if !auto {
+				var answer string
+				fmt.Printf("Start server? [y/n] ")
+				fmt.Scanln(&answer)
+				fmt.Printf("\n")
 
-			if answer == "y" {
+				if answer == "y" {
+					fmt.Println("Starting server")
+					c.processmanager.Start()
+				}
+			} else {
 				fmt.Println("Starting server")
 				c.processmanager.Start()
 			}
