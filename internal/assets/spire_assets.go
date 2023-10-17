@@ -42,7 +42,9 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 	cachedir := filepath.Join(a.getCacheDir(), "spire", "assets")
 
 	// check for assets
-	a.checkForAssets()
+	if len(os.Getenv("SKIP_ASSET_CHECK")) == 0 {
+		a.checkForAssets()
+	}
 
 	// in development, perform a symlink between the downloaded assets and the frontend public directory
 	// the reason for this is that in development we run the Vue development web server
