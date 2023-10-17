@@ -28,6 +28,7 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireOcculusUpdateCommand,
 	cmd.NewSpireServerLauncherCommand,
 	cmd.NewSpireCrashAnalyticsCommand,
+	cmd.NewEQEmuServerUpdateCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -53,6 +54,7 @@ func ProvideCommands(
 	spireOcculusUpdateCmd *cmd.SpireOcculusUpdateCommand,
 	spireServerLauncherCmd *cmd.SpireServerLauncherCommand,
 	spireCrashAnalyticsCommand *cmd.SpireCrashAnalyticsFingerprintBackfillCommand,
+	eQEmuServerUpdateCommand *cmd.EQEmuServerUpdateCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		adminPingOcculus.Command(),
@@ -74,5 +76,6 @@ func ProvideCommands(
 		spireOcculusUpdateCmd.Command(),
 		spireServerLauncherCmd.Command(),
 		spireCrashAnalyticsCommand.Command(),
+		eQEmuServerUpdateCommand.Command(),
 	}
 }

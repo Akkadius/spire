@@ -38,11 +38,13 @@ export default {
   },
   data() {
     return {
-      isLocal: false,
+      isLocal: false
     }
   },
-  async mounted() {
+  async created() {
     await AppEnv.init()
+
+    // @ts-ignore
     this.isLocal = AppEnv.isAppLocal()
   },
 }

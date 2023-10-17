@@ -7,10 +7,13 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/sirupsen/logrus"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path"
@@ -55,6 +58,10 @@ func (u *Updater) SetUpdateType(updateType string) {
 
 func (u *Updater) GetUpdateType() string {
 	return u.settings.GetSetting(updateTypeSetting).Value
+}
+
+func (u *Updater) GetBuildLocation() string {
+	return u.settings.GetSetting(spire.SettingBuildLocation).Value
 }
 
 type ServerVersionInfo struct {
@@ -121,6 +128,7 @@ func (u *Updater) InstallRelease(release string) error {
 type BuildInfo struct {
 	SourceDirectory string `json:"source_directory"`
 	BuildTool       string `json:"build_tool"`
+	BuildCores      string `json:"build_cores"`
 }
 
 // GetBuildInfo tries to auto discovery source directory and returns build tool
@@ -178,5 +186,41 @@ func (u *Updater) GetBuildInfo() (BuildInfo, error) {
 	return BuildInfo{
 		SourceDirectory: filepath.Dir(foundPath),
 		BuildTool:       buildTool,
+		BuildCores:      u.settings.GetSetting(spire.SettingBuildCores).Value,
 	}, nil
+}
+
+func (u *Updater) GetLatestReleaseVersion() (string, error) {
+	// get latest version from https://github.com/eqemu/server
+	type Release struct {
+		TagName string `json:"tag_name"`
+	}
+
+	// get latest release version
+	resp, err := http.Get("https://api.github.com/repos/eqemu/server/releases/latest")
+	if err != nil {
+		u.logger.Fatalf("could not get latest release version: %v", err)
+	}
+
+	defer resp.Body.Close()
+
+	// read response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		u.logger.Fatalf("could not read response body: %v", err)
+	}
+
+	err = github.HandleRateLimitBodyResponseFormatter(body, resp.Header)
+	if err != nil {
+		u.logger.Fatalf("Rate limited: %v", err)
+	}
+
+	// bind body to struct
+	var release Release
+	err = json.Unmarshal(body, &release)
+	if err != nil {
+		u.logger.Fatalf("could not unmarshal response body: %v", err)
+	}
+
+	return strings.ReplaceAll(release.TagName, "v", ""), nil
 }
