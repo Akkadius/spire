@@ -9,13 +9,13 @@ import (
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
-	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type SpireAssets struct {
@@ -108,6 +108,8 @@ func (a SpireAssets) doDownloadAssets(cachedir string) error {
 	if err != nil {
 		return err
 	}
+
+	time.Sleep(2 * time.Second)
 
 	// unzip the file
 	a.logger.Infof("Downloaded zip to [%v]\n", dumpZip)
