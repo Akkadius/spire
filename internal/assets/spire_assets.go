@@ -9,6 +9,7 @@ import (
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
+	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
