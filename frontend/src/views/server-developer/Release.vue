@@ -251,7 +251,6 @@ export default {
         const container = document.getElementById("crash-list-viewport");
         const target    = document.getElementById("crash-" + this.crash.id);
         if (container && target) {
-          console.log(container)
           container.scrollTop = target.offsetTop - 100;
         }
       }, 100)
