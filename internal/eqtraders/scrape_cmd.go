@@ -1,12 +1,15 @@
-package cmd
+package eqtraders
 
 import (
 	"bytes"
+	"crypto/md5"
 	"encoding/gob"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gammazero/workerpool"
+	"github.com/gosimple/slug"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -20,26 +23,26 @@ import (
 	"sync"
 )
 
-type ImportEqTradersCommand struct {
+type ScrapeCommand struct {
 	db      *gorm.DB
 	logger  *logrus.Logger
 	command *cobra.Command
 }
 
-func (c *ImportEqTradersCommand) Command() *cobra.Command {
+func (c *ScrapeCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewImportEqTradersCommand(
+func NewScrapeCommand(
 	db *gorm.DB,
 	logger *logrus.Logger,
-) *ImportEqTradersCommand {
-	i := &ImportEqTradersCommand{
+) *ScrapeCommand {
+	i := &ScrapeCommand{
 		db:     db,
 		logger: logger,
 		command: &cobra.Command{
-			Use:   "import:eq-traders-recipes [expansion_number]",
-			Short: "A command for importing eq traders recipes",
+			Use:   "eq-traders:scrape [expansion_number]",
+			Short: "A command for scraping / downloading eq traders recipes. Use eq-traders:import to import the data into the database.",
 		},
 	}
 
@@ -49,209 +52,19 @@ func NewImportEqTradersCommand(
 	return i
 }
 
-type Expansion struct {
-	ExpansionNumber int    `json:"expansion_number"`
-	ExpansionName   string `json:"expansion_name"`
-	ShortName       string `json:"short_name"`
-	MaxLevel        int    `json:"max_level"`
-}
-
-// fill in expansions from json data above
-var expansions = []Expansion{
-	{
-		ExpansionNumber: 0,
-		ExpansionName:   "Original",
-		ShortName:       "",
-		MaxLevel:        50,
-	},
-	{
-		ExpansionNumber: 1,
-		ExpansionName:   "Ruins of Kunark",
-		ShortName:       "RoK",
-		MaxLevel:        60,
-	},
-	{
-		ExpansionNumber: 2,
-		ExpansionName:   "Scars of Velious",
-		ShortName:       "SoV",
-		MaxLevel:        60,
-	},
-	{
-		ExpansionNumber: 3,
-		ExpansionName:   "Shadows of Luclin",
-		ShortName:       "SoL",
-		MaxLevel:        60,
-	},
-	{
-		ExpansionNumber: 4,
-		ExpansionName:   "Planes of Power",
-		ShortName:       "PoP",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 5,
-		ExpansionName:   "Legacy of Ykesha",
-		ShortName:       "LoY",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 6,
-		ExpansionName:   "Lost Dungeons of Norrath",
-		ShortName:       "LDoN",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 7,
-		ExpansionName:   "Gates of Discord",
-		ShortName:       "GoD",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 8,
-		ExpansionName:   "Omens of War",
-		ShortName:       "OoW",
-		MaxLevel:        70,
-	},
-	{
-		ExpansionNumber: 9,
-		ExpansionName:   "Dragons of Norrath",
-		ShortName:       "DoN",
-		MaxLevel:        70,
-	},
-	{
-		ExpansionNumber: 10,
-		ExpansionName:   "Depths of Darkhollow",
-		ShortName:       "DoDH",
-		MaxLevel:        70,
-	},
-	{
-		ExpansionNumber: 11,
-		ExpansionName:   "Prophecy of Ro",
-		ShortName:       "PoR",
-		MaxLevel:        70,
-	},
-	{
-		ExpansionNumber: 12,
-		ExpansionName:   "The Serpent's Spine",
-		ShortName:       "TSS",
-		MaxLevel:        75,
-	},
-	{
-		ExpansionNumber: 13,
-		ExpansionName:   "The Buried Sea",
-		ShortName:       "TBS",
-		MaxLevel:        75,
-	},
-	{
-		ExpansionNumber: 14,
-		ExpansionName:   "Secrets of Faydwer",
-		ShortName:       "SoF",
-		MaxLevel:        80,
-	},
-	{
-		ExpansionNumber: 15,
-		ExpansionName:   "Seeds of Destruction",
-		ShortName:       "SoD",
-		MaxLevel:        85,
-	},
-	{
-		ExpansionNumber: 16,
-		ExpansionName:   "Underfoot",
-		ShortName:       "UF",
-		MaxLevel:        85,
-	},
-	{
-		ExpansionNumber: 17,
-		ExpansionName:   "House of Thule",
-		ShortName:       "HoT",
-		MaxLevel:        90,
-	},
-	{
-		ExpansionNumber: 18,
-		ExpansionName:   "Veil of Alaris",
-		ShortName:       "VoA",
-		MaxLevel:        95,
-	},
-	{
-		ExpansionNumber: 19,
-		ExpansionName:   "Rain of Fear",
-		ShortName:       "RoF",
-		MaxLevel:        100,
-	},
-	{
-		ExpansionNumber: 20,
-		ExpansionName:   "Call of the Forsaken",
-		ShortName:       "CoTF",
-		MaxLevel:        100,
-	},
-	{
-		ExpansionNumber: 21,
-		ExpansionName:   "The Darkened Sea",
-		ShortName:       "TDS",
-		MaxLevel:        105,
-	},
-	{
-		ExpansionNumber: 22,
-		ExpansionName:   "The Broken Mirror",
-		ShortName:       "TBM",
-		MaxLevel:        105,
-	},
-	{
-		ExpansionNumber: 23,
-		ExpansionName:   "Empires of Kunark",
-		ShortName:       "EoK",
-		MaxLevel:        105,
-	},
-	{
-		ExpansionNumber: 24,
-		ExpansionName:   "Ring of Scale",
-		ShortName:       "RoS",
-		MaxLevel:        110,
-	},
-	{
-		ExpansionNumber: 25,
-		ExpansionName:   "The Burning Lands",
-		ShortName:       "TBL",
-		MaxLevel:        110,
-	},
-	{
-		ExpansionNumber: 26,
-		ExpansionName:   "Torment of Velious",
-		ShortName:       "ToV",
-		MaxLevel:        115,
-	},
-	{
-		ExpansionNumber: 27,
-		ExpansionName:   "Claws of Veeshan",
-		ShortName:       "CoV",
-		MaxLevel:        115,
-	},
-	{
-		ExpansionNumber: 28,
-		ExpansionName:   "Terror of Luclin",
-		ShortName:       "ToL",
-		MaxLevel:        120,
-	},
-	{
-		ExpansionNumber: 29,
-		ExpansionName:   "Night of Shadows",
-		ShortName:       "NoS",
-		MaxLevel:        120,
-	},
-}
-
-type ExpansionRecipe struct {
-	ExpId     int
-	ExpName   string
-	PageTitle string
-	Url       string
-}
-
 // Handle implementation of the Command interface
-func (c *ImportEqTradersCommand) Handle(cmd *cobra.Command, args []string) {
+func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
+	err := os.MkdirAll("data/eqtraders", os.ModePerm)
+	if err != nil {
+		c.logger.Fatal(err)
+	}
+	err = os.MkdirAll("data/site-cache/", os.ModePerm)
+	if err != nil {
+		c.logger.Fatal(err)
+	}
+
 	list := []ExpansionRecipe{
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=337&rsa=Tailoring&rc=ELF&sb=item&sub=dron&menustr=080040120080"},
-
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=velluc&sb=item&menustr=080020040000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=SoV&menustr=080110120000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=SoV&sb=item&menustr=080070000000"},
@@ -610,7 +423,7 @@ func (c *ImportEqTradersCommand) Handle(cmd *cobra.Command, args []string) {
 	if err != nil {
 		c.logger.Error(err)
 	}
-	err = os.WriteFile("recipes.json", data, 0644)
+	err = os.WriteFile("data/eqtraders/recipes.json", data, 0644)
 	if err != nil {
 		c.logger.Error(err)
 	}
@@ -618,8 +431,7 @@ func (c *ImportEqTradersCommand) Handle(cmd *cobra.Command, args []string) {
 	//pp.Println(string(data))
 }
 
-func (c *ImportEqTradersCommand) FindExpansionFromText(text string) Expansion {
-
+func (c *ScrapeCommand) FindExpansionFromText(text string) Expansion {
 	sort.Slice(expansions, func(i, j int) bool {
 		return expansions[i].ExpansionName > expansions[j].ExpansionName
 	})
@@ -633,7 +445,7 @@ func (c *ImportEqTradersCommand) FindExpansionFromText(text string) Expansion {
 	return Expansion{}
 }
 
-func (c *ImportEqTradersCommand) getStringInBetween(str, before, after string) string {
+func (c *ScrapeCommand) getStringInBetween(str, before, after string) string {
 	if !strings.Contains(str, before) {
 		return ""
 	}
@@ -672,24 +484,51 @@ var recipes []Recipe
 
 var recipeWriteMutex = &sync.Mutex{}
 
-func (c *ImportEqTradersCommand) parseRecipePage(r ExpansionRecipe) {
+func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 	c.logger.Info("Parsing recipe page: ", r.Url+"&printer=normal")
-	resp, err := http.Get(r.Url + "&printer=normal")
-	if err != nil {
-		c.logger.Error(err)
+
+	// get page slug
+	hash := md5.Sum([]byte(r.Url))
+	pageSlug := slug.Make(fmt.Sprintf("%v-%v-%v", r.ExpName, r.PageTitle, hex.EncodeToString(hash[:])))
+	file := fmt.Sprintf("data/site-cache/%v.html", pageSlug)
+	contents := ""
+
+	// check if cache file exists
+	if _, err := os.Stat(file); !os.IsNotExist(err) {
+		// read cache file
+		data, err := os.ReadFile(file)
+		if err != nil {
+			c.logger.Error(err)
+		}
+
+		contents = string(data)
 	}
 
-	defer resp.Body.Close()
+	// if cache doesn't exist, fetch page and write cache
+	if len(contents) == 0 {
+		resp, err := http.Get(r.Url + "&printer=normal")
+		if err != nil {
+			c.logger.Error(err)
+		}
 
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		c.logger.Error(err)
+		defer resp.Body.Close()
+
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			c.logger.Error(err)
+		}
+
+		// write site cache
+		err = os.WriteFile(file, data, 0644)
+		if err != nil {
+			c.logger.Error(err)
+		}
+
+		// some pages are formatted strange and have an extra <td> beginning of the row
+		// https://www.eqtraders.com/recipes/pottery_recipe_page.php?article=1365&rsa=Pottery&sb=item&sub=ToL&printer=normal
+		contents = string(data)
+		contents = strings.ReplaceAll(contents, "<td>&nbsp;&nbsp;</td>", "")
 	}
-
-	// some pages are formatted strange and have an extra <td> beginning of the row
-	// https://www.eqtraders.com/recipes/pottery_recipe_page.php?article=1365&rsa=Pottery&sb=item&sub=ToL&printer=normal
-	contents := string(data)
-	contents = strings.ReplaceAll(contents, "<td>&nbsp;&nbsp;</td>", "")
 
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(contents)))
 	if err != nil {
@@ -943,7 +782,7 @@ var itemLookupReadOnlyCache = make(map[string]int, 0) // conncurent
 
 var lookupWriteMutex = &sync.Mutex{}
 
-func (c *ImportEqTradersCommand) getItemIdFromHtml(html string) int {
+func (c *ScrapeCommand) getItemIdFromHtml(html string) int {
 	url := c.getStringInBetween(html, "href=\"", "\">")
 	tradersItemId := c.getStringInBetween(url, "item=", "&amp;")
 
@@ -980,7 +819,7 @@ func (c *ImportEqTradersCommand) getItemIdFromHtml(html string) int {
 	return i
 }
 
-func (c *ImportEqTradersCommand) SaveItemCache() {
+func (c *ScrapeCommand) SaveItemCache() {
 	b := new(bytes.Buffer)
 	e := gob.NewEncoder(b)
 
@@ -991,15 +830,14 @@ func (c *ImportEqTradersCommand) SaveItemCache() {
 	}
 
 	// write to file
-	err = os.WriteFile(filepath.Join("itemLookupCache.gob"), b.Bytes(), 0644)
+	err = os.WriteFile(filepath.Join("./data/eqtraders/item-lookup-cache.gob"), b.Bytes(), 0644)
 	if err != nil {
 		c.logger.Error(err)
 	}
 }
 
-func (c *ImportEqTradersCommand) LoadItemCache() {
-	file := filepath.Join("itemLookupCache.gob")
-
+func (c *ScrapeCommand) LoadItemCache() {
+	file := filepath.Join("./data/eqtraders/item-lookup-cache.gob")
 	if _, err := os.Stat(file); os.IsNotExist(err) {
 		return
 	}
@@ -1042,7 +880,7 @@ var skills = []Skill{
 	{SkillId: 69, SkillName: "Pottery"},
 }
 
-func (c *ImportEqTradersCommand) getSkillFromName(name string) Skill {
+func (c *ScrapeCommand) getSkillFromName(name string) Skill {
 	for _, s := range skills {
 		if strings.Contains(name, s.SkillName) {
 			return s
@@ -1052,53 +890,7 @@ func (c *ImportEqTradersCommand) getSkillFromName(name string) Skill {
 	return Skill{}
 }
 
-type ObjectType struct {
-	Type         int      `json:"type"`
-	Name         string   `json:"name"`
-	Skill        int      `json:"skill"`
-	TradersNames []string `json:"traders_names"`
-}
-
-var objectTypes = []ObjectType{
-	{Type: 10, Name: "Tinkering", Skill: 57, TradersNames: []string{"Tinkering Table"}},
-	{Type: 12, Name: "Mortar and Pestle", Skill: 56, TradersNames: []string{"Poisoncrafting Table"}},
-	{Type: 15, Name: "Baking", Skill: 60, TradersNames: []string{"Oven", "Tanaan Oven", "Spit", "Ice Cream Churn", "Mixing Bowl"}},
-	{Type: 16, Name: "Tailoring", Skill: 61, TradersNames: []string{"Loom", "Tanaan Loom"}},
-	{Type: 17, Name: "Blacksmithing", Skill: 63, TradersNames: []string{"Tanaan Forge", "Half Elf Forge", "Crystalwing Forge", "Shar Vahl Forge"}},
-	{Type: 18, Name: "Fletching", Skill: 64},
-	{Type: 19, Name: "Brewing", Skill: 65, TradersNames: []string{"Brew Barrel", "Tanaan Brew Barrel"}},
-	{Type: 20, Name: "Jewelry Making", Skill: 68},
-	{Type: 21, Name: "Pottery", Skill: 69},
-	{Type: 22, Name: "Kiln", Skill: 69},
-	{Type: 24, Name: "Lexicon Wiz", Skill: 58},
-	{Type: 25, Name: "Lexicon Mage", Skill: 58, TradersNames: []string{"Spell Research Table"}}, // observed in PoK
-	{Type: 26, Name: "Lexicon Nec", Skill: 58},
-	{Type: 27, Name: "Lexicon Enc", Skill: 58},
-	{Type: 29, Name: "Lexicon Practice", Skill: 58},
-	{Type: 30, Name: "Alchemy", Skill: 59},
-	{Type: 31, Name: "High Elf Forge", Skill: 63, TradersNames: []string{"Koada&#39;dal Forge"}},
-	{Type: 32, Name: "Dark Elf Forge", Skill: 63, TradersNames: []string{"Teir`Dal Forge"}},
-	{Type: 33, Name: "Ogre Forge", Skill: 63, TradersNames: []string{"Ogre Forge"}},
-	{Type: 34, Name: "Dwarf Forge", Skill: 63, TradersNames: []string{"Stormguard Forge"}},
-	{Type: 35, Name: "Gnome Forge", Skill: 63, TradersNames: []string{"Clockwork Forge"}},
-	{Type: 36, Name: "Barbarian Forge", Skill: 63, TradersNames: []string{"Northman Forge"}},
-	{Type: 37, Name: "Iksar Forge", Skill: 63},
-	{Type: 38, Name: "Iksar Forge", Skill: 63, TradersNames: []string{"Iksar Forge"}},
-	{Type: 39, Name: "Human Forge", Skill: 63},
-	{Type: 40, Name: "Halfling Forge", Skill: 63, TradersNames: []string{"Antonican Forge"}},
-	//{Type: 41, Name: "Halfling Forge", Skill: 63},
-	//{Type: 42, Name: "Erudite Forge", Skill: 63},
-	//{Type: 43, Name: "Wood Elf Forge", Skill: 63},
-	//{Type: 44, Name: "Wood Elf Forge", Skill: 63},
-	{Type: 45, Name: "Iksar Pottery", Skill: 69},
-	{Type: 47, Name: "Troll Forge", Skill: 63, TradersNames: []string{"Troll Forge"}},
-	{Type: 48, Name: "Wood Elf Forge", Skill: 63, TradersNames: []string{"Feir`Dal Forge"}},
-	{Type: 49, Name: "Halfling Forge", Skill: 63, TradersNames: []string{"Vale Forge"}},
-	{Type: 50, Name: "Erudite Forge", Skill: 63, TradersNames: []string{"Erud Forge"}},
-	{Type: 52, Name: "Froglok Forge", Skill: 63, TradersNames: []string{"Froglok Forge", "Guktan Forge"}},
-}
-
-func (c *ImportEqTradersCommand) getObjectTypeFromName(name string) ObjectType {
+func (c *ScrapeCommand) getObjectTypeFromName(name string) ObjectType {
 	for _, o := range objectTypes {
 		if strings.Contains(name, o.Name) {
 			return o
@@ -1116,7 +908,7 @@ func (c *ImportEqTradersCommand) getObjectTypeFromName(name string) ObjectType {
 	return ObjectType{}
 }
 
-func (c *ImportEqTradersCommand) stripTradersComments(s string) string {
+func (c *ScrapeCommand) stripTradersComments(s string) string {
 	s = strings.ReplaceAll(s, "(temporary)", "")
 	s = strings.ReplaceAll(s, "(Cannot Scribe)", "")
 	s = strings.ReplaceAll(s, "(Legacy)", "")

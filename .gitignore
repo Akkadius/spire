@@ -34,6 +34,6 @@ eqemu_config.json*
 
 *.syso
 
-itemLookupCache.gob
-recipes.json
+data/eqtraders/item-lookup-cache.gob
+data/eqtraders/recipes.json
 cpu.prof

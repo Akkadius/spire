@@ -3,6 +3,7 @@ package boot
 import (
 	"github.com/Akkadius/spire/internal/console/cmd"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	"github.com/Akkadius/spire/internal/eqtraders"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
@@ -29,7 +30,8 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireServerLauncherCommand,
 	cmd.NewSpireCrashAnalyticsCommand,
 	cmd.NewEQEmuServerUpdateCommand,
-	cmd.NewImportEqTradersCommand,
+	eqtraders.NewScrapeCommand,
+	eqtraders.NewImportCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -56,7 +58,8 @@ func ProvideCommands(
 	spireServerLauncherCmd *cmd.SpireServerLauncherCommand,
 	spireCrashAnalyticsCommand *cmd.SpireCrashAnalyticsFingerprintBackfillCommand,
 	eQEmuServerUpdateCommand *cmd.EQEmuServerUpdateCommand,
-	importEqTradersCmd *cmd.ImportEqTradersCommand,
+	scrapeEqtradersCommand *eqtraders.ScrapeCommand,
+	importEqtradersCommand *eqtraders.ImportCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		adminPingOcculus.Command(),
@@ -79,6 +82,7 @@ func ProvideCommands(
 		spireServerLauncherCmd.Command(),
 		spireCrashAnalyticsCommand.Command(),
 		eQEmuServerUpdateCommand.Command(),
-		importEqTradersCmd.Command(),
+		scrapeEqtradersCommand.Command(),
+		importEqtradersCommand.Command(),
 	}
 }
