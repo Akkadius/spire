@@ -1,13 +1,16 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/pathmgmt"
+	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type SpireServerLauncherCommand struct {
@@ -73,6 +76,56 @@ func (c *SpireServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 		return
 	}
 
+	time.Sleep(1 * time.Second)
+
+	if arg == "stop-server" || arg == "restart-server" {
+		processes, _ := process.Processes()
+		for _, p := range processes {
+			cmdline, _ := p.Cmdline()
+			parent, _ := p.Parent()
+			parentcmd, _ := parent.Cmdline()
+
+			//pp.Println(p.Pid, cmdline)
+			//if len(parentcmd) > 0 {
+			//	fmt.Println(" -- ", parent.Pid, parentcmd)
+			//}
+
+			// kill occulus server launcher
+			if strings.Contains(cmdline, "occulus") && strings.Contains(cmdline, "server-launcher") {
+				if parent != nil && strings.Contains(parentcmd, "while") {
+					c.logger.Infof("Killing occulus server-launcher bash-while parent PID (%v)\n", parent.Pid)
+					err := parent.Kill()
+					if err != nil {
+						c.logger.Fatal(err)
+					}
+				}
+
+				c.logger.Infof("Killing occulus server-launcher PID (%v)\n", p.Pid)
+				err := p.Kill()
+				if err != nil {
+					c.logger.Fatal(err)
+				}
+			}
+
+			// kill spire launcher that is running in an infinite bash while loop process keepalive
+			if strings.Contains(cmdline, "spire:launcher start") {
+				if parent != nil && strings.Contains(parentcmd, "while") {
+					c.logger.Infof("Killing spire:launcher bash-while parent PID (%v)\n", parent.Pid)
+					err := parent.Kill()
+					if err != nil {
+						c.logger.Fatal(err)
+					}
+				}
+
+				c.logger.Infof("Killing spire:launcher start PID (%v)\n", p.Pid)
+				err = p.Kill()
+				if err != nil {
+					c.logger.Fatal(err)
+				}
+			}
+		}
+	}
+
 	for _, file := range files {
 		if strings.Contains(file.Name(), "occulus") {
 			// execute the launcher
@@ -101,4 +154,6 @@ func (c *SpireServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 			}
 		}
 	}
+
+	fmt.Println("Ran " + arg + " successfully")
 }
