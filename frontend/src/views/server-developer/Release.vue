@@ -1,7 +1,5 @@
 <template>
   <div>
-    <app-loader :is-loading="loading"/>
-
     <div
         class="row justify-content-center"
         style="position: absolute; top: -2%; z-index: 9999999; width: 100%"
@@ -19,10 +17,11 @@
       </div>
     </div>
 
+    <!-- make window opacity .5 when loading -->
     <eq-window
         :title="`Release Version (${release})`"
         class="p-0"
-        v-if="!loading"
+        :style="{'opacity': loading ? '.5' : '1'}"
     >
 
       <div class="p-4 text-center" v-if="crashes.length === 0">
@@ -34,17 +33,19 @@
       <div
           :style="'max-height: ' + (highlightedId ? 35 : 95) + 'vh; overflow-y: scroll; '"
           v-if="crashes.length > 0"
+          id="crash-list-viewport"
       >
         <table
             class="eq-table bordered eq-highlight-rows mb-0"
             style="overflow-x: scroll; min-width: 80vw"
+
         >
           <thead class="eq-table-floating-header">
           <tr>
             <th style="min-width: 100px"></th>
             <th>ID</th>
             <th>Fingerprint</th>
-            <th>Compile Time</th>
+            <th style="min-width: 100px">Compile Time</th>
             <th>Server Name</th>
             <th>Process</th>
             <th>PID</th>
@@ -60,6 +61,7 @@
               :key="c.id"
               :class="(highlightedId && c.id === highlightedId ? 'pulsate-highlight-white' : '')"
               :style="{'opacity': c.resolved ? '.5' : '1'}"
+              :id="'crash-' + c.id"
           >
             <td class="text-center">
               <b-button
@@ -244,6 +246,15 @@ export default {
           this.crash = r
         }
       }
+
+      setTimeout(() => {
+        const container = document.getElementById("crash-list-viewport");
+        const target    = document.getElementById("crash-" + this.crash.id);
+        if (container && target) {
+          console.log(container)
+          container.scrollTop = target.offsetTop - 100;
+        }
+      }, 100)
     },
     viewCrash(e) {
       this.crash         = e

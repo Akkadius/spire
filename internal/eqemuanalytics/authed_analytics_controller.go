@@ -77,7 +77,7 @@ func (a *AuthedAnalyticsController) markCrashResolved(c echo.Context) error {
 		err := discord.SendDiscordWebhook(
 			os.Getenv("DISCORD_CRASH_REPORT_WEBHOOK_URL"),
 			fmt.Sprintf(
-				"Crash fingerprint **%v** (%v total crashes) marked as resolved by **%v** can be viewed at %v",
+				"✅ Crash fingerprint **%v** (%v total crashes) marked as resolved by **%v** can be viewed at %v",
 				r.Fingerprint,
 				result.RowsAffected,
 				user.UserName,
@@ -132,7 +132,7 @@ func (a *AuthedAnalyticsController) markCrashUnresolved(c echo.Context) error {
 		err := discord.SendDiscordWebhook(
 			os.Getenv("DISCORD_CRASH_REPORT_WEBHOOK_URL"),
 			fmt.Sprintf(
-				"Crash fingerprint **%v** (%v total crashes) marked as resolved by **%v** can be viewed at %v",
+				"❌ Crash fingerprint **%v** (%v total crashes) marked as resolved by **%v** can be viewed at %v",
 				r.Fingerprint,
 				result.RowsAffected,
 				user.UserName,
