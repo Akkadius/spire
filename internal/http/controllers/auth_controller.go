@@ -128,6 +128,10 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
 	callbackUrl := fmt.Sprintf("%s/fe-auth-callback?jwt=%s", os.Getenv("VUE_APP_FRONTEND_BASE_URL"), newToken)
 
+	// clear users cache on logging in if exists
+	userKey := fmt.Sprintf("user-%v", user.ID)
+	a.cache.Delete(userKey)
+
 	fmt.Println(callbackUrl)
 
 	return c.Redirect(http.StatusMovedPermanently, callbackUrl)
