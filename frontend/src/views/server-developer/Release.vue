@@ -41,7 +41,7 @@
         >
           <thead class="eq-table-floating-header">
           <tr>
-            <th></th>
+            <th style="min-width: 100px"></th>
             <th>ID</th>
             <th>Fingerprint</th>
             <th>Compile Time</th>
