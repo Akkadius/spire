@@ -44,7 +44,7 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 
 	// check for assets
 	if len(os.Getenv("SKIP_ASSET_CHECK")) == 0 {
-		a.checkForAssets()
+		a.CheckForAssets()
 	}
 
 	// in development, perform a symlink between the downloaded assets and the frontend public directory
@@ -134,12 +134,42 @@ func (a SpireAssets) getCacheDir() string {
 	return os.TempDir()
 }
 
-func (a SpireAssets) checkForAssets() {
+func (a SpireAssets) CheckForAssets() {
 	cachedir := filepath.Join(a.getCacheDir(), "spire", "assets")
 
 	// check if cachedir exists
 	if _, err := os.Stat(cachedir); os.IsNotExist(err) {
 		a.downloadAssets(cachedir)
+	}
+
+	// check if we're running a command
+	// github rate limits us if we check too often
+	// 60 requests per hour
+	// write a cache file to check last time we checked
+	// if we checked within the last hour, don't check again
+	// if we checked more than an hour ago, check again
+	doUpdateCheck := false
+	tmpFile := filepath.Join(os.TempDir(), "spire_asset_last_check")
+	if _, err := os.Stat(tmpFile); os.IsNotExist(err) {
+		// file doesn't exist, create it
+		_, err := os.Create(tmpFile)
+		if err != nil {
+			a.logger.Fatal(err)
+		}
+
+		doUpdateCheck = true
+	}
+
+	// check if file modified over an hour ago
+	fileInfo, err := os.Stat(tmpFile)
+	if err != nil {
+		a.logger.Fatal(err)
+	}
+
+	// get current time
+	currentTime := time.Now()
+	if !doUpdateCheck && currentTime.Sub(fileInfo.ModTime()).Hours() < 1 {
+		return
 	}
 
 	// GitHub release struct

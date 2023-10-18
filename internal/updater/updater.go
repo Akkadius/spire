@@ -124,6 +124,15 @@ func (s Service) CheckForUpdates() {
 		return
 	}
 
+	// remove asset check file if we have an update
+	tmpFile := filepath.Join(os.TempDir(), "spire_asset_last_check")
+	if _, err := os.Stat(tmpFile); err == nil {
+		e := os.Remove(tmpFile)
+		if e != nil {
+			log.Fatal(e)
+		}
+	}
+
 	fmt.Printf("Local version [%s] latest [%v]\n", localVersion, releaseVersion)
 
 	for _, asset := range release.Assets {

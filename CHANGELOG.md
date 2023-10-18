@@ -1,3 +1,7 @@
+## [3.5.8] 10/18/2023
+
+* **Assets** Keep from checking GitHub for asset updates every boot. We check once an hour now on boot and during regular application updates. This prevents us from getting rate limited by GitHub which can prevent other Spire actions from working properly.
+
 ## [3.5.7] 10/16/2023
 
 * **Zip** Ignore zip deletion errors when deleting old zips
