@@ -16,6 +16,7 @@ type User struct {
 	Provider                     string                         `db:"provider" json:"provider"`
 	Password                     string                         `db:"password" json:"-"`
 	IsAdmin                      bool                           `db:"is_admin" json:"is_admin" gorm:"default:0"`
+	IsServerDeveloper            bool                           `db:"is_server_developer" json:"is_server_developer" gorm:"default:0"`
 	CreatedAt                    time.Time                      `db:"created_at" json:"created_at"`
 	UpdatedAt                    time.Time                      `db:"updated_at" json:"updated_at"`
 	Deleted                      gorm.DeletedAt                 `db:"deleted_at" json:"deleted_at"`

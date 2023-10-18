@@ -9,6 +9,7 @@ import (
 	"github.com/danilopolani/gocialite"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
+	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
@@ -19,6 +20,7 @@ type AuthController struct {
 	db     *database.DatabaseResolver
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
+	cache  *gocache.Cache
 	user   *spire.UserService
 }
 
@@ -26,10 +28,12 @@ func NewAuthController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 	user *spire.UserService,
+	cache *gocache.Cache,
 ) *AuthController {
 	return &AuthController{
 		db:     db,
 		logger: logger,
+		cache:  cache,
 		gocial: gocialite.NewDispatcher(),
 		user:   user,
 	}
@@ -150,6 +154,10 @@ func (a *AuthController) login(c echo.Context) error {
 	}
 
 	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
+
+	// clear users cache on logging in if exists
+	userKey := fmt.Sprintf("user-%v", user.ID)
+	a.cache.Delete(userKey)
 
 	return c.JSON(
 		http.StatusOK,

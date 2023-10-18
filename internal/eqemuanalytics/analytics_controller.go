@@ -152,6 +152,7 @@ func (a *AnalyticsController) listServerCrashReports(c echo.Context) error {
 		limit = l
 	}
 	q = q.Limit(limit)
+	q = q.Preload("ResolvedUser")
 
 	// version filters
 	w := c.QueryParam("version")
@@ -183,12 +184,14 @@ type CrashReportCounts struct {
 	ServerVersion string `json:"server_version"`
 	CompileDate   string `json:"compile_date"`
 	CrashCount    int    `json:"crash_count"`
+	ResolvedCount int    `json:"resolved_count"`
 }
 
 type CrashUniqueReportCounts struct {
 	ServerVersion    string `json:"server_version"`
 	Fingerprint      string `json:"fingerprint"`
 	UniqueCrashCount int    `json:"unique_crash_count"`
+	ResolvedCount    int    `json:"resolved_count"`
 }
 
 func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
@@ -197,7 +200,7 @@ func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 		return err
 	}
 
-	rows, err := db.Query("select server_version, compile_date, count(*) as crash_count from spire_crash_reports group by server_version order by server_version")
+	rows, err := db.Query("select server_version, compile_date, count(*) as crash_count, sum(resolved) as resolved from spire_crash_reports group by server_version order by server_version")
 	if err != nil {
 		return err
 	}
@@ -205,14 +208,14 @@ func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 	var counts []CrashReportCounts
 	for rows.Next() {
 		var r CrashReportCounts
-		err = rows.Scan(&r.ServerVersion, &r.CompileDate, &r.CrashCount)
+		err = rows.Scan(&r.ServerVersion, &r.CompileDate, &r.CrashCount, &r.ResolvedCount)
 		if err != nil {
 			return err
 		}
 		counts = append(counts, r)
 	}
 
-	rows, err = db.Query("select server_version, fingerprint, count(*) as crash_count from spire_crash_reports group by server_version, fingerprint order by server_version")
+	rows, err = db.Query("select server_version, fingerprint, count(*) as crash_count, sum(resolved) as resolved from spire_crash_reports group by server_version, fingerprint order by server_version")
 	if err != nil {
 		return err
 	}
@@ -220,7 +223,7 @@ func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 	var uniqueCounts []CrashUniqueReportCounts
 	for rows.Next() {
 		var r CrashUniqueReportCounts
-		err = rows.Scan(&r.ServerVersion, &r.Fingerprint, &r.UniqueCrashCount)
+		err = rows.Scan(&r.ServerVersion, &r.Fingerprint, &r.UniqueCrashCount, &r.ResolvedCount)
 		if err != nil {
 			return err
 		}

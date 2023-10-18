@@ -3,10 +3,10 @@
     <app-loader :is-loading="loading"/>
 
     <b-modal
-      id="release-notes"
-      centered
-      :title="`Release Notes`"
-      size="lg"
+        id="release-notes"
+        centered
+        :title="`Release Notes`"
+        size="lg"
     >
       <v-runtime-template class="changelog" :template="releaseNotes"/>
 
@@ -18,99 +18,120 @@
     </b-modal>
 
     <eq-window
-      title="Release Version Analytics"
-      class="p-3"
-      v-if="!loading"
+        title="Release Version Analytics"
+        class="p-3"
+        v-if="!loading"
 
     >
       <eq-tabs
-        :selected="tabSelected"
-        @on-selected="tabSelected = $event; updateQueryState()"
+          :selected="tabSelected"
+          @on-selected="tabSelected = $event; updateQueryState()"
       >
         <eq-tab
-          class="fade-in"
-          :name="`Official Releases`"
+            class="fade-in"
+            :name="`Official Releases`"
         >
           <div style="max-height:85vh; overflow-y: scroll">
             <table
-              class="eq-table bordered eq-highlight-rows"
+                class="eq-table bordered eq-highlight-rows"
             >
               <thead class="eq-table-floating-header">
               <tr>
                 <th style="width: 50px"></th>
-                <th>Release</th>
-                <th>Change Count</th>
-                <th>Released</th>
-                <th>
-                  <i class="fa fa-windows"></i>
-                  Windows Downloads
+                <th class="text-center pl-0 pr-0">
+                  <div title="Change Count">
+                    <i class="fa fa-pencil"></i>
+                  </div>
                 </th>
-                <th>
-                  <i class="fa fa-linux"></i>
-                  Linux Downloads
-                </th>
-                <th>
+                <th class="text-center">Release</th>
+
+                <th style="width: 220px">Released</th>
+                <th style="width: 220px">
                   <i class="fa fa-download"></i>
                   Download Links
                 </th>
-                <th class="text-center">Unique Crashes</th>
-                <th class="text-center">Total Crashes</th>
+                <th class="text-center pl-0 pr-0" style="width: 75px">
+                  <div title="Windows downloads">
+                    <i class="fa fa-windows"></i>
+                    <i class="fa fa-download ml-2"></i>
+                  </div>
+                </th>
+                <th class="text-center pl-0 pr-0" style="width: 75px">
+                  <div title="Linux downloads">
+                    <i class="fa fa-linux"></i>
+                    <i class="fa fa-download ml-2"></i>
+                  </div>
+                </th>
+                <th class="text-center pl-0 pr-0 pt-2 pb-0" style="width: 100px">Unique <br>Crashes<br></th>
+                <th class="text-center pl-0 pr-0 pt-2 pb-0" style="width: 100px">Unique <br>Resolved<br></th>
+                <th class="text-center pl-0 pr-0 pt-2 pb-0" style="width: 100px">Total <br>Crashes</th>
                 <th></th>
               </tr>
               </thead>
               <tbody>
               <tr
-                class="fade-in"
-                v-for="(r, index) in releases"
-                :key="r.tag_name"
+                  class="fade-in"
+                  v-for="(r, index) in releases"
+                  :key="r.tag_name"
               >
                 <td class="text-center">
                   <b-button
-                    variant="primary"
-                    class="btn-dark btn-sm btn-outline-warning"
-                    style="padding: 0px 6px;"
-                    title="View Release Notes"
-                    @click="viewReleaseNotes(r)"
+                      variant="primary"
+                      class="btn-dark btn-sm btn-outline-warning"
+                      style="padding: 0px 6px;"
+                      title="View Release Notes"
+                      @click="viewReleaseNotes(r)"
                   >
                     <i class="fa fa-sticky-note-o"></i>
                   </b-button>
                 </td>
-                <td>{{ r.name }}</td>
-                <td>{{ countChanges(r) }}</td>
+                <td class="text-center pl-1 pr-1" style="width: 75px">{{ countChanges(r) }}</td>
+                <td class="text-center" style="width: 100px">{{ r.name }}</td>
                 <td>{{ formatTime(r.published_at) }} ({{ formatDate(r.published_at) }})</td>
-                <td>{{ getWindowsDownloads(r) }}</td>
-                <td>{{ getLinuxDownloads(r) }}</td>
                 <td>
                   <a
-                    :href="getWindowsDownloadLink(r)"
-                    v-if="getWindowsDownloadLink(r)"
-                    class="text-muted"
+                      :href="getWindowsDownloadLink(r)"
+                      v-if="getWindowsDownloadLink(r)"
+                      class="text-muted"
                   >
                     <i class="fa fa-windows"></i> Windows (x64)
                   </a>
                   <a
-                    :href="getLinuxDownloadLink(r)"
-                    v-if="getLinuxDownloadLink(r)"
-                    class="text-muted"
+                      :href="getLinuxDownloadLink(r)"
+                      v-if="getLinuxDownloadLink(r)"
+                      class="text-muted"
                   >
                     <i class="fa fa-linux"></i> Linux (x64)
                   </a>
                 </td>
-                <td class="text-center">
+                <td class="text-center">{{ getWindowsDownloads(r) }}</td>
+                <td class="text-center">{{ getLinuxDownloads(r) }}</td>
+                <td class="text-center p-1">
                   {{ getUniqueCrashCount(r) }}
                 </td>
-                <td class="text-center">
+                <td class="text-center p-1">
+                  <span
+                      title="Unique crashes that have been resolved and released in a newer version"
+                      style="color: limegreen"
+                  >{{ getUniqueCrashResolvedCount(r) }}
+
+                    <span v-if="getUniqueCrashResolvedCount(r) > 0">
+                      ({{ (getUniqueCrashResolvedCount(r) / getUniqueCrashCount(r) * 100).toFixed(2) }}%)
+                    </span>
+                  </span>
+                </td>
+                <td class="text-center pl-0 pr-0">
                   {{ getCrashCount(r) }}
                 </td>
-                <td class="text-center">
+                <td class="">
                   <b-button
-                    variant="primary"
-                    class="btn-dark btn-sm btn-outline-warning ml-1"
-                    style="padding: 0px 6px; width: 50px"
-                    title="View Release Crashes"
-                    @click="goToRelease(r.name.replaceAll('v', ''))"
+                      variant="primary"
+                      class="btn-dark btn-sm btn-outline-warning ml-1"
+                      style="padding: 0px 6px;"
+                      title="View Release Crashes"
+                      @click="goToRelease(r.name.replaceAll('v', ''))"
                   >
-                    <i class="fa fa-arrow-right"></i>
+                    View Crashes <i class="fa fa-arrow-right"></i>
                   </b-button>
                 </td>
               </tr>
@@ -120,12 +141,12 @@
 
         </eq-tab>
         <eq-tab
-          class="fade-in"
-          :name="`Self Built`"
+            class="fade-in"
+            :name="`Self Built`"
         >
           <div style="max-height:85vh; overflow-y: scroll">
             <table
-              class="eq-table bordered eq-highlight-rows"
+                class="eq-table bordered eq-highlight-rows"
             >
               <thead class="eq-table-floating-header">
               <tr>
@@ -136,9 +157,9 @@
               </thead>
               <tbody>
               <tr
-                class="fade-in"
-                v-for="(r, index) in selfBuilt"
-                :key="r.server_version"
+                  class="fade-in"
+                  v-for="(r, index) in selfBuilt"
+                  :key="r.server_version"
               >
                 <td class="text-center">{{ r.server_version }}</td>
                 <td class="text-center">
@@ -146,11 +167,11 @@
                 </td>
                 <td class="text-center">
                   <b-button
-                    variant="primary"
-                    class="btn-dark btn-sm btn-outline-warning ml-1"
-                    style="padding: 0px 6px; width: 50px"
-                    title="View Release Crashes"
-                    @click="goToRelease(r.server_version)"
+                      variant="primary"
+                      class="btn-dark btn-sm btn-outline-warning ml-1"
+                      style="padding: 0px 6px; width: 50px"
+                      title="View Release Crashes"
+                      @click="goToRelease(r.server_version)"
                   >
                     <i class="fa fa-arrow-right"></i>
                   </b-button>
@@ -217,10 +238,10 @@ export default {
       }
 
       this.$router.push(
-        {
-          path: ROUTE.RELEASES,
-          query: q
-        }
+          {
+            path: ROUTE.RELEASES,
+            query: q
+          }
       ).catch(() => {
       })
     },
@@ -264,18 +285,18 @@ export default {
     },
     goToRelease(r) {
       this.$router.push(
-        {
-          path: util.format(ROUTE.RELEASE, r),
-        }
+          {
+            path: util.format(ROUTE.RELEASE, r),
+          }
       ).catch(() => {
       })
     },
     async loadCounts() {
       const r = await SpireApi.v1().get(`analytics/server-crash-report/counts`)
       if (r.status === 200) {
-        this.counts = r.data.crash_report_counts
+        this.counts       = r.data.crash_report_counts
         this.uniqueCounts = r.data.unique_crash_counts
-        this.selfBuilt = r.data.crash_report_counts.filter((e) => {
+        this.selfBuilt    = r.data.crash_report_counts.filter((e) => {
           return e.server_version.includes("-dev")
         }).sort((a, b) => {
           return b.server_version.localeCompare(a.server_version);
@@ -345,6 +366,17 @@ export default {
 
       return 0
     },
+    getCrashResolvedCount(r) {
+      const version = r.name.replaceAll("v", "")
+
+      for (let v of this.counts) {
+        if (v.server_version === version) {
+          return v.resolved_count;
+        }
+      }
+
+      return 0
+    },
     getUniqueCrashCount(r) {
       const version = r.name.replaceAll("v", "")
 
@@ -356,7 +388,21 @@ export default {
       }
 
       return total
-    }
+    },
+    getUniqueCrashResolvedCount(r) {
+      const version = r.name.replaceAll("v", "")
+
+      console.log(this.uniqueCounts)
+
+      let total = 0;
+      for (let v of this.uniqueCounts) {
+        if (v.server_version === version && v.resolved_count > 0) {
+          total++;
+        }
+      }
+
+      return total
+    },
   },
   async mounted() {
     this.loadQueryState();

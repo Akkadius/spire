@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"github.com/volatiletech/null/v8"
+	"time"
+)
 
 type CrashReport struct {
 	ID              uint      `json:"id" gorm:"primary_key,AUTO_INCREMENT"`
@@ -20,6 +23,10 @@ type CrashReport struct {
 	ServerShortName string    `json:"server_short_name" gorm:"server_short_name;type:varchar(200)"`
 	ServerVersion   string    `json:"server_version" gorm:"server_version;type:varchar(50);index:version"`
 	Fingerprint     string    `json:"fingerprint" gorm:"fingerprint;type:varchar(100);index:fingerprint"`
+	Resolved        bool      `json:"resolved" db:"resolved" gorm:"default:0"`
+	ResolvedBy      uint      `json:"resolved_by" gorm:"Column:resolved_by;default:0"`
+	ResolvedUser    *User     `json:"user,omitempty" gorm:"foreignKey:ID;references:ResolvedBy"`
+	ResolvedAt      null.Time `json:"resolved_at" gorm:"Column:resolved_at;type:TIMESTAMP NULL"`
 	Uptime          int       `json:"uptime" gorm:"uptime"`
 	CreatedAt       time.Time `json:"created_at" gorm:"Column:created_at"`
 }
