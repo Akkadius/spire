@@ -5,18 +5,21 @@ import (
 )
 
 type RaidDetail struct {
-	Raidid       int          `json:"raidid" gorm:"Column:raidid"`
-	Loottype     int          `json:"loottype" gorm:"Column:loottype"`
-	Locked       int8         `json:"locked" gorm:"Column:locked"`
-	Motd         null.String  `json:"motd" gorm:"Column:motd"`
-	MarkedNpc1   uint16       `json:"marked_npc_1" gorm:"Column:marked_npc_1"`
-	MarkedNpc2   uint16       `json:"marked_npc_2" gorm:"Column:marked_npc_2"`
-	MarkedNpc3   uint16       `json:"marked_npc_3" gorm:"Column:marked_npc_3"`
-	MarkedNPC1   uint16       `json:"marked_npc_1" gorm:"Column:markedNPC1"`
-	MarkedNPC2   uint16       `json:"marked_npc_2" gorm:"Column:markedNPC2"`
-	MarkedNPC3   uint16       `json:"marked_npc_3" gorm:"Column:markedNPC3"`
-	RaidLeaders  []RaidLeader `json:"raid_leaders,omitempty" gorm:"foreignKey:rid;references:raidid"`
-	RaidMembers  []RaidMember `json:"raid_members,omitempty" gorm:"foreignKey:raidid;references:raidid"`
+	Raidid                   int          `json:"raidid" gorm:"Column:raidid"`
+	Loottype                 int          `json:"loottype" gorm:"Column:loottype"`
+	Locked                   int8         `json:"locked" gorm:"Column:locked"`
+	Motd                     null.String  `json:"motd" gorm:"Column:motd"`
+	MarkedNpc1EntityId       uint         `json:"marked_npc_1_entity_id" gorm:"Column:marked_npc_1_entity_id"`
+	MarkedNpc1ZoneId         uint         `json:"marked_npc_1_zone_id" gorm:"Column:marked_npc_1_zone_id"`
+	MarkedNpc1InstanceId     uint         `json:"marked_npc_1_instance_id" gorm:"Column:marked_npc_1_instance_id"`
+	MarkedNpc2EntityId       uint         `json:"marked_npc_2_entity_id" gorm:"Column:marked_npc_2_entity_id"`
+	MarkedNpc2ZoneId         uint         `json:"marked_npc_2_zone_id" gorm:"Column:marked_npc_2_zone_id"`
+	MarkedNpc2InstanceId     uint         `json:"marked_npc_2_instance_id" gorm:"Column:marked_npc_2_instance_id"`
+	MarkedNpc3EntityId       uint         `json:"marked_npc_3_entity_id" gorm:"Column:marked_npc_3_entity_id"`
+	MarkedNpc3ZoneId         uint         `json:"marked_npc_3_zone_id" gorm:"Column:marked_npc_3_zone_id"`
+	MarkedNpc3InstanceId     uint         `json:"marked_npc_3_instance_id" gorm:"Column:marked_npc_3_instance_id"`
+	RaidLeaders              []RaidLeader `json:"raid_leaders,omitempty" gorm:"foreignKey:rid;references:raidid"`
+	RaidMembers              []RaidMember `json:"raid_members,omitempty" gorm:"foreignKey:raidid;references:raidid"`
 }
 
 func (RaidDetail) TableName() string {

@@ -21,6 +21,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"unicode"
 )
 
 type ScrapeCommand struct {
@@ -32,6 +33,8 @@ type ScrapeCommand struct {
 func (c *ScrapeCommand) Command() *cobra.Command {
 	return c.command
 }
+
+var skipLookups bool
 
 func NewScrapeCommand(
 	db *gorm.DB,
@@ -49,6 +52,8 @@ func NewScrapeCommand(
 	i.command.Args = cobra.MinimumNArgs(1)
 	i.command.Run = i.Handle
 
+	i.command.Flags().BoolVarP(&skipLookups, "skip-lookups", "s", false, "Skip lookups for items that are not found in the database")
+
 	return i
 }
 
@@ -64,7 +69,6 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	}
 
 	list := []ExpansionRecipe{
-		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=337&rsa=Tailoring&rc=ELF&sb=item&sub=dron&menustr=080040120080"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=velluc&sb=item&menustr=080020040000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=SoV&menustr=080110120000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=SoV&sb=item&menustr=080070000000"},
@@ -431,6 +435,13 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	//pp.Println(string(data))
 }
 
+func removeDigits(r rune) rune {
+	if unicode.IsDigit(r) {
+		r = -1
+	}
+	return r
+}
+
 func (c *ScrapeCommand) FindExpansionFromText(text string) Expansion {
 	sort.Slice(expansions, func(i, j int) bool {
 		return expansions[i].ExpansionName > expansions[j].ExpansionName
@@ -531,6 +542,11 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 			recipeText := s.Find("td").Next().Text()
 
+			// debugging
+			//if recipeName != "Simple Charm of Physical Endurance" {
+			//	return
+			//}
+
 			// second attempt to get recipe name
 			if recipeName == "" {
 				recipeName = strings.Split(recipeName, "\n")[0]
@@ -543,6 +559,10 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			// trivial
 			trivialInt := 0
 			trivial := s.Find("td").Next().Next().Text()
+			//pp.Println(trivial)
+
+			trivialInt, _ = strconv.Atoi(trivial)
+
 			noFail := false
 			if strings.Contains(trivial, "(No-Fail)") {
 				trivial = strings.TrimSpace(strings.ReplaceAll(trivial, "(No-Fail)", ""))
@@ -689,12 +709,13 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 			notesSplit := strings.Split(recipeText, "Notes:")
 			var notes string
+			learnedItem := ""
+
 			if len(notesSplit) > 1 {
 				notes = strings.TrimSpace(notesSplit[1])
 				notes = strings.ReplaceAll(notes, "&#39;", "")
 				notes = strings.ReplaceAll(notes, "&#39;", "")
 
-				learnedItem := ""
 				if strings.Contains(notes, "You may need to purchase and scribe") {
 					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You may need to purchase and scribe", "in order to perform this combine"))
 				} else if strings.Contains(notes, "You must purchase and scribe") && strings.Contains(notes, "from") {
@@ -705,22 +726,31 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You can purchase and scribe", "in order to learn this recipe"))
 				}
 
+				// strip ' on outside of learned item
+				learnedItem = strings.TrimPrefix(learnedItem, "'")
+				learnedItem = strings.TrimSuffix(learnedItem, "'")
+
 				// extract Simple Charms from Can scribe to Learn:
 				if strings.Contains(notes, "Can scribe to Learn:") {
 					learnedItem = strings.TrimSpace(strings.Split(notes, "Can scribe to Learn:")[1])
 				}
 
+				// strip numbers end of learned item
+				learnedItem := strings.Map(removeDigits, learnedItem)
+
 				if len(learnedItem) > 0 {
 					c.logger.Infof("learned item [%v] for recipe [%v]", learnedItem, recipeName)
 				}
+
 			}
 
 			fmt.Printf(
-				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Components [%v] Containers [%v] Returns [%v] \n",
+				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Trivial [%v] Components [%v] Containers [%v] Returns [%v] \n",
 				recipeName,
 				r.ExpName,
 				r.ExpId,
 				c.getSkillFromName(r.PageTitle).SkillName,
+				trivialInt,
 				len(componentsList),
 				len(inList),
 				len(returnItems),
@@ -739,6 +769,9 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				Yield:          yieldInt,
 				Returns:        returnItems,
 				FailureReturns: failureReturnItems,
+				LearnedByItem: Item{
+					ItemName: learnedItem,
+				},
 			}
 
 			//pp.Println(r)
@@ -768,6 +801,10 @@ func (c *ScrapeCommand) getItemIdFromHtml(html string) int {
 	}
 
 	url = "https://www.eqtraders.com/" + url
+
+	if skipLookups {
+		return 0
+	}
 
 	resp, err := http.Get(url + "&printer=normal")
 	if err != nil {

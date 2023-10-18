@@ -1,3 +1,9 @@
+## [3.7.0] 10/18/2023
+
+**EQTraders** Added eq traders CLI tools to both scrape and import
+ * `eq-traders:scrape` will scrape eqtraders.com and output a JSON file. It will cache all item lookups and page lookups and store them under `./data/eqtraders`
+ * `eq-traders:import` will import the JSON file into the database
+
 ## [3.6.0] 10/18/2023
 
 * **Assets** Keep from checking GitHub for asset updates every boot. We check once an hour now on boot and during regular application updates. This prevents us from getting rate limited by GitHub which can prevent other Spire actions from working properly.

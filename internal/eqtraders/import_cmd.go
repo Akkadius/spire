@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/models"
+	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/volatiletech/null/v8"
@@ -44,9 +45,8 @@ func NewImportCommand(
 
 func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	expansion := os.Args[2]
-	if expansion == "all" {
 
-	}
+	itemLookupCache := make(map[string]models.Item)
 
 	expansionNumber, err := strconv.Atoi(expansion)
 	if err != nil {
@@ -91,7 +91,19 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.Nofail = int8(0)
 		r.MinExpansion = int8(recipe.ExpansionId)
 		r.MaxExpansion = 99
-		r.Notes = null.StringFrom(fmt.Sprintf("%v-%v (eqtraders import)", recipe.ExpansionName, recipe.Skill.SkillName))
+
+		additionalNotes := ""
+		if recipe.LearnedByItem.ItemName != "" {
+			additionalNotes = fmt.Sprintf(" - Learned by %v", recipe.LearnedByItem.ItemName)
+		}
+
+		r.Notes = null.StringFrom(
+			fmt.Sprintf("%v-%v %v(eqtraders import)",
+				recipe.ExpansionName,
+				recipe.Skill.SkillName,
+				additionalNotes,
+			),
+		)
 		r.Enabled = int8(1)
 		r.MustLearn = int8(0)
 		r.Quest = int8(0)
@@ -99,6 +111,26 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.ContentFlags = null.StringFrom("")
 		r.ContentFlagsDisabled = null.StringFrom("")
 		r.Skillneeded = 0 // todo - figure out what this is
+
+		if len(recipe.LearnedByItem.ItemName) > 0 {
+			pp.Println(recipe.LearnedByItem)
+
+			if i, ok := itemLookupCache[recipe.LearnedByItem.ItemName]; ok {
+				r.LearnedByItemId = i.ID
+			} else {
+				var item models.Item
+				c.db.Where("Name = ?", recipe.LearnedByItem.ItemName).First(&item)
+
+				if item.ID > 0 {
+					itemLookupCache[recipe.LearnedByItem.ItemName] = item
+					r.LearnedByItemId = item.ID
+				}
+			}
+			if r.LearnedByItemId > 0 {
+				r.MustLearn = int8(1)
+				fmt.Printf("Learned by item: %v (%v)\n", recipe.LearnedByItem.ItemName, r.LearnedByItemId)
+			}
+		}
 
 		// insert recipe into database
 		c.db.Save(&r)

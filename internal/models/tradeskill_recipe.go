@@ -14,6 +14,7 @@ type TradeskillRecipe struct {
 	ReplaceContainer       int8        `json:"replace_container" gorm:"Column:replace_container"`
 	Notes                  null.String `json:"notes" gorm:"Column:notes"`
 	MustLearn              int8        `json:"must_learn" gorm:"Column:must_learn"`
+	LearnedByItemId        int         `json:"learned_by_item_id" gorm:"Column:learned_by_item_id"`
 	Quest                  int8        `json:"quest" gorm:"Column:quest"`
 	Enabled                int8        `json:"enabled" gorm:"Column:enabled"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`

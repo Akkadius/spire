@@ -8,6 +8,7 @@ type InstanceList struct {
 	StartTime           uint                 `json:"start_time" gorm:"Column:start_time"`
 	Duration            uint                 `json:"duration" gorm:"Column:duration"`
 	NeverExpires        uint8                `json:"never_expires" gorm:"Column:never_expires"`
+	Notes               string               `json:"notes" gorm:"Column:notes"`
 	InstanceListPlayers []InstanceListPlayer `json:"instance_list_players,omitempty" gorm:"foreignKey:id;references:id"`
 	Zones               []Zone               `json:"zones,omitempty" gorm:"foreignKey:zoneidunumber;references:zone"`
 }
