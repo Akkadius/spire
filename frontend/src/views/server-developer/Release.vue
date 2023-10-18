@@ -1,27 +1,27 @@
 <template>
   <div>
     <div
-        class="row justify-content-center"
-        style="position: absolute; top: -2%; z-index: 9999999; width: 100%"
+      class="row justify-content-center"
+      style="position: absolute; top: -2%; z-index: 9999999; width: 100%"
     >
       <div class="col-6">
         <info-error-banner
-            style="width: 100%"
-            :slim="true"
-            :notification="notification"
-            :error="error"
-            @dismiss-error="error = ''"
-            @dismiss-notification="notification = ''"
-            class="mt-3"
+          style="width: 100%"
+          :slim="true"
+          :notification="notification"
+          :error="error"
+          @dismiss-error="error = ''"
+          @dismiss-notification="notification = ''"
+          class="mt-3"
         />
       </div>
     </div>
 
     <!-- make window opacity .5 when loading -->
     <eq-window
-        :title="`Release Version (${release})`"
-        class="p-0"
-        :style="{'opacity': loading ? '.5' : '1'}"
+      :title="`Release Version (${release})`"
+      class="p-0"
+      :style="{'opacity': loading ? '.5' : '1'}"
     >
 
       <div class="p-4 text-center" v-if="crashes.length === 0">
@@ -31,13 +31,13 @@
       </div>
 
       <div
-          :style="'max-height: ' + (highlightedId ? 35 : 95) + 'vh; overflow-y: scroll; '"
-          v-if="crashes.length > 0"
-          id="crash-list-viewport"
+        :style="'max-height: ' + (highlightedId ? 35 : 95) + 'vh; overflow-y: scroll; '"
+        v-if="crashes.length > 0"
+        id="crash-list-viewport"
       >
         <table
-            class="eq-table bordered eq-highlight-rows mb-0"
-            style="overflow-x: scroll; min-width: 80vw"
+          class="eq-table bordered eq-highlight-rows mb-0"
+          style="overflow-x: scroll; min-width: 80vw"
 
         >
           <thead class="eq-table-floating-header">
@@ -56,42 +56,44 @@
           </thead>
           <tbody>
           <tr
-              @click="viewCrash(c)"
-              v-for="(c, index) in crashes"
-              :key="c.id"
-              :class="(highlightedId && c.id === highlightedId ? 'pulsate-highlight-white' : '')"
-              :style="{'opacity': c.resolved ? '.5' : '1'}"
-              :id="'crash-' + c.id"
+            @click="viewCrash(c)"
+            v-for="(c, index) in crashes"
+            :key="c.id"
+            :class="(highlightedId && c.id === highlightedId ? 'pulsate-highlight-white' : '')"
+            :style="{'opacity': c.resolved ? '.5' : '1'}"
+            :id="'crash-' + c.id"
           >
             <td class="text-center">
               <b-button
-                  class="btn-dark btn-sm btn-outline-warning d-inline-block"
-                  style="padding: 0px 6px;"
-                  title="View Crash"
-                  @click="viewCrash(c)"
+                class="btn-dark btn-sm btn-outline-warning d-inline-block"
+                style="padding: 0px 6px;"
+                title="View Crash"
+                @click="viewCrash(c)"
               >
                 <i class="fa fa-eye"></i>
               </b-button>
 
-              <b-button
+              <div class="d-inline-block" v-if="user && user.is_server_developer">
+                <b-button
                   class="btn-dark btn-sm btn-outline-success d-inline-block ml-3"
                   style="padding: 0px 6px;"
                   title="Mark Crash as Resolved"
                   @click="markCrashResolved(c)"
-                  v-if="!c.resolved && user.is_server_developer"
-              >
-                <i class="fa fa-check"></i>
-              </b-button>
+                  v-if="!c.resolved"
+                >
+                  <i class="fa fa-check"></i>
+                </b-button>
 
-              <b-button
+                <b-button
                   class="btn-dark btn-sm btn-outline-danger d-inline-block ml-3"
                   style="padding: 0px 6px;"
                   title="Mark Crash as Unresolved"
                   @click="markCrashUnresolved(c)"
-                  v-if="c.resolved && user.is_server_developer"
-              >
-                <i class="fa fa-remove"></i>
-              </b-button>
+                  v-if="c.resolved"
+                >
+                  <i class="fa fa-remove"></i>
+                </b-button>
+              </div>
 
             </td>
             <td>{{ c.id }}</td>
@@ -111,9 +113,9 @@
     </eq-window>
 
     <eq-window
-        class="mt-4"
-        :title="`Crash Stack (${highlightedId})`"
-        v-if="crash && crash.id"
+      class="mt-4"
+      :title="`Crash Stack (${highlightedId})`"
+      v-if="crash && crash.id"
     >
       <div class="pb-3">
         <div v-if="crash.resolved" class="d-block mb-3">
@@ -129,7 +131,7 @@
       </div>
 
       <pre
-          style="width: 100%; height: 50vh; overflow-y: scroll"
+        style="width: 100%; height: 50vh; overflow-y: scroll"
       >{{ crash.crash_report }}</pre>
     </eq-window>
   </div>
@@ -268,10 +270,10 @@ export default {
       }
 
       this.$router.push(
-          {
-            path: util.format(ROUTE.RELEASE, this.$route.params.version),
-            query: queryState
-          }
+        {
+          path: util.format(ROUTE.RELEASE, this.$route.params.version),
+          query: queryState
+        }
       ).catch(() => {
       })
     },
