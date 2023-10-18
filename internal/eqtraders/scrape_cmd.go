@@ -58,7 +58,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	if err != nil {
 		c.logger.Fatal(err)
 	}
-	err = os.MkdirAll("data/site-cache/", os.ModePerm)
+	err = os.MkdirAll("data/eqtraders/site-cache/", os.ModePerm)
 	if err != nil {
 		c.logger.Fatal(err)
 	}
@@ -458,30 +458,6 @@ func (c *ScrapeCommand) getStringInBetween(str, before, after string) string {
 	return b[0][0 : len(b[0])-len(after)]
 }
 
-type Item struct {
-	ItemId   int    `json:"item_id"`
-	ItemName string `json:"item_name"`
-	Count    int    `json:"count"`
-}
-
-type Recipe struct {
-	RecipeName     string `json:"recipe_name"`
-	Skill          Skill  `json:"skill"`
-	ExpansionId    int    `json:"expansion_id"`
-	ExpansionName  string `json:"expansion_name"`
-	Trivial        int    `json:"trivial"`
-	NoFail         bool   `json:"no_fail"`
-	RecipeItemId   int    `json:"recipe_item_id"`
-	Components     []Item `json:"components"`
-	In             []Item `json:"in"`
-	Yield          int    `json:"yield"`
-	Returns        []Item `json:"returns"`
-	FailureReturns []Item `json:"failure_returns"`
-	LearnedByItem  Item   `json:"learned_by_item"`
-}
-
-var recipes []Recipe
-
 var recipeWriteMutex = &sync.Mutex{}
 
 func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
@@ -490,7 +466,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 	// get page slug
 	hash := md5.Sum([]byte(r.Url))
 	pageSlug := slug.Make(fmt.Sprintf("%v-%v-%v", r.ExpName, r.PageTitle, hex.EncodeToString(hash[:])))
-	file := fmt.Sprintf("data/site-cache/%v.html", pageSlug)
+	file := fmt.Sprintf("data/eqtraders/site-cache/%v.html", pageSlug)
 	contents := ""
 
 	// check if cache file exists
