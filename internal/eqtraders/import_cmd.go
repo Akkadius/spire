@@ -100,6 +100,13 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.MinExpansion = int8(recipe.ExpansionId)
 		r.MaxExpansion = 99
 
+		var nofail int8
+		if recipe.NoFail {
+			nofail = 1
+		}
+
+		r.Nofail = nofail
+
 		var additionalNotes []string
 		if recipe.LearnedByItem.ItemName != "" {
 			additionalNotes = append(
