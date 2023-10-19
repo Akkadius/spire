@@ -1,4 +1,4 @@
-package controllers
+package auth
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-type AuthController struct {
+type Controller struct {
 	db     *database.Resolver
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
@@ -24,13 +24,13 @@ type AuthController struct {
 	user   *spire.UserService
 }
 
-func NewAuthController(
+func NewController(
 	db *database.Resolver,
 	logger *logrus.Logger,
 	user *spire.UserService,
 	cache *gocache.Cache,
-) *AuthController {
-	return &AuthController{
+) *Controller {
+	return &Controller{
 		db:     db,
 		logger: logger,
 		cache:  cache,
@@ -39,7 +39,7 @@ func NewAuthController(
 	}
 }
 
-func (a *AuthController) Routes() []*routes.Route {
+func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodPost, "login", a.login, nil),
 		routes.RegisterRoute(http.MethodGet, "github", a.githubRedirectHandler, nil),
@@ -62,7 +62,7 @@ func createJwtToken(userId string) (string, error) {
 	return token, nil
 }
 
-func (a *AuthController) githubRedirectHandler(c echo.Context) error {
+func (a *Controller) githubRedirectHandler(c echo.Context) error {
 	authURL, err := a.gocial.New().
 		Driver("github").
 		Scopes([]string{""}).
@@ -88,7 +88,7 @@ type JwtTokenResponse struct {
 	Jwt         string `json:"jwt"`
 }
 
-func (a *AuthController) githubCallbackHandler(c echo.Context) error {
+func (a *Controller) githubCallbackHandler(c echo.Context) error {
 	code := c.QueryParam("code")
 	state := c.QueryParam("state")
 
@@ -142,7 +142,7 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func (a *AuthController) login(c echo.Context) error {
+func (a *Controller) login(c echo.Context) error {
 	u := new(LoginRequest)
 	if err := c.Bind(u); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")

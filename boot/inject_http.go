@@ -1,7 +1,9 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/analytics"
 	"github.com/Akkadius/spire/internal/assets"
+	"github.com/Akkadius/spire/internal/auth"
 	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/deploy"
@@ -35,11 +37,11 @@ var httpSet = wire.NewSet(
 	appmiddleware.NewReadOnlyMiddleware,
 	appmiddleware.NewPermissionsMiddleware,
 	appmiddleware.NewLocalUserAuthMiddleware,
-	controllers.NewAnalyticsController,
+	analytics.NewController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
 	controllers.NewMeController,
-	controllers.NewAuthController,
+	auth.NewController,
 	controllers.NewDocsController,
 	questapi.NewController,
 	controllers.NewAppController,
@@ -173,9 +175,9 @@ func NewRouter(
 // controllers provider
 func provideControllers(
 	hello *controllers.HelloWorldController,
-	auth *controllers.AuthController,
+	auth *auth.Controller,
 	me *controllers.MeController,
-	analytics *controllers.AnalyticsController,
+	analytics *analytics.Controller,
 	connections *controllers.ConnectionsController,
 	docs *controllers.DocsController,
 	quest *questapi.Controller,

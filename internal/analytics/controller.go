@@ -1,4 +1,4 @@
-package controllers
+package analytics
 
 import (
 	"github.com/Akkadius/spire/internal/database"
@@ -12,28 +12,28 @@ import (
 	"time"
 )
 
-type AnalyticsController struct {
+type Controller struct {
 	db     *database.Resolver
 	logger *logrus.Logger
 	influx *influx.Client
 }
 
-func NewAnalyticsController(
+func NewController(
 	logger *logrus.Logger,
 	influx *influx.Client,
 	db *database.Resolver,
-) *AnalyticsController {
-	return &AnalyticsController{logger: logger, influx: influx, db: db}
+) *Controller {
+	return &Controller{logger: logger, influx: influx, db: db}
 }
 
-func (a *AnalyticsController) Routes() []*routes.Route {
+func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodPost, "analytics/event", a.event, nil),
 		routes.RegisterRoute(http.MethodPost, "analytics/count", a.count, nil),
 	}
 }
 
-type AnalyticsEventRequest struct {
+type EventRequest struct {
 	EventName  string   `json:"event_name"`
 	EventValue string   `json:"event_value"`
 	Tags       []string `json:"tags"`
@@ -41,7 +41,7 @@ type AnalyticsEventRequest struct {
 }
 
 // searches quest examples
-func (a *AnalyticsController) event(c echo.Context) error {
+func (a *Controller) event(c echo.Context) error {
 	if a.db.GetSpireDb() == nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -52,7 +52,7 @@ func (a *AnalyticsController) event(c echo.Context) error {
 	}
 
 	// body - bind
-	p := new(AnalyticsEventRequest)
+	p := new(EventRequest)
 	if err := c.Bind(p); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -77,13 +77,13 @@ func (a *AnalyticsController) event(c echo.Context) error {
 	)
 }
 
-type AnalyticsEventCountRequest struct {
+type EventCountRequest struct {
 	EventName string `json:"event_name"`
 	EventKey  string `json:"event_key"`
 }
 
 // searches quest examples
-func (a *AnalyticsController) count(c echo.Context) error {
+func (a *Controller) count(c echo.Context) error {
 	if a.db.GetSpireDb() == nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -93,7 +93,7 @@ func (a *AnalyticsController) count(c echo.Context) error {
 		)
 	}
 
-	r := new(AnalyticsEventCountRequest)
+	r := new(EventCountRequest)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

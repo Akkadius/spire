@@ -7,8 +7,10 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/analytics"
 	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auditlog"
+	"github.com/Akkadius/spire/internal/auth"
 	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
@@ -72,10 +74,10 @@ func InitializeApplication() (App, error) {
 	generateModelsCommand := generators.NewModelGeneratorCommand(db, logger)
 	generateControllersCommand := generators.NewControllerGeneratorCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
-	authController := controllers.NewAuthController(databaseResolver, logger, userService, cache)
+	authController := auth.NewController(databaseResolver, logger, userService, cache)
 	meController := controllers.NewMeController()
 	client := influx.NewClient()
-	analyticsController := controllers.NewAnalyticsController(logger, client, databaseResolver)
+	analyticsController := analytics.NewController(logger, client, databaseResolver)
 	dbConnectionCreateService := connection.NewCreate(databaseResolver, logger, encrypter)
 	dbConnectionCheckService := connection.NewCheck(databaseResolver, logger, encrypter)
 	pluralizeClient := pluralize.NewClient()
