@@ -16,13 +16,13 @@ import (
 )
 
 type CharacterPotionbeltController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewCharacterPotionbeltController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *CharacterPotionbeltController {

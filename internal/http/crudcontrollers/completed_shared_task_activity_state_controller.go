@@ -16,13 +16,13 @@ import (
 )
 
 type CompletedSharedTaskActivityStateController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewCompletedSharedTaskActivityStateController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *CompletedSharedTaskActivityStateController {

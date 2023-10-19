@@ -16,13 +16,13 @@ import (
 )
 
 type FriendController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewFriendController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *FriendController {

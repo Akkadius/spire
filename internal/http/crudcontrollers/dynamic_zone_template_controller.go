@@ -16,13 +16,13 @@ import (
 )
 
 type DynamicZoneTemplateController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewDynamicZoneTemplateController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *DynamicZoneTemplateController {

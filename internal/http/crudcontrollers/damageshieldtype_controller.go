@@ -16,13 +16,13 @@ import (
 )
 
 type DamageshieldtypeController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewDamageshieldtypeController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *DamageshieldtypeController {

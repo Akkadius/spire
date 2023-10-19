@@ -19,6 +19,7 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/Akkadius/spire/internal/websocket"
 	pluralize "github.com/gertd/go-pluralize"
 	"github.com/google/wire"
@@ -26,11 +27,11 @@ import (
 
 var serviceSet = wire.NewSet(
 	influx.NewClient,
-	connection.NewDbConnectionCreateService,
-	connection.NewDbConnectionCheckService,
+	connection.NewCreate,
+	connection.NewCheck,
 	github.NewGithubSourceDownloader,
 	questapi.NewParseService,
-	questapi.NewQuestExamplesGithubSourcer,
+	questapi.NewExamplesGithubSourcer,
 	desktop.NewWebBoot,
 	clientfiles.NewExporter,
 	clientfiles.NewImporter,
@@ -42,7 +43,7 @@ var serviceSet = wire.NewSet(
 	assets.NewSpireAssets,
 	eqemuchangelog.NewChangelog,
 	eqemuanalytics.NewReleases,
-	spire.NewUserService,
+	user.NewUser,
 	spire.NewSettings,
 	spire.NewInit,
 	occulus.NewProxy,
@@ -50,7 +51,7 @@ var serviceSet = wire.NewSet(
 	telnet.NewClient,
 	eqemuserver.NewClient,
 	backup.NewMysql,
-	websocket.NewSpireHandler,
+	websocket.NewHandler,
 	eqemuserver.NewUpdater,
 	eqemuserver.NewProcessManager,
 )

@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/models"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/go-sql-driver/mysql"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -24,11 +25,11 @@ type Init struct {
 	logger                    *logrus.Logger
 	isInitialized             bool // determines if spire as an app is initialized or not
 	serverconfig              *eqemuserverconfig.Config
-	dbConnectionCreateService *connection.DbConnectionCreateService
+	dbConnectionCreateService *connection.Create
 	cache                     *gocache.Cache
 	settings                  *Settings
 	crypt                     *encryption.Encrypter
-	spireuser                 *UserService
+	spireuser                 *user.User
 }
 
 func NewInit(
@@ -38,8 +39,8 @@ func NewInit(
 	settings *Settings,
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
-	dbConnectionCreateService *connection.DbConnectionCreateService,
-	spireuser *UserService,
+	dbConnectionCreateService *connection.Create,
+	spireuser *user.User,
 ) *Init {
 	i := &Init{
 		connections:               connections,
@@ -287,7 +288,7 @@ func (o *Init) InitApp(r *InitAppRequest) error {
 			UserName: r.Username,
 			FullName: r.Username,
 			Password: r.Password,
-			Provider: LoginProviderLocal,
+			Provider: user.LoginProviderLocal,
 			IsAdmin:  true,
 		}
 

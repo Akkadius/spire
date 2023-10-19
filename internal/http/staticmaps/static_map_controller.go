@@ -11,11 +11,11 @@ import (
 )
 
 type StaticMapController struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 }
 
-func NewStaticMapController(db *database.DatabaseResolver, logger *logrus.Logger) *StaticMapController {
+func NewStaticMapController(db *database.Resolver, logger *logrus.Logger) *StaticMapController {
 	return &StaticMapController{
 		db:     db,
 		logger: logger,

@@ -22,14 +22,14 @@ import (
 
 type Service struct {
 	logger    *logrus.Logger
-	db        *database.DatabaseResolver
+	db        *database.Resolver
 	cache     *gocache.Cache
 	pluralize *pluralize.Client
 	debug     int
 }
 
 func NewService(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	cache *gocache.Cache,
 	logger *logrus.Logger,
 	pluralize *pluralize.Client,

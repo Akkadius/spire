@@ -5,8 +5,10 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqtraders"
+	"github.com/Akkadius/spire/internal/generators"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/user"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
@@ -16,19 +18,19 @@ import (
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
 	cmd.NewAdminPingOcculus,
-	spire.NewUserCreateCommand,
-	cmd.NewGenerateModelsCommand,
-	cmd.NewGenerateControllersCommand,
+	user.NewCreateCommand,
+	generators.NewModelGeneratorCommand,
+	generators.NewControllerGeneratorCommand,
 	cmd.NewHttpServeCommand,
 	questapi.NewParseCommand,
 	cmd.NewRoutesListCommand,
-	cmd.NewGenerateConfigurationCommand,
+	generators.NewGenerateConfigurationCommand,
 	spire.NewMigrateCommand,
 	questapi.NewExampleTestCommand,
-	cmd.NewGenerateRaceModelMapsCommand,
+	generators.NewRaceModelMapsCommand,
 	cmd.NewTestFilesystemCommand,
 	spire.NewInitCommand,
-	spire.NewUserChangePasswordCommand,
+	user.NewChangePasswordCommand,
 	spire.NewOcculusUpdateCommand,
 	spire.NewServerLauncherCommand,
 	spire.NewCrashAnalyticsCommand,
@@ -43,20 +45,20 @@ var commandSet = wire.NewSet(
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
 	adminPingOcculus *cmd.AdminPingOcculus,
-	userCreateCommand *spire.UserCreateCommand,
-	generateModelsCommand *cmd.GenerateModelsCommand,
-	generateControllersCommand *cmd.GenerateControllersCommand,
+	userCreateCommand *user.CreateCommand,
+	generateModelsCommand *generators.ModelGeneratorCommand,
+	generateControllersCommand *generators.ControllerGeneratorCmd,
 	httpServeCommand *cmd.HttpServeCommand,
 	routesListCommand *cmd.RoutesListCommand,
-	generateConfigurationCommand *cmd.GenerateConfigurationCommand,
+	generateConfigurationCommand *generators.ConfigurationCommand,
 	spireMigrateCommand *spire.MigrateCommand,
 	questApiParseCommand *questapi.ParseCommand,
 	questExampleTestCommand *questapi.ExampleTestCommand,
-	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
+	generateRaceModelMapsCommand *generators.RaceModelMapsCommand,
 	changelogCmd *eqemuchangelog.ChangelogCommand,
 	testFilesystemCmd *cmd.TestFilesystemCommand,
 	spireInstallCmd *spire.InitCommand,
-	userChangePasswordCmd *spire.UserChangePasswordCommand,
+	userChangePasswordCmd *user.ChangePasswordCommand,
 	spireOcculusUpdateCmd *spire.OcculusUpdateCommand,
 	spireServerLauncherCmd *spire.ServerLauncherCommand,
 	spireCrashAnalyticsCommand *spire.CrashAnalyticsFingerprintBackfillCommand,

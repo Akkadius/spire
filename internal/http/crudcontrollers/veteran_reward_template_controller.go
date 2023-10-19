@@ -16,13 +16,13 @@ import (
 )
 
 type VeteranRewardTemplateController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewVeteranRewardTemplateController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *VeteranRewardTemplateController {

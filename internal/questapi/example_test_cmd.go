@@ -11,7 +11,7 @@ import (
 type ExampleTestCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
-	sourcer *QuestExamplesGithubSourcer
+	sourcer *ExamplesGithubSourcer
 }
 
 func (c *ExampleTestCommand) Command() *cobra.Command {
@@ -20,7 +20,7 @@ func (c *ExampleTestCommand) Command() *cobra.Command {
 
 func NewExampleTestCommand(
 	logger *logrus.Logger,
-	sourcer *QuestExamplesGithubSourcer,
+	sourcer *ExamplesGithubSourcer,
 ) *ExampleTestCommand {
 	i := &ExampleTestCommand{
 		logger:  logger,

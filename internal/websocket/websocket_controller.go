@@ -14,13 +14,13 @@ import (
 type Controller struct {
 	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
-	handler  *SpireHandler
+	handler  *Handler
 }
 
 func NewController(
 	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
-	handler *SpireHandler,
+	handler *Handler,
 ) *Controller {
 	return &Controller{
 		logger:   logger,

@@ -13,11 +13,11 @@ import (
 )
 
 type ReadOnlyMiddleware struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 }
 
-func NewReadOnlyMiddleware(db *database.DatabaseResolver, logger *logrus.Logger) *ReadOnlyMiddleware {
+func NewReadOnlyMiddleware(db *database.Resolver, logger *logrus.Logger) *ReadOnlyMiddleware {
 	return &ReadOnlyMiddleware{
 		db:     db,
 		logger: logger,

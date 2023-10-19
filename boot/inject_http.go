@@ -1,7 +1,10 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/analytics"
+	"github.com/Akkadius/spire/internal/app"
 	"github.com/Akkadius/spire/internal/assets"
+	"github.com/Akkadius/spire/internal/auth"
 	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/deploy"
@@ -17,9 +20,11 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/permissions"
+	"github.com/Akkadius/spire/internal/query"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
@@ -30,27 +35,26 @@ import (
 
 var httpSet = wire.NewSet(
 	apphttp.NewServer,
-	appmiddleware.NewUserContextMiddleware,
+	user.NewContextMiddleware,
 	appmiddleware.NewRequestLogMiddleware,
 	appmiddleware.NewReadOnlyMiddleware,
 	appmiddleware.NewPermissionsMiddleware,
 	appmiddleware.NewLocalUserAuthMiddleware,
-	controllers.NewAnalyticsController,
+	analytics.NewController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
-	controllers.NewMeController,
-	controllers.NewAuthController,
-	controllers.NewDocsController,
-	questapi.NewQuestApiController,
-	controllers.NewAppController,
-	controllers.NewQueryController,
-	eqemuanalytics.NewAnalyticsController,
-	eqemuanalytics.NewAuthedAnalyticsController,
-	eqemuchangelog.NewEqemuChangelogController,
-	clientfiles.NewClientFilesController,
-	assets.NewAssetsController,
-	permissions.NewPermissionsController,
-	spire.NewUsersController,
+	user.NewMeController,
+	auth.NewController,
+	questapi.NewController,
+	app.NewController,
+	query.NewController,
+	eqemuanalytics.NewController,
+	eqemuanalytics.NewAuthedController,
+	eqemuchangelog.NewController,
+	clientfiles.NewController,
+	assets.NewController,
+	permissions.NewController,
+	user.NewController,
 	spire.NewSettingController,
 	occulus.NewController,
 	staticmaps.NewStaticMapController,
@@ -77,7 +81,7 @@ type appControllerGroups struct {
 func NewRouter(
 	cg *appControllerGroups,
 	crudc *crudControllers,
-	userContextMiddleware *appmiddleware.UserContextMiddleware,
+	userContextMiddleware *user.ContextMiddleware,
 	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
 	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
@@ -173,23 +177,22 @@ func NewRouter(
 // controllers provider
 func provideControllers(
 	hello *controllers.HelloWorldController,
-	auth *controllers.AuthController,
-	me *controllers.MeController,
-	analytics *controllers.AnalyticsController,
+	auth *auth.Controller,
+	me *user.MeController,
+	analytics *analytics.Controller,
 	connections *controllers.ConnectionsController,
-	docs *controllers.DocsController,
-	quest *questapi.QuestApiController,
-	app *controllers.AppController,
-	query *controllers.QueryController,
-	clientFilesController *clientfiles.ClientFilesController,
+	quest *questapi.Controller,
+	app *app.Controller,
+	query *query.Controller,
+	clientFilesController *clientfiles.Controller,
 	staticMaps *staticmaps.StaticMapController,
-	analyticsController *eqemuanalytics.AnalyticsController,
-	authedAnalyticsController *eqemuanalytics.AuthedAnalyticsController,
-	changelogController *eqemuchangelog.EqemuChangelogController,
+	analyticsController *eqemuanalytics.Controller,
+	authedAnalyticsController *eqemuanalytics.AuthedController,
+	changelogController *eqemuchangelog.Controller,
 	deployController *deploy.DeployController,
-	assetsController *assets.AssetsController,
-	permissionsController *permissions.PermissionsController,
-	usersController *spire.UsersController,
+	assetsController *assets.Controller,
+	permissionsController *permissions.Controller,
+	usersController *user.Controller,
 	settingsController *spire.SettingsController,
 	occulusController *occulus.Controller,
 	eqemuserverController *eqemuserver.Controller,
@@ -208,7 +211,6 @@ func provideControllers(
 			analytics,
 			connections,
 			hello,
-			docs,
 			query,
 		},
 		v1controllers: []routes.Controller{

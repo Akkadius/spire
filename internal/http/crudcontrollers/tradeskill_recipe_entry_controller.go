@@ -16,13 +16,13 @@ import (
 )
 
 type TradeskillRecipeEntryController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewTradeskillRecipeEntryController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *TradeskillRecipeEntryController {

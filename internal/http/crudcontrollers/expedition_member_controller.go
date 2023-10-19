@@ -12,12 +12,12 @@ import (
 )
 
 type ExpeditionMemberController struct {
-	db	 *database.DatabaseResolver
+	db	 *database.Resolver
 	logger *logrus.Logger
 }
 
 func NewExpeditionMemberController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 ) *ExpeditionMemberController {
 	return &ExpeditionMemberController{

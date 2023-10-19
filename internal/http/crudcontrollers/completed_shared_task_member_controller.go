@@ -16,13 +16,13 @@ import (
 )
 
 type CompletedSharedTaskMemberController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewCompletedSharedTaskMemberController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *CompletedSharedTaskMemberController {

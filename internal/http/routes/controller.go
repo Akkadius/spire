@@ -34,7 +34,7 @@ func (c *ControllerGroup) RoutePrefix() string {
 	return c.routePrefix
 }
 
-func (c ControllerGroup) Controllers() []Controller {
+func (c *ControllerGroup) Controllers() []Controller {
 	return c.controllers
 }
 

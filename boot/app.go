@@ -20,7 +20,7 @@ type App struct {
 	logger        *logrus.Logger
 	cache         *gocache.Cache
 	commands      []*cobra.Command
-	db            *database.DatabaseResolver
+	db            *database.Resolver
 	router        *routes.Router
 	desktop       *desktop.WebBoot
 	onboarding    *spire.Init
@@ -48,7 +48,7 @@ func NewApplication(
 	logger *logrus.Logger,
 	cache *gocache.Cache,
 	commands []*cobra.Command,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	dbConnections *database.Connections,
 	router *routes.Router,
 	desktop *desktop.WebBoot,

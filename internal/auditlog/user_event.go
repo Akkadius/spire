@@ -13,13 +13,13 @@ import (
 )
 
 type UserEvent struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	cache  *cache.Cache
 	logger *logrus.Logger
 }
 
 func NewUserEvent(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	cache *cache.Cache,
 ) *UserEvent {

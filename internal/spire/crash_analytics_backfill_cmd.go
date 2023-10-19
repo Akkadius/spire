@@ -15,7 +15,7 @@ import (
 type CrashAnalyticsFingerprintBackfillCommand struct {
 	logger   *logrus.Logger
 	command  *cobra.Command
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	pathmgmt *pathmgmt.PathManagement
 }
 
@@ -26,7 +26,7 @@ func (c *CrashAnalyticsFingerprintBackfillCommand) Command() *cobra.Command {
 func NewCrashAnalyticsCommand(
 	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 ) *CrashAnalyticsFingerprintBackfillCommand {
 	i := &CrashAnalyticsFingerprintBackfillCommand{
 		logger:   logger,

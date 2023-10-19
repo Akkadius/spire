@@ -15,7 +15,7 @@ import (
 )
 
 type PermissionsMiddleware struct {
-	db          *database.DatabaseResolver
+	db          *database.Resolver
 	cache       *gocache.Cache
 	permissions *permissions.Service
 	logger      *logrus.Logger
@@ -23,7 +23,7 @@ type PermissionsMiddleware struct {
 }
 
 func NewPermissionsMiddleware(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	cache *gocache.Cache,
 	permissions *permissions.Service,
