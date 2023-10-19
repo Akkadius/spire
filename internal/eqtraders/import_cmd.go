@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/volatiletech/null/v8"
@@ -39,6 +38,7 @@ func NewImportCommand(
 
 	i.command.Args = cobra.MinimumNArgs(1)
 	i.command.Run = i.Handle
+	i.command.Flags().StringVarP(&singleRecipe, "single-recipe", "r", "", "Scrape a single recipe by name")
 
 	return i
 }
@@ -68,6 +68,12 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	c.db.Find(&existingRecipes)
 
 	for _, recipe := range recipes {
+		if len(singleRecipe) > 0 && recipe.RecipeName != singleRecipe {
+			continue
+		}
+
+		//pp.Println(recipe)
+
 		// ignore recipes that are not for the expansion we are importing
 		if recipe.ExpansionId != expansionNumber && expansion != "all" {
 			continue
@@ -77,7 +83,9 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
 		hasExistingRecipe := false
 		for _, existingRecipe := range existingRecipes {
-			if existingRecipe.Name == recipe.RecipeName {
+			if existingRecipe.Name == recipe.RecipeName &&
+				existingRecipe.Tradeskill == int16(recipe.Skill.SkillId) &&
+				existingRecipe.MinExpansion == int8(recipe.ExpansionId) {
 				fmt.Printf("Found existing recipe: %v\n", existingRecipe.Name)
 				r = existingRecipe
 				hasExistingRecipe = true
@@ -92,16 +100,19 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.MinExpansion = int8(recipe.ExpansionId)
 		r.MaxExpansion = 99
 
-		additionalNotes := ""
+		var additionalNotes []string
 		if recipe.LearnedByItem.ItemName != "" {
-			additionalNotes = fmt.Sprintf(" - Learned by %v", recipe.LearnedByItem.ItemName)
+			additionalNotes = append(
+				additionalNotes,
+				fmt.Sprintf(" - Learned by item [%v]", recipe.LearnedByItem.ItemName),
+			)
 		}
 
 		r.Notes = null.StringFrom(
-			fmt.Sprintf("%v-%v %v(eqtraders import)",
+			fmt.Sprintf("%v-%v%v (eqtraders import)",
 				recipe.ExpansionName,
 				recipe.Skill.SkillName,
-				additionalNotes,
+				strings.Join(additionalNotes, ", "),
 			),
 		)
 		r.Enabled = int8(1)
@@ -113,8 +124,6 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.Skillneeded = 0 // todo - figure out what this is
 
 		if len(recipe.LearnedByItem.ItemName) > 0 {
-			pp.Println(recipe.LearnedByItem)
-
 			if i, ok := itemLookupCache[recipe.LearnedByItem.ItemName]; ok {
 				r.LearnedByItemId = i.ID
 			} else {
@@ -135,6 +144,9 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		// insert recipe into database
 		c.db.Save(&r)
 
+		// insert into cache
+		existingRecipes = append(existingRecipes, r)
+
 		if r.ID == 0 {
 			c.logger.Fatalf("Error inserting recipe id: %v name: %v into database", r.ID, r.Name)
 		}
@@ -144,9 +156,15 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			existing = "new"
 		}
 
-		fmt.Println(strings.Repeat("-", 40))
+		fmt.Println(strings.Repeat("-", 80))
 		fmt.Printf("> Importing recipe: %v (%v)\n", recipe.RecipeName, existing)
-		fmt.Println(strings.Repeat("-", 40))
+		fmt.Println(strings.Repeat("-", 80))
+
+		fmt.Printf("> Skill %17v | Trivial (%v)\n",
+			fmt.Sprintf("%v (%v)", recipe.Skill.SkillName, recipe.Skill.SkillId),
+			recipe.Trivial,
+		)
+		fmt.Println(strings.Repeat("-", 80))
 
 		var components []models.TradeskillRecipeEntry
 
@@ -156,38 +174,68 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			e.RecipeId = r.ID
 			e.ItemId = component.ItemId
 			e.Componentcount = int8(component.Count)
+
+			for _, returns := range recipe.FailureReturns {
+				if returns.ItemId == component.ItemId {
+					e.Failcount = int8(returns.Count)
+					break
+				}
+			}
+
+			for _, returns := range recipe.Returns {
+				if returns.ItemId == component.ItemId {
+					e.Successcount = int8(returns.Count)
+					break
+				}
+			}
+
+			if e.Failcount == 0 {
+				e.Salvagecount = int8(component.Count)
+			}
+
 			components = append(components, e)
-			fmt.Printf("|--- Component: %v (%v) Count %v\n", component.ItemId, component.ItemName, component.Count)
+
+			fmt.Printf(
+				"|--- Component %10v | %-40v | Count (%v) Successcount (%v) Failcount (%v) Salvage (%v)\n",
+				component.ItemId,
+				component.ItemName,
+				component.Count,
+				e.Successcount,
+				e.Failcount,
+				e.Salvagecount,
+			)
 		}
 
 		// insert in into database
 		for _, in := range recipe.In {
+			alreadyExists := false
+			for _, component := range components {
+				if component.ItemId == in.ItemId {
+					alreadyExists = true
+					break
+				}
+			}
+
+			if alreadyExists {
+				continue
+			}
+
 			var e models.TradeskillRecipeEntry
 			e.RecipeId = r.ID
 			e.ItemId = in.ItemId
 			e.Iscontainer = int8(1)
 			components = append(components, e)
-			fmt.Printf("|--- In: %v (%v)\n", in.ItemId, in.ItemName)
+			fmt.Printf("|--- Container %10v | %-40v\n", in.ItemId, in.ItemName)
 		}
 
-		// insert returns into database
-		for _, returns := range recipe.Returns {
+		// insert item result itself
+		if recipe.RecipeItemId > 0 {
 			var e models.TradeskillRecipeEntry
 			e.RecipeId = r.ID
-			e.ItemId = returns.ItemId
-			e.Successcount = int8(returns.Count)
+			e.ItemId = recipe.RecipeItemId
+			e.Successcount = int8(recipe.Yield)
 			components = append(components, e)
-			fmt.Printf("|--- Returns: %v (%v) Count %v\n", returns.ItemId, returns.ItemName, returns.Count)
-		}
-
-		// insert failure returns into database
-		for _, failureReturns := range recipe.FailureReturns {
-			var e models.TradeskillRecipeEntry
-			e.RecipeId = r.ID
-			e.ItemId = failureReturns.ItemId
-			e.Failcount = int8(failureReturns.Count)
-			components = append(components, e)
-			fmt.Printf("|--- Failure Returns: %v (%v) Count %v\n", failureReturns.ItemId, failureReturns.ItemName, failureReturns.Count)
+			fmt.Printf("|--- Item Result %8v | %-40v | Count (%v)\n", recipe.RecipeItemId, recipe.RecipeName, recipe.Yield)
 		}
 
 		if hasExistingRecipe {

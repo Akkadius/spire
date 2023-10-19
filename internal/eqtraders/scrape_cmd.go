@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -35,6 +36,7 @@ func (c *ScrapeCommand) Command() *cobra.Command {
 }
 
 var skipLookups bool
+var singleRecipe string
 
 func NewScrapeCommand(
 	db *gorm.DB,
@@ -53,6 +55,7 @@ func NewScrapeCommand(
 	i.command.Run = i.Handle
 
 	i.command.Flags().BoolVarP(&skipLookups, "skip-lookups", "s", false, "Skip lookups for items that are not found in the database")
+	i.command.Flags().StringVarP(&singleRecipe, "single-recipe", "r", "", "Scrape a single recipe by name")
 
 	return i
 }
@@ -542,10 +545,9 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 			recipeText := s.Find("td").Next().Text()
 
-			// debugging
-			//if recipeName != "Simple Charm of Physical Endurance" {
-			//	return
-			//}
+			if len(singleRecipe) > 0 && recipeName != singleRecipe {
+				return
+			}
 
 			// second attempt to get recipe name
 			if recipeName == "" {
@@ -726,6 +728,9 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You can purchase and scribe", "in order to learn this recipe"))
 				}
 
+				learnedItem = strings.ReplaceAll(learnedItem, " to learn this recipe without experimenting.", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to learn this recipe without experiementing.", "")
+
 				// strip ' on outside of learned item
 				learnedItem = strings.TrimPrefix(learnedItem, "'")
 				learnedItem = strings.TrimSuffix(learnedItem, "'")
@@ -735,14 +740,71 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					learnedItem = strings.TrimSpace(strings.Split(notes, "Can scribe to Learn:")[1])
 				}
 
+				learnedItem = strings.ReplaceAll(learnedItem, "Compendium on", "Compendium of")
+				learnedItem = strings.ReplaceAll(learnedItem, "Regal froglok Tailoring", "Regal Froglok Cultural Tailoring")
+				learnedItem = strings.ReplaceAll(learnedItem, "Regal froglok Smithing", "Regal Froglok Cultural Smithing")
+				learnedItem = strings.ReplaceAll(learnedItem, "Numinous Reaching Augments for Fletchers", "Numinous Reaching Weapon Augments for Fletchers")
+				learnedItem = strings.ReplaceAll(learnedItem, "Numinous Reaching Augments for Jewelers", "Numinous Reaching Weapon Augments for Jewelers")
+				learnedItem = strings.ReplaceAll(learnedItem, "Numinous Weapon Augmenting for Jewelers", "Numinous Reaching Weapon Augments for Jewelers")
+				learnedItem = strings.ReplaceAll(learnedItem, "Numnious", "Numinous")
+				learnedItem = strings.ReplaceAll(learnedItem, "Glorious Erudian", "Glorious Erudite")
+
+				learnedItem = strings.TrimPrefix(learnedItem, "the ")
+				learnedItem = strings.TrimSuffix(learnedItem, " scroll")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to complete this combine", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to learn this combine without experimentation", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " before you can complete this combine", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " to learn these recipes without experimenting", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to learn the recipe without experimentation", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to make this combine", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to make this item", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order to make this item", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " without experimentation scribing may be required", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " to learn these recipes", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " in order", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " to make this recipe", "")
+				learnedItem = strings.ReplaceAll(learnedItem, "  to learn this recipes", "")
+				learnedItem = strings.ReplaceAll(learnedItem, "  to learn this recipe", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " to learn this recipes", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " to learn this recipe", "")
+				learnedItem = strings.ReplaceAll(learnedItem, "Cultural Drakkin", "Drakkin Cultural")
+				learnedItem = strings.ReplaceAll(learnedItem, " Erudian ", " Erudite ")
+				learnedItem = strings.ReplaceAll(learnedItem, " No-Fail", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " (No-Fail)", "")
+				learnedItem = strings.ReplaceAll(learnedItem, " without experimentation (scribing may be required).", "")
+				learnedItem = strings.ReplaceAll(learnedItem, "A Guide.", "A Guide")
+
+				if strings.Contains(learnedItem, "Glorious") && !strings.Contains(learnedItem, "Cultural") {
+					learnedItem = strings.ReplaceAll(learnedItem, " Smithing", " Cultural Smithing")
+				}
+
+				if strings.Contains(learnedItem, "Glorious") && !strings.Contains(learnedItem, "Cultural") {
+					learnedItem = strings.ReplaceAll(learnedItem, " Tailoring", " Cultural Tailoring")
+				}
+
+				if strings.Contains(learnedItem, "Regal") && !strings.Contains(learnedItem, "Cultural") {
+					learnedItem = strings.ReplaceAll(learnedItem, " Smithing", " Cultural Smithing")
+				}
+
+				if strings.Contains(learnedItem, "Regal") && !strings.Contains(learnedItem, "Cultural") {
+					learnedItem = strings.ReplaceAll(learnedItem, " Tailoring", " Cultural Tailoring")
+				}
+
 				// strip numbers end of learned item
-				learnedItem := strings.Map(removeDigits, learnedItem)
+				//learnedItem = strings.Map(removeDigits, learnedItem)
+				re := regexp.MustCompile(`[^a-zA-Z -:]+`)
+				//fmt.Println(Input)
+				learnedItem = re.ReplaceAllString(learnedItem, "")
 
 				if len(learnedItem) > 0 {
 					c.logger.Infof("learned item [%v] for recipe [%v]", learnedItem, recipeName)
 				}
-
 			}
+
+			// remove everything in recipeName in parentheses
+			// Resilient Supplicant's Earring of Rallos Zek (Evolving Level 1/2)
+			recipeName = strings.Split(recipeName, "(Evolving Level")[0]
+			recipeName = strings.TrimSpace(recipeName)
 
 			fmt.Printf(
 				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Trivial [%v] Components [%v] Containers [%v] Returns [%v] \n",
