@@ -51,8 +51,8 @@ type NpcType struct {
 	ArmortintRed           uint8              `json:"armortint_red" gorm:"Column:armortint_red"`
 	ArmortintGreen         uint8              `json:"armortint_green" gorm:"Column:armortint_green"`
 	ArmortintBlue          uint8              `json:"armortint_blue" gorm:"Column:armortint_blue"`
-	DMeleeTexture1         int                `json:"d_melee_texture_1" gorm:"Column:d_melee_texture1"`
-	DMeleeTexture2         int                `json:"d_melee_texture_2" gorm:"Column:d_melee_texture2"`
+	DMeleeTexture1         uint               `json:"d_melee_texture_1" gorm:"Column:d_melee_texture1"`
+	DMeleeTexture2         uint               `json:"d_melee_texture_2" gorm:"Column:d_melee_texture2"`
 	AmmoIdfile             string             `json:"ammo_idfile" gorm:"Column:ammo_idfile"`
 	PrimMeleeType          uint8              `json:"prim_melee_type" gorm:"Column:prim_melee_type"`
 	SecMeleeType           uint8              `json:"sec_melee_type" gorm:"Column:sec_melee_type"`

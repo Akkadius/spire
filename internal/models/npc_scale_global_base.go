@@ -3,8 +3,6 @@ package models
 type NpcScaleGlobalBase struct {
 	Type                  int    `json:"type" gorm:"Column:type"`
 	Level                 int    `json:"level" gorm:"Column:level"`
-	ZoneId                uint   `json:"zone_id" gorm:"Column:zone_id"`
-	InstanceVersion       uint   `json:"instance_version" gorm:"Column:instance_version"`
 	ZoneIdList            string `json:"zone_id_list" gorm:"Column:zone_id_list"`
 	InstanceVersionList   string `json:"instance_version_list" gorm:"Column:instance_version_list"`
 	Ac                    int    `json:"ac" gorm:"Column:ac"`

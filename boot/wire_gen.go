@@ -21,6 +21,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/eqtraders"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
@@ -346,7 +347,9 @@ func InitializeApplication() (App, error) {
 	spireCrashAnalyticsFingerprintBackfillCommand := cmd.NewSpireCrashAnalyticsCommand(logger, pathManagement, databaseResolver)
 	processManager := eqemuserver.NewProcessManager(logger, config, settings, pathManagement)
 	eqEmuServerUpdateCommand := cmd.NewEQEmuServerUpdateCommand(logger, config, settings, pathManagement, processManager, updater)
-	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand, spireOcculusUpdateCommand, spireServerLauncherCommand, spireCrashAnalyticsFingerprintBackfillCommand, eqEmuServerUpdateCommand)
+	scrapeCommand := eqtraders.NewScrapeCommand(db, logger)
+	importCommand := eqtraders.NewImportCommand(db, logger)
+	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand, testFilesystemCommand, spireInitCommand, userChangePasswordCommand, spireOcculusUpdateCommand, spireServerLauncherCommand, spireCrashAnalyticsFingerprintBackfillCommand, eqEmuServerUpdateCommand, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(logger, server, config)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, init)
 	return app, nil
