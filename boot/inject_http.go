@@ -35,7 +35,7 @@ import (
 
 var httpSet = wire.NewSet(
 	apphttp.NewServer,
-	appmiddleware.NewUserContextMiddleware,
+	user.NewContextMiddleware,
 	appmiddleware.NewRequestLogMiddleware,
 	appmiddleware.NewReadOnlyMiddleware,
 	appmiddleware.NewPermissionsMiddleware,
@@ -81,7 +81,7 @@ type appControllerGroups struct {
 func NewRouter(
 	cg *appControllerGroups,
 	crudc *crudControllers,
-	userContextMiddleware *appmiddleware.UserContextMiddleware,
+	userContextMiddleware *user.ContextMiddleware,
 	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
 	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,

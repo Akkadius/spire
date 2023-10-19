@@ -1,4 +1,4 @@
-package middleware
+package user
 
 import (
 	"fmt"
@@ -15,17 +15,17 @@ import (
 	"time"
 )
 
-type UserContextMiddleware struct {
+type ContextMiddleware struct {
 	db     *database.Resolver
 	cache  *gocache.Cache
 	logger *logrus.Logger
 }
 
-func NewUserContextMiddleware(
+func NewContextMiddleware(
 	db *database.Resolver,
 	cache *gocache.Cache,
-	logger *logrus.Logger) *UserContextMiddleware {
-	return &UserContextMiddleware{
+	logger *logrus.Logger) *ContextMiddleware {
+	return &ContextMiddleware{
 		db:     db,
 		cache:  cache,
 		logger: logger,
@@ -38,7 +38,7 @@ type jwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func (m UserContextMiddleware) HandleHeader() echo.MiddlewareFunc {
+func (m ContextMiddleware) HandleHeader() echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(middleware.JWTConfig{
 		SuccessHandler: m.successHandler,
 		Skipper:        m.skipperHeader,
@@ -47,7 +47,7 @@ func (m UserContextMiddleware) HandleHeader() echo.MiddlewareFunc {
 	})
 }
 
-func (m UserContextMiddleware) HandleQuerystring() echo.MiddlewareFunc {
+func (m ContextMiddleware) HandleQuerystring() echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(middleware.JWTConfig{
 		SuccessHandler: m.successHandler,
 		TokenLookup:    "query:jwt",
@@ -57,7 +57,7 @@ func (m UserContextMiddleware) HandleQuerystring() echo.MiddlewareFunc {
 	})
 }
 
-func (m UserContextMiddleware) skipperHeader(c echo.Context) bool {
+func (m ContextMiddleware) skipperHeader(c echo.Context) bool {
 	// Skip JWT signature validation if authenticated with basic auth
 	if strings.Contains(c.Request().Header.Get("Authorization"), "Basic") {
 		return true
@@ -79,7 +79,7 @@ func (m UserContextMiddleware) skipperHeader(c echo.Context) bool {
 	return true
 }
 
-func (m UserContextMiddleware) skipperQuery(c echo.Context) bool {
+func (m ContextMiddleware) skipperQuery(c echo.Context) bool {
 	// If we send a query param header then we will go through our JWT signature validation logic
 	if c.QueryParam("jwt") != "" {
 		return false
@@ -96,7 +96,7 @@ func (m UserContextMiddleware) skipperQuery(c echo.Context) bool {
 	return true
 }
 
-func (m UserContextMiddleware) successHandler(c echo.Context) {
+func (m ContextMiddleware) successHandler(c echo.Context) {
 	// signature validation
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*jwtCustomClaims)
