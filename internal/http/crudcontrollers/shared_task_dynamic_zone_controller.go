@@ -16,13 +16,13 @@ import (
 )
 
 type SharedTaskDynamicZoneController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewSharedTaskDynamicZoneController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *SharedTaskDynamicZoneController {

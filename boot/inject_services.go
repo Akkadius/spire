@@ -26,11 +26,11 @@ import (
 
 var serviceSet = wire.NewSet(
 	influx.NewClient,
-	connection.NewDbConnectionCreateService,
-	connection.NewDbConnectionCheckService,
+	connection.NewCreate,
+	connection.NewCheck,
 	github.NewGithubSourceDownloader,
 	questapi.NewParseService,
-	questapi.NewQuestExamplesGithubSourcer,
+	questapi.NewExamplesGithubSourcer,
 	desktop.NewWebBoot,
 	clientfiles.NewExporter,
 	clientfiles.NewImporter,

@@ -8,7 +8,7 @@ import (
 )
 
 type UserChangePasswordCommand struct {
-	db      *database.DatabaseResolver
+	db      *database.Resolver
 	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
@@ -20,7 +20,7 @@ func (c *UserChangePasswordCommand) Command() *cobra.Command {
 }
 
 func NewUserChangePasswordCommand(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	user *UserService,

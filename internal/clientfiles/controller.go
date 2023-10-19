@@ -17,20 +17,20 @@ import (
 	"strings"
 )
 
-type ClientFilesController struct {
+type Controller struct {
 	logger   *logrus.Logger
 	exporter *Exporter
 	importer *Importer
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 }
 
-func NewClientFilesController(
+func NewController(
 	logger *logrus.Logger,
 	exporter *Exporter,
 	importer *Importer,
-	db *database.DatabaseResolver,
-) *ClientFilesController {
-	return &ClientFilesController{
+	db *database.Resolver,
+) *Controller {
+	return &Controller{
 		logger:   logger,
 		exporter: exporter,
 		importer: importer,
@@ -38,7 +38,7 @@ func NewClientFilesController(
 	}
 }
 
-func (f *ClientFilesController) Routes() []*routes.Route {
+func (f *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "client-files/export/spells", f.exportSpells, nil),
 		routes.RegisterRoute(http.MethodGet, "client-files/export/dbstr", f.exportDbStr, nil),
@@ -46,7 +46,7 @@ func (f *ClientFilesController) Routes() []*routes.Route {
 	}
 }
 
-func (f *ClientFilesController) exportSpells(c echo.Context) error {
+func (f *Controller) exportSpells(c echo.Context) error {
 	// todo, bubble error handling
 	// quick and dirty for now
 	db := f.db.Get(&models.SpellsNew{}, c)
@@ -71,7 +71,7 @@ func (f *ClientFilesController) exportSpells(c echo.Context) error {
 	return c.Attachment(filePath, "spells_us.txt")
 }
 
-func (f *ClientFilesController) exportDbStr(c echo.Context) error {
+func (f *Controller) exportDbStr(c echo.Context) error {
 	// todo, bubble error handling
 	// quick and dirty for now
 	db := f.db.Get(&models.DbStr{}, c)
@@ -96,7 +96,7 @@ func (f *ClientFilesController) exportDbStr(c echo.Context) error {
 	return c.Attachment(filePath, "dbstr_us.txt")
 }
 
-func (f *ClientFilesController) importFile(c echo.Context) error {
+func (f *Controller) importFile(c echo.Context) error {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return err

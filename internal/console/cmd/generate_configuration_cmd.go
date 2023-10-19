@@ -9,7 +9,7 @@ import (
 )
 
 type GenerateConfigurationCommand struct {
-	db      *database.DatabaseResolver
+	db      *database.Resolver
 	logger  *logrus.Logger
 	command *cobra.Command
 }
@@ -19,7 +19,7 @@ func (c *GenerateConfigurationCommand) Command() *cobra.Command {
 }
 
 func NewGenerateConfigurationCommand(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 ) *GenerateConfigurationCommand {
 	i := &GenerateConfigurationCommand{

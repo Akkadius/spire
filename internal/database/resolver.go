@@ -22,7 +22,8 @@ import (
 // when the users request comes in; a middleware function will lookup their database info
 // from the memory pool of connections and re-use it if found, re-establish if not found or
 // return an error if credentials no longer work
-type DatabaseResolver struct {
+
+type Resolver struct {
 	connections           *Connections                 // local connections
 	remoteDatabases       map[string]map[uint]*gorm.DB // remote databases only used when Spire resolves connections defined by users
 	logger                *logrus.Logger
@@ -31,13 +32,13 @@ type DatabaseResolver struct {
 	contentConnectionName string
 }
 
-func NewDatabaseResolver(
+func NewResolver(
 	connections *Connections,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	cache *gocache.Cache,
-) *DatabaseResolver {
-	i := &DatabaseResolver{
+) *Resolver {
+	i := &Resolver{
 		connections:           connections,
 		remoteDatabases:       map[string]map[uint]*gorm.DB{},
 		logger:                logger,
@@ -53,7 +54,7 @@ func NewDatabaseResolver(
 	return i
 }
 
-func (d *DatabaseResolver) Get(model models.Modelable, c echo.Context) *gorm.DB {
+func (d *Resolver) Get(model models.Modelable, c echo.Context) *gorm.DB {
 	user := request.GetUser(c)
 	if user.ID > 0 {
 		return d.ResolveUserEqemuConnection(model, user)
@@ -62,19 +63,19 @@ func (d *DatabaseResolver) Get(model models.Modelable, c echo.Context) *gorm.DB 
 	return d.connections.EqemuDb()
 }
 
-func (d *DatabaseResolver) GetSpireDb() *gorm.DB {
+func (d *Resolver) GetSpireDb() *gorm.DB {
 	return d.connections.SpireDb()
 }
 
-func (d *DatabaseResolver) GetEqemuDb() *gorm.DB {
+func (d *Resolver) GetEqemuDb() *gorm.DB {
 	return d.connections.EqemuDb()
 }
 
-func (d *DatabaseResolver) GetEncKey(userId uint) string {
+func (d *Resolver) GetEncKey(userId uint) string {
 	return fmt.Sprintf("%v-%v", d.crypt.GetEncryptionKey(), userId)
 }
 
-func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
+func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
 
 	// TODO: Mutex handling in edge cases
 
@@ -237,7 +238,7 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 	return db
 }
 
-func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB {
+func (d *Resolver) handleWheres(query *gorm.DB, filter string) *gorm.DB {
 	// parse where field = value
 	wheres := strings.Split(filter, equalDelimiter)
 	if len(wheres) > 1 {
@@ -301,7 +302,7 @@ func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB 
 	return query
 }
 
-func (d *DatabaseResolver) handleJsonWheres(query *gorm.DB, filter string) *gorm.DB {
+func (d *Resolver) handleJsonWheres(query *gorm.DB, filter string) *gorm.DB {
 	// parse where field = value
 	wheres := strings.Split(filter, equalDelimiter)
 	if len(wheres) > 1 {
@@ -331,7 +332,7 @@ func (d *DatabaseResolver) handleJsonWheres(query *gorm.DB, filter string) *gorm
 	return query
 }
 
-func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.DB {
+func (d *Resolver) handleOrWheres(query *gorm.DB, filter string) *gorm.DB {
 	// parse where field = value
 	wheres := strings.Split(filter, equalDelimiter)
 	if len(wheres) > 1 {
@@ -395,7 +396,7 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 	return query
 }
 
-func (d *DatabaseResolver) GetUserConnection(user models.User) models.UserServerDatabaseConnection {
+func (d *Resolver) GetUserConnection(user models.User) models.UserServerDatabaseConnection {
 	// cache
 	key := fmt.Sprintf("active-user-db-connection-%v", user.ID)
 	cachedConn, found := d.cache.Get(key)

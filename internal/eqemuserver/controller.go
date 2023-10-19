@@ -27,7 +27,7 @@ import (
 )
 
 type Controller struct {
-	db             *database.DatabaseResolver
+	db             *database.Resolver
 	logger         *logrus.Logger
 	eqemuserverapi *Client
 	pathmgmt       *pathmgmt.PathManagement
@@ -37,7 +37,7 @@ type Controller struct {
 }
 
 func NewController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	api *Client,
 	serverconfig *eqemuserverconfig.Config,

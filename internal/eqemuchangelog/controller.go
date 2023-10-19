@@ -8,31 +8,31 @@ import (
 	"net/http"
 )
 
-type EqemuChangelogController struct {
+type Controller struct {
 	logger    *logrus.Logger
-	db        *database.DatabaseResolver
+	db        *database.Resolver
 	changelog *Changelog
 }
 
-func NewEqemuChangelogController(
+func NewController(
 	logger *logrus.Logger,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	changelog *Changelog,
-) *EqemuChangelogController {
-	return &EqemuChangelogController{
+) *Controller {
+	return &Controller{
 		logger:    logger,
 		db:        db,
 		changelog: changelog,
 	}
 }
 
-func (a *EqemuChangelogController) Routes() []*routes.Route {
+func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "changelog", a.getChangelog, nil),
 	}
 }
 
-func (a *EqemuChangelogController) getChangelog(c echo.Context) error {
+func (a *Controller) getChangelog(c echo.Context) error {
 	return c.JSON(
 		http.StatusOK,
 		echo.Map{

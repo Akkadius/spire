@@ -12,28 +12,28 @@ import (
 	"strings"
 )
 
-type AssetsController struct {
+type Controller struct {
 	logger *logrus.Logger
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 }
 
-func NewAssetsController(
+func NewController(
 	logger *logrus.Logger,
-	db *database.DatabaseResolver,
-) *AssetsController {
-	return &AssetsController{
+	db *database.Resolver,
+) *Controller {
+	return &Controller{
 		logger: logger,
 		db:     db,
 	}
 }
 
-func (f *AssetsController) Routes() []*routes.Route {
+func (f *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "assets/zone-images/:zone_long_name", f.zoneImages, nil),
 	}
 }
 
-func (f *AssetsController) zoneImages(c echo.Context) error {
+func (f *Controller) zoneImages(c echo.Context) error {
 	zone, err := url.PathUnescape(c.Param("zone_long_name"))
 	if err != nil {
 		fmt.Println(err)

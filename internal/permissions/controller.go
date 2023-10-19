@@ -8,30 +8,30 @@ import (
 	"net/http"
 )
 
-type PermissionsController struct {
+type Controller struct {
 	logger      *logrus.Logger
-	db          *database.DatabaseResolver
+	db          *database.Resolver
 	permissions *Service
 }
 
-func NewPermissionsController(
+func NewController(
 	logger *logrus.Logger,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	permissions *Service,
-) *PermissionsController {
-	return &PermissionsController{
+) *Controller {
+	return &Controller{
 		logger:      logger,
 		db:          db,
 		permissions: permissions,
 	}
 }
 
-func (p *PermissionsController) Routes() []*routes.Route {
+func (p *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "permissions/resources", p.getPermissionResources, nil),
 	}
 }
 
-func (p *PermissionsController) getPermissionResources(c echo.Context) error {
+func (p *Controller) getPermissionResources(c echo.Context) error {
 	return c.JSON(http.StatusOK, p.permissions.GetResources(c.Echo().Routes()))
 }

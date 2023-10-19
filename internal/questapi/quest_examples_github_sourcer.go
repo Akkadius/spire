@@ -7,19 +7,19 @@ import (
 	"strings"
 )
 
-type QuestExamplesGithubSourcer struct {
+type ExamplesGithubSourcer struct {
 	logger     *logrus.Logger
 	cache      *gocache.Cache
-	downloader *github.GithubSourceDownloader
+	downloader *github.SourceDownloader
 	files      map[string]string
 }
 
-func NewQuestExamplesGithubSourcer(
+func NewExamplesGithubSourcer(
 	logger *logrus.Logger,
 	cache *gocache.Cache,
-	downloader *github.GithubSourceDownloader,
-) *QuestExamplesGithubSourcer {
-	return &QuestExamplesGithubSourcer{logger: logger, cache: cache, downloader: downloader}
+	downloader *github.SourceDownloader,
+) *ExamplesGithubSourcer {
+	return &ExamplesGithubSourcer{logger: logger, cache: cache, downloader: downloader}
 }
 
 const (
@@ -39,12 +39,12 @@ type SearchResultSnippet struct {
 }
 
 // return files from memory
-func (q *QuestExamplesGithubSourcer) Files() map[string]string {
+func (q *ExamplesGithubSourcer) Files() map[string]string {
 	return q.files
 }
 
 // source files
-func (q *QuestExamplesGithubSourcer) Source(
+func (q *ExamplesGithubSourcer) Source(
 	org string,
 	repo string,
 	branch string,
@@ -64,7 +64,7 @@ func (q *QuestExamplesGithubSourcer) Source(
 }
 
 // search files for results
-func (q *QuestExamplesGithubSourcer) Search(
+func (q *ExamplesGithubSourcer) Search(
 	org string,
 	repo string,
 	branch string,

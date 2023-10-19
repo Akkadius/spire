@@ -11,14 +11,14 @@ import (
 )
 
 type SettingsController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	settings *Settings
 	crypt    *encryption.Encrypter
 }
 
 func NewSettingController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	settings *Settings,

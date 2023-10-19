@@ -16,13 +16,13 @@ import (
 )
 
 type UserContextMiddleware struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	cache  *gocache.Cache
 	logger *logrus.Logger
 }
 
 func NewUserContextMiddleware(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	cache *gocache.Cache,
 	logger *logrus.Logger) *UserContextMiddleware {
 	return &UserContextMiddleware{

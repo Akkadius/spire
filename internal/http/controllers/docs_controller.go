@@ -12,11 +12,11 @@ import (
 )
 
 type DocsController struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 }
 
-func NewDocsController(db *database.DatabaseResolver, logger *logrus.Logger) *DocsController {
+func NewDocsController(db *database.Resolver, logger *logrus.Logger) *DocsController {
 	return &DocsController{
 		db:     db,
 		logger: logger,

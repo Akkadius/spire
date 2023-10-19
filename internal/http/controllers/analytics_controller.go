@@ -13,7 +13,7 @@ import (
 )
 
 type AnalyticsController struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 	influx *influx.Client
 }
@@ -21,7 +21,7 @@ type AnalyticsController struct {
 func NewAnalyticsController(
 	logger *logrus.Logger,
 	influx *influx.Client,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 ) *AnalyticsController {
 	return &AnalyticsController{logger: logger, influx: influx, db: db}
 }

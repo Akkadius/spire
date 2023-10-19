@@ -12,7 +12,7 @@ import (
 type ParseService struct {
 	logger     *logrus.Logger
 	cache      *gocache.Cache
-	downloader *github.GithubSourceDownloader
+	downloader *github.SourceDownloader
 	files      map[string]string
 	snippets   map[string]string
 }
@@ -20,12 +20,12 @@ type ParseService struct {
 func NewParseService(
 	logger *logrus.Logger,
 	cache *gocache.Cache,
-	downloader *github.GithubSourceDownloader,
+	downloader *github.SourceDownloader,
 ) *ParseService {
 	return &ParseService{logger: logger, cache: cache, downloader: downloader}
 }
 
-type QuestApiResponse struct {
+type Response struct {
 	LastRefreshed time.Time `json:"last_refreshed"`
 	PerlApi       `json:"perl"`
 	LuaApi        `json:"lua"`
@@ -115,7 +115,7 @@ func (c *ParseService) SourceSnippets(
 }
 
 // Parse parses methods from our source
-func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
+func (c *ParseService) Parse(forceRefresh bool) Response {
 	// if lock set, return
 	_, found := c.cache.Get(lockKey)
 	if found {
@@ -234,8 +234,8 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 }
 
 // response method
-func (c *ParseService) apiResponse() QuestApiResponse {
-	return QuestApiResponse{
+func (c *ParseService) apiResponse() Response {
+	return Response{
 		LastRefreshed: lastRefreshed,
 		PerlApi: PerlApi{
 			PerlMethods:   perlMethods,

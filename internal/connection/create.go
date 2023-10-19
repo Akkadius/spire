@@ -11,25 +11,25 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type DbConnectionCreateService struct {
-	db     *database.DatabaseResolver
+type Create struct {
+	db     *database.Resolver
 	logger *logrus.Logger
 	crypt  *encryption.Encrypter
 }
 
-func NewDbConnectionCreateService(
-	db *database.DatabaseResolver,
+func NewCreate(
+	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
-) *DbConnectionCreateService {
-	return &DbConnectionCreateService{db: db, logger: logger, crypt: crypt}
+) *Create {
+	return &Create{db: db, logger: logger, crypt: crypt}
 }
 
-func (c *DbConnectionCreateService) GetEncKey(userId uint) string {
+func (c *Create) GetEncKey(userId uint) string {
 	return fmt.Sprintf("%v-%v", c.crypt.GetEncryptionKey(), userId)
 }
 
-func (c *DbConnectionCreateService) Handle(ctx *contexts.ConnectionCreateContext) error {
+func (c *Create) Handle(ctx *contexts.ConnectionCreateContext) error {
 
 	// validate valid user before creating
 	if ctx.UserId() == 0 {

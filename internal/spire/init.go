@@ -24,7 +24,7 @@ type Init struct {
 	logger                    *logrus.Logger
 	isInitialized             bool // determines if spire as an app is initialized or not
 	serverconfig              *eqemuserverconfig.Config
-	dbConnectionCreateService *connection.DbConnectionCreateService
+	dbConnectionCreateService *connection.Create
 	cache                     *gocache.Cache
 	settings                  *Settings
 	crypt                     *encryption.Encrypter
@@ -38,7 +38,7 @@ func NewInit(
 	settings *Settings,
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
-	dbConnectionCreateService *connection.DbConnectionCreateService,
+	dbConnectionCreateService *connection.Create,
 	spireuser *UserService,
 ) *Init {
 	i := &Init{

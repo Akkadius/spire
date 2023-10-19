@@ -17,14 +17,14 @@ const (
 )
 
 type UserService struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 	crypt  *encryption.Encrypter
 	cache  *gocache.Cache
 }
 
 func NewUserService(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	cache *gocache.Cache,

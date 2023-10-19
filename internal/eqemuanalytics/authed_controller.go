@@ -15,29 +15,29 @@ import (
 	"time"
 )
 
-type AuthedAnalyticsController struct {
+type AuthedController struct {
 	logger *logrus.Logger
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 }
 
-func NewAuthedAnalyticsController(
+func NewAuthedController(
 	logger *logrus.Logger,
-	db *database.DatabaseResolver,
-) *AuthedAnalyticsController {
-	return &AuthedAnalyticsController{
+	db *database.Resolver,
+) *AuthedController {
+	return &AuthedController{
 		logger: logger,
 		db:     db,
 	}
 }
 
-func (a *AuthedAnalyticsController) Routes() []*routes.Route {
+func (a *AuthedController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodPost, "analytics/server-crash-reports/:crash-id/mark-resolved", a.markCrashResolved, nil),
 		routes.RegisterRoute(http.MethodPost, "analytics/server-crash-reports/:crash-id/mark-unresolved", a.markCrashUnresolved, nil),
 	}
 }
 
-func (a *AuthedAnalyticsController) markCrashResolved(c echo.Context) error {
+func (a *AuthedController) markCrashResolved(c echo.Context) error {
 	crashId := c.Param("crash-id")
 	if len(crashId) == 0 {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid crash report request"})
@@ -92,7 +92,7 @@ func (a *AuthedAnalyticsController) markCrashResolved(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": "Crash fingerprint marked as resolved"})
 }
 
-func (a *AuthedAnalyticsController) markCrashUnresolved(c echo.Context) error {
+func (a *AuthedController) markCrashUnresolved(c echo.Context) error {
 	crashId := c.Param("crash-id")
 	if len(crashId) == 0 {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid crash report request"})

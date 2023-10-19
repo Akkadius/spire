@@ -22,22 +22,22 @@ import (
 )
 
 type ConnectionsController struct {
-	db                        *database.DatabaseResolver
+	db                        *database.Resolver
 	logger                    *logrus.Logger
 	cache                     *gocache.Cache
-	dbConnectionCreateService *connection.DbConnectionCreateService
-	dbConnectionCheckService  *connection.DbConnectionCheckService
+	dbConnectionCreateService *connection.Create
+	dbConnectionCheckService  *connection.Check
 	permissions               *permissions.Service
 	spireInit                 *spire.Init
 	spireuser                 *spire.UserService
 }
 
 func NewConnectionsController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	cache *gocache.Cache,
-	dbConnectionCreateService *connection.DbConnectionCreateService,
-	dbConnectionCheckService *connection.DbConnectionCheckService,
+	dbConnectionCreateService *connection.Create,
+	dbConnectionCheckService *connection.Check,
 	permissions *permissions.Service,
 	spireInit *spire.Init,
 	spireuser *spire.UserService,

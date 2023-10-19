@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-type GithubSourceDownloader struct {
+type SourceDownloader struct {
 	logger         *logrus.Logger
 	cache          *gocache.Cache
 	sourceUserDir  bool // if set, sources files to user directory
@@ -21,16 +21,16 @@ type GithubSourceDownloader struct {
 	readFiles      bool // if set, will open files and return contents
 }
 
-func (g *GithubSourceDownloader) SetReadFiles(readFiles bool) {
+func (g *SourceDownloader) SetReadFiles(readFiles bool) {
 	g.readFiles = readFiles
 }
 
-func (g *GithubSourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
+func (g *SourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
 	g.sourceUserDir = sourceUserDir
 }
 
-func NewGithubSourceDownloader(logger *logrus.Logger, cache *gocache.Cache) *GithubSourceDownloader {
-	return &GithubSourceDownloader{logger: logger, cache: cache, readFiles: true}
+func NewGithubSourceDownloader(logger *logrus.Logger, cache *gocache.Cache) *SourceDownloader {
+	return &SourceDownloader{logger: logger, cache: cache, readFiles: true}
 }
 
 type SourceResult struct {
@@ -39,7 +39,7 @@ type SourceResult struct {
 }
 
 // Source downloads files and returns filename:contents
-func (g *GithubSourceDownloader) Source(org string, repo string, branch string, forceRefresh bool) SourceResult {
+func (g *SourceDownloader) Source(org string, repo string, branch string, forceRefresh bool) SourceResult {
 	lockKey := fmt.Sprintf("%v-%v-%v", org, repo, branch)
 	// if lock set, return
 	_, found := g.cache.Get(lockKey)
@@ -144,7 +144,7 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 
 // downloadFile will download a url to a local file. It's efficient because it will
 // write as it downloads and not load the whole file into memory.
-func (g *GithubSourceDownloader) downloadFile(filepath string, url string) error {
+func (g *SourceDownloader) downloadFile(filepath string, url string) error {
 	err := download.WithProgress(filepath, url)
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func (g *GithubSourceDownloader) downloadFile(filepath string, url string) error
 
 // GetSourceRoot returns user cache dir or temp dir
 // eg /home/user/.cache/ or /tmp/
-func (g *GithubSourceDownloader) GetSourceRoot() string {
+func (g *SourceDownloader) GetSourceRoot() string {
 	userDir, err := os.UserCacheDir()
 	if err != nil {
 		g.logger.Error(err)
@@ -169,6 +169,6 @@ func (g *GithubSourceDownloader) GetSourceRoot() string {
 
 // GetSourcedDirPath returns the sourced download path
 // eg /home/user/.cache/<repo>-<branch> or /tmp/<repo>-<branch>
-func (g *GithubSourceDownloader) GetSourcedDirPath(repo string, branch string) string {
+func (g *SourceDownloader) GetSourcedDirPath(repo string, branch string) string {
 	return filepath.Join(g.GetSourceRoot(), fmt.Sprintf("%v-%v", repo, branch))
 }

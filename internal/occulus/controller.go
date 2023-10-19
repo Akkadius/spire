@@ -10,14 +10,14 @@ import (
 )
 
 type Controller struct {
-	db      *database.DatabaseResolver
+	db      *database.Resolver
 	logger  *logrus.Logger
 	occulus *Proxy
 }
 
 func NewController(
 	logger *logrus.Logger,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	occulus *Proxy,
 ) *Controller {
 	return &Controller{

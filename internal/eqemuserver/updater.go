@@ -22,7 +22,7 @@ import (
 )
 
 type Updater struct {
-	db           *database.DatabaseResolver
+	db           *database.Resolver
 	logger       *logrus.Logger
 	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
@@ -30,7 +30,7 @@ type Updater struct {
 }
 
 func NewUpdater(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,

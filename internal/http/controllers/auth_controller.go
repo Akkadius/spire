@@ -17,7 +17,7 @@ import (
 )
 
 type AuthController struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
 	cache  *gocache.Cache
@@ -25,7 +25,7 @@ type AuthController struct {
 }
 
 func NewAuthController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	user *spire.UserService,
 	cache *gocache.Cache,

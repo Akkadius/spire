@@ -17,7 +17,7 @@ import (
 )
 
 type PublicController struct {
-	db             *database.DatabaseResolver
+	db             *database.Resolver
 	logger         *logrus.Logger
 	eqemuserverapi *Client
 	pathmgmt       *pathmgmt.PathManagement
@@ -27,7 +27,7 @@ type PublicController struct {
 }
 
 func NewPublicController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	api *Client,
 	serverconfig *eqemuserverconfig.Config,

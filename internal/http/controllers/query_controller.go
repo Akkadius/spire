@@ -12,11 +12,11 @@ import (
 )
 
 type QueryController struct {
-	db     *database.DatabaseResolver
+	db     *database.Resolver
 	logger *logrus.Logger
 }
 
-func NewQueryController(db *database.DatabaseResolver, logger *logrus.Logger) *QueryController {
+func NewQueryController(db *database.Resolver, logger *logrus.Logger) *QueryController {
 	return &QueryController{
 		db:     db,
 		logger: logger,

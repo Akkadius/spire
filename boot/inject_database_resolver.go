@@ -7,5 +7,5 @@ import (
 
 // wire set for loading the stores.
 var databaseResolverSet = wire.NewSet(
-	database.NewDatabaseResolver,
+	database.NewResolver,
 )

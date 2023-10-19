@@ -10,7 +10,7 @@ import (
 )
 
 type UserCreateCommand struct {
-	db      *database.DatabaseResolver
+	db      *database.Resolver
 	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
@@ -21,7 +21,7 @@ func (c *UserCreateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewUserCreateCommand(db *database.DatabaseResolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *UserService) *UserCreateCommand {
+func NewUserCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *UserService) *UserCreateCommand {
 	i := &UserCreateCommand{
 		db:     db,
 		logger: logger,

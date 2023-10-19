@@ -16,13 +16,13 @@ import (
 )
 
 type PetsBeastlordDatumController struct {
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewPetsBeastlordDatumController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *PetsBeastlordDatumController {

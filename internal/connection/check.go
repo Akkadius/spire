@@ -10,25 +10,25 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type DbConnectionCheckService struct {
-	db     *database.DatabaseResolver
+type Check struct {
+	db     *database.Resolver
 	logger *logrus.Logger
 	crypt  *encryption.Encrypter
 }
 
-func NewDbConnectionCheckService(
-	db *database.DatabaseResolver,
+func NewCheck(
+	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
-) *DbConnectionCheckService {
-	return &DbConnectionCheckService{db: db, logger: logger, crypt: crypt}
+) *Check {
+	return &Check{db: db, logger: logger, crypt: crypt}
 }
 
-func (c *DbConnectionCheckService) GetEncKey(userId uint) string {
+func (c *Check) GetEncKey(userId uint) string {
 	return fmt.Sprintf("%v-%v", c.crypt.GetEncryptionKey(), userId)
 }
 
-func (c *DbConnectionCheckService) Handle(userId uint, connectionId string) error {
+func (c *Check) Handle(userId uint, connectionId string) error {
 	var result models.UserServerDatabaseConnection
 	relationships := models.UserServerDatabaseConnection{}.Relationships()
 

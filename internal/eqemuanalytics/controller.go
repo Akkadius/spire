@@ -17,18 +17,18 @@ import (
 	"time"
 )
 
-type AnalyticsController struct {
+type Controller struct {
 	logger   *logrus.Logger
-	db       *database.DatabaseResolver
+	db       *database.Resolver
 	releases *Releases
 }
 
-func NewAnalyticsController(
+func NewController(
 	logger *logrus.Logger,
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	releases *Releases,
-) *AnalyticsController {
-	return &AnalyticsController{
+) *Controller {
+	return &Controller{
 		logger:   logger,
 		db:       db,
 		releases: releases,
@@ -52,7 +52,7 @@ func v1AnalyticsRateLimit() echo.MiddlewareFunc {
 	)
 }
 
-func (a *AnalyticsController) Routes() []*routes.Route {
+func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodPost, "analytics/server-crash-report", a.serverCrashReport, []echo.MiddlewareFunc{v1AnalyticsRateLimit()}),
 		routes.RegisterRoute(http.MethodGet, "analytics/server-crash-reports", a.listServerCrashReports, nil),
@@ -61,7 +61,7 @@ func (a *AnalyticsController) Routes() []*routes.Route {
 	}
 }
 
-func (a *AnalyticsController) serverCrashReport(c echo.Context) error {
+func (a *Controller) serverCrashReport(c echo.Context) error {
 	r := new(models.CrashReport)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -137,7 +137,7 @@ func (a *AnalyticsController) serverCrashReport(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Invalid request")
 }
 
-func (a *AnalyticsController) listServerCrashReports(c echo.Context) error {
+func (a *Controller) listServerCrashReports(c echo.Context) error {
 	var entries []models.CrashReport
 	q := a.db.GetSpireDb()
 
@@ -194,7 +194,7 @@ type CrashUniqueReportCounts struct {
 	ResolvedCount    int    `json:"resolved_count"`
 }
 
-func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
+func (a *Controller) getServerCrashReportCounts(c echo.Context) error {
 	db, err := a.db.GetSpireDb().DB()
 	if err != nil {
 		return err
@@ -239,7 +239,7 @@ func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 	)
 }
 
-func (a *AnalyticsController) getReleases(c echo.Context) error {
+func (a *Controller) getReleases(c echo.Context) error {
 	r, err := a.releases.getReleases()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

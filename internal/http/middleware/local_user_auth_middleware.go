@@ -14,7 +14,7 @@ import (
 )
 
 type LocalUserAuthMiddleware struct {
-	db        *database.DatabaseResolver
+	db        *database.Resolver
 	cache     *gocache.Cache
 	logger    *logrus.Logger
 	debug     int
@@ -23,7 +23,7 @@ type LocalUserAuthMiddleware struct {
 }
 
 func NewLocalUserAuthMiddleware(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	cache *gocache.Cache,
 	settings *spire.Settings,

@@ -9,21 +9,21 @@ import (
 	"net/http"
 )
 
-type QuestApiController struct {
+type Controller struct {
 	logger  *logrus.Logger
 	parser  *ParseService
-	sourcer *QuestExamplesGithubSourcer
+	sourcer *ExamplesGithubSourcer
 }
 
-func NewQuestApiController(
+func NewController(
 	logger *logrus.Logger,
 	parser *ParseService,
-	sourcer *QuestExamplesGithubSourcer,
-) *QuestApiController {
-	return &QuestApiController{logger: logger, parser: parser, sourcer: sourcer}
+	sourcer *ExamplesGithubSourcer,
+) *Controller {
+	return &Controller{logger: logger, parser: parser, sourcer: sourcer}
 }
 
-func (d *QuestApiController) Routes() []*routes.Route {
+func (d *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "quest-api/definitions", d.getQuestDefinitions, nil),
 		routes.RegisterRoute(http.MethodGet, "quest-api/vscode-snippets", d.getSnippets, nil),
@@ -40,11 +40,11 @@ func (d *QuestApiController) Routes() []*routes.Route {
 	}
 }
 
-func (d *QuestApiController) getQuestDefinitions(c echo.Context) error {
+func (d *Controller) getQuestDefinitions(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": d.parser.Parse(false)})
 }
 
-func (d *QuestApiController) getSnippets(c echo.Context) error {
+func (d *Controller) getSnippets(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": d.parser.GetSnippets()})
 }
 
@@ -54,7 +54,7 @@ type SearchTermRequest struct {
 }
 
 // searches quest examples
-func (d *QuestApiController) searchGithubExamples(c echo.Context) error {
+func (d *Controller) searchGithubExamples(c echo.Context) error {
 	// body - bind
 	p := new(SearchTermRequest)
 	if err := c.Bind(p); err != nil {
@@ -76,7 +76,7 @@ func (d *QuestApiController) searchGithubExamples(c echo.Context) error {
 }
 
 // ingests a webhook from Github and updates the repo data locally
-func (d *QuestApiController) webhookSourceDefinitionsUpdateApi(c echo.Context) error {
+func (d *Controller) webhookSourceDefinitionsUpdateApi(c echo.Context) error {
 	// todo: verify signature later
 
 	fmt.Println("Received definitions update request...")
@@ -96,7 +96,7 @@ func (d *QuestApiController) webhookSourceDefinitionsUpdateApi(c echo.Context) e
 }
 
 // ingests a webhook from Github and updates the repo data locally
-func (d *QuestApiController) webhookVscodeSnippetsUpdate(c echo.Context) error {
+func (d *Controller) webhookVscodeSnippetsUpdate(c echo.Context) error {
 	// todo: verify signature later
 
 	fmt.Println("Received vscode quest snippets update request...")
@@ -116,7 +116,7 @@ func (d *QuestApiController) webhookVscodeSnippetsUpdate(c echo.Context) error {
 }
 
 // ingests a webhook from Github and updates the repo data locally
-func (d *QuestApiController) webhookSourceExamplesUpdateApi(c echo.Context) error {
+func (d *Controller) webhookSourceExamplesUpdateApi(c echo.Context) error {
 	// todo: verify signature later
 	if c.Request().Header.Get("X-Github-Event") != "" &&
 		c.Request().Header.Get("X-Github-Delivery") != "" {

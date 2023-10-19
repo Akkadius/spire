@@ -13,14 +13,14 @@ import (
 )
 
 type UsersController struct {
-	db        *database.DatabaseResolver
+	db        *database.Resolver
 	logger    *logrus.Logger
 	spireuser *UserService
 	crypt     *encryption.Encrypter
 }
 
 func NewUsersController(
-	db *database.DatabaseResolver,
+	db *database.Resolver,
 	logger *logrus.Logger,
 	spireuser *UserService,
 	crypt *encryption.Encrypter,
