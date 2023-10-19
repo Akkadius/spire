@@ -36,6 +36,7 @@ import (
 	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
+	"github.com/Akkadius/spire/internal/query"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
@@ -77,7 +78,7 @@ func InitializeApplication() (App, error) {
 	controllerGeneratorCmd := generators.NewControllerGeneratorCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
 	controller := auth.NewController(resolver, logger, userUser, cache)
-	meController := controllers.NewMeController()
+	meController := user.NewMeController()
 	client := influx.NewClient()
 	analyticsController := analytics.NewController(logger, client, resolver)
 	create := connection.NewCreate(resolver, logger, encrypter)
@@ -92,7 +93,7 @@ func InitializeApplication() (App, error) {
 	examplesGithubSourcer := questapi.NewExamplesGithubSourcer(logger, cache, sourceDownloader)
 	questapiController := questapi.NewController(logger, parseService, examplesGithubSourcer)
 	appController := app.NewController(cache, logger, init, userUser, settings)
-	queryController := controllers.NewQueryController(resolver, logger)
+	queryController := query.NewController(resolver, logger)
 	exporter := clientfiles.NewExporter(logger)
 	importer := clientfiles.NewImporter(logger)
 	clientfilesController := clientfiles.NewController(logger, exporter, importer, resolver)

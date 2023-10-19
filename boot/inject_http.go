@@ -20,6 +20,7 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/permissions"
+	"github.com/Akkadius/spire/internal/query"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
@@ -42,11 +43,11 @@ var httpSet = wire.NewSet(
 	analytics.NewController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
-	controllers.NewMeController,
+	user.NewMeController,
 	auth.NewController,
 	questapi.NewController,
 	app.NewController,
-	controllers.NewQueryController,
+	query.NewController,
 	eqemuanalytics.NewController,
 	eqemuanalytics.NewAuthedController,
 	eqemuchangelog.NewController,
@@ -177,12 +178,12 @@ func NewRouter(
 func provideControllers(
 	hello *controllers.HelloWorldController,
 	auth *auth.Controller,
-	me *controllers.MeController,
+	me *user.MeController,
 	analytics *analytics.Controller,
 	connections *controllers.ConnectionsController,
 	quest *questapi.Controller,
 	app *app.Controller,
-	query *controllers.QueryController,
+	query *query.Controller,
 	clientFilesController *clientfiles.Controller,
 	staticMaps *staticmaps.StaticMapController,
 	analyticsController *eqemuanalytics.Controller,

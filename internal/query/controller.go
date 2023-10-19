@@ -1,4 +1,4 @@
-package controllers
+package query
 
 import (
 	"fmt"
@@ -11,19 +11,19 @@ import (
 	"strconv"
 )
 
-type QueryController struct {
+type Controller struct {
 	db     *database.Resolver
 	logger *logrus.Logger
 }
 
-func NewQueryController(db *database.Resolver, logger *logrus.Logger) *QueryController {
-	return &QueryController{
+func NewController(db *database.Resolver, logger *logrus.Logger) *Controller {
+	return &Controller{
 		db:     db,
 		logger: logger,
 	}
 }
 
-func (q *QueryController) Routes() []*routes.Route {
+func (q *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "query/schema/table/:table", q.getTableSchema, nil),
 		routes.RegisterRoute(http.MethodGet, "query/free-id-ranges/:table/:id", q.freeIdRanges, nil),
@@ -39,7 +39,7 @@ type StartEndRange struct {
 
 // this version is far faster than its query counterpart
 // freeIdRanges gets free contiguous blocks of ids
-func (q *QueryController) freeIdRanges(c echo.Context) error {
+func (q *Controller) freeIdRanges(c echo.Context) error {
 
 	// params
 	table := c.Param("table")
@@ -149,7 +149,7 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Ranges not found"})
 }
 
-func (q *QueryController) getTableSchema(c echo.Context) error {
+func (q *Controller) getTableSchema(c echo.Context) error {
 	table := c.Param("table")
 	db := q.db.Get(q.getModelFromString(table), c)
 	schema, err := database.GetTableSchema(db, table)
@@ -160,7 +160,7 @@ func (q *QueryController) getTableSchema(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": schema})
 }
 
-func (q *QueryController) freeIdsReserved(c echo.Context) error {
+func (q *Controller) freeIdsReserved(c echo.Context) error {
 	table := c.Param("table")
 
 	db, err := q.db.Get(q.getModelFromString(table), c).DB()
@@ -183,7 +183,7 @@ func (q *QueryController) freeIdsReserved(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": database.GenericQuery(db, query)})
 }
 
-func (q *QueryController) getModelFromString(s string) models.Modelable {
+func (q *Controller) getModelFromString(s string) models.Modelable {
 	if s == "zone" {
 		return models.Zone{}
 	}
@@ -200,7 +200,7 @@ func (q *QueryController) getModelFromString(s string) models.Modelable {
 	return models.Zone{}
 }
 
-func (q *QueryController) expansionStats(c echo.Context) error {
+func (q *Controller) expansionStats(c echo.Context) error {
 	db, err := q.db.Get(q.getModelFromString("zone"), c).DB()
 	if err != nil {
 		q.logger.Warn(err)
