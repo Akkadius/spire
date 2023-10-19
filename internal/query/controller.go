@@ -180,7 +180,7 @@ func (q *Controller) freeIdsReserved(c echo.Context) error {
 		IdColumn,
 	)
 
-	return c.JSON(http.StatusOK, echo.Map{"data": database.GenericQuery(db, query)})
+	return c.JSON(http.StatusOK, echo.Map{"data": GenericQuery(db, query)})
 }
 
 func (q *Controller) getModelFromString(s string) models.Modelable {
@@ -209,7 +209,7 @@ func (q *Controller) expansionStats(c echo.Context) error {
 	// gather content tables
 	query := fmt.Sprintf(`SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE column_name LIKE 'min_expansion'`)
 	tableNames := []string{}
-	for _, m := range database.GenericQuery(db, query) {
+	for _, m := range GenericQuery(db, query) {
 		tableNames = append(tableNames, m["TABLE_NAME"])
 	}
 
@@ -217,7 +217,7 @@ func (q *Controller) expansionStats(c echo.Context) error {
 
 	for _, name := range tableNames {
 		q := fmt.Sprintf("select count(*) as count, min_expansion FROM %v WHERE `min_expansion` > -1 GROUP BY `min_expansion`", name)
-		response[name] = database.GenericQuery(db, q)
+		response[name] = GenericQuery(db, q)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"data": response})
