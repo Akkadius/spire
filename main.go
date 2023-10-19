@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
-	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/updater"
 	"log"
 	"os"
@@ -21,14 +20,6 @@ func main() {
 
 	// default
 	_ = os.Setenv("APP_ENV", "local")
-
-	// installer logic
-	// check if eqemu_config.json exists in current directory
-	// if it doesn't exist, run the eqemu server installer
-	if _, err := os.Stat("eqemu_config.json"); os.IsNotExist(err) {
-		eqemuserver.NewInstaller().Install()
-		return
-	}
 
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
