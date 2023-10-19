@@ -23,4 +23,5 @@ cd "$cwd/frontend" && npm install && npm run build
 
 #:: Pack frontend assets into binary
 cd "$cwd" && make build-binary
+cd "$cwd" && make build-installer-binary
 cd "$cwd" && make release-binary

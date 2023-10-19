@@ -1,3 +1,7 @@
+## [3.7.1] 10/19/2023
+
+* Installer release binary test
+
 ## [3.7.0] 10/18/2023
 
 **EQTraders** Added eq traders CLI tools to both scrape and import
