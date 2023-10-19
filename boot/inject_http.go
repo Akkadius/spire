@@ -22,6 +22,7 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
@@ -52,7 +53,7 @@ var httpSet = wire.NewSet(
 	clientfiles.NewController,
 	assets.NewController,
 	permissions.NewController,
-	spire.NewUsersController,
+	user.NewController,
 	spire.NewSettingController,
 	occulus.NewController,
 	staticmaps.NewStaticMapController,
@@ -191,7 +192,7 @@ func provideControllers(
 	deployController *deploy.DeployController,
 	assetsController *assets.Controller,
 	permissionsController *permissions.Controller,
-	usersController *spire.UsersController,
+	usersController *user.Controller,
 	settingsController *spire.SettingsController,
 	occulusController *occulus.Controller,
 	eqemuserverController *eqemuserver.Controller,

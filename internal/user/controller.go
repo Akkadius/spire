@@ -1,4 +1,4 @@
-package spire
+package user
 
 import (
 	"fmt"
@@ -12,20 +12,20 @@ import (
 	"net/http"
 )
 
-type UsersController struct {
+type Controller struct {
 	db        *database.Resolver
 	logger    *logrus.Logger
 	spireuser *UserService
 	crypt     *encryption.Encrypter
 }
 
-func NewUsersController(
+func NewController(
 	db *database.Resolver,
 	logger *logrus.Logger,
 	spireuser *UserService,
 	crypt *encryption.Encrypter,
-) *UsersController {
-	return &UsersController{
+) *Controller {
+	return &Controller{
 		db:        db,
 		logger:    logger,
 		spireuser: spireuser,
@@ -33,7 +33,7 @@ func NewUsersController(
 	}
 }
 
-func (a *UsersController) Routes() []*routes.Route {
+func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "users", a.list, nil),
 		routes.RegisterRoute(http.MethodPut, "user", a.create, nil),
@@ -42,7 +42,7 @@ func (a *UsersController) Routes() []*routes.Route {
 	}
 }
 
-func (a *UsersController) list(c echo.Context) error {
+func (a *Controller) list(c echo.Context) error {
 	var results []models.User
 	if a.db.GetSpireDb() != nil {
 		query := a.db.GetSpireDb().Model(&models.User{})
@@ -73,7 +73,7 @@ type UserCreateRequest struct {
 
 // create endpoint is currently primarily in use for local spire users
 // assumptions in logic are based around its use
-func (a *UsersController) create(c echo.Context) error {
+func (a *Controller) create(c echo.Context) error {
 
 	// validation: not admin
 	u := request.GetUser(c)
@@ -116,7 +116,7 @@ func (a *UsersController) create(c echo.Context) error {
 
 // delete endpoint is currently primarily in use for local spire users
 // assumptions in logic are based around its use
-func (a *UsersController) delete(c echo.Context) error {
+func (a *Controller) delete(c echo.Context) error {
 
 	// validation: not admin
 	u := request.GetUser(c)
@@ -174,7 +174,7 @@ type PasswordResetRequest struct {
 	Password string `json:"password"`
 }
 
-func (a *UsersController) passwordReset(c echo.Context) error {
+func (a *Controller) passwordReset(c echo.Context) error {
 	// validation: not admin
 	u := request.GetUser(c)
 	if !u.IsAdmin {

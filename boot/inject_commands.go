@@ -8,6 +8,7 @@ import (
 	"github.com/Akkadius/spire/internal/generators"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/user"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
@@ -17,7 +18,7 @@ import (
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
 	cmd.NewAdminPingOcculus,
-	spire.NewUserCreateCommand,
+	user.NewCreateCommand,
 	generators.NewModelGeneratorCommand,
 	generators.NewControllerGeneratorCommand,
 	cmd.NewHttpServeCommand,
@@ -29,7 +30,7 @@ var commandSet = wire.NewSet(
 	generators.NewRaceModelMapsCommand,
 	cmd.NewTestFilesystemCommand,
 	spire.NewInitCommand,
-	spire.NewUserChangePasswordCommand,
+	user.NewChangePasswordCommand,
 	spire.NewOcculusUpdateCommand,
 	spire.NewServerLauncherCommand,
 	spire.NewCrashAnalyticsCommand,
@@ -44,7 +45,7 @@ var commandSet = wire.NewSet(
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
 	adminPingOcculus *cmd.AdminPingOcculus,
-	userCreateCommand *spire.UserCreateCommand,
+	userCreateCommand *user.CreateCommand,
 	generateModelsCommand *generators.ModelGeneratorCommand,
 	generateControllersCommand *generators.ControllerGeneratorCmd,
 	httpServeCommand *cmd.HttpServeCommand,
@@ -57,7 +58,7 @@ func ProvideCommands(
 	changelogCmd *eqemuchangelog.ChangelogCommand,
 	testFilesystemCmd *cmd.TestFilesystemCommand,
 	spireInstallCmd *spire.InitCommand,
-	userChangePasswordCmd *spire.UserChangePasswordCommand,
+	userChangePasswordCmd *user.ChangePasswordCommand,
 	spireOcculusUpdateCmd *spire.OcculusUpdateCommand,
 	spireServerLauncherCmd *spire.ServerLauncherCommand,
 	spireCrashAnalyticsCommand *spire.CrashAnalyticsFingerprintBackfillCommand,

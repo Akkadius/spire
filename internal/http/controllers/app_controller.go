@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -19,7 +20,7 @@ type AppController struct {
 	cache     *gocache.Cache
 	logger    *logrus.Logger
 	spireinit *spire.Init
-	spireuser *spire.UserService
+	spireuser *user.UserService
 	settings  *spire.Settings
 }
 
@@ -28,7 +29,7 @@ func NewAppController(
 	cache *gocache.Cache,
 	logger *logrus.Logger,
 	spireinit *spire.Init,
-	spireuser *spire.UserService,
+	spireuser *user.UserService,
 	settings *spire.Settings,
 ) *AppController {
 	return &AppController{

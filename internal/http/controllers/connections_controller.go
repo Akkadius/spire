@@ -11,6 +11,7 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -29,7 +30,7 @@ type ConnectionsController struct {
 	dbConnectionCheckService  *connection.Check
 	permissions               *permissions.Service
 	spireInit                 *spire.Init
-	spireuser                 *spire.UserService
+	spireuser                 *user.UserService
 }
 
 func NewConnectionsController(
@@ -40,7 +41,7 @@ func NewConnectionsController(
 	dbConnectionCheckService *connection.Check,
 	permissions *permissions.Service,
 	spireInit *spire.Init,
-	spireuser *spire.UserService,
+	spireuser *user.UserService,
 ) *ConnectionsController {
 	return &ConnectionsController{
 		db:                        db,

@@ -16,22 +16,22 @@ import (
 	"runtime"
 )
 
-type SpireHandler struct {
+type Handler struct {
 	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
 }
 
-func NewSpireHandler(
+func NewHandler(
 	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
-) *SpireHandler {
-	return &SpireHandler{
+) *Handler {
+	return &Handler{
 		logger:   logger,
 		pathmgmt: pathmgmt,
 	}
 }
 
-func (h *SpireHandler) HandleHello(ws *websocket.Conn, msg string) error {
+func (h *Handler) HandleHello(ws *websocket.Conn, msg string) error {
 	err := websocket.Message.Send(ws, "Hello, Client!")
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ type SpireExecCommand struct {
 	Arguments []string `json:"args"`
 }
 
-func (h *SpireHandler) HandleExecServerBin(ws *websocket.Conn, msg string) error {
+func (h *Handler) HandleExecServerBin(ws *websocket.Conn, msg string) error {
 	var m SpireExecCommand
 	err := json.Unmarshal([]byte(msg), &m)
 	if err != nil {
@@ -112,7 +112,7 @@ func (h *SpireHandler) HandleExecServerBin(ws *websocket.Conn, msg string) error
 	return nil
 }
 
-func (h *SpireHandler) HandleUnauthorized(ws *websocket.Conn) error {
+func (h *Handler) HandleUnauthorized(ws *websocket.Conn) error {
 	err := websocket.Message.Send(ws, "Unauthorized")
 	if err != nil {
 		return err

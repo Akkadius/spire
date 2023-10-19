@@ -41,7 +41,7 @@ func (a *Controller) Routes() []*routes.Route {
 }
 
 func (a *Controller) getHostInfo(c echo.Context) error {
-	host, err := host.Info()
+	h, err := host.Info()
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -49,7 +49,7 @@ func (a *Controller) getHostInfo(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, host)
+	return c.JSON(http.StatusOK, h)
 }
 
 func (a *Controller) getCpuAll(c echo.Context) error {

@@ -1,4 +1,4 @@
-package spire
+package user
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type UserCreateCommand struct {
+type CreateCommand struct {
 	db      *database.Resolver
 	logger  *logrus.Logger
 	command *cobra.Command
@@ -17,12 +17,12 @@ type UserCreateCommand struct {
 	user    *UserService
 }
 
-func (c *UserCreateCommand) Command() *cobra.Command {
+func (c *CreateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewUserCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *UserService) *UserCreateCommand {
-	i := &UserCreateCommand{
+func NewCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *UserService) *CreateCommand {
+	i := &CreateCommand{
 		db:     db,
 		logger: logger,
 		crypt:  crypt,
@@ -39,7 +39,7 @@ func NewUserCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *e
 	return i
 }
 
-func (c *UserCreateCommand) Handle(_ *cobra.Command, args []string) {
+func (c *CreateCommand) Handle(_ *cobra.Command, args []string) {
 	if len(args) != 2 {
 		fmt.Println("Usage: [username] [password]")
 		return
@@ -68,6 +68,6 @@ func (c *UserCreateCommand) Handle(_ *cobra.Command, args []string) {
 }
 
 // Validate implementation of the Command interface
-func (c *UserCreateCommand) Validate(_ *cobra.Command, _ []string) error {
+func (c *CreateCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }

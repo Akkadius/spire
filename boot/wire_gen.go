@@ -39,6 +39,7 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/gertd/go-pluralize"
 )
@@ -69,8 +70,8 @@ func InitializeApplication() (App, error) {
 	connections := provideAppDbConnections(config, logger)
 	encrypter := encryption.NewEncrypter(logger, config)
 	databaseResolver := database.NewResolver(connections, logger, encrypter, cache)
-	userService := spire.NewUserService(databaseResolver, logger, encrypter, cache)
-	userCreateCommand := spire.NewUserCreateCommand(databaseResolver, logger, encrypter, userService)
+	userService := user.NewUserService(databaseResolver, logger, encrypter, cache)
+	userCreateCommand := user.NewCreateCommand(databaseResolver, logger, encrypter, userService)
 	generateModelsCommand := generators.NewModelGeneratorCommand(db, logger)
 	generateControllersCommand := generators.NewControllerGeneratorCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
@@ -104,7 +105,7 @@ func InitializeApplication() (App, error) {
 	deployController := deploy.NewDeployController(logger)
 	assetsController := assets.NewController(logger, databaseResolver)
 	permissionsController := permissions.NewController(logger, databaseResolver, service)
-	usersController := spire.NewUsersController(databaseResolver, logger, userService, encrypter)
+	usersController := user.NewController(databaseResolver, logger, userService, encrypter)
 	settingsController := spire.NewSettingController(databaseResolver, logger, encrypter, settings)
 	controller := occulus.NewController(logger, databaseResolver, proxy)
 	telnetClient := telnet.NewClient(logger)
@@ -114,7 +115,7 @@ func InitializeApplication() (App, error) {
 	publicController := eqemuserver.NewPublicController(databaseResolver, logger, eqemuserverClient, config, pathManagement, settings, updater)
 	eqemuserverconfigController := eqemuserverconfig.NewController(logger, config)
 	backupController := backup.NewController(logger, mysql, pathManagement)
-	spireHandler := websocket.NewSpireHandler(logger, pathManagement)
+	spireHandler := websocket.NewHandler(logger, pathManagement)
 	websocketController := websocket.NewController(logger, pathManagement, spireHandler)
 	systemController := system.NewController(logger)
 	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, authedAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, settingsController, controller, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
@@ -344,7 +345,7 @@ func InitializeApplication() (App, error) {
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
 	initCommand := spire.NewInitCommand(logger, init)
-	userChangePasswordCommand := spire.NewUserChangePasswordCommand(databaseResolver, logger, encrypter, userService)
+	userChangePasswordCommand := user.NewChangePasswordCommand(databaseResolver, logger, encrypter, userService)
 	occulusUpdateCommand := spire.NewOcculusUpdateCommand(logger, processManagement)
 	serverLauncherCommand := spire.NewServerLauncherCommand(logger, pathManagement)
 	crashAnalyticsFingerprintBackfillCommand := spire.NewCrashAnalyticsCommand(logger, pathManagement, databaseResolver)

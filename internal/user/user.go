@@ -1,4 +1,4 @@
-package spire
+package user
 
 import (
 	"errors"

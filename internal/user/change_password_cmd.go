@@ -1,4 +1,4 @@
-package spire
+package user
 
 import (
 	"github.com/Akkadius/spire/internal/database"
@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type UserChangePasswordCommand struct {
+type ChangePasswordCommand struct {
 	db      *database.Resolver
 	logger  *logrus.Logger
 	command *cobra.Command
@@ -15,17 +15,17 @@ type UserChangePasswordCommand struct {
 	user    *UserService
 }
 
-func (c *UserChangePasswordCommand) Command() *cobra.Command {
+func (c *ChangePasswordCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewUserChangePasswordCommand(
+func NewChangePasswordCommand(
 	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	user *UserService,
-) *UserChangePasswordCommand {
-	i := &UserChangePasswordCommand{
+) *ChangePasswordCommand {
+	i := &ChangePasswordCommand{
 		db:     db,
 		logger: logger,
 		crypt:  crypt,
@@ -42,7 +42,7 @@ func NewUserChangePasswordCommand(
 	return i
 }
 
-func (c *UserChangePasswordCommand) Handle(_ *cobra.Command, args []string) {
+func (c *ChangePasswordCommand) Handle(_ *cobra.Command, args []string) {
 	// args
 	username := args[0]
 	password := args[1]

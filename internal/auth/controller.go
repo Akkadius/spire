@@ -5,7 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/user"
 	"github.com/danilopolani/gocialite"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -21,13 +21,13 @@ type Controller struct {
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
 	cache  *gocache.Cache
-	user   *spire.UserService
+	user   *user.UserService
 }
 
 func NewController(
 	db *database.Resolver,
 	logger *logrus.Logger,
-	user *spire.UserService,
+	user *user.UserService,
 	cache *gocache.Cache,
 ) *Controller {
 	return &Controller{
@@ -100,10 +100,10 @@ func (a *Controller) githubCallbackHandler(c echo.Context) error {
 	//spew.Dump(github)
 	//spew.Dump(token)
 
-	var user models.User
-	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, spire.LoginProviderGithub).First(&user)
+	var u models.User
+	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, user.LoginProviderGithub).First(&u)
 
-	if user.ID == 0 {
+	if u.ID == 0 {
 		u := models.User{
 			UserName:  github.Username,
 			FullName:  github.FullName,
@@ -111,7 +111,7 @@ func (a *Controller) githubCallbackHandler(c echo.Context) error {
 			LastName:  github.LastName,
 			Email:     github.Email,
 			Avatar:    github.Avatar,
-			Provider:  spire.LoginProviderGithub,
+			Provider:  user.LoginProviderGithub,
 		}
 
 		// new github
@@ -121,15 +121,15 @@ func (a *Controller) githubCallbackHandler(c echo.Context) error {
 		}
 
 		if newUser.ID > 0 {
-			user.ID = newUser.ID
+			u.ID = newUser.ID
 		}
 	}
 
-	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
+	newToken, _ := createJwtToken(fmt.Sprintf("%v", u.ID))
 	callbackUrl := fmt.Sprintf("%s/fe-auth-callback?jwt=%s", os.Getenv("VUE_APP_FRONTEND_BASE_URL"), newToken)
 
 	// clear users cache on logging in if exists
-	userKey := fmt.Sprintf("user-%v", user.ID)
+	userKey := fmt.Sprintf("user-%v", u.ID)
 	a.cache.Delete(userKey)
 
 	fmt.Println(callbackUrl)
