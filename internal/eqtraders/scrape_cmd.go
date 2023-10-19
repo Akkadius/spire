@@ -790,9 +790,12 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					learnedItem = strings.ReplaceAll(learnedItem, " Tailoring", " Cultural Tailoring")
 				}
 
+				learnedItem = strings.ReplaceAll(learnedItem, "Regal Weapon Cultural Tailoring", "Regal Weapon Tailoring")
+				learnedItem = strings.ReplaceAll(learnedItem, "Regal Weapon Cultural Smithing", "Regal Weapon Smithing")
+
 				// strip numbers end of learned item
 				//learnedItem = strings.Map(removeDigits, learnedItem)
-				re := regexp.MustCompile(`[^a-zA-Z -:]+`)
+				re := regexp.MustCompile(`[^a-zA-Z \-:]+`)
 				//fmt.Println(Input)
 				learnedItem = re.ReplaceAllString(learnedItem, "")
 
