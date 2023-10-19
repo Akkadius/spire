@@ -1,24 +1,23 @@
-package cmd
+package generators
 
 import (
-	"github.com/Akkadius/spire/internal/generators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 )
 
-type GenerateModelsCommand struct {
+type ModelGeneratorCommand struct {
 	db      *gorm.DB
 	logger  *logrus.Logger
 	command *cobra.Command
 }
 
-func (c *GenerateModelsCommand) Command() *cobra.Command {
+func (c *ModelGeneratorCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewGenerateModelsCommand(db *gorm.DB, logger *logrus.Logger) *GenerateModelsCommand {
-	i := &GenerateModelsCommand{
+func NewModelGeneratorCommand(db *gorm.DB, logger *logrus.Logger) *ModelGeneratorCommand {
+	i := &ModelGeneratorCommand{
 		db:     db,
 		logger: logger,
 		command: &cobra.Command{
@@ -32,7 +31,7 @@ func NewGenerateModelsCommand(db *gorm.DB, logger *logrus.Logger) *GenerateModel
 	return i
 }
 
-func (c *GenerateModelsCommand) Handle(cmd *cobra.Command, args []string) {
+func (c *ModelGeneratorCommand) Handle(cmd *cobra.Command, args []string) {
 	tablesToGenerate := make([]string, 0)
 
 	// pass in table as argument
@@ -40,8 +39,8 @@ func (c *GenerateModelsCommand) Handle(cmd *cobra.Command, args []string) {
 		tablesToGenerate = append(tablesToGenerate, args[0])
 	}
 
-	generators.NewGenerateModel(
-		generators.GenerateModelContext{
+	NewGenerateModel(
+		GenerateModelContext{
 			TablesToGenerate: tablesToGenerate,
 		},
 		c.logger,
@@ -50,7 +49,7 @@ func (c *GenerateModelsCommand) Handle(cmd *cobra.Command, args []string) {
 
 }
 
-func (c *GenerateModelsCommand) Validate(cmd *cobra.Command, _ []string) error {
+func (c *ModelGeneratorCommand) Validate(cmd *cobra.Command, _ []string) error {
 	//if len(args) < 1 {
 	//	return errors.New("Requires [all|table_name]")
 	//}

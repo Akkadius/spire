@@ -22,6 +22,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/eqtraders"
+	"github.com/Akkadius/spire/internal/generators"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
@@ -68,8 +69,8 @@ func InitializeApplication() (App, error) {
 	databaseResolver := database.NewResolver(connections, logger, encrypter, cache)
 	userService := spire.NewUserService(databaseResolver, logger, encrypter, cache)
 	userCreateCommand := spire.NewUserCreateCommand(databaseResolver, logger, encrypter, userService)
-	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
-	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
+	generateModelsCommand := generators.NewModelGeneratorCommand(db, logger)
+	generateControllersCommand := generators.NewControllerGeneratorCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
 	authController := controllers.NewAuthController(databaseResolver, logger, userService, cache)
 	meController := controllers.NewMeController()
@@ -333,11 +334,11 @@ func InitializeApplication() (App, error) {
 	server := http.NewServer(logger, router, processManagement)
 	httpServeCommand := cmd.NewHttpServeCommand(logger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router, logger)
-	generateConfigurationCommand := cmd.NewGenerateConfigurationCommand(databaseResolver, logger)
+	generateConfigurationCommand := generators.NewGenerateConfigurationCommand(databaseResolver, logger)
 	migrateCommand := spire.NewMigrateCommand(connections, logger)
 	parseCommand := questapi.NewParseCommand(logger, parseService)
 	exampleTestCommand := questapi.NewExampleTestCommand(logger, questExamplesGithubSourcer)
-	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
+	generateRaceModelMapsCommand := generators.NewRaceModelMapsCommand(logger)
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(logger, pathManagement)
 	initCommand := spire.NewInitCommand(logger, init)

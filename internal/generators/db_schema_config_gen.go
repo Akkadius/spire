@@ -13,13 +13,13 @@ import (
 	"strings"
 )
 
-type GenerateDbSchemaConfig struct {
+type DbSchemaConfig struct {
 	db     *sql.DB
 	logger *logrus.Logger
 }
 
-func NewGenerateDbSchemaConfig(db *sql.DB, logger *logrus.Logger) *GenerateDbSchemaConfig {
-	return &GenerateDbSchemaConfig{db: db, logger: logger}
+func NewDbSchemaConfig(db *sql.DB, logger *logrus.Logger) *DbSchemaConfig {
+	return &DbSchemaConfig{db: db, logger: logger}
 }
 
 const (
@@ -39,7 +39,7 @@ type DbSchemaRowResult struct {
 }
 
 // Generate db schema config
-func (c *GenerateDbSchemaConfig) Generate(dbName string) error {
+func (c *DbSchemaConfig) Generate(dbName string) error {
 	rows, err := c.db.Query(
 		fmt.Sprintf(
 			`
@@ -126,7 +126,7 @@ func (c *GenerateDbSchemaConfig) Generate(dbName string) error {
 	return nil
 }
 
-func (c *GenerateDbSchemaConfig) GenerateKeys() error {
+func (c *DbSchemaConfig) GenerateKeys() error {
 	keys, err := getDbTableKeys()
 	if err != nil {
 		c.logger.Fatal(err)
@@ -243,7 +243,7 @@ func GetDatabaseTables() []string {
 		if strings.Contains("spire_", table) {
 			continue
 		}
-		
+
 		tables = append(tables, table)
 	}
 	return tables

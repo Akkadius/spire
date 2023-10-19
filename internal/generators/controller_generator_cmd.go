@@ -1,8 +1,7 @@
-package cmd
+package generators
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/internal/generators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -11,18 +10,18 @@ import (
 	"strings"
 )
 
-type GenerateControllersCommand struct {
+type ControllerGeneratorCmd struct {
 	db      *gorm.DB
 	logger  *logrus.Logger
 	command *cobra.Command
 }
 
-func (g *GenerateControllersCommand) Command() *cobra.Command {
+func (g *ControllerGeneratorCmd) Command() *cobra.Command {
 	return g.command
 }
 
-func NewGenerateControllersCommand(db *gorm.DB, logger *logrus.Logger) *GenerateControllersCommand {
-	i := &GenerateControllersCommand{
+func NewControllerGeneratorCommand(db *gorm.DB, logger *logrus.Logger) *ControllerGeneratorCmd {
+	i := &ControllerGeneratorCmd{
 		db:     db,
 		logger: logger,
 		command: &cobra.Command{
@@ -38,12 +37,12 @@ func NewGenerateControllersCommand(db *gorm.DB, logger *logrus.Logger) *Generate
 }
 
 // Handle implementation of the Command interface
-func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
+func (g *ControllerGeneratorCmd) Handle(_ *cobra.Command, args []string) {
 	//plural := pluralize.NewClient()
 
 	g.writeTypesFile()
 
-	for table, keys := range generators.GetDbSchemaKeysConfig() {
+	for table, keys := range GetDbSchemaKeysConfig() {
 		if len(args) > 0 && table != args[0] {
 			continue
 		}
@@ -56,8 +55,8 @@ func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 			if isKey {
 				fmt.Printf("Generating models and controllers for [%v]\n", table)
 
-				generators.NewGenerateController(
-					generators.GenerateControllerContext{
+				NewControllerGenerator(
+					GenerateControllerContext{
 						EntityName: table,
 					},
 					g.logger,
@@ -66,14 +65,14 @@ func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 		}
 	}
 
-	generators.NewSyncControllersToInjector(g.logger).Sync()
+	NewSyncControllersToInjector(g.logger).Sync()
 }
 
-func (g *GenerateControllersCommand) Validate(_ *cobra.Command, _ []string) error {
+func (g *ControllerGeneratorCmd) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }
 
-func (g *GenerateControllersCommand) writeTypesFile() {
+func (g *ControllerGeneratorCmd) writeTypesFile() {
 	b, err := ioutil.ReadFile("./internal/generators/templates/crud_controller_types.go")
 	if err != nil {
 		g.logger.Fatal(err)

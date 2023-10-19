@@ -1,28 +1,27 @@
-package cmd
+package generators
 
 import (
 	"github.com/Akkadius/spire/internal/database"
-	"github.com/Akkadius/spire/internal/generators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"os"
 )
 
-type GenerateConfigurationCommand struct {
+type ConfigurationCommand struct {
 	db      *database.Resolver
 	logger  *logrus.Logger
 	command *cobra.Command
 }
 
-func (c *GenerateConfigurationCommand) Command() *cobra.Command {
+func (c *ConfigurationCommand) Command() *cobra.Command {
 	return c.command
 }
 
 func NewGenerateConfigurationCommand(
 	db *database.Resolver,
 	logger *logrus.Logger,
-) *GenerateConfigurationCommand {
-	i := &GenerateConfigurationCommand{
+) *ConfigurationCommand {
+	i := &ConfigurationCommand{
 		db:     db,
 		logger: logger,
 		command: &cobra.Command{
@@ -36,25 +35,25 @@ func NewGenerateConfigurationCommand(
 	return i
 }
 
-func (c *GenerateConfigurationCommand) Handle(_ *cobra.Command, _ []string) {
+func (c *ConfigurationCommand) Handle(_ *cobra.Command, _ []string) {
 	db, err := c.db.GetEqemuDb().DB()
 	if err != nil {
 		c.logger.Fatal(err)
 	}
 
-	if err := generators.NewGenerateDbSchemaConfig(
+	if err := NewDbSchemaConfig(
 		db,
 		c.logger,
 	).Generate(os.Getenv("MYSQL_EQEMU_DATABASE")); err != nil {
 		c.logger.Fatal(err)
 	}
 
-	if err := generators.NewGenerateDbSchemaConfig(db, c.logger).GenerateKeys(); err != nil {
+	if err := NewDbSchemaConfig(db, c.logger).GenerateKeys(); err != nil {
 		c.logger.Fatal(err)
 	}
 
 }
 
-func (c *GenerateConfigurationCommand) Validate(_ *cobra.Command, _ []string) error {
+func (c *ConfigurationCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqtraders"
+	"github.com/Akkadius/spire/internal/generators"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	_ "github.com/go-sql-driver/mysql"
@@ -17,15 +18,15 @@ var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
 	cmd.NewAdminPingOcculus,
 	spire.NewUserCreateCommand,
-	cmd.NewGenerateModelsCommand,
-	cmd.NewGenerateControllersCommand,
+	generators.NewModelGeneratorCommand,
+	generators.NewControllerGeneratorCommand,
 	cmd.NewHttpServeCommand,
 	questapi.NewParseCommand,
 	cmd.NewRoutesListCommand,
-	cmd.NewGenerateConfigurationCommand,
+	generators.NewGenerateConfigurationCommand,
 	spire.NewMigrateCommand,
 	questapi.NewExampleTestCommand,
-	cmd.NewGenerateRaceModelMapsCommand,
+	generators.NewRaceModelMapsCommand,
 	cmd.NewTestFilesystemCommand,
 	spire.NewInitCommand,
 	spire.NewUserChangePasswordCommand,
@@ -44,15 +45,15 @@ func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
 	adminPingOcculus *cmd.AdminPingOcculus,
 	userCreateCommand *spire.UserCreateCommand,
-	generateModelsCommand *cmd.GenerateModelsCommand,
-	generateControllersCommand *cmd.GenerateControllersCommand,
+	generateModelsCommand *generators.ModelGeneratorCommand,
+	generateControllersCommand *generators.ControllerGeneratorCmd,
 	httpServeCommand *cmd.HttpServeCommand,
 	routesListCommand *cmd.RoutesListCommand,
-	generateConfigurationCommand *cmd.GenerateConfigurationCommand,
+	generateConfigurationCommand *generators.ConfigurationCommand,
 	spireMigrateCommand *spire.MigrateCommand,
 	questApiParseCommand *questapi.ParseCommand,
 	questExampleTestCommand *questapi.ExampleTestCommand,
-	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
+	generateRaceModelMapsCommand *generators.RaceModelMapsCommand,
 	changelogCmd *eqemuchangelog.ChangelogCommand,
 	testFilesystemCmd *cmd.TestFilesystemCommand,
 	spireInstallCmd *spire.InitCommand,

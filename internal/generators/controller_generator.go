@@ -17,14 +17,14 @@ type GenerateControllerContext struct {
 	RelationshipsComment string
 }
 
-type GenerateController struct {
+type ControllerGenerator struct {
 	options   GenerateControllerContext
 	logger    *logrus.Logger
 	pluralize *pluralize.Client
 }
 
-func NewGenerateController(options GenerateControllerContext, logger *logrus.Logger) *GenerateController {
-	return &GenerateController{
+func NewControllerGenerator(options GenerateControllerContext, logger *logrus.Logger) *ControllerGenerator {
+	return &ControllerGenerator{
 		options:   options,
 		logger:    logger,
 		pluralize: pluralize.NewClient(),
@@ -51,7 +51,7 @@ const (
 	crudControllerPath = "./internal/http/crudcontrollers/"
 )
 
-func (gc *GenerateController) Generate() {
+func (gc *ControllerGenerator) Generate() {
 	keyName := ""
 	keys := GetDbSchemaKeysConfigTable(gc.options.EntityName)
 

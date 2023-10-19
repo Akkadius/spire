@@ -1,4 +1,4 @@
-package cmd
+package generators
 
 import (
 	"encoding/json"
@@ -13,12 +13,12 @@ import (
 	"strings"
 )
 
-type GenerateRaceModelMapsCommand struct {
+type RaceModelMapsCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
 }
 
-func (c *GenerateRaceModelMapsCommand) Command() *cobra.Command {
+func (c *RaceModelMapsCommand) Command() *cobra.Command {
 	return c.command
 }
 
@@ -64,8 +64,8 @@ type RaceData struct {
 	Race []RaceEntry `json:"races"`
 }
 
-func NewGenerateRaceModelMapsCommand(logger *logrus.Logger) *GenerateRaceModelMapsCommand {
-	i := &GenerateRaceModelMapsCommand{
+func NewRaceModelMapsCommand(logger *logrus.Logger) *RaceModelMapsCommand {
+	i := &RaceModelMapsCommand{
 		logger: logger,
 		command: &cobra.Command{
 			Use:   "generate:race-model-maps",
@@ -80,7 +80,7 @@ func NewGenerateRaceModelMapsCommand(logger *logrus.Logger) *GenerateRaceModelMa
 }
 
 // Handle implementation of the Command interface
-func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
+func (c *RaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 	rd := RaceData{}
 
 	contents := c.FetchAndCache("http://www.shendare.com/EQ/Emu/EQRI/RoF2_EQRaces.htm", "races.html")
@@ -323,11 +323,11 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 }
 
 // Validate implementation of the Command interface
-func (c *GenerateRaceModelMapsCommand) Validate(_ *cobra.Command, _ []string) error {
+func (c *RaceModelMapsCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }
 
-func (c *GenerateRaceModelMapsCommand) FetchAndCache(url string, file string) string {
+func (c *RaceModelMapsCommand) FetchAndCache(url string, file string) string {
 	// cache file
 	cacheFile := fmt.Sprintf("%s/%s", os.TempDir(), file)
 
@@ -370,7 +370,7 @@ func (c *GenerateRaceModelMapsCommand) FetchAndCache(url string, file string) st
 	return string(body)
 }
 
-func (c *GenerateRaceModelMapsCommand) GetStringInBetween(value string, a string, b string) string {
+func (c *RaceModelMapsCommand) GetStringInBetween(value string, a string, b string) string {
 	firstSplit := strings.Split(value, a)
 	if len(firstSplit) > 1 {
 		secondSplit := strings.Split(firstSplit[1], b)
@@ -382,7 +382,7 @@ func (c *GenerateRaceModelMapsCommand) GetStringInBetween(value string, a string
 	return ""
 }
 
-func (c *GenerateRaceModelMapsCommand) GetMinMaxValues(between string) (int, int) {
+func (c *RaceModelMapsCommand) GetMinMaxValues(between string) (int, int) {
 	if strings.Contains(between, "-") {
 		split := strings.Split(between, "-")
 		if len(split) > 0 {
