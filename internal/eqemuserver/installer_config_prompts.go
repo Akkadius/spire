@@ -110,7 +110,7 @@ func (a *Installer) checkInstallConfig() {
 	// check if we are using an existing mysql install
 	useExistingMysqlInstall := strings.Contains(strings.ToLower(useExistingMysqlInstallPrompt), "y")
 	if useExistingMysqlInstall {
-		a.logger.Infof("Using existing MySQL install, please specify your MySQL connection details.")
+		fmt.Printf("Using existing MySQL install, please specify your MySQL connection details.")
 
 		// prompt: mysql host
 		mysqlHost, err := (&promptui.Prompt{
@@ -163,7 +163,7 @@ func (a *Installer) checkInstallConfig() {
 		}
 
 		// validate the mysql connection
-		a.logger.Infof("Validating MySQL connection...")
+		fmt.Printf("Validating MySQL connection...")
 		err = a.validateMysqlConnection(
 			mysqlHost,
 			mysqlPort,
@@ -329,24 +329,24 @@ func (a *Installer) loadInstallConfigIfExists() bool {
 		installConfigFile = file
 	}
 
-	a.logger.Infof("Install config file already exists, loading it")
+	fmt.Printf("Install config file already exists, loading it\n")
 	// get contents of install config file
 	installConfigContents, err := os.ReadFile(installConfigFile)
 	if err != nil {
 		a.logger.Fatalf("could not read install config file: %v", err)
 	}
 
-	a.logger.Infof("----------------------------------------\n")
-	a.logger.Infof("%v\n", installConfigFile)
-	a.logger.Infof("----------------------------------------\n")
-	a.logger.Infof("")
+	fmt.Printf("----------------------------------------\n")
+	fmt.Printf("%v\n", installConfigFile)
+	fmt.Printf("----------------------------------------\n")
+	fmt.Printf("\n")
 
 	// print install config contents
 	for _, s := range strings.Split(string(installConfigContents), "\n") {
-		a.logger.Infof("%v", s)
+		fmt.Printf("%v\n", s)
 	}
 
-	a.logger.Infof("----------------------------------------\n")
+	fmt.Printf("----------------------------------------\n")
 
 	// mysql username
 	useExistingConfig, _ := (&promptui.Prompt{
@@ -357,7 +357,7 @@ func (a *Installer) loadInstallConfigIfExists() bool {
 
 	// confirmation check
 	if strings.Contains(strings.ToLower(useExistingConfig), "y") || len(useExistingConfig) == 0 {
-		a.logger.Infof("Using existing install config")
+		fmt.Printf("Using existing install config")
 
 		// load install config contents into struct
 		err = yaml.Unmarshal(installConfigContents, &a.installConfig)
