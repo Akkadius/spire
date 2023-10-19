@@ -15,14 +15,14 @@ import (
 type Controller struct {
 	db        *database.Resolver
 	logger    *logrus.Logger
-	spireuser *UserService
+	spireuser *User
 	crypt     *encryption.Encrypter
 }
 
 func NewController(
 	db *database.Resolver,
 	logger *logrus.Logger,
-	spireuser *UserService,
+	spireuser *User,
 	crypt *encryption.Encrypter,
 ) *Controller {
 	return &Controller{

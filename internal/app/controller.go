@@ -1,4 +1,4 @@
-package controllers
+package app
 
 import (
 	"encoding/json"
@@ -15,24 +15,24 @@ import (
 	"runtime"
 )
 
-// AppController is the controller for the app
-type AppController struct {
+// Controller is the controller for the app
+type Controller struct {
 	cache     *gocache.Cache
 	logger    *logrus.Logger
 	spireinit *spire.Init
-	spireuser *user.UserService
+	spireuser *user.User
 	settings  *spire.Settings
 }
 
-// NewAppController returns a new app controller
-func NewAppController(
+// NewController returns a new app controller
+func NewController(
 	cache *gocache.Cache,
 	logger *logrus.Logger,
 	spireinit *spire.Init,
-	spireuser *user.UserService,
+	spireuser *user.User,
 	settings *spire.Settings,
-) *AppController {
-	return &AppController{
+) *Controller {
+	return &Controller{
 		cache:     cache,
 		logger:    logger,
 		spireinit: spireinit,
@@ -42,7 +42,7 @@ func NewAppController(
 }
 
 // Routes returns the routes for the app controller
-func (d *AppController) Routes() []*routes.Route {
+func (d *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "app/onboarding-info", d.getOnboardingInfo, nil),
 		routes.RegisterRoute(http.MethodPost, "app/onboard-initialize", d.initializeApp, nil),
@@ -52,7 +52,7 @@ func (d *AppController) Routes() []*routes.Route {
 	}
 }
 
-func (d *AppController) changelog(c echo.Context) error {
+func (d *Controller) changelog(c echo.Context) error {
 	changelog, _ := d.cache.Get("changelog")
 	return c.JSON(200, echo.Map{"data": changelog})
 }
@@ -82,7 +82,7 @@ type PackageJson struct {
 }
 
 // env returns the environment variables for the app
-func (d *AppController) env(c echo.Context) error {
+func (d *Controller) env(c echo.Context) error {
 	data, _ := d.cache.Get("packageJson")
 	pJson, ok := data.([]byte)
 	if ok {
@@ -110,7 +110,7 @@ func (d *AppController) env(c echo.Context) error {
 }
 
 // getOnboardingInfo is used to get the spireinit info
-func (d *AppController) getOnboardingInfo(c echo.Context) error {
+func (d *Controller) getOnboardingInfo(c echo.Context) error {
 	return c.JSON(http.StatusOK,
 		echo.Map{
 			"data": echo.Map{
@@ -122,7 +122,7 @@ func (d *AppController) getOnboardingInfo(c echo.Context) error {
 }
 
 // initializeApp is used to initialize the app
-func (d *AppController) initializeApp(c echo.Context) error {
+func (d *Controller) initializeApp(c echo.Context) error {
 	r := new(spire.InitAppRequest)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -140,7 +140,7 @@ func (d *AppController) initializeApp(c echo.Context) error {
 // sync is used to sync the db name
 // used for local setups
 // eventually replace this with something better
-func (d *AppController) sync(c echo.Context) error {
+func (d *Controller) sync(c echo.Context) error {
 	d.spireinit.SyncDbName()
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})

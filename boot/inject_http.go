@@ -2,6 +2,7 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/analytics"
+	"github.com/Akkadius/spire/internal/app"
 	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auth"
 	"github.com/Akkadius/spire/internal/backup"
@@ -43,9 +44,8 @@ var httpSet = wire.NewSet(
 	controllers.NewConnectionsController,
 	controllers.NewMeController,
 	auth.NewController,
-	controllers.NewDocsController,
 	questapi.NewController,
-	controllers.NewAppController,
+	app.NewController,
 	controllers.NewQueryController,
 	eqemuanalytics.NewController,
 	eqemuanalytics.NewAuthedController,
@@ -180,9 +180,8 @@ func provideControllers(
 	me *controllers.MeController,
 	analytics *analytics.Controller,
 	connections *controllers.ConnectionsController,
-	docs *controllers.DocsController,
 	quest *questapi.Controller,
-	app *controllers.AppController,
+	app *app.Controller,
 	query *controllers.QueryController,
 	clientFilesController *clientfiles.Controller,
 	staticMaps *staticmaps.StaticMapController,
@@ -211,7 +210,6 @@ func provideControllers(
 			analytics,
 			connections,
 			hello,
-			docs,
 			query,
 		},
 		v1controllers: []routes.Controller{

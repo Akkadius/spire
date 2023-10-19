@@ -43,7 +43,7 @@ var serviceSet = wire.NewSet(
 	assets.NewSpireAssets,
 	eqemuchangelog.NewChangelog,
 	eqemuanalytics.NewReleases,
-	user.NewUserService,
+	user.NewUser,
 	spire.NewSettings,
 	spire.NewInit,
 	occulus.NewProxy,

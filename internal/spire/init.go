@@ -29,7 +29,7 @@ type Init struct {
 	cache                     *gocache.Cache
 	settings                  *Settings
 	crypt                     *encryption.Encrypter
-	spireuser                 *user.UserService
+	spireuser                 *user.User
 }
 
 func NewInit(
@@ -40,7 +40,7 @@ func NewInit(
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
 	dbConnectionCreateService *connection.Create,
-	spireuser *user.UserService,
+	spireuser *user.User,
 ) *Init {
 	i := &Init{
 		connections:               connections,

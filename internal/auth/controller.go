@@ -21,13 +21,13 @@ type Controller struct {
 	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
 	cache  *gocache.Cache
-	user   *user.UserService
+	user   *user.User
 }
 
 func NewController(
 	db *database.Resolver,
 	logger *logrus.Logger,
-	user *user.UserService,
+	user *user.User,
 	cache *gocache.Cache,
 ) *Controller {
 	return &Controller{

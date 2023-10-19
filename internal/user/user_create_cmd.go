@@ -14,14 +14,14 @@ type CreateCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
-	user    *UserService
+	user    *User
 }
 
 func (c *CreateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *UserService) *CreateCommand {
+func NewCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *User) *CreateCommand {
 	i := &CreateCommand{
 		db:     db,
 		logger: logger,

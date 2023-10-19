@@ -12,7 +12,7 @@ type ChangePasswordCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
-	user    *UserService
+	user    *User
 }
 
 func (c *ChangePasswordCommand) Command() *cobra.Command {
@@ -23,7 +23,7 @@ func NewChangePasswordCommand(
 	db *database.Resolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
-	user *UserService,
+	user *User,
 ) *ChangePasswordCommand {
 	i := &ChangePasswordCommand{
 		db:     db,
