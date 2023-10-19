@@ -1,4 +1,4 @@
-package cmd
+package spire
 
 import (
 	"github.com/Akkadius/spire/internal/occulus"
@@ -6,24 +6,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// SpireOcculusUpdateCommand is the command to update Occulus
-type SpireOcculusUpdateCommand struct {
+// OcculusUpdateCommand is the command to update Occulus
+type OcculusUpdateCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
 	occulus *occulus.ProcessManagement
 }
 
 // Command implementation of the Command interface
-func (c *SpireOcculusUpdateCommand) Command() *cobra.Command {
+func (c *OcculusUpdateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-// NewSpireOcculusUpdateCommand creates a new spire:init command
-func NewSpireOcculusUpdateCommand(
+// NewOcculusUpdateCommand creates a new spire:init command
+func NewOcculusUpdateCommand(
 	logger *logrus.Logger,
 	occulus *occulus.ProcessManagement,
-) *SpireOcculusUpdateCommand {
-	i := &SpireOcculusUpdateCommand{
+) *OcculusUpdateCommand {
+	i := &OcculusUpdateCommand{
 		logger:  logger,
 		occulus: occulus,
 		command: &cobra.Command{
@@ -38,7 +38,7 @@ func NewSpireOcculusUpdateCommand(
 }
 
 // Handle implementation of the Command interface
-func (c *SpireOcculusUpdateCommand) Handle(_ *cobra.Command, args []string) {
+func (c *OcculusUpdateCommand) Handle(_ *cobra.Command, args []string) {
 	path, err := c.occulus.FetchOcculusAndGetBinaryPath()
 	if err != nil {
 		c.logger.Error(err)

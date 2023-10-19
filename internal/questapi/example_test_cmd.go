@@ -1,29 +1,28 @@
-package cmd
+package questapi
 
 import (
 	"errors"
 	"fmt"
-	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"strings"
 )
 
-type QuestExampleTestCommand struct {
+type ExampleTestCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
-	sourcer *questapi.QuestExamplesGithubSourcer
+	sourcer *QuestExamplesGithubSourcer
 }
 
-func (c *QuestExampleTestCommand) Command() *cobra.Command {
+func (c *ExampleTestCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewQuestExampleTestCommand(
+func NewExampleTestCommand(
 	logger *logrus.Logger,
-	sourcer *questapi.QuestExamplesGithubSourcer,
-) *QuestExampleTestCommand {
-	i := &QuestExampleTestCommand{
+	sourcer *QuestExamplesGithubSourcer,
+) *ExampleTestCommand {
+	i := &ExampleTestCommand{
 		logger:  logger,
 		sourcer: sourcer,
 		command: &cobra.Command{
@@ -39,7 +38,7 @@ func NewQuestExampleTestCommand(
 }
 
 // Handle implementation of the Command interface
-func (c *QuestExampleTestCommand) Handle(_ *cobra.Command, args []string) {
+func (c *ExampleTestCommand) Handle(_ *cobra.Command, args []string) {
 	searchTerms := []string{}
 	if len(args) > 0 {
 		searchTerms = strings.Split(args[0], ",")
@@ -57,7 +56,7 @@ func (c *QuestExampleTestCommand) Handle(_ *cobra.Command, args []string) {
 	fmt.Println(result)
 }
 
-func (c *QuestExampleTestCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *ExampleTestCommand) Validate(_ *cobra.Command, args []string) error {
 	if len(args) < 2 {
 		return errors.New("args required [methods] [language]")
 	}

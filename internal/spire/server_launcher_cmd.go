@@ -1,4 +1,4 @@
-package cmd
+package spire
 
 import (
 	"fmt"
@@ -13,21 +13,21 @@ import (
 	"time"
 )
 
-type SpireServerLauncherCommand struct {
+type ServerLauncherCommand struct {
 	logger   *logrus.Logger
 	command  *cobra.Command
 	pathmgmt *pathmgmt.PathManagement
 }
 
-func (c *SpireServerLauncherCommand) Command() *cobra.Command {
+func (c *ServerLauncherCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewSpireServerLauncherCommand(
+func NewServerLauncherCommand(
 	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
-) *SpireServerLauncherCommand {
-	i := &SpireServerLauncherCommand{
+) *ServerLauncherCommand {
+	i := &ServerLauncherCommand{
 		logger:   logger,
 		pathmgmt: pathmgmt,
 		command: &cobra.Command{
@@ -42,7 +42,7 @@ func NewSpireServerLauncherCommand(
 }
 
 // Handle implementation of the Command interface
-func (c *SpireServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
+func (c *ServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 	if len(args) == 0 {
 		_ = c.command.Help()
 		return

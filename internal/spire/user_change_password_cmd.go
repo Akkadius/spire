@@ -1,9 +1,8 @@
-package cmd
+package spire
 
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
-	"github.com/Akkadius/spire/internal/spire"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +12,7 @@ type UserChangePasswordCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
-	user    *spire.UserService
+	user    *UserService
 }
 
 func (c *UserChangePasswordCommand) Command() *cobra.Command {
@@ -24,7 +23,7 @@ func NewUserChangePasswordCommand(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
-	user *spire.UserService,
+	user *UserService,
 ) *UserChangePasswordCommand {
 	i := &UserChangePasswordCommand{
 		db:     db,

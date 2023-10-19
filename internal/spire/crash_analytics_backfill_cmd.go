@@ -1,4 +1,4 @@
-package cmd
+package spire
 
 import (
 	"fmt"
@@ -12,23 +12,23 @@ import (
 	"os"
 )
 
-type SpireCrashAnalyticsFingerprintBackfillCommand struct {
+type CrashAnalyticsFingerprintBackfillCommand struct {
 	logger   *logrus.Logger
 	command  *cobra.Command
 	db       *database.DatabaseResolver
 	pathmgmt *pathmgmt.PathManagement
 }
 
-func (c *SpireCrashAnalyticsFingerprintBackfillCommand) Command() *cobra.Command {
+func (c *CrashAnalyticsFingerprintBackfillCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewSpireCrashAnalyticsCommand(
+func NewCrashAnalyticsCommand(
 	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
 	db *database.DatabaseResolver,
-) *SpireCrashAnalyticsFingerprintBackfillCommand {
-	i := &SpireCrashAnalyticsFingerprintBackfillCommand{
+) *CrashAnalyticsFingerprintBackfillCommand {
+	i := &CrashAnalyticsFingerprintBackfillCommand{
 		logger:   logger,
 		pathmgmt: pathmgmt,
 		db:       db,
@@ -48,7 +48,7 @@ func NewSpireCrashAnalyticsCommand(
 	return i
 }
 
-func (c *SpireCrashAnalyticsFingerprintBackfillCommand) Handle(_ *cobra.Command, args []string) {
+func (c *CrashAnalyticsFingerprintBackfillCommand) Handle(_ *cobra.Command, args []string) {
 	fmt.Println("Running crash fingerprint backfill process...")
 
 	// query the database for all crashes

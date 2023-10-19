@@ -1,28 +1,27 @@
-package cmd
+package questapi
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"time"
 )
 
-type QuestApiParseCommand struct {
+type ParseCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
-	parser  *questapi.ParseService
+	parser  *ParseService
 }
 
-func (c *QuestApiParseCommand) Command() *cobra.Command {
+func (c *ParseCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewQuestApiParseCommand(
+func NewParseCommand(
 	logger *logrus.Logger,
-	parser *questapi.ParseService,
-) *QuestApiParseCommand {
-	i := &QuestApiParseCommand{
+	parser *ParseService,
+) *ParseCommand {
+	i := &ParseCommand{
 		parser: parser,
 		logger: logger,
 		command: &cobra.Command{
@@ -38,7 +37,7 @@ func NewQuestApiParseCommand(
 }
 
 // Handle implementation of the Command interface
-func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
+func (c *ParseCommand) Handle(_ *cobra.Command, args []string) {
 	start := time.Now()
 
 	_ = c.parser.Parse(false)
@@ -76,7 +75,7 @@ func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
 }
 
 // Validate
-func (c *QuestApiParseCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *ParseCommand) Validate(_ *cobra.Command, args []string) error {
 	// Validate
 
 	return nil

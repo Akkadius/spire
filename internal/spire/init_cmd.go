@@ -1,20 +1,19 @@
-package cmd
+package spire
 
 import (
-	"github.com/Akkadius/spire/internal/spire"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"runtime"
 )
 
-type SpireInitCommand struct {
+type InitCommand struct {
 	logger    *logrus.Logger
 	command   *cobra.Command
-	spireinit *spire.Init
+	spireinit *Init
 }
 
-func (c *SpireInitCommand) Command() *cobra.Command {
+func (c *InitCommand) Command() *cobra.Command {
 	return c.command
 }
 
@@ -23,12 +22,12 @@ var flagAuthEnabled bool
 var compileServer bool
 var compileLocation string
 
-// NewSpireInitCommand creates a new spire:init command
-func NewSpireInitCommand(
+// NewInitCommand creates a new spire:init command
+func NewInitCommand(
 	logger *logrus.Logger,
-	spireinit *spire.Init,
-) *SpireInitCommand {
-	i := &SpireInitCommand{
+	spireinit *Init,
+) *InitCommand {
+	i := &InitCommand{
 		logger:    logger,
 		spireinit: spireinit,
 		command: &cobra.Command{
@@ -48,7 +47,7 @@ func NewSpireInitCommand(
 }
 
 // Handle implementation of the Command interface
-func (c *SpireInitCommand) Handle(_ *cobra.Command, args []string) {
+func (c *InitCommand) Handle(_ *cobra.Command, args []string) {
 	username := args[0]
 	password := args[1]
 
@@ -78,7 +77,7 @@ func (c *SpireInitCommand) Handle(_ *cobra.Command, args []string) {
 
 	// Run the spire:init command
 	err = c.spireinit.InitApp(
-		&spire.InitAppRequest{
+		&InitAppRequest{
 			AuthEnabled:   authEnabled,
 			Username:      username,
 			Password:      password,

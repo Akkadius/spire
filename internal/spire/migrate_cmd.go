@@ -1,4 +1,4 @@
-package cmd
+package spire
 
 import (
 	"github.com/Akkadius/spire/internal/database"
@@ -6,23 +6,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type SpireMigrateCommand struct {
+type MigrateCommand struct {
 	connections *database.Connections
 	logger      *logrus.Logger
 	command     *cobra.Command
 }
 
-func (c *SpireMigrateCommand) Command() *cobra.Command {
+func (c *MigrateCommand) Command() *cobra.Command {
 	return c.command
 }
 
 var dropTables bool
 
-func NewSpireMigrateCommand(
+func NewMigrateCommand(
 	connections *database.Connections,
 	logger *logrus.Logger,
-) *SpireMigrateCommand {
-	i := &SpireMigrateCommand{
+) *MigrateCommand {
+	i := &MigrateCommand{
 		connections: connections,
 		logger:      logger,
 		command: &cobra.Command{
@@ -40,11 +40,11 @@ func NewSpireMigrateCommand(
 }
 
 // Handle implementation of the Command interface
-func (c *SpireMigrateCommand) Handle(_ *cobra.Command, args []string) {
+func (c *MigrateCommand) Handle(_ *cobra.Command, args []string) {
 	c.connections.SpireMigrate(dropTables)
 }
 
-func (c *SpireMigrateCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *MigrateCommand) Validate(_ *cobra.Command, args []string) error {
 	// Validate
 
 	return nil

@@ -1,8 +1,7 @@
-package cmd
+package eqemuserver
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
@@ -19,34 +18,38 @@ import (
 	"strings"
 )
 
-type EQEmuServerUpdateCommand struct {
+type UpdateCommand struct {
 	logger         *logrus.Logger
 	command        *cobra.Command
 	serverconfig   *eqemuserverconfig.Config
 	settings       *spire.Settings
 	pathmgmt       *pathmgmt.PathManagement
-	processmanager *eqemuserver.ProcessManager
-	updater        *eqemuserver.Updater
+	processmanager *ProcessManager
+	updater        *Updater
 }
 
-func (c *EQEmuServerUpdateCommand) Command() *cobra.Command {
+func (c *UpdateCommand) Command() *cobra.Command {
 	return c.command
 }
 
 var useReleaseBinaries bool
 var auto bool
 
-// NewEQEmuServerUpdateCommand creates a new spire:init command
-func NewEQEmuServerUpdateCommand(
+// var flagAuthEnabled bool
+var compileServer bool
+var compileLocation string
+
+// NewUpdateCommand creates a new spire:init command
+func NewUpdateCommand(
 	logger *logrus.Logger,
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
-	processmanager *eqemuserver.ProcessManager,
-	updater *eqemuserver.Updater,
+	processmanager *ProcessManager,
+	updater *Updater,
 
-) *EQEmuServerUpdateCommand {
-	i := &EQEmuServerUpdateCommand{
+) *UpdateCommand {
+	i := &UpdateCommand{
 		logger:         logger,
 		serverconfig:   serverconfig,
 		settings:       settings,
@@ -72,7 +75,7 @@ func NewEQEmuServerUpdateCommand(
 	return i
 }
 
-func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
+func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 	if useReleaseBinaries {
 		fmt.Println("Setting to use release binaries")
 		c.settings.SetSetting(spire.SettingUpdateType, spire.UpdateTypeRelease)
@@ -271,6 +274,6 @@ func (c *EQEmuServerUpdateCommand) Handle(_ *cobra.Command, args []string) {
 	}
 }
 
-func (c *EQEmuServerUpdateCommand) LineBreak() {
+func (c *UpdateCommand) LineBreak() {
 	fmt.Println(strings.Repeat("-", 40))
 }

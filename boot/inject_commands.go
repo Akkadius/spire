@@ -3,7 +3,10 @@ package boot
 import (
 	"github.com/Akkadius/spire/internal/console/cmd"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqtraders"
+	"github.com/Akkadius/spire/internal/questapi"
+	"github.com/Akkadius/spire/internal/spire"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
@@ -13,23 +16,23 @@ import (
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
 	cmd.NewAdminPingOcculus,
-	cmd.NewUserCreateCommand,
+	spire.NewUserCreateCommand,
 	cmd.NewGenerateModelsCommand,
 	cmd.NewGenerateControllersCommand,
 	cmd.NewHttpServeCommand,
-	cmd.NewQuestApiParseCommand,
+	questapi.NewParseCommand,
 	cmd.NewRoutesListCommand,
 	cmd.NewGenerateConfigurationCommand,
-	cmd.NewSpireMigrateCommand,
-	cmd.NewQuestExampleTestCommand,
+	spire.NewMigrateCommand,
+	questapi.NewExampleTestCommand,
 	cmd.NewGenerateRaceModelMapsCommand,
 	cmd.NewTestFilesystemCommand,
-	cmd.NewSpireInitCommand,
-	cmd.NewUserChangePasswordCommand,
-	cmd.NewSpireOcculusUpdateCommand,
-	cmd.NewSpireServerLauncherCommand,
-	cmd.NewSpireCrashAnalyticsCommand,
-	cmd.NewEQEmuServerUpdateCommand,
+	spire.NewInitCommand,
+	spire.NewUserChangePasswordCommand,
+	spire.NewOcculusUpdateCommand,
+	spire.NewServerLauncherCommand,
+	spire.NewCrashAnalyticsCommand,
+	eqemuserver.NewUpdateCommand,
 	eqtraders.NewScrapeCommand,
 	eqtraders.NewImportCommand,
 	eqemuchangelog.NewChangelogCommand,
@@ -40,24 +43,24 @@ var commandSet = wire.NewSet(
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
 	adminPingOcculus *cmd.AdminPingOcculus,
-	userCreateCommand *cmd.UserCreateCommand,
+	userCreateCommand *spire.UserCreateCommand,
 	generateModelsCommand *cmd.GenerateModelsCommand,
 	generateControllersCommand *cmd.GenerateControllersCommand,
 	httpServeCommand *cmd.HttpServeCommand,
 	routesListCommand *cmd.RoutesListCommand,
 	generateConfigurationCommand *cmd.GenerateConfigurationCommand,
-	spireMigrateCommand *cmd.SpireMigrateCommand,
-	questApiParseCommand *cmd.QuestApiParseCommand,
-	questExampleTestCommand *cmd.QuestExampleTestCommand,
+	spireMigrateCommand *spire.MigrateCommand,
+	questApiParseCommand *questapi.ParseCommand,
+	questExampleTestCommand *questapi.ExampleTestCommand,
 	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
 	changelogCmd *eqemuchangelog.ChangelogCommand,
 	testFilesystemCmd *cmd.TestFilesystemCommand,
-	spireInstallCmd *cmd.SpireInitCommand,
-	userChangePasswordCmd *cmd.UserChangePasswordCommand,
-	spireOcculusUpdateCmd *cmd.SpireOcculusUpdateCommand,
-	spireServerLauncherCmd *cmd.SpireServerLauncherCommand,
-	spireCrashAnalyticsCommand *cmd.SpireCrashAnalyticsFingerprintBackfillCommand,
-	eQEmuServerUpdateCommand *cmd.EQEmuServerUpdateCommand,
+	spireInstallCmd *spire.InitCommand,
+	userChangePasswordCmd *spire.UserChangePasswordCommand,
+	spireOcculusUpdateCmd *spire.OcculusUpdateCommand,
+	spireServerLauncherCmd *spire.ServerLauncherCommand,
+	spireCrashAnalyticsCommand *spire.CrashAnalyticsFingerprintBackfillCommand,
+	eQEmuServerUpdateCommand *eqemuserver.UpdateCommand,
 	scrapeEqtradersCommand *eqtraders.ScrapeCommand,
 	importEqtradersCommand *eqtraders.ImportCommand,
 ) []*cobra.Command {
