@@ -1,4 +1,4 @@
-package http
+package routes
 
 import (
 	"github.com/labstack/echo/v4"
@@ -6,8 +6,7 @@ import (
 	"sort"
 )
 
-// list internal routes
-func listRoutes(c echo.Context) error {
+func List(c echo.Context) error {
 	type Route struct {
 		Method string `json:"method"`
 		Path   string `json:"path"`

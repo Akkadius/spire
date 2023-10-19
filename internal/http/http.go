@@ -83,10 +83,10 @@ func (c *Server) Serve(port uint) error {
 	}))
 
 	e.GET("/swagger/*", docs.WrapHandler)
-	e.GET("/api/v1/routes", listRoutes)
+	e.GET("/api/v1/routes", routes.List)
 
 	// serve spa as embedded static assets
-	s := spa.NewSpirePackagedSpaService(c.logger)
+	s := spa.NewSpa(c.logger)
 	e.GET("/*", s.Spa().Handler(), middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}))
 	e.Use(s.Spa().MiddlewareHandler())
 
