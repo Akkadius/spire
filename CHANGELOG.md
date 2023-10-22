@@ -1,3 +1,11 @@
+## [3.7.2] 10/22/2023
+
+* **DiscordEQ** Add **eqemu_config.json** configuration support for legacy DiscordEQ 
+
+## [3.7.1] 10/19/2023
+
+* Installer release binary test
+
 ## [3.7.0] 10/18/2023
 
 **EQTraders** Added eq traders CLI tools to both scrape and import

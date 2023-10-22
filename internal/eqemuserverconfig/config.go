@@ -32,6 +32,15 @@ type DatabaseConfig struct {
 
 type EQEmuConfigJson struct {
 	Server struct {
+		Discord *struct {
+			Channelid    string `json:"channelid"`
+			Itemurl      string `json:"itemurl"`
+			Refreshrate  string `json:"refreshrate"`
+			Clientid     string `json:"clientid"`
+			Clientsecret string `json:"clientsecret"`
+			Serverid     string `json:"serverid"`
+			Username     string `json:"username"`
+		} `json:"discord"`
 		Zones struct {
 			Defaultstatus string `json:"defaultstatus"`
 			Ports         struct {
