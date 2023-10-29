@@ -1,3 +1,7 @@
+## [3.7.3] 10/29/2023
+
+* **DiscordEQ** Make the DiscordEQ section of **eqemu_config.json** optional
+
 ## [3.7.2] 10/22/2023
 
 * **DiscordEQ** Add **eqemu_config.json** configuration support for legacy DiscordEQ 

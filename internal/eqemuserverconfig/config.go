@@ -40,7 +40,7 @@ type EQEmuConfigJson struct {
 			Clientsecret string `json:"clientsecret"`
 			Serverid     string `json:"serverid"`
 			Username     string `json:"username"`
-		} `json:"discord"`
+		} `json:"discord,omitempty"`
 		Zones struct {
 			Defaultstatus string `json:"defaultstatus"`
 			Ports         struct {
