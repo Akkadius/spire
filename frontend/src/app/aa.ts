@@ -37,11 +37,21 @@ export class AA {
         (new DbStrApi(...SpireApi.cfg())).listDbStrs(builder.get())
       ]
     ).then(async (r) => {
-        this._aaRanks   = await r[0].data
-        this._aaAbility = await r[1].data
-        this._dbStrs    = await r[2].data.filter((e) => {
+        const aaRanks = await r[0].data
+        const aaAbils = await r[1].data
+        const dbStrs  = await r[2].data.filter((e) => {
           return e.type === 1;
         })
+
+        if (aaRanks.length > 0) {
+          this._aaRanks = aaRanks
+        }
+        if (aaAbils.length > 0) {
+          this._aaAbility = aaAbils
+        }
+        if (dbStrs.length > 0) {
+          this._dbStrs = dbStrs
+        }
       }
     );
   }

@@ -1,4 +1,4 @@
-## [3.7.4] 10/31/2023
+## [3.7.5] 10/31/2023
 
 * **Player Event Logs** Fix issue with player event log loading in some cases.
 
