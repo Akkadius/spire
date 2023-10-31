@@ -1,3 +1,7 @@
+## [3.7.4] 10/31/2023
+
+* **Player Event Logs** Fix issue with player event log loading in some cases.
+
 ## [3.7.3] 10/29/2023
 
 * **DiscordEQ** Make the DiscordEQ section of **eqemu_config.json** optional

@@ -12,7 +12,6 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"os"
 	"strings"
 	"time"
 )
@@ -44,7 +43,7 @@ func NewResolver(
 		logger:                logger,
 		crypt:                 crypt,
 		cache:                 cache,
-		contentConnectionName: os.Getenv("MYSQL_EQEMU_CONTENT_DB_CONNECTION_NAME"),
+		contentConnectionName: "eqemu_content",
 	}
 
 	// initialize ahead of time
