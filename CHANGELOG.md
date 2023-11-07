@@ -1,3 +1,7 @@
+## [3.7.6] 10/31/2023
+
+* **Spire Updater** Fix issue with Spire updater not prompting for any key to restart when there is no terminal attached
+
 ## [3.7.5] 10/31/2023
 
 * **Player Event Logs** Fix issue with player event log loading in some cases.

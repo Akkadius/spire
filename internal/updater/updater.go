@@ -191,14 +191,6 @@ func (s Service) CheckForUpdates() {
 				if err != nil {
 					log.Println(err)
 				}
-
-				fmt.Println("")
-				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
-				fmt.Println("")
-				fmt.Print("Press [Enter] to exit spire...")
-				fmt.Println("")
-				bufio.NewReader(os.Stdin).ReadBytes('\n')
-				os.Exit(0)
 			}
 
 			// windows
