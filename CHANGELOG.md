@@ -1,3 +1,7 @@
+## [3.7.7] 11/21/2023
+
+* **Server Updates** Adjust visual feedback when updating server binaries via CLI
+
 ## [3.7.6] 10/31/2023
 
 * **Spire Updater** Fix issue with Spire updater not prompting for any key to restart when there is no terminal attached

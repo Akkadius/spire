@@ -146,11 +146,18 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 	}
 	info, _ := c.updater.GetVersionInfo()
 
+	compileTime := fmt.Sprintf(" (%s %s)", info.CompileDate, info.CompileTime)
+	if info.ServerVersion == "" {
+		info.ServerVersion = "0.0.0"
+		compileTime = ""
+	}
+
 	fmt.Printf(
-		" %*s | %v\n",
+		" %*s | %v%v\n",
 		padSize,
 		"Current",
-		info.ServerVersion+" ("+info.CompileDate+" "+info.CompileTime+")",
+		info.ServerVersion,
+		compileTime,
 	)
 
 	c.LineBreak()
