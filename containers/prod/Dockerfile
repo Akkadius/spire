@@ -1,7 +1,7 @@
 #############################################
 # go workspace
 #############################################
-FROM debian:11-slim
+FROM debian:12-slim
 
 ARG PUID=1000
 ENV PUID ${PUID}
@@ -62,11 +62,11 @@ USER go
 RUN go install github.com/cosmtrek/air@latest
 RUN go install github.com/gobuffalo/packr/packr@latest
 
-#############################################
+#######################################################################
 # node
-#############################################
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo bash && \
-    sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
+#######################################################################
+RUN sudo apt-get update && sudo apt-get install -y curl sudo gnupg nodejs npm \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # Remove sudo; we needed it during build steps to make per-user installs smoother
 USER root
