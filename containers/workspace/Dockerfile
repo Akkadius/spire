@@ -1,7 +1,7 @@
 #############################################
 # go workspace
 #############################################
-FROM debian:11-slim
+FROM debian:12-slim
 
 ARG PUID=1000
 ENV PUID ${PUID}
@@ -84,11 +84,11 @@ RUN go install github.com/gobuffalo/packr/packr@v1.30.1
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.5
 RUN go install github.com/google/wire/cmd/wire@latest
 
-#############################################
+#######################################################################
 # node
-#############################################
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo bash && \
-    sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
+#######################################################################
+RUN sudo apt-get update && sudo apt-get install -y curl sudo gnupg nodejs npm \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 RUN sudo npm install -g gh-release
 RUN sudo npm install @openapitools/openapi-generator-cli -g

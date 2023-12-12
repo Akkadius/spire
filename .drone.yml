@@ -15,7 +15,7 @@ volumes:
 
 steps:
   - name: spire-build-release
-    image: akkadius/spire:go-workspace-v11
+    image: akkadius/spire:go-workspace-v12
     environment:
       GH_RELEASE_GITHUB_API_TOKEN:
         from_secret: GH_RELEASE_GITHUB_API_TOKEN
