@@ -1,3 +1,8 @@
+## [3.7.8] 12/12/2023
+
+* **Items** Fix an issue with the items page loading due to a recent starting items schema change.
+* **Items** Items search page now surfaces error to the user.
+
 ## [3.7.7] 11/21/2023
 
 * **Server Updates** Adjust visual feedback when updating server binaries via CLI

@@ -224,6 +224,14 @@
       </div>
     </div>
 
+    <info-error-banner
+      :notification="notification"
+      :error="error"
+      @dismiss-error="error = ''"
+      @dismiss-notification="notification = ''"
+      class="mt-0 pt-3"
+    />
+
     <!-- table -->
     <item-preview-table
       :items="items"
@@ -259,9 +267,11 @@ import {Zones} from "@/app/zones";
 import {Items} from "@/app/items";
 import ItemPopover from "@/components/ItemPopover.vue";
 import ContentArea from "@/components/layout/ContentArea.vue";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
   components: {
+    InfoErrorBanner,
     ContentArea,
     ItemPopover,
     DbColumnFilter,
@@ -309,6 +319,10 @@ export default {
       itemFields: [],
 
       itemTypeOptions: [],
+
+      // notification / errors
+      notification: "",
+      error: "",
     }
   },
 
@@ -671,7 +685,7 @@ export default {
       return eqClass === this.selectedClasses;
     },
 
-    listItems: function () {
+    listItems: async function () {
       this.loaded   = false;
       const builder = new SpireQueryBuilder()
       const api     = (new ItemApi(...SpireApi.cfg()))
@@ -759,13 +773,20 @@ export default {
       builder.groupBy(["id"])
       builder.limit(this.limit)
       builder.includes(Items.getRelationships())
-      api.listItems(builder.get()).then(async (result) => {
-        if (result.status === 200) {
+
+      try {
+        const r = await api.listItems(builder.get())
+        if (r.status === 200) {
           // set items to be rendered
-          this.items  = result.data
+          this.items  = r.data
           this.loaded = true;
         }
-      })
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+          this.loaded = true
+        }
+      }
     }
   }
 }

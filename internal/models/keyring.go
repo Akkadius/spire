@@ -1,8 +1,9 @@
 package models
 
 type Keyring struct {
-	CharId  int `json:"char_id" gorm:"Column:char_id"`
-	ItemId  int `json:"item_id" gorm:"Column:item_id"`
+	ID      uint `json:"id" gorm:"Column:id"`
+	CharId  int  `json:"char_id" gorm:"Column:char_id"`
+	ItemId  int  `json:"item_id" gorm:"Column:item_id"`
 }
 
 func (Keyring) TableName() string {

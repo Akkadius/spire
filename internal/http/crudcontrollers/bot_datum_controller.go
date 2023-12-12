@@ -67,7 +67,7 @@ func (e *BotDatumController) listBotData(c echo.Context) error {
 	var results []models.BotDatum
 	err := e.db.QueryContext(models.BotDatum{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *BotDatumController) getBotDataCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.BotDatum{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

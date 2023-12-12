@@ -67,7 +67,7 @@ func (e *CharacterLanguageController) listCharacterLanguages(c echo.Context) err
 	var results []models.CharacterLanguage
 	err := e.db.QueryContext(models.CharacterLanguage{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *CharacterLanguageController) getCharacterLanguagesCount(c echo.Context)
 	var count int64
 	err := e.db.QueryContext(models.CharacterLanguage{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

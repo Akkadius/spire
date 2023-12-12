@@ -67,7 +67,7 @@ func (e *CharacterBuffController) listCharacterBuffs(c echo.Context) error {
 	var results []models.CharacterBuff
 	err := e.db.QueryContext(models.CharacterBuff{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *CharacterBuffController) getCharacterBuffsCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.CharacterBuff{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

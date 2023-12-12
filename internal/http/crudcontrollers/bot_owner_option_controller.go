@@ -67,7 +67,7 @@ func (e *BotOwnerOptionController) listBotOwnerOptions(c echo.Context) error {
 	var results []models.BotOwnerOption
 	err := e.db.QueryContext(models.BotOwnerOption{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *BotOwnerOptionController) getBotOwnerOptionsCount(c echo.Context) error
 	var count int64
 	err := e.db.QueryContext(models.BotOwnerOption{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

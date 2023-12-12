@@ -67,7 +67,7 @@ func (e *CharacterInspectMessageController) listCharacterInspectMessages(c echo.
 	var results []models.CharacterInspectMessage
 	err := e.db.QueryContext(models.CharacterInspectMessage{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *CharacterInspectMessageController) getCharacterInspectMessagesCount(c e
 	var count int64
 	err := e.db.QueryContext(models.CharacterInspectMessage{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

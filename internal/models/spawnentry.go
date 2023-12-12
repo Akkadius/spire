@@ -9,6 +9,8 @@ type Spawnentry struct {
 	NpcID                  int         `json:"npc_id" gorm:"Column:npcID"`
 	Chance                 int16       `json:"chance" gorm:"Column:chance"`
 	ConditionValueFilter   int32       `json:"condition_value_filter" gorm:"Column:condition_value_filter"`
+	MinTime                int16       `json:"min_time" gorm:"Column:min_time"`
+	MaxTime                int16       `json:"max_time" gorm:"Column:max_time"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
@@ -58,9 +60,6 @@ func (Spawnentry) Relationships() []string {
 		"NpcType.AlternateCurrency.Item.Objects",
 		"NpcType.AlternateCurrency.Item.Objects.Item",
 		"NpcType.AlternateCurrency.Item.Objects.Zone",
-		"NpcType.AlternateCurrency.Item.StartingItems",
-		"NpcType.AlternateCurrency.Item.StartingItems.Item",
-		"NpcType.AlternateCurrency.Item.StartingItems.Zone",
 		"NpcType.AlternateCurrency.Item.TradeskillRecipeEntries",
 		"NpcType.AlternateCurrency.Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"NpcType.AlternateCurrency.Item.TributeLevels",
@@ -94,9 +93,6 @@ func (Spawnentry) Relationships() []string {
 		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Objects",
 		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Objects.Item",
 		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Objects.Zone",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.StartingItems",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.StartingItems.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.StartingItems.Zone",
 		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TradeskillRecipeEntries",
 		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TributeLevels",
@@ -137,9 +133,6 @@ func (Spawnentry) Relationships() []string {
 		"NpcType.Merchantlists.Items.Objects",
 		"NpcType.Merchantlists.Items.Objects.Item",
 		"NpcType.Merchantlists.Items.Objects.Zone",
-		"NpcType.Merchantlists.Items.StartingItems",
-		"NpcType.Merchantlists.Items.StartingItems.Item",
-		"NpcType.Merchantlists.Items.StartingItems.Zone",
 		"NpcType.Merchantlists.Items.TradeskillRecipeEntries",
 		"NpcType.Merchantlists.Items.TradeskillRecipeEntries.TradeskillRecipe",
 		"NpcType.Merchantlists.Items.TributeLevels",
@@ -191,9 +184,6 @@ func (Spawnentry) Relationships() []string {
 		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.Objects",
 		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.Objects.Item",
 		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.Objects.Zone",
-		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.StartingItems",
-		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.StartingItems.Item",
-		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.StartingItems.Zone",
 		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
 		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
 		"NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items.TributeLevels",
@@ -245,9 +235,6 @@ func (Spawnentry) Relationships() []string {
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects.Item",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects.Zone",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems.Zone",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.TributeLevels",

@@ -17,9 +17,7 @@ type Object struct {
 	Objectname             null.String `json:"objectname" gorm:"Column:objectname"`
 	Type                   int         `json:"type" gorm:"Column:type"`
 	Icon                   int         `json:"icon" gorm:"Column:icon"`
-	Unknown08              int32       `json:"unknown_08" gorm:"Column:unknown08"`
-	Unknown10              int32       `json:"unknown_10" gorm:"Column:unknown10"`
-	Unknown20              int         `json:"unknown_20" gorm:"Column:unknown20"`
+	SizePercentage         float32     `json:"size_percentage" gorm:"Column:size_percentage"`
 	Unknown24              int         `json:"unknown_24" gorm:"Column:unknown24"`
 	Unknown60              int         `json:"unknown_60" gorm:"Column:unknown60"`
 	Unknown64              int         `json:"unknown_64" gorm:"Column:unknown64"`
@@ -28,6 +26,8 @@ type Object struct {
 	Unknown76              int         `json:"unknown_76" gorm:"Column:unknown76"`
 	Unknown84              int         `json:"unknown_84" gorm:"Column:unknown84"`
 	Size                   float32     `json:"size" gorm:"Column:size"`
+	SolidType              int32       `json:"solid_type" gorm:"Column:solid_type"`
+	Incline                int         `json:"incline" gorm:"Column:incline"`
 	TiltX                  float32     `json:"tilt_x" gorm:"Column:tilt_x"`
 	TiltY                  float32     `json:"tilt_y" gorm:"Column:tilt_y"`
 	DisplayName            null.String `json:"display_name" gorm:"Column:display_name"`
@@ -226,9 +226,6 @@ func (Object) Relationships() []string {
 		"Item.Merchantlists.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 		"Item.ObjectContents",
 		"Item.Objects",
-		"Item.StartingItems",
-		"Item.StartingItems.Item",
-		"Item.StartingItems.Zone",
 		"Item.TradeskillRecipeEntries",
 		"Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"Item.TributeLevels",

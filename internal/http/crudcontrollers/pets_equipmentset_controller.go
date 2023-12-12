@@ -67,7 +67,7 @@ func (e *PetsEquipmentsetController) listPetsEquipmentsets(c echo.Context) error
 	var results []models.PetsEquipmentset
 	err := e.db.QueryContext(models.PetsEquipmentset{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *PetsEquipmentsetController) getPetsEquipmentsetsCount(c echo.Context) e
 	var count int64
 	err := e.db.QueryContext(models.PetsEquipmentset{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

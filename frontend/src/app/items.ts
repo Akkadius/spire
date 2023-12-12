@@ -406,8 +406,6 @@ export class Items {
       "Merchantlists.NpcTypes.Spawnentries.Spawngroup.Spawn2",
       "Objects",
       "Objects.Zone",
-      "StartingItems",
-      "StartingItems.Zone",
       "TradeskillRecipeEntries",
       "TradeskillRecipeEntries.TradeskillRecipe",
       "TributeLevels",

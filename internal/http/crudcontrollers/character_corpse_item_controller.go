@@ -67,7 +67,7 @@ func (e *CharacterCorpseItemController) listCharacterCorpseItems(c echo.Context)
 	var results []models.CharacterCorpseItem
 	err := e.db.QueryContext(models.CharacterCorpseItem{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *CharacterCorpseItemController) getCharacterCorpseItemsCount(c echo.Cont
 	var count int64
 	err := e.db.QueryContext(models.CharacterCorpseItem{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

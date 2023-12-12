@@ -67,7 +67,7 @@ func (e *CharacterBandolierController) listCharacterBandoliers(c echo.Context) e
 	var results []models.CharacterBandolier
 	err := e.db.QueryContext(models.CharacterBandolier{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -428,7 +428,7 @@ func (e *CharacterBandolierController) getCharacterBandoliersCount(c echo.Contex
 	var count int64
 	err := e.db.QueryContext(models.CharacterBandolier{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

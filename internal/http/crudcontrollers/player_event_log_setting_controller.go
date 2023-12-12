@@ -67,7 +67,7 @@ func (e *PlayerEventLogSettingController) listPlayerEventLogSettings(c echo.Cont
 	var results []models.PlayerEventLogSetting
 	err := e.db.QueryContext(models.PlayerEventLogSetting{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *PlayerEventLogSettingController) getPlayerEventLogSettingsCount(c echo.
 	var count int64
 	err := e.db.QueryContext(models.PlayerEventLogSetting{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

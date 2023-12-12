@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/volatiletech/null/v8"
-	"time"
 )
 
 type Item struct {
@@ -140,7 +139,7 @@ type Item struct {
 	UNK124                  int                     `json:"unk_124" gorm:"Column:UNK124"`
 	Attuneable              int                     `json:"attuneable" gorm:"Column:attuneable"`
 	Nopet                   int                     `json:"nopet" gorm:"Column:nopet"`
-	Updated                 time.Time               `json:"updated" gorm:"Column:updated"`
+	Updated                 null.Time               `json:"updated" gorm:"Column:updated"`
 	Comment                 string                  `json:"comment" gorm:"Column:comment"`
 	UNK127                  int                     `json:"unk_127" gorm:"Column:UNK127"`
 	Pointtype               int                     `json:"pointtype" gorm:"Column:pointtype"`
@@ -302,7 +301,6 @@ type Item struct {
 	LootdropEntries         []LootdropEntry         `json:"lootdrop_entries,omitempty" gorm:"foreignKey:item_id;references:id"`
 	Objects                 []Object                `json:"objects,omitempty" gorm:"foreignKey:itemid;references:id"`
 	ObjectContents          []ObjectContent         `json:"object_contents,omitempty" gorm:"foreignKey:itemid;references:id"`
-	StartingItems           []StartingItem          `json:"starting_items,omitempty" gorm:"foreignKey:itemid;references:id"`
 	TradeskillRecipeEntries []TradeskillRecipeEntry `json:"tradeskill_recipe_entries,omitempty" gorm:"foreignKey:item_id;references:id"`
 	TributeLevels           []TributeLevel          `json:"tribute_levels,omitempty" gorm:"foreignKey:item_id;references:id"`
 	GroundSpawns            []GroundSpawn           `json:"ground_spawns,omitempty" gorm:"foreignKey:item;references:id"`
@@ -497,9 +495,6 @@ func (Item) Relationships() []string {
 		"Objects",
 		"Objects.Item",
 		"Objects.Zone",
-		"StartingItems",
-		"StartingItems.Item",
-		"StartingItems.Zone",
 		"TradeskillRecipeEntries",
 		"TradeskillRecipeEntries.TradeskillRecipe",
 		"TributeLevels",

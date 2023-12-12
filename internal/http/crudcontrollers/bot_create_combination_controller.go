@@ -67,7 +67,7 @@ func (e *BotCreateCombinationController) listBotCreateCombinations(c echo.Contex
 	var results []models.BotCreateCombination
 	err := e.db.QueryContext(models.BotCreateCombination{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *BotCreateCombinationController) getBotCreateCombinationsCount(c echo.Co
 	var count int64
 	err := e.db.QueryContext(models.BotCreateCombination{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

@@ -67,7 +67,7 @@ func (e *CharacterPetInventoryController) listCharacterPetInventories(c echo.Con
 	var results []models.CharacterPetInventory
 	err := e.db.QueryContext(models.CharacterPetInventory{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -428,7 +428,7 @@ func (e *CharacterPetInventoryController) getCharacterPetInventoriesCount(c echo
 	var count int64
 	err := e.db.QueryContext(models.CharacterPetInventory{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

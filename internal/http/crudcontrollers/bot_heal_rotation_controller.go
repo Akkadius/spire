@@ -67,7 +67,7 @@ func (e *BotHealRotationController) listBotHealRotations(c echo.Context) error {
 	var results []models.BotHealRotation
 	err := e.db.QueryContext(models.BotHealRotation{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *BotHealRotationController) getBotHealRotationsCount(c echo.Context) err
 	var count int64
 	err := e.db.QueryContext(models.BotHealRotation{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

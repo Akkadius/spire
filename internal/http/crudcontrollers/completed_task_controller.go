@@ -67,7 +67,7 @@ func (e *CompletedTaskController) listCompletedTasks(c echo.Context) error {
 	var results []models.CompletedTask
 	err := e.db.QueryContext(models.CompletedTask{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -461,7 +461,7 @@ func (e *CompletedTaskController) getCompletedTasksCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.CompletedTask{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

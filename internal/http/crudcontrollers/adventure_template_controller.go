@@ -67,7 +67,7 @@ func (e *AdventureTemplateController) listAdventureTemplates(c echo.Context) err
 	var results []models.AdventureTemplate
 	err := e.db.QueryContext(models.AdventureTemplate{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *AdventureTemplateController) getAdventureTemplatesCount(c echo.Context)
 	var count int64
 	err := e.db.QueryContext(models.AdventureTemplate{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})
