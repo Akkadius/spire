@@ -67,7 +67,7 @@ func (e *CharacterMemmedSpellController) listCharacterMemmedSpells(c echo.Contex
 	var results []models.CharacterMemmedSpell
 	err := e.db.QueryContext(models.CharacterMemmedSpell{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *CharacterMemmedSpellController) getCharacterMemmedSpellsCount(c echo.Co
 	var count int64
 	err := e.db.QueryContext(models.CharacterMemmedSpell{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

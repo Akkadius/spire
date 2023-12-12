@@ -67,7 +67,7 @@ func (e *SpellGlobalController) listSpellGlobals(c echo.Context) error {
 	var results []models.SpellGlobal
 	err := e.db.QueryContext(models.SpellGlobal{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *SpellGlobalController) getSpellGlobalsCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.SpellGlobal{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

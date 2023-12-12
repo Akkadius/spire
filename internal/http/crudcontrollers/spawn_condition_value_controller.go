@@ -67,7 +67,7 @@ func (e *SpawnConditionValueController) listSpawnConditionValues(c echo.Context)
 	var results []models.SpawnConditionValue
 	err := e.db.QueryContext(models.SpawnConditionValue{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -428,7 +428,7 @@ func (e *SpawnConditionValueController) getSpawnConditionValuesCount(c echo.Cont
 	var count int64
 	err := e.db.QueryContext(models.SpawnConditionValue{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

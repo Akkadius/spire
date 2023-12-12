@@ -67,7 +67,7 @@ func (e *AccountFlagController) listAccountFlags(c echo.Context) error {
 	var results []models.AccountFlag
 	err := e.db.QueryContext(models.AccountFlag{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *AccountFlagController) getAccountFlagsCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.AccountFlag{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

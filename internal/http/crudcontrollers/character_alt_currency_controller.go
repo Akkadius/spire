@@ -67,7 +67,7 @@ func (e *CharacterAltCurrencyController) listCharacterAltCurrencies(c echo.Conte
 	var results []models.CharacterAltCurrency
 	err := e.db.QueryContext(models.CharacterAltCurrency{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *CharacterAltCurrencyController) getCharacterAltCurrenciesCount(c echo.C
 	var count int64
 	err := e.db.QueryContext(models.CharacterAltCurrency{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

@@ -67,7 +67,7 @@ func (e *LdonTrapEntryController) listLdonTrapEntries(c echo.Context) error {
 	var results []models.LdonTrapEntry
 	err := e.db.QueryContext(models.LdonTrapEntry{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -395,7 +395,7 @@ func (e *LdonTrapEntryController) getLdonTrapEntriesCount(c echo.Context) error 
 	var count int64
 	err := e.db.QueryContext(models.LdonTrapEntry{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

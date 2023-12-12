@@ -67,7 +67,7 @@ func (e *ZonePointController) listZonePoints(c echo.Context) error {
 	var results []models.ZonePoint
 	err := e.db.QueryContext(models.ZonePoint{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *ZonePointController) getZonePointsCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.ZonePoint{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

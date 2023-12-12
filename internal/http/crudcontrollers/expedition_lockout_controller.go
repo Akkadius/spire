@@ -67,7 +67,7 @@ func (e *ExpeditionLockoutController) listExpeditionLockouts(c echo.Context) err
 	var results []models.ExpeditionLockout
 	err := e.db.QueryContext(models.ExpeditionLockout{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *ExpeditionLockoutController) getExpeditionLockoutsCount(c echo.Context)
 	var count int64
 	err := e.db.QueryContext(models.ExpeditionLockout{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

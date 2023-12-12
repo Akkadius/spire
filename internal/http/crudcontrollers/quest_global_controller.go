@@ -67,7 +67,7 @@ func (e *QuestGlobalController) listQuestGlobals(c echo.Context) error {
 	var results []models.QuestGlobal
 	err := e.db.QueryContext(models.QuestGlobal{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -461,7 +461,7 @@ func (e *QuestGlobalController) getQuestGlobalsCount(c echo.Context) error {
 	var count int64
 	err := e.db.QueryContext(models.QuestGlobal{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

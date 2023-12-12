@@ -67,7 +67,7 @@ func (e *CharacterInstanceSafereturnController) listCharacterInstanceSafereturns
 	var results []models.CharacterInstanceSafereturn
 	err := e.db.QueryContext(models.CharacterInstanceSafereturn{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *CharacterInstanceSafereturnController) getCharacterInstanceSafereturnsC
 	var count int64
 	err := e.db.QueryContext(models.CharacterInstanceSafereturn{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})

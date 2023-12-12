@@ -67,7 +67,7 @@ func (e *PerlEventExportSettingController) listPerlEventExportSettings(c echo.Co
 	var results []models.PerlEventExportSetting
 	err := e.db.QueryContext(models.PerlEventExportSetting{}, c).Find(&results).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
@@ -362,7 +362,7 @@ func (e *PerlEventExportSettingController) getPerlEventExportSettingsCount(c ech
 	var count int64
 	err := e.db.QueryContext(models.PerlEventExportSetting{}, c).Count(&count).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"count": count})
