@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open --host=0.0.0.0",
-    "serve": "node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --host=0.0.0.0",
-    "build": "NODE_ENV=production node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js build --nomaps",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open --host=0.0.0.0",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --host=0.0.0.0",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js build --nomaps",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

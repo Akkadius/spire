@@ -95,7 +95,6 @@ items:
   - 1-* id->lootdrop_entries:item_id
   - 1-* id->object:itemid
   - 1-* id->object_contents:itemid
-  - 1-* id->starting_items:itemid
   - 1-* id->tradeskill_recipe_entries:item_id
   - 1-* id->tribute_levels:item_id
   - 1-* id->ground_spawns:item
@@ -175,7 +174,6 @@ start_zones:
   - 1-1 zone_id->zone:zoneidnumber
 starting_items:
   - 1-1 zoneid->zone:zoneidnumber
-  - 1-1 itemid->items:id
 tradeskill_recipe_entries:
   - 1-1 recipe_id->tradeskill_recipe:id
 #task_activities:
