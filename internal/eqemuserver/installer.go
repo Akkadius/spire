@@ -1452,10 +1452,25 @@ func (a *Installer) getLinuxDistributionVersion() int {
 func (a *Installer) initWindowsMysql() {
 	a.Banner("Downloading MariaDB")
 
-	// check if a.getWindowsMysqlPath() exists
+	// check if mysql folder exists
 	if _, err := os.Stat(a.getWindowsMysqlPath()); err == nil {
-		fmt.Printf("MySQL already installed, skipping")
-		return
+		// login to mysql
+		mysqlPath := filepath.Join(a.getWindowsMysqlPath(), "mysqladmin.exe")
+		fmt.Printf("Logging into MySQL\n")
+		res := a.Exec(ExecConfig{
+			command: mysqlPath,
+			args: []string{
+				fmt.Sprintf("-u%v", a.installConfig.MysqlUsername),
+				fmt.Sprintf("-p%v", a.installConfig.MysqlPassword),
+				"ping",
+			},
+		})
+
+		// check if mysql is alive
+		if strings.Contains(res, "mysqld is alive") {
+			fmt.Printf("MySQL already installed, skipping")
+			return
+		}
 	}
 
 	// download mariadb
