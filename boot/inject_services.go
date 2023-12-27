@@ -9,7 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
-	"github.com/Akkadius/spire/internal/eqemuloginserverconfig"
+	"github.com/Akkadius/spire/internal/eqemuloginserver"
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/github"
@@ -37,7 +37,7 @@ var serviceSet = wire.NewSet(
 	clientfiles.NewExporter,
 	clientfiles.NewImporter,
 	eqemuserverconfig.NewConfig,
-	eqemuloginserverconfig.NewConfig,
+	eqemuloginserver.NewConfig,
 	pathmgmt.NewPathManagement,
 	permissions.NewService,
 	pluralize.NewClient,

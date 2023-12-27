@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
-	"github.com/Akkadius/spire/internal/eqemuloginserverconfig"
+	"github.com/Akkadius/spire/internal/eqemuloginserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/password"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -31,7 +31,7 @@ import (
 type Installer struct {
 	pathmanager   *pathmgmt.PathManagement
 	config        *eqemuserverconfig.Config
-	loginConfig   *eqemuloginserverconfig.Config
+	loginConfig   *eqemuloginserver.Config
 	logger        *logrus.Logger
 	stepTime      time.Time
 	totalTime     time.Time
@@ -67,7 +67,7 @@ func NewInstaller() *Installer {
 		pathmanager:   pathmanager,
 		config:        eqemuserverconfig.NewConfig(logger, pathmanager),
 		installConfig: &InstallConfig{},
-		loginConfig:   eqemuloginserverconfig.NewConfig(logger, pathmanager),
+		loginConfig:   eqemuloginserver.NewConfig(logger, pathmanager),
 	}
 
 	return i

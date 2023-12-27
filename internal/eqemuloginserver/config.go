@@ -1,4 +1,4 @@
-package eqemuloginserverconfig
+package eqemuloginserver
 
 import (
 	"encoding/json"
