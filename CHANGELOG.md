@@ -1,3 +1,7 @@
+## [3.7.10] 12/27/2023
+
+* **Spire Launcher Proxy** Speed up command line launcher proxy calls to start/stop/restart
+
 ## [3.7.9] 12/27/2023
 
 * **Spire Updates** Fix an issue where Spire command invocations were making API requests to GitHub to check for new versions when they didn't need to.

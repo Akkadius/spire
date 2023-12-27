@@ -15,6 +15,16 @@ import (
 )
 
 func main() {
+	// uncomment for profiling
+	//f, err := os.Create("main.prof")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//pprof.StartCPUProfile(f)
+	//defer pprof.StopCPUProfile()
+
+	registerHttpLogging()
+
 	// self update service
 	if len(os.Args) == 1 {
 		updater.NewService(packageJson).CheckForUpdates()
@@ -22,8 +32,6 @@ func main() {
 
 	// default
 	_ = os.Setenv("APP_ENV", "local")
-
-	registerHttpLogging()
 
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {

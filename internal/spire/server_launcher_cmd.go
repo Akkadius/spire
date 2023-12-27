@@ -82,16 +82,11 @@ func (c *ServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 		processes, _ := process.Processes()
 		for _, p := range processes {
 			cmdline, _ := p.Cmdline()
-			parent, _ := p.Parent()
-			parentcmd, _ := parent.Cmdline()
-
-			//pp.Println(p.Pid, cmdline)
-			//if len(parentcmd) > 0 {
-			//	fmt.Println(" -- ", parent.Pid, parentcmd)
-			//}
 
 			// kill occulus server launcher
 			if strings.Contains(cmdline, "occulus") && strings.Contains(cmdline, "server-launcher") {
+				parent, _ := p.Parent()
+				parentcmd, _ := parent.Cmdline()
 				if parent != nil && strings.Contains(parentcmd, "while") {
 					c.logger.Infof("Killing occulus server-launcher bash-while parent PID (%v)\n", parent.Pid)
 					err := parent.Kill()
@@ -109,6 +104,8 @@ func (c *ServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 
 			// kill spire launcher that is running in an infinite bash while loop process keepalive
 			if strings.Contains(cmdline, "spire:launcher start") {
+				parent, _ := p.Parent()
+				parentcmd, _ := parent.Cmdline()
 				if parent != nil && strings.Contains(parentcmd, "while") {
 					c.logger.Infof("Killing spire:launcher bash-while parent PID (%v)\n", parent.Pid)
 					err := parent.Kill()
@@ -140,8 +137,8 @@ func (c *ServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 			// run the launcher
 			cmd := exec.Command(binary, arg)
 			cmd.Dir = c.pathmgmt.GetEQEmuServerBinPath()
-			//cmd.Stdout = os.Stdout
-			//cmd.Stderr = os.Stderr
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
 			err = cmd.Start()
 			if err != nil {
 				c.logger.Fatal(err)
