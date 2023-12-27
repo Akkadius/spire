@@ -1,3 +1,9 @@
+## [3.7.9] 12/27/2023
+
+* **Spire Updates** Fix an issue where Spire command invocations were making API requests to GitHub to check for new versions when they didn't need to.
+* **Utility** Added a `HTTP_DEBUG` environment variable flag that will print exhaustive request debugging
+* **Installer** Start to build eqemu server installer v2 binaries alongside of releases. These are not ready for prime time yet but they will be!
+
 ## [3.7.8] 12/12/2023
 
 * **Items** Fix an issue with the items page loading due to a recent starting items schema change.

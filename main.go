@@ -7,7 +7,9 @@ import (
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/updater"
+	"github.com/henvic/httpretty"
 	"log"
+	"net/http"
 	"os"
 	"time"
 )
@@ -20,6 +22,8 @@ func main() {
 
 	// default
 	_ = os.Setenv("APP_ENV", "local")
+
+	registerHttpLogging()
 
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
@@ -69,4 +73,21 @@ func loadEmbedded(app *boot.App) {
 	// load embedded files into cache
 	app.Cache().Set("changelog", changelog, -1)
 	app.Cache().Set("packageJson", packageJson, -1)
+}
+
+func registerHttpLogging() {
+	if len(os.Getenv("HTTP_DEBUG")) > 0 {
+		logger := &httpretty.Logger{
+			Time:           true,
+			TLS:            true,
+			RequestHeader:  true,
+			RequestBody:    true,
+			ResponseHeader: true,
+			ResponseBody:   true,
+			Colors:         true,
+			Formatters:     []httpretty.Formatter{&httpretty.JSONFormatter{}},
+		}
+
+		http.DefaultClient.Transport = logger.RoundTripper(http.DefaultClient.Transport)
+	}
 }

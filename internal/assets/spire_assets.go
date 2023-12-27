@@ -148,7 +148,6 @@ func (a SpireAssets) CheckForAssets() {
 	// write a cache file to check last time we checked
 	// if we checked within the last hour, don't check again
 	// if we checked more than an hour ago, check again
-	doUpdateCheck := false
 	tmpFile := filepath.Join(os.TempDir(), "spire_asset_last_check")
 	if _, err := os.Stat(tmpFile); os.IsNotExist(err) {
 		// file doesn't exist, create it
@@ -157,7 +156,7 @@ func (a SpireAssets) CheckForAssets() {
 			a.logger.Fatal(err)
 		}
 
-		doUpdateCheck = true
+		_ = os.Chtimes(tmpFile, time.Now().Add(-time.Hour*1), time.Now().Add(-time.Hour*1))
 	}
 
 	// check if file modified over an hour ago
@@ -166,9 +165,10 @@ func (a SpireAssets) CheckForAssets() {
 		a.logger.Fatal(err)
 	}
 
-	// get current time
 	currentTime := time.Now()
-	if !doUpdateCheck && currentTime.Sub(fileInfo.ModTime()).Hours() < 1 {
+
+	assetCheckPassedTime := currentTime.Sub(fileInfo.ModTime()).Hours() < 1
+	if assetCheckPassedTime {
 		return
 	}
 
@@ -229,5 +229,8 @@ func (a SpireAssets) CheckForAssets() {
 			)
 			a.downloadAssets(cachedir)
 		}
+
+		// update the file modified time
+		_ = os.Chtimes(tmpFile, time.Now(), time.Now())
 	}
 }

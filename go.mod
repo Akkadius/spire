@@ -41,8 +41,8 @@ require (
 	github.com/valyala/fasttemplate v1.2.1
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/ziutek/telnet v0.0.0-20180329124119-c3b780dc415b
-	golang.org/x/crypto v0.13.0
-	golang.org/x/net v0.15.0
+	golang.org/x/crypto v0.14.0
+	golang.org/x/net v0.16.0
 	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1
 	golang.org/x/text v0.13.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -84,6 +84,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
+	github.com/henvic/httpretty v0.1.3 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
@@ -120,11 +121,11 @@ require (
 	github.com/volatiletech/strmangle v0.0.4 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
-	golang.org/x/mod v0.12.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
-	golang.org/x/term v0.12.0 // indirect
+	golang.org/x/mod v0.13.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
-	golang.org/x/tools v0.13.0 // indirect
+	golang.org/x/tools v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
