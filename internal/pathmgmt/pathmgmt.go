@@ -11,7 +11,8 @@ import (
 )
 
 type PathManagement struct {
-	logger *logrus.Logger
+	logger     *logrus.Logger
+	serverPath string
 }
 
 func NewPathManagement(logger *logrus.Logger) *PathManagement {
@@ -24,7 +25,20 @@ func NewPathManagement(logger *logrus.Logger) *PathManagement {
 
 const eqemuConfigFileName = "eqemu_config.json"
 
+// SetServerPath sets the server path
+// this is typically set by the installer
+// this is not used by the server
+func (m *PathManagement) SetServerPath(serverPath string) {
+	m.serverPath = serverPath
+}
+
 func (m *PathManagement) GetEQEmuServerPath() string {
+	// this is typically set by the installer
+	// this is not used by the server
+	if m.serverPath != "" {
+		return m.serverPath
+	}
+
 	// get current path
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -60,6 +74,12 @@ func (m *PathManagement) GetEQEmuServerConfigFilePath() string {
 	m.debug("[GetEQEmuServerConfigFilePath] path not found...")
 
 	return ""
+}
+
+const loginConfigFile = "login.json"
+
+func (m *PathManagement) GetEqemuLoginServerConfigPath() string {
+	return filepath.Join(m.GetEQEmuServerPath(), loginConfigFile)
 }
 
 func (m *PathManagement) debug(msg string, a ...interface{}) {

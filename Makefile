@@ -237,4 +237,10 @@ build-binary: ##@build Build and packs release binary
 	zip spire-windows-amd64.exe.zip spire-windows-amd64.exe
 
 release-binary: ##@build Releases binary
-	gh-release --assets=spire-linux-amd64.zip,spire-windows-amd64.exe.zip -y
+	gh-release --assets=spire-linux-amd64.zip,spire-windows-amd64.exe.zip,eqemu-server-installer-linux-amd64,eqemu-server-installer-windows-amd64.exe -y
+
+build-installer-binary: ##@build Builds installer binary
+	GOOS=linux GOARCH=amd64 go build -o eqemu-server-installer-linux-amd64 ./cmd/installer/
+	go install github.com/tc-hib/go-winres@latest
+	go-winres make
+	GOOS=windows GOARCH=amd64 go build -o eqemu-server-installer-windows-amd64.exe ./cmd/installer/

@@ -56,6 +56,11 @@ type LoginRequestBody struct {
 func (o *Proxy) Login() error {
 	config := o.serverconfig.Get()
 
+	// check if webadmin is configured
+	if config.WebAdmin == nil {
+		return fmt.Errorf("webadmin is not configured")
+	}
+
 	postBody := LoginRequestBody{
 		Username: "admin",
 		Password: config.WebAdmin.Application.Admin.Password,

@@ -25,7 +25,7 @@ steps:
       - sudo chown -R go /drone/src/frontend/node_modules
       - ./scripts/build-release.sh
     when:
-      branch: [ "master" ]
+      branch: [ "master", "akkadius/eqemu-installer-v2" ]
       event: [ push ]
     volumes:
       - name: cache-be

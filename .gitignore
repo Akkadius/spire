@@ -12,7 +12,7 @@ internal/generators/config/database-schema-reference.yml
 
 docs-quest-api
 public/
-spire.exe
+spire*.exe
 spire.exe~
 
 !internal/spire
@@ -37,3 +37,5 @@ eqemu_config.json*
 data/eqtraders/item-lookup-cache.gob
 data/eqtraders/recipes.json
 cpu.prof
+eqemu-server-installer-linux-amd64
+eqemu-server-installer-windows-amd64.exe
