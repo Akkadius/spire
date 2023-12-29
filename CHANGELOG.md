@@ -1,3 +1,7 @@
+## [3.8.0] 12/29/2023
+
+* **Login Automation** Add ability to login to the login page by passing query params `user` `password` and `redirect`
+
 ## [3.7.10] 12/27/2023
 
 * **Spire Launcher Proxy** Speed up command line launcher proxy calls to start/stop/restart

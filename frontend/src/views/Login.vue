@@ -149,10 +149,20 @@ export default {
     // auth settings
     this.localAuthEnabled  = AppEnv.isLocalAuthEnabled()
     this.githubAuthEnabled = AppEnv.isGithubAuthEnabled()
+
+    // check query params user,password,redirect
+    this.$router.onReady(async () => {
+      const query = this.$route.query
+      if (query && query.user && query.password) {
+        console.log("login with query params")
+        this.username = query.user
+        this.password = query.password
+        await this.loginSpire()
+      }
+    })
   },
   methods: {
     async loginSpire() {
-
       try {
         const r = await axios.post(SpireApi.getBasePath() + "/auth/login", {
           username: this.username,
@@ -166,8 +176,15 @@ export default {
             SpireApi.reloadAxios()
 
             setTimeout(() => {
-              this.$router.push(ROUTE.HOME).catch((e) => {
-              })
+              const query = this.$route.query
+              if (query.redirect) {
+                this.$router.push(query.redirect).catch((e) => {
+                })
+              } else {
+                this.$router.push(ROUTE.HOME).catch((e) => {
+                })
+              }
+
             }, 100)
           }
         }

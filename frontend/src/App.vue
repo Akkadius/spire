@@ -30,20 +30,26 @@ export default {
   },
 
   async mounted() {
-
     this.loadKeypressBindings();
     this.loadWallpaper();
     this.loadSpellIconSettings();
 
-    this.user = await UserContext.getUser()
     if (typeof AppEnv.getOS() === "undefined") {
       await AppEnv.init()
     }
 
     EventBus.$emit('APP_ENV_LOADED', true);
-    AppEnv.routeCheckOcculus(this.$route, this.$router)
-    AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
-    this.checkIfUserNeedsToAuth()
+
+    this.$router.onReady(async () => {
+      if (!this.$route.fullPath.includes(ROUTE.LOGIN)) {
+        console.log("login route, skipping auth check")
+        this.user = await UserContext.getUser()
+        await this.checkIfUserNeedsToAuth()
+      }
+
+      AppEnv.routeCheckOcculus(this.$route, this.$router)
+      AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
+    })
 
     setTimeout(() => {
       AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
