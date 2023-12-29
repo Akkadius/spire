@@ -71,7 +71,7 @@ type EQEmuConfigJson struct {
 			Port string `json:"port"`
 		} `json:"mailserver,omitempty"`
 		World struct {
-			AutoDatabaseUpdates *bool `json:"auto_database_updates"`
+			AutoDatabaseUpdates *bool `json:"auto_database_updates,omitempty"`
 			API                 struct {
 				Enabled bool `json:"enabled"`
 			} `json:"api,omitempty"`

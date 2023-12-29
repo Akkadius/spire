@@ -1,6 +1,7 @@
 package eqemuserver
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/promptui"
 	"gopkg.in/yaml.v3"
@@ -32,17 +33,18 @@ const (
 	installConfigFileName = "install_config.yaml"
 )
 
-func (a *Installer) checkInstallConfig() {
+func (a *Installer) checkInstallConfig() error {
 	a.Banner("Checking Install Config")
 
 	// check if the install config exists
-	if a.loadInstallConfigIfExists() {
-		return // config file exists, we're done
+	err := a.loadInstallConfigIfExists()
+	if err == nil {
+		return nil // config file exists, we're done
 	}
 
 	homedir, err := os.UserHomeDir()
 	if err != nil {
-		a.logger.Error(err)
+		return err
 	}
 
 	// prompt: server path
@@ -52,7 +54,7 @@ func (a *Installer) checkInstallConfig() {
 		AllowEdit: true,
 	}).Run()
 	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
+		return fmt.Errorf("prompt failed %v\n", err)
 	}
 	a.installConfig.ServerPath = serverPath
 
@@ -62,7 +64,7 @@ func (a *Installer) checkInstallConfig() {
 	// set the installer path
 	err = os.Chdir(serverPath)
 	if err != nil {
-		a.logger.Error(err)
+		return err
 	}
 
 	// prompt: server code path
@@ -72,7 +74,7 @@ func (a *Installer) checkInstallConfig() {
 		AllowEdit: true,
 	}).Run()
 	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
+		return fmt.Errorf("prompt failed %v\n", err)
 	}
 	a.installConfig.CodePath = codePath
 
@@ -119,7 +121,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 
 		// prompt: mysql port
@@ -129,7 +131,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 
 		// prompt: mysql database name
@@ -139,7 +141,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 
 		// prompt: mysql username
@@ -149,7 +151,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 
 		// prompt: mysql password
@@ -159,7 +161,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 
 		// validate the mysql connection
@@ -172,7 +174,7 @@ func (a *Installer) checkInstallConfig() {
 			mysqlPassword,
 		)
 		if err != nil {
-			a.logger.Fatalf("Failed to validate MySQL connection: %v", err)
+			return fmt.Errorf("failed to validate MySQL connection: %v", err)
 		}
 
 		// set installation variables
@@ -183,7 +185,10 @@ func (a *Installer) checkInstallConfig() {
 		a.installConfig.MysqlPassword = mysqlPassword
 	} else {
 		// if we are installing a new mysql server
-		generatedPassword := a.GetRandomPassword()
+		generatedPassword, err := a.GetRandomPassword()
+		if err != nil {
+			return err
+		}
 
 		// prompt: mysql database name
 		mysqlDbName, err := (&promptui.Prompt{
@@ -192,7 +197,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 		mysqlDbName = a.stripSpecialCharacters(mysqlDbName)
 		a.installConfig.MysqlDatabaseName = mysqlDbName
@@ -204,7 +209,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 		a.installConfig.MysqlUsername = mysqlUsername
 
@@ -216,7 +221,7 @@ func (a *Installer) checkInstallConfig() {
 			AllowEdit: true,
 		}).Run()
 		if err != nil {
-			a.logger.Fatalf("Prompt failed %v\n", err)
+			return fmt.Errorf("prompt failed %v\n", err)
 		}
 
 		// validate: passwords match if we manually entered it
@@ -228,11 +233,11 @@ func (a *Installer) checkInstallConfig() {
 				AllowEdit: true,
 			}).Run()
 			if err != nil {
-				a.logger.Fatalf("Prompt failed %v\n", err)
+				return fmt.Errorf("prompt failed %v\n", err)
 			}
 
 			if mysqlPassword != mysqlPasswordConfirm {
-				a.logger.Fatalf("MySQL Passwords do not match")
+				return fmt.Errorf("MySQL Passwords do not match")
 			}
 		}
 
@@ -249,19 +254,24 @@ func (a *Installer) checkInstallConfig() {
 		AllowEdit: true,
 	}).Run()
 	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
+		return fmt.Errorf("prompt failed %v\n", err)
 	}
 	a.installConfig.SpireAdminUser = spireAdminUser
+
+	password, err := a.GetRandomPassword()
+	if err != nil {
+		return err
+	}
 
 	// prompt: spire admin password
 	spireAdminPassword, err := (&promptui.Prompt{
 		Label:     "Spire Admin Password (Leave blank for random password)",
-		Default:   a.GetRandomPassword(),
+		Default:   password,
 		Mask:      '*',
 		AllowEdit: true,
 	}).Run()
 	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
+		return fmt.Errorf("prompt failed %v\n", err)
 	}
 	a.installConfig.SpireAdminPassword = spireAdminPassword
 
@@ -272,7 +282,7 @@ func (a *Installer) checkInstallConfig() {
 		AllowEdit: true,
 	}).Run()
 	if err != nil {
-		a.logger.Fatalf("Prompt failed %v\n", err)
+		return fmt.Errorf("prompt failed %v\n", err)
 	}
 	a.installConfig.SpireWebPort = spireWebPort
 
@@ -296,20 +306,22 @@ func (a *Installer) checkInstallConfig() {
 	// marshal a.installConfig into yaml
 	installConfigYaml, err := yaml.Marshal(a.installConfig)
 	if err != nil {
-		a.logger.Fatalf("error: %v", err)
+		return fmt.Errorf("error: %v", err)
 	}
 
 	// write yaml to install_config.yaml
 	installConfigFile := filepath.Join(a.pathmanager.GetEQEmuServerPath(), installConfigFileName)
 	err = os.WriteFile(installConfigFile, installConfigYaml, 0644)
 	if err != nil {
-		a.logger.Fatalf("could not write install_config.yaml: %v", err)
+		return fmt.Errorf("could not write install_config.yaml: %v", err)
 	}
 
 	a.DoneBanner("Checking Install Config")
+
+	return nil
 }
 
-func (a *Installer) loadInstallConfigIfExists() bool {
+func (a *Installer) loadInstallConfigIfExists() error {
 	// check if install config file exists
 	installConfigFile := filepath.Join(a.pathmanager.GetEQEmuServerPath(), installConfigFileName)
 	if _, err := os.Stat(installConfigFile); os.IsNotExist(err) {
@@ -317,12 +329,12 @@ func (a *Installer) loadInstallConfigIfExists() bool {
 		// try to load from home directory default
 		homedir, err := os.UserHomeDir()
 		if err != nil {
-			a.logger.Error(err)
+			return err
 		}
 
 		file := filepath.Join(homedir, "server", installConfigFileName)
 		if _, err := os.Stat(file); os.IsNotExist(err) {
-			return false // config file does not exist
+			return errors.New("config file does not exist") // config file does not exist
 		}
 
 		// set the install config file
@@ -333,7 +345,7 @@ func (a *Installer) loadInstallConfigIfExists() bool {
 	// get contents of install config file
 	installConfigContents, err := os.ReadFile(installConfigFile)
 	if err != nil {
-		a.logger.Fatalf("could not read install config file: %v", err)
+		return fmt.Errorf("could not read install config file: %v", err)
 	}
 
 	fmt.Printf("----------------------------------------\n")
@@ -362,15 +374,15 @@ func (a *Installer) loadInstallConfigIfExists() bool {
 		// load install config contents into struct
 		err = yaml.Unmarshal(installConfigContents, &a.installConfig)
 		if err != nil {
-			a.logger.Fatalf("could not unmarshal install config: %v", err)
+			return fmt.Errorf("could not unmarshal install config: %v", err)
 		}
 
 		a.pathmanager.SetServerPath(a.installConfig.ServerPath)
 
-		return true
+		return nil
 	}
 
-	return false // config file does not exist
+	return nil // config file does not exist
 }
 
 func (a *Installer) stripSpecialCharacters(name string) string {
@@ -392,7 +404,7 @@ func (a *Installer) validateMysqlConnection(host string, port string, name strin
 	}
 
 	// check if mysql is running
-	res := a.Exec(ExecConfig{
+	res, err := a.Exec(ExecConfig{
 		command: mysqlAdminBin,
 		args: []string{
 			"ping",
@@ -402,12 +414,16 @@ func (a *Installer) validateMysqlConnection(host string, port string, name strin
 			"-p" + mysqlPassword,
 		},
 	})
+	if err != nil {
+		return fmt.Errorf("could not connect to mysql: %v", err)
+	}
+
 	if !strings.Contains(res, "mysqld is alive") {
 		return fmt.Errorf("could not connect to mysql: %v", res)
 	}
 
 	// check if database exists and has data
-	res = a.Exec(ExecConfig{
+	res, err = a.Exec(ExecConfig{
 		command: mysqlBin,
 		args: []string{
 			"-h" + host,
@@ -418,6 +434,9 @@ func (a *Installer) validateMysqlConnection(host string, port string, name strin
 			"show databases like '" + name + "';",
 		},
 	})
+	if err != nil {
+		return fmt.Errorf("could not connect to mysql: %v", err)
+	}
 	if len(res) > 0 {
 		return fmt.Errorf("database already exists: %v", res)
 	}

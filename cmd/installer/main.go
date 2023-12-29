@@ -21,7 +21,11 @@ func main() {
 	// installer logic
 	// check if eqemu_config.json exists in current directory
 	// if it doesn't exist, run the eqemu server installer
-	eqemuserver.NewInstaller().Install()
+	err := eqemuserver.NewInstaller().Install()
+	if err != nil {
+		fmt.Printf("\nInstallation error: %s\n\n", err)
+		return
+	}
 }
 
 func Fatal(err error) {
