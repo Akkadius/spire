@@ -1,3 +1,11 @@
+## [3.8.2] 12/29/2023
+
+* **Server Installer** Add Windows run as admin check to installer
+* **Server Installer** Add Windows firewall rule creation to installer
+* **Server Installer** Add Windows cmd prompt window maximization to installer
+* **Server Installer** Add "Press enter to continue" to installer when an error occurs to keep the window from disappearing before the user can read the error
+* **Server Installer** Add "Press enter to continue" to installer at the end of installation
+
 ## [3.8.1] 12/29/2023
 
 * **Downloader** Add more resiliency to the file downloader so it fully flushes the file before closing the file handle.

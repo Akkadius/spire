@@ -112,7 +112,7 @@ func (a *Installer) checkInstallConfig() error {
 	// check if we are using an existing mysql install
 	useExistingMysqlInstall := strings.Contains(strings.ToLower(useExistingMysqlInstallPrompt), "y")
 	if useExistingMysqlInstall {
-		fmt.Printf("Using existing MySQL install, please specify your MySQL connection details.")
+		fmt.Printf("Using existing MySQL install, please specify your MySQL connection details.\n")
 
 		// prompt: mysql host
 		mysqlHost, err := (&promptui.Prompt{
@@ -369,7 +369,7 @@ func (a *Installer) loadInstallConfigIfExists() error {
 
 	// confirmation check
 	if strings.Contains(strings.ToLower(useExistingConfig), "y") || len(useExistingConfig) == 0 {
-		fmt.Printf("Using existing install config")
+		fmt.Printf("Using existing install config\n")
 
 		// load install config contents into struct
 		err = yaml.Unmarshal(installConfigContents, &a.installConfig)

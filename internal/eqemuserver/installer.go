@@ -78,6 +78,14 @@ type Task struct {
 	function func() error
 }
 
+func checkForWinRanAsAdmin() bool {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 func (a *Installer) Install() error {
 	err := a.setInstallerPath()
 	if err != nil {
@@ -115,6 +123,13 @@ func (a *Installer) Install() error {
 ------------------------------------------------------------------------------------------
 | > This installer will walk you through the installation of the EQEmu Server
 ------------------------------------------------------------------------------------------`)
+
+	if runtime.GOOS == "windows" {
+		_, _ = a.Exec(ExecConfig{command: "mode", args: []string{"800"}})
+		if !checkForWinRanAsAdmin() {
+			return fmt.Errorf("please run this installer as Administrator")
+		}
+	}
 
 	// check install config
 	err = a.checkInstallConfig()
@@ -241,6 +256,10 @@ func (a *Installer) Install() error {
 	if runtime.GOOS == "windows" {
 		a.openWindowsPostInstallWindows()
 	}
+
+	fmt.Print("Press [Enter] to close...")
+	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
+
 	return nil
 }
 
@@ -1649,6 +1668,7 @@ func (a *Installer) initWindowsMysql() error {
 			"/l*v",
 			"mariadb-install-log.txt",
 		},
+		hidestring: a.installConfig.MysqlPassword,
 	})
 	if err != nil {
 		return err
@@ -1877,7 +1897,7 @@ func (a *Installer) initWindowsCommandPrompt() error {
 	cmd := exec.Command("chcp", "65001")
 	cmd.Env = os.Environ()
 	cmd.Dir = a.pathmanager.GetEQEmuServerPath()
-	stdout, err := cmd.StdoutPipe()
+	_, err := cmd.StdoutPipe()
 	if err != nil {
 		return fmt.Errorf("could not get stdout pipe: %v", err)
 	}
@@ -1886,7 +1906,6 @@ func (a *Installer) initWindowsCommandPrompt() error {
 		return err
 	}
 
-	fmt.Println(stdout)
 	return nil
 }
 

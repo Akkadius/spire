@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserver"
@@ -24,6 +25,8 @@ func main() {
 	err := eqemuserver.NewInstaller().Install()
 	if err != nil {
 		fmt.Printf("\nInstallation error: %s\n\n", err)
+		fmt.Print("Press [Enter] to continue...")
+		_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
 		return
 	}
 }
