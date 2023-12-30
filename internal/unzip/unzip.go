@@ -3,7 +3,6 @@ package unzip
 import (
 	"archive/zip"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"path/filepath"
@@ -11,23 +10,21 @@ import (
 )
 
 type Unzip struct {
-	Src    string
-	Dest   string
-	debug  bool
-	logger *logrus.Logger
+	Src   string
+	Dest  string
+	debug bool
 }
 
-func New(src string, dest string, logger *logrus.Logger) Unzip {
+func New(src string, dest string) Unzip {
 	return Unzip{
-		Src:    src,
-		Dest:   dest,
-		debug:  false,
-		logger: logger,
+		Src:   src,
+		Dest:  dest,
+		debug: false,
 	}
 }
 
 func (uz Unzip) Extract() error {
-	uz.logger.Infoln("|-- [Zip] Extraction of [" + uz.Src + "] started!")
+	fmt.Println("|-- [Zip] Extraction of [" + uz.Src + "] started!")
 
 	r, err := zip.OpenReader(uz.Src)
 	if err != nil {
@@ -91,7 +88,7 @@ func (uz Unzip) Extract() error {
 			return err
 		}
 		if uz.debug {
-			uz.logger.Infoln("Extracting file: " + f.Name)
+			fmt.Println("Extracting file: " + f.Name)
 		}
 	}
 
@@ -100,7 +97,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	uz.logger.Infof("|-- [Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
+	fmt.Printf("|-- [Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
 
 	return nil
 }

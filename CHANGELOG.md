@@ -1,3 +1,7 @@
+## [3.8.1] 12/29/2023
+
+* **Downloader** Add more resiliency to the file downloader so it fully flushes the file before closing the file handle.
+
 ## [3.8.0] 12/29/2023
 
 * **Login Automation** Add ability to login to the login page by passing query params `user` `password` and `redirect`

@@ -116,7 +116,7 @@ func (u *Updater) InstallRelease(release string) error {
 		return err
 	}
 
-	uz := unzip.New(downloadPath, u.pathmgmt.GetEQEmuServerBinPath(), u.logger)
+	uz := unzip.New(downloadPath, u.pathmgmt.GetEQEmuServerBinPath())
 	err = uz.Extract()
 	if err != nil {
 		return err

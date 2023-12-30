@@ -76,7 +76,7 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 }
 
 func (a SpireAssets) downloadAssets(cachedir string) {
-	a.logger.Infof("Downloading [eq-asset-preview] latest release\n")
+	fmt.Printf("Downloading [eq-asset-preview] latest release\n")
 
 	attempt := 1
 	for {
@@ -113,8 +113,8 @@ func (a SpireAssets) doDownloadAssets(cachedir string) error {
 	time.Sleep(2 * time.Second)
 
 	// unzip the file
-	a.logger.Infof("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, cachedir, a.logger).Extract()
+	fmt.Printf("Downloaded zip to [%v]\n", dumpZip)
+	err = unzip.New(dumpZip, cachedir).Extract()
 	if err != nil {
 		return errors.New(fmt.Sprintf("could not extract zip: %v", err))
 	}

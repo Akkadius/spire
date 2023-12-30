@@ -400,7 +400,7 @@ func (a *Installer) cloneEQEmuMaps() error {
 	// unzip the file
 	mapsPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "maps")
 	fmt.Printf("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, mapsPath, a.logger).Extract()
+	err = unzip.New(dumpZip, mapsPath).Extract()
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}
@@ -810,7 +810,7 @@ func (a *Installer) sourcePeqDatabase() error {
 	}
 
 	fmt.Printf("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, filepath.Join(os.TempDir(), "/dump"), a.logger).Extract()
+	err = unzip.New(dumpZip, filepath.Join(os.TempDir(), "/dump")).Extract()
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}
@@ -886,7 +886,7 @@ func (a *Installer) installBinaries() error {
 	// extract the zip
 	extractTo := a.pathmanager.GetEQEmuServerBinPath()
 	fmt.Printf("Extracting zip to [%v]\n", extractTo)
-	err = unzip.New(tempPath, extractTo, a.logger).Extract()
+	err = unzip.New(tempPath, extractTo).Extract()
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}
@@ -1292,7 +1292,7 @@ func (a *Installer) installSpireBinary() error {
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
 				unzipPathTemp := filepath.Join(fmt.Sprintf("%s/spire-download", os.TempDir()))
-				uz := unzip.New(tempFileZipped, unzipPathTemp, a.logger)
+				uz := unzip.New(tempFileZipped, unzipPathTemp)
 				fmt.Printf("|-- Unzipping file [%v] to [%v]\n", tempFileZipped, a.pathmanager.GetEQEmuServerPath())
 				err = uz.Extract()
 				if err != nil {

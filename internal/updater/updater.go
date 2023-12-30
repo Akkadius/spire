@@ -182,7 +182,7 @@ func (s Service) CheckForUpdates() {
 
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, os.TempDir(), s.logger)
+				uz := unzip.New(tempFileZipped, os.TempDir())
 				err = uz.Extract()
 				if err != nil {
 					log.Println(err)
@@ -217,7 +217,7 @@ func (s Service) CheckForUpdates() {
 			if runtime.GOOS == "windows" {
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s\\%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, os.TempDir(), s.logger)
+				uz := unzip.New(tempFileZipped, os.TempDir())
 				err = uz.Extract()
 				if err != nil {
 					log.Println(err)

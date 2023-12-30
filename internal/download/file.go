@@ -34,8 +34,8 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 	banner.Loading()
 	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 
-	fmt.Printf("[Downloading] URL  [%v] Attempt (%v of %v)\n", downloadUrl, attempt, maxRetries)
-	fmt.Printf("[Downloading] To   [%v]\n", destinationPath)
+	fmt.Printf("[Downloading]  URL | %v | Attempt (%v of %v)\n", downloadUrl, attempt, maxRetries)
+	fmt.Printf("[Downloading] File | %v\n", destinationPath)
 
 	//tempDestinationPath := destinationPath + ".tmp"
 	req, err := http.NewRequest("GET", downloadUrl, nil)
@@ -66,7 +66,7 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 		progressbar.OptionSetWriter(os.Stderr),
 		progressbar.OptionShowBytes(true),
 		progressbar.OptionSetWidth(30),
-		progressbar.OptionThrottle(100*time.Millisecond),
+		progressbar.OptionThrottle(10*time.Millisecond),
 		progressbar.OptionOnCompletion(func() {
 			fmt.Fprint(os.Stderr)
 		}),
@@ -80,6 +80,11 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 	}
 
 	err = resp.Body.Close()
+	if err != nil {
+		return err
+	}
+
+	err = f.Sync()
 	if err != nil {
 		return err
 	}
