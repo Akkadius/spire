@@ -1,10 +1,11 @@
-## [3.8.2] 12/29/2023
+## [3.8.3] 12/29/2023
 
 * **Server Installer** Add Windows run as admin check to installer
 * **Server Installer** Add Windows firewall rule creation to installer
 * **Server Installer** Add Windows cmd prompt window maximization to installer
 * **Server Installer** Add "Press enter to continue" to installer when an error occurs to keep the window from disappearing before the user can read the error
 * **Server Installer** Add "Press enter to continue" to installer at the end of installation
+* **Database** Set connection max lifetime to 3 minutes to prevent stale connections from being used
 
 ## [3.8.1] 12/29/2023
 

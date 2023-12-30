@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"fmt"
 
@@ -162,9 +163,8 @@ func provideEQEmuLocalDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB
 		return nil, err
 	}
 
-	if config.ConnMaxLifetime > 0 {
-		sqlDB.SetMaxOpenConns(config.ConnMaxLifetime)
-	}
+	sqlDB.SetConnMaxLifetime(time.Minute * 3)
+
 	if config.MaxIdleConnections > 0 {
 		sqlDB.SetMaxIdleConns(config.MaxIdleConnections)
 	}
@@ -254,9 +254,8 @@ func provideSpireDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB, err
 		return nil, err
 	}
 
-	if config.ConnMaxLifetime > 0 {
-		sqlDB.SetMaxOpenConns(config.ConnMaxLifetime)
-	}
+	sqlDB.SetConnMaxLifetime(time.Minute * 3)
+
 	if config.MaxIdleConnections > 0 {
 		sqlDB.SetMaxIdleConns(config.MaxIdleConnections)
 	}
