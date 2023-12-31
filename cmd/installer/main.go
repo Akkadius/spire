@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	_ "embed"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserver"

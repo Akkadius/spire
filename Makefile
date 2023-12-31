@@ -242,5 +242,6 @@ release-binary: ##@build Releases binary
 build-installer-binary: ##@build Builds installer binary
 	GOOS=linux GOARCH=amd64 go build -o eqemu-server-installer-linux-amd64 ./cmd/installer/
 	go install github.com/tc-hib/go-winres@latest
-	go-winres make
+	go-winres make --arch amd64 --in ./cmd/installer/winres.json --out ./cmd/installer/
+	mv cmd/installer/_windows_amd64.syso cmd/installer/rsrc_windows_amd64.syso
 	GOOS=windows GOARCH=amd64 go build -o eqemu-server-installer-windows-amd64.exe ./cmd/installer/
