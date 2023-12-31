@@ -256,7 +256,7 @@ func (a *Installer) Install() error {
 		a.openWindowsPostInstallWindows()
 	}
 
-	fmt.Printf("For windows users, Spire is ran with administrator privileges and should not be under normal cirucmstances\n")
+	fmt.Printf("For windows users, Spire is ran with administrator privileges and should not be under normal circumstances\n")
 	fmt.Printf("Once you have verified your server is running, shutdown the server and spire and restart spire as your user\n")
 	fmt.Print("Press [Enter] to close...\n\n")
 	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
