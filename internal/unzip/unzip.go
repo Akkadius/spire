@@ -24,7 +24,7 @@ func New(src string, dest string) Unzip {
 }
 
 func (uz Unzip) Extract() error {
-	fmt.Println("|-- [Zip] Extraction of [" + uz.Src + "] started!")
+	fmt.Println("[Zip] Extracting [" + uz.Src + "]")
 
 	r, err := zip.OpenReader(uz.Src)
 	if err != nil {
@@ -97,7 +97,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	fmt.Printf("|-- [Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
+	fmt.Printf("[Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
 
 	return nil
 }

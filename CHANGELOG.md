@@ -1,3 +1,7 @@
+## [3.8.4] 12/30/2023
+
+* **Downloader** Tweaks to downloader logic
+
 ## [3.8.3] 12/29/2023
 
 * **Server Installer** Add Windows run as admin check to installer

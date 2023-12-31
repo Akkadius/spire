@@ -30,12 +30,15 @@ func WithProgress(destinationPath, downloadUrl string) error {
 }
 
 func download(destinationPath, downloadUrl string, attempt int) error {
-	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 	banner.Loading()
-	fmt.Printf("-------------------------------------------------------------------------------------------\n")
 
-	fmt.Printf("[Downloading]  URL | %v | Attempt (%v of %v)\n", downloadUrl, attempt, maxRetries)
-	fmt.Printf("[Downloading] File | %v\n", destinationPath)
+	var attemptStr string
+	if attempt > 1 {
+		attemptStr = fmt.Sprintf("| Attempt (%v of %v)", attempt, maxRetries)
+	}
+
+	fmt.Printf("[Download]  URL | %v %v\n", downloadUrl, attemptStr)
+	fmt.Printf("[Download] File | %v\n", destinationPath)
 
 	//tempDestinationPath := destinationPath + ".tmp"
 	req, err := http.NewRequest("GET", downloadUrl, nil)
@@ -62,16 +65,23 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 
 	bar := progressbar.NewOptions64(
 		resp.ContentLength,
-		progressbar.OptionSetDescription("[Downloading]"),
+		progressbar.OptionSetDescription("[Download]"),
 		progressbar.OptionSetWriter(os.Stderr),
 		progressbar.OptionShowBytes(true),
-		progressbar.OptionSetWidth(30),
+		progressbar.OptionSetWidth(50),
 		progressbar.OptionThrottle(10*time.Millisecond),
 		progressbar.OptionOnCompletion(func() {
 			fmt.Fprint(os.Stderr)
 		}),
 		progressbar.OptionSpinnerType(14),
 		progressbar.OptionSetRenderBlankState(true),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "=",
+			SaucerHead:    ">",
+			SaucerPadding: " ",
+			BarStart:      "| ",
+			BarEnd:        " |",
+		}),
 	)
 
 	_, err = io.Copy(io.MultiWriter(f, bar), resp.Body)
@@ -99,8 +109,7 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 		return fmt.Errorf("could not download file [%v]", destinationPath)
 	}
 
-	fmt.Printf("\n-------------------------------------------------------------------------------------------")
-	fmt.Printf("\n")
+	fmt.Printf("\n\n")
 
 	return nil
 }
