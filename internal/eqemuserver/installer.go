@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/user"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -125,7 +126,6 @@ func (a *Installer) Install() error {
 ------------------------------------------------------------------------------------------`)
 
 	if runtime.GOOS == "windows" {
-		_, _ = a.Exec(ExecConfig{command: "mode", args: []string{"800"}})
 		if !checkForWinRanAsAdmin() {
 			return fmt.Errorf("please run this installer as Administrator")
 		}
@@ -1505,12 +1505,18 @@ func (a *Installer) startSpire() error {
 			return fmt.Errorf("could not find spire binary: %v", err)
 		}
 
+		u, err := user.Current()
+		if err != nil {
+			return err
+		}
+
 		_, err = a.Exec(ExecConfig{
 			command: "cmd",
 			args: []string{
 				"/c",
 				fmt.Sprintf(
-					"start %s http:serve --port=%v > %s/logs/spire.log 2>&1",
+					"runas /user:%v start %s http:serve --port=%v > %s/logs/spire.log 2>&1",
+					u.Username,
 					spirePath,
 					a.installConfig.SpireWebPort,
 					a.pathmanager.GetEQEmuServerPath(),

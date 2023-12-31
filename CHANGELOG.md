@@ -1,3 +1,7 @@
+## [3.8.5] 12/31/2023
+
+* **Server Installer** Run Spire as regular user on Windows instead of admin
+
 ## [3.8.4] 12/30/2023
 
 * **Downloader** Tweaks to downloader logic
