@@ -1,4 +1,4 @@
-## [3.8.6] 12/31/2023
+## [3.8.7] 12/31/2023
 
 * **Server Installer** Run Spire as regular user on Windows instead of admin
 * **Server Installer** Sign windows binaries

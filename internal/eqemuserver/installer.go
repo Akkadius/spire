@@ -21,7 +21,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"os/user"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -257,7 +256,9 @@ func (a *Installer) Install() error {
 		a.openWindowsPostInstallWindows()
 	}
 
-	fmt.Print("Press [Enter] to close...")
+	fmt.Printf("For windows users, Spire is ran with administrator privileges and should not be under normal cirucmstances\n")
+	fmt.Printf("Once you have verified your server is running, shutdown the server and spire and restart spire as your user\n")
+	fmt.Print("Press [Enter] to close...\n\n")
 	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
 
 	return nil
@@ -1505,18 +1506,12 @@ func (a *Installer) startSpire() error {
 			return fmt.Errorf("could not find spire binary: %v", err)
 		}
 
-		u, err := user.Current()
-		if err != nil {
-			return err
-		}
-
 		_, err = a.Exec(ExecConfig{
 			command: "cmd",
 			args: []string{
 				"/c",
 				fmt.Sprintf(
-					"runas /user:%v start %s http:serve --port=%v > %s/logs/spire.log 2>&1",
-					u.Username,
+					"start %s http:serve --port=%v > %s/logs/spire.log 2>&1",
 					spirePath,
 					a.installConfig.SpireWebPort,
 					a.pathmanager.GetEQEmuServerPath(),
