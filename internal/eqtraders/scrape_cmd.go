@@ -625,6 +625,15 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			components := c.getStringInBetween(recipe, "Components:", "In:")
 			in := c.getStringInBetween(recipe, "In:", "Yield:")
 
+			var requiredSkillLevel int
+			if strings.Contains(recipe, "Required Skill Level:") {
+				// parse out "300" in Required Skill Level: 300
+				requiredSkillLevel, err = strconv.Atoi(strings.TrimSpace(c.getStringInBetween(recipe, "Required Skill Level:", "<")))
+				if err != nil {
+					c.logger.Errorf("error parsing required skill level [%v] err [%v]", c.getStringInBetween(recipe, "Required Skill Level:", "<"), err.Error())
+				}
+			}
+
 			var componentsList []Item
 			for _, s := range strings.Split(components, ",") {
 				s = c.stripTradersComments(s)
@@ -854,30 +863,32 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			recipeName = strings.TrimSpace(recipeName)
 
 			fmt.Printf(
-				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Trivial [%v] Components [%v] Containers [%v] Returns [%v] \n",
+				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Trivial [%v] Required Skill [%v] Components [%v] Containers [%v] Returns [%v] \n",
 				recipeName,
 				r.ExpName,
 				r.ExpId,
 				c.getSkillFromName(r.PageTitle).SkillName,
 				trivialInt,
+				requiredSkillLevel,
 				len(componentsList),
 				len(inList),
 				len(returnItems),
 			)
 
 			r := Recipe{
-				RecipeName:     recipeName,
-				Skill:          c.getSkillFromName(r.PageTitle),
-				ExpansionId:    r.ExpId,
-				ExpansionName:  r.ExpName,
-				Trivial:        trivialInt,
-				NoFail:         noFail,
-				RecipeItemId:   c.getItemIdFromHtml(recipeNameHtml),
-				Components:     componentsList,
-				In:             inList,
-				Yield:          yieldInt,
-				Returns:        returnItems,
-				FailureReturns: failureReturnItems,
+				RecipeName:         recipeName,
+				Skill:              c.getSkillFromName(r.PageTitle),
+				ExpansionId:        r.ExpId,
+				ExpansionName:      r.ExpName,
+				Trivial:            trivialInt,
+				RequiredSkillLevel: requiredSkillLevel,
+				NoFail:             noFail,
+				RecipeItemId:       c.getItemIdFromHtml(recipeNameHtml),
+				Components:         componentsList,
+				In:                 inList,
+				Yield:              yieldInt,
+				Returns:            returnItems,
+				FailureReturns:     failureReturnItems,
 				LearnedByItem: Item{
 					ItemName: learnedItem,
 				},

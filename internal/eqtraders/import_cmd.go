@@ -155,12 +155,12 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		if recipe.LearnedByItem.ItemName != "" {
 			additionalNotes = append(
 				additionalNotes,
-				fmt.Sprintf(" - Learned by item [%v]", recipe.LearnedByItem.ItemName),
+				fmt.Sprintf("Learned by item [%v]", recipe.LearnedByItem.ItemName),
 			)
 		}
 
 		r.Notes = null.StringFrom(
-			fmt.Sprintf("%v-%v%v (eqtraders import)",
+			fmt.Sprintf("%v - %v (eqtraders import) %v",
 				recipe.ExpansionName,
 				recipe.Skill.SkillName,
 				strings.Join(additionalNotes, ", "),
@@ -172,7 +172,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.ReplaceContainer = int8(0) // todo - figure out what this is
 		r.ContentFlags = null.StringFrom("")
 		r.ContentFlagsDisabled = null.StringFrom("")
-		r.Skillneeded = 0 // todo - figure out what this is
+		r.Skillneeded = int16(recipe.RequiredSkillLevel)
 
 		if len(recipe.LearnedByItem.ItemName) > 0 {
 			if i, ok := itemLookupCache[recipe.LearnedByItem.ItemName]; ok {

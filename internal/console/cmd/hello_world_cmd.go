@@ -41,6 +41,7 @@ func NewHelloWorldCommand(
 
 // Handle implementation of the Command interface
 func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
+
 }
 
 // Validate implementation of the Command interface
