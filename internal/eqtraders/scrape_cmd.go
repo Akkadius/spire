@@ -654,6 +654,10 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 					qty = strings.ReplaceAll(qty, "x", "")
 
+					if strings.Contains(qty, "right") {
+						continue
+					}
+
 					quantity, err = strconv.Atoi(qty)
 					if err != nil {
 						fmt.Println("error parsing component quantity [%v] err [%v]", qty, err.Error())
