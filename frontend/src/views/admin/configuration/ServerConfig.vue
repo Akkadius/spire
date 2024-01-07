@@ -362,33 +362,23 @@
       </eq-tab>
 
       <eq-tab class="fade-in" name="UCS">
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label class="form-label">Chatserver Host</label>
-            <input
-              type="text" class="form-control" placeholder="0.0.0.0"
-              v-model="config.server.chatserver.host"
-            />
-          </div>
 
-          <div class="form-group col-md-6">
-            <label class="form-label">Chatserver Port</label>
-            <input type="text" class="form-control" v-model="config.server.chatserver.port"/>
-          </div>
+        <div class="mb-3">
+          Universal Chat Service (UCS) is a service that allows you to connect to the in game chat server. It also runs mail services.
         </div>
 
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label class="form-label">Mailserver Host</label>
+            <label class="form-label">Host</label>
             <input
               type="text" class="form-control" placeholder="0.0.0.0"
-              v-model="config.server.mailserver.host"
+              v-model="config.server.ucs.host"
             />
           </div>
 
           <div class="form-group col-md-6">
-            <label class="form-label">Mailserver Port</label>
-            <input type="text" class="form-control" v-model="config.server.mailserver.port"/>
+            <label class="form-label">Port</label>
+            <input type="text" class="form-control" v-model="config.server.ucs.port"/>
           </div>
         </div>
       </eq-tab>
@@ -635,6 +625,13 @@ export default {
       }
     }
 
+    if (!this.config.server.ucs) {
+      this.config.server.ucs = {
+        host: "",
+        port: "",
+      }
+    }
+
     const loginServerConfigModel = {
       'account': '',
       'password': '',
@@ -693,6 +690,14 @@ export default {
     },
 
     submitServerConfig: async function () {
+      if (!this.config.server.content_database) {
+        delete this.config.server.content_database
+      }
+
+      if (this.config.server.content_database && Object.keys(this.config.server.content_database).length === 0) {
+        delete this.config.server.content_database
+      }
+
       try {
         const r = await SpireApi.v1().post('admin/serverconfig', this.config)
         if (r.status === 200) {

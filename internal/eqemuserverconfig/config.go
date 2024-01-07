@@ -62,14 +62,21 @@ type EQEmuConfigJson struct {
 			} `json:"ports"`
 		} `json:"zones,omitempty"`
 		Qsdatabase *DatabaseConfig `json:"qsdatabase,omitempty"`
-		Chatserver struct {
+		// deprecated
+		Chatserver *struct {
 			Port string `json:"port"`
 			Host string `json:"host"`
 		} `json:"chatserver,omitempty"`
-		Mailserver struct {
+		// deprecated
+		Mailserver *struct {
 			Host string `json:"host"`
 			Port string `json:"port"`
 		} `json:"mailserver,omitempty"`
+		// replaces chatserver and mailserver
+		Ucs *struct {
+			Host string `json:"host"`
+			Port string `json:"port"`
+		} `json:"ucs,omitempty"`
 		World struct {
 			AutoDatabaseUpdates *bool `json:"auto_database_updates,omitempty"`
 			API                 struct {
