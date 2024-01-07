@@ -1,3 +1,7 @@
+## [3.8.8] 1/6/2024
+
+* **Server Installer** Use legacy analytics pipeline to record install counts
+
 ## [3.8.7] 12/31/2023
 
 * **Server Installer** Run Spire as regular user on Windows instead of admin

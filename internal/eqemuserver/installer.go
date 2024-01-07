@@ -14,11 +14,15 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/go-git/go-git/v5"
 	"github.com/google/go-github/v41/github"
+	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path"
@@ -256,10 +260,50 @@ func (a *Installer) Install() error {
 		a.openWindowsPostInstallWindows()
 	}
 
+	_ = a.sendLegacyAnalyticsEvent("install_complete", "spire")
+
 	fmt.Printf("For windows users, Spire is ran with administrator privileges and should not be under normal circumstances\n")
 	fmt.Printf("Once you have verified your server is running, shutdown the server and spire and restart spire as your user\n")
 	fmt.Print("Press [Enter] to close...\n\n")
 	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
+
+	return nil
+}
+
+// legacy installer analytics
+// continue recording these events until the analytics are replaced
+func (a *Installer) sendLegacyAnalyticsEvent(eventName string, eventData string) error {
+	u, err := url.Parse("http://analytics.akkadius.com/")
+	if err != nil {
+		return err
+	}
+
+	h, err := host.Info()
+	if err != nil {
+		return err
+	}
+
+	extendedOs := fmt.Sprintf("%s %s %s %s",
+		h.Platform,
+		h.PlatformVersion,
+		h.KernelVersion,
+		h.KernelArch,
+	)
+
+	q := u.Query()
+	q.Set("api_key", "24a0bde2e5bacd65bcab06a9ac40b62c")
+	q.Set("event", eventName)
+	q.Set("event_data", eventData)
+	q.Set("OS", cases.Title(language.English, cases.Compact).String(runtime.GOOS))
+	q.Set("extended_os", extendedOs)
+	q.Set("server_name", "test")
+	u.RawQuery = q.Encode()
+
+	// post
+	_, err = http.PostForm(u.String(), url.Values{})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
