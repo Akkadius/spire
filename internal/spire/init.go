@@ -260,20 +260,22 @@ func (o *Init) InitApp(r *InitAppRequest) error {
 	}
 
 	// validate
-	if len(r.Username) == 0 || len(r.Password) == 0 {
-		return errors.New("username and password are required")
-	}
+	if r.AuthEnabled == 1 {
+		if len(r.Username) == 0 || len(r.Password) == 0 {
+			return errors.New("username and password are required")
+		}
 
-	if len(r.Password) < 8 {
-		return errors.New("password must be at least 8 characters")
-	}
+		if len(r.Password) < 8 {
+			return errors.New("password must be at least 8 characters")
+		}
 
-	if len(r.Username) < 4 {
-		return errors.New("username must be at least 4 characters")
-	}
+		if len(r.Username) < 4 {
+			return errors.New("username must be at least 4 characters")
+		}
 
-	if len(r.Username) > 32 {
-		return errors.New("username must be less than 32 characters")
+		if len(r.Username) > 32 {
+			return errors.New("username must be less than 32 characters")
+		}
 	}
 
 	// check if already initialized

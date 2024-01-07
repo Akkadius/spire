@@ -1,3 +1,7 @@
+## [3.9.1] 1/7/2024
+
+* **Spire Install** Fix issue during Spire initialization where users were not able to disable authentication receiving an error
+
 ## [3.9.0] 1/6/2024
 
 * **Server Config** Update server admin configuration editor to use new config schema. Mailserver and chatserver have been consolidated to `server.ucs` see https://github.com/EQEmu/Server/pull/3768

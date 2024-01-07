@@ -290,13 +290,15 @@ func (a *Installer) sendLegacyAnalyticsEvent(eventName string, eventData string)
 		h.KernelArch,
 	)
 
+	config := a.config.Get()
+
 	q := u.Query()
 	q.Set("api_key", "24a0bde2e5bacd65bcab06a9ac40b62c")
 	q.Set("event", eventName)
 	q.Set("event_data", eventData)
 	q.Set("OS", cases.Title(language.English, cases.Compact).String(runtime.GOOS))
 	q.Set("extended_os", extendedOs)
-	q.Set("server_name", "test")
+	q.Set("server_name", config.Server.World.Longname)
 	u.RawQuery = q.Encode()
 
 	// post
