@@ -169,7 +169,13 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.Enabled = int8(1)
 		r.MustLearn = int8(0)
 		r.Quest = int8(0)
-		r.ReplaceContainer = int8(0) // todo - figure out what this is
+		// replace container appear to be mostly quest based recipes
+		// todo handle this with quest cases
+		r.ReplaceContainer = int8(0)
+		if recipe.ConsumeContainer {
+			r.ReplaceContainer = int8(1)
+		}
+
 		r.ContentFlags = null.StringFrom("")
 		r.ContentFlagsDisabled = null.StringFrom("")
 		r.Skillneeded = int16(recipe.RequiredSkillLevel)

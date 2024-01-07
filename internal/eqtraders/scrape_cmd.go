@@ -589,6 +589,8 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 			recipeText := s.Find("td").Next().Text()
 
+			consumeContainer := false
+
 			if len(singleRecipe) > 0 && recipeName != singleRecipe {
 				return
 			}
@@ -627,8 +629,16 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 			var requiredSkillLevel int
 			if strings.Contains(recipe, "Required Skill Level:") {
+				reqStr := c.getStringInBetween(recipe, "Required Skill Level:", "<")
+				reqStr = strings.ReplaceAll(reqStr, "&gt;", "")
+				if strings.Contains(reqStr, "&") {
+					reqStr = strings.Split(reqStr, "&")[0]
+				}
+
+				reqStr = strings.TrimSpace(reqStr)
+
 				// parse out "300" in Required Skill Level: 300
-				requiredSkillLevel, err = strconv.Atoi(strings.TrimSpace(c.getStringInBetween(recipe, "Required Skill Level:", "<")))
+				requiredSkillLevel, err = strconv.Atoi(reqStr)
 				if err != nil {
 					c.logger.Errorf("error parsing required skill level [%v] err [%v]", c.getStringInBetween(recipe, "Required Skill Level:", "<"), err.Error())
 				}
@@ -771,6 +781,11 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				notes = strings.ReplaceAll(notes, "&#39;", "")
 				notes = strings.ReplaceAll(notes, "&#39;", "")
 
+				if strings.Contains(notes, "is consumed") {
+					consumeContainer = true
+					//fmt.Println("Notes ", notes, " consumed in recipe ", recipeName)
+				}
+
 				if strings.Contains(notes, "You may need to purchase and scribe") {
 					learnedItem = strings.TrimSpace(c.getStringInBetween(notes, "You may need to purchase and scribe", "in order to perform this combine"))
 				} else if strings.Contains(notes, "You must purchase and scribe") && strings.Contains(notes, "from") {
@@ -882,6 +897,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				ExpansionName:      r.ExpName,
 				Trivial:            trivialInt,
 				RequiredSkillLevel: requiredSkillLevel,
+				ConsumeContainer:   consumeContainer,
 				NoFail:             noFail,
 				RecipeItemId:       c.getItemIdFromHtml(recipeNameHtml),
 				Components:         componentsList,

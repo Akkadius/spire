@@ -15,6 +15,7 @@ type Recipe struct {
 	ExpansionName      string `json:"expansion_name"`
 	Trivial            int    `json:"trivial"`
 	RequiredSkillLevel int    `json:"required_skill_level"`
+	ConsumeContainer   bool   `json:"consume_container"`
 	NoFail             bool   `json:"no_fail"`
 	RecipeItemId       int    `json:"recipe_item_id"`
 	Components         []Item `json:"components"`
