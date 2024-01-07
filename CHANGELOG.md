@@ -1,3 +1,7 @@
+## [3.9.0] 1/6/2024
+
+* **Server Config** Update server admin configuration editor to use new config schema. Mailserver and chatserver have been consolidated to `server.ucs` see https://github.com/EQEmu/Server/pull/3768
+
 ## [3.8.8] 1/6/2024
 
 * **Server Installer** Use legacy analytics pipeline to record install counts
