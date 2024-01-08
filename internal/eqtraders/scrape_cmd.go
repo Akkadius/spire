@@ -561,8 +561,9 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		// some pages are formatted strange and have an extra <td> beginning of the row
 		// https://www.eqtraders.com/recipes/pottery_recipe_page.php?article=1365&rsa=Pottery&sb=item&sub=ToL&printer=normal
 		contents = string(data)
-		contents = strings.ReplaceAll(contents, "<td>&nbsp;&nbsp;</td>", "")
 	}
+
+	contents = strings.ReplaceAll(contents, "<td>&nbsp;&nbsp;</td>", "")
 
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(contents)))
 	if err != nil {
@@ -900,6 +901,18 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 			if skill.SkillId == 0 {
 				c.logger.Errorf("skill not found for recipe [%v] [%v]", recipeName, r.Url)
+			}
+
+			if len(componentsList) == 0 {
+				c.logger.Errorf("components not found for recipe [%v] [%v]", recipeName, r.Url)
+				return
+			}
+
+			for _, component := range componentsList {
+				if component.ItemId == 0 {
+					c.logger.Errorf("component item not found for recipe [%v] [%v]", recipeName, r.Url)
+					return
+				}
 			}
 
 			r := Recipe{
