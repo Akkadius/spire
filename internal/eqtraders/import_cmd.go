@@ -246,7 +246,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 				}
 			}
 
-			if e.Failcount == 0 {
+			if e.Failcount == 0 && !recipe.NoFail {
 				e.Salvagecount = int8(component.Count)
 			}
 

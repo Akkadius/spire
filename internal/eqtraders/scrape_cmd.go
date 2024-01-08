@@ -519,7 +519,7 @@ func (c *ScrapeCommand) getStringInBetween(str, before, after string) string {
 var recipeWriteMutex = &sync.Mutex{}
 
 func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
-	fmt.Println("Parsing recipe page: ", r.Url+"&printer=normal")
+	fmt.Printf("> Parsing recipe page: %v&printer=normal\n", r.Url)
 
 	// get page slug
 	hash := md5.Sum([]byte(r.Url))
@@ -872,7 +872,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				learnedItem = re.ReplaceAllString(learnedItem, "")
 
 				if len(learnedItem) > 0 {
-					fmt.Printf("learned item [%v] for recipe [%v]\n", learnedItem, recipeName)
+					fmt.Printf("-- Learned by item [%v] for recipe [%v]\n", learnedItem, recipeName)
 				}
 			}
 
@@ -882,7 +882,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			recipeName = strings.TrimSpace(recipeName)
 
 			fmt.Printf(
-				"Recipe [%v] Expansion [%v] (%v) Skill [%v] Trivial [%v] Required Skill [%v] Components [%v] Containers [%v] Returns [%v] \n",
+				"- Recipe [%v] Expansion [%v] (%v) Skill [%v] Trivial [%v] Required Skill [%v] Components [%v] Containers [%v] Returns [%v] \n",
 				recipeName,
 				r.ExpName,
 				r.ExpId,
@@ -894,9 +894,17 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				len(returnItems),
 			)
 
+			skill := c.getSkillFromName(r.PageTitle)
+			if skill.SkillId == 0 {
+				skill = c.getSkillFromName(r.Url)
+			}
+			if skill.SkillId == 0 {
+				c.logger.Errorf("skill not found for recipe [%v] [%v]", recipeName, r.Url)
+			}
+
 			r := Recipe{
 				RecipeName:         recipeName,
-				Skill:              c.getSkillFromName(r.PageTitle),
+				Skill:              skill,
 				ExpansionId:        r.ExpId,
 				ExpansionName:      r.ExpName,
 				Trivial:            trivialInt,
@@ -1018,6 +1026,7 @@ type Skill struct {
 
 var skills = []Skill{
 	{SkillId: 56, SkillName: "Make Poison"},
+	{SkillId: 56, SkillName: "Make%20Poison"},
 	{SkillId: 57, SkillName: "Tinkering"},
 	{SkillId: 58, SkillName: "Research"},
 	{SkillId: 59, SkillName: "Alchemy"},
@@ -1028,6 +1037,7 @@ var skills = []Skill{
 	{SkillId: 65, SkillName: "Brewing"},
 	{SkillId: 68, SkillName: "Jewelcraft"},
 	{SkillId: 69, SkillName: "Pottery"},
+	// add fishing
 }
 
 func (c *ScrapeCommand) getSkillFromName(name string) Skill {
