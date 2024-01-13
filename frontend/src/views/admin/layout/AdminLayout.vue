@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      isLocal: false
+      isLocal: true
     }
   },
   async created() {

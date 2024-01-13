@@ -1,15 +1,13 @@
 <template>
   <div>
-    <app-loader :is-loading="!loaded"></app-loader>
-
     <div style="max-height: 85vh; overflow-y: scroll; overflow-x: hidden">
-      <div class="row row-cards" v-if="loaded">
+      <div class="row row-cards" :style="loaded ? 'opacity:1' : 'opacity:.3'">
         <dashboard-counter name="Accounts" icon="user" :counter="kFormatter(stats.accounts)"/>
         <dashboard-counter name="Characters" icon="user" :counter="kFormatter(stats.characters)"/>
         <dashboard-counter name="Guilds" icon="shield" :counter="kFormatter(stats.guilds)"/>
       </div>
 
-      <div class="row row-cards" v-if="loaded">
+      <div class="row row-cards" :style="loaded ? 'opacity:1' : 'opacity:.3'">
         <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
         <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
         <dashboard-counter name="Server Uptime" :counter="stats.uptime.includes('{') ? '' : formatUptime(stats.uptime)"/>

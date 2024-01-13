@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <app-loader :is-loading="!loaded"></app-loader>
-
-    <div v-if="zoneList.length === 0 && loaded">
+  <div :style="loaded ? 'opacity:1' : 'opacity:.3'">
+    <div v-if="zoneList.length === 0">
       <div class="card">
         <div class="card-body">
           Zoneservers are offline

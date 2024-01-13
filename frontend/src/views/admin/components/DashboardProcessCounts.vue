@@ -1,5 +1,5 @@
 <template>
-  <div v-if="processCounts">
+  <div v-if="processCounts" :style="loaded ? 'opacity:1' : 'opacity:.3'">
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">Server Processes</h4>
@@ -74,6 +74,8 @@ export default {
       p.push({ name: "Queryserv (queryserv)", count: e.query_serv_online ? 1 : 0, optional: true })
 
       this.processCounts = p
+
+      this.loaded = true
     })
   },
 }

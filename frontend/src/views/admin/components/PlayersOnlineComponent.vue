@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" :style="loaded ? 'opacity:1' : 'opacity:.3'">
     <div class="col-12">
       <div class="card mb-3" v-if="clientList.length > 0 && filteredClientList.length > 0">
         <div class="card-body pt-0 pb-0 pl-3 pr-3">
@@ -18,8 +18,6 @@
         </div>
 
       </div>
-
-      <app-loader :is-loading="!loaded" padding="4"></app-loader>
 
       <div class="card">
         <div
