@@ -1,5 +1,5 @@
 <template>
-  <div class="card" v-if="stats">
+  <div class="card" v-if="stats" style="min-height: 90px">
     <div class="card-body pl-4 pr-4 pt-3 pb-3">
 
       <div class="row align-items-center">

@@ -1,4 +1,4 @@
-## [3.9.4] 1/13/2024
+## [3.9.5] 1/13/2024
 
 * **Database Connections** Fix core issue database connection management logic where database connections that failed to established could be cached and used in subsequent requests
 * **Database** Update Spire with latest EQEmulator schema changes
