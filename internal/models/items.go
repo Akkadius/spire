@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/volatiletech/null/v8"
+	"time"
 )
 
 type Item struct {
@@ -60,7 +61,7 @@ type Item struct {
 	Damageshield            int                     `json:"damageshield" gorm:"Column:damageshield"`
 	Deity                   int                     `json:"deity" gorm:"Column:deity"`
 	Delay                   int                     `json:"delay" gorm:"Column:delay"`
-	Augdistiller            int                     `json:"augdistiller" gorm:"Column:augdistiller"`
+	Augdistiller            uint                    `json:"augdistiller" gorm:"Column:augdistiller"`
 	Dotshielding            int                     `json:"dotshielding" gorm:"Column:dotshielding"`
 	Dr                      int                     `json:"dr" gorm:"Column:dr"`
 	Clicktype               int                     `json:"clicktype" gorm:"Column:clicktype"`
@@ -139,7 +140,7 @@ type Item struct {
 	UNK124                  int                     `json:"unk_124" gorm:"Column:UNK124"`
 	Attuneable              int                     `json:"attuneable" gorm:"Column:attuneable"`
 	Nopet                   int                     `json:"nopet" gorm:"Column:nopet"`
-	Updated                 null.Time               `json:"updated" gorm:"Column:updated"`
+	Updated                 time.Time               `json:"updated" gorm:"Column:updated"`
 	Comment                 string                  `json:"comment" gorm:"Column:comment"`
 	UNK127                  int                     `json:"unk_127" gorm:"Column:UNK127"`
 	Pointtype               int                     `json:"pointtype" gorm:"Column:pointtype"`
@@ -212,7 +213,7 @@ type Item struct {
 	Focusunk5               int                     `json:"focusunk_5" gorm:"Column:focusunk5"`
 	Focusunk6               string                  `json:"focusunk_6" gorm:"Column:focusunk6"`
 	Focusunk7               int                     `json:"focusunk_7" gorm:"Column:focusunk7"`
-	Scrollunk1              int                     `json:"scrollunk_1" gorm:"Column:scrollunk1"`
+	Scrollunk1              uint                    `json:"scrollunk_1" gorm:"Column:scrollunk1"`
 	Scrollunk2              int                     `json:"scrollunk_2" gorm:"Column:scrollunk2"`
 	Scrollunk3              int                     `json:"scrollunk_3" gorm:"Column:scrollunk3"`
 	Scrollunk4              int                     `json:"scrollunk_4" gorm:"Column:scrollunk4"`
@@ -251,10 +252,10 @@ type Item struct {
 	Created                 string                  `json:"created" gorm:"Column:created"`
 	Elitematerial           int16                   `json:"elitematerial" gorm:"Column:elitematerial"`
 	Ldonsellbackrate        int16                   `json:"ldonsellbackrate" gorm:"Column:ldonsellbackrate"`
-	Scriptfileid            int16                   `json:"scriptfileid" gorm:"Column:scriptfileid"`
+	Scriptfileid            int32                   `json:"scriptfileid" gorm:"Column:scriptfileid"`
 	Expendablearrow         int16                   `json:"expendablearrow" gorm:"Column:expendablearrow"`
-	Powersourcecapacity     int16                   `json:"powersourcecapacity" gorm:"Column:powersourcecapacity"`
-	Bardeffect              int16                   `json:"bardeffect" gorm:"Column:bardeffect"`
+	Powersourcecapacity     int32                   `json:"powersourcecapacity" gorm:"Column:powersourcecapacity"`
+	Bardeffect              int32                   `json:"bardeffect" gorm:"Column:bardeffect"`
 	Bardeffecttype          int16                   `json:"bardeffecttype" gorm:"Column:bardeffecttype"`
 	Bardlevel2              int16                   `json:"bardlevel_2" gorm:"Column:bardlevel2"`
 	Bardlevel               int16                   `json:"bardlevel" gorm:"Column:bardlevel"`

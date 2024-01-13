@@ -29,6 +29,7 @@ type TaskActivity struct {
 	Zones                string      `json:"zones" gorm:"Column:zones"`
 	ZoneVersion          null.Int    `json:"zone_version" gorm:"Column:zone_version"`
 	Optional             int8        `json:"optional" gorm:"Column:optional"`
+	ListGroup            uint8       `json:"list_group" gorm:"Column:list_group"`
 }
 
 func (TaskActivity) TableName() string {

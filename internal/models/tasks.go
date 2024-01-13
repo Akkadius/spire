@@ -33,6 +33,7 @@ type Task struct {
 	DzTemplateId          uint               `json:"dz_template_id" gorm:"Column:dz_template_id"`
 	LockActivityId        int                `json:"lock_activity_id" gorm:"Column:lock_activity_id"`
 	FactionAmount         int                `json:"faction_amount" gorm:"Column:faction_amount"`
+	Enabled               null.Int16         `json:"enabled" gorm:"Column:enabled"`
 	TaskActivities        []TaskActivity     `json:"task_activities,omitempty" gorm:"foreignKey:taskid;references:id"`
 	Tasksets              []Taskset          `json:"tasksets,omitempty" gorm:"foreignKey:taskid;references:id"`
 	AlternateCurrency     *AlternateCurrency `json:"alternate_currency,omitempty" gorm:"foreignKey:reward_point_type;references:id"`
