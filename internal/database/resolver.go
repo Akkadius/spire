@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -46,6 +47,8 @@ func NewResolver(
 		contentConnectionName: "eqemu_content",
 	}
 
+	go i.connectionKeepAlive()
+
 	// initialize ahead of time
 	i.remoteDatabases["default"] = map[uint]*gorm.DB{}
 	i.remoteDatabases["eqemu_content"] = map[uint]*gorm.DB{}
@@ -73,6 +76,9 @@ func (d *Resolver) GetEqemuDb() *gorm.DB {
 func (d *Resolver) GetEncKey(userId uint) string {
 	return fmt.Sprintf("%v-%v", d.crypt.GetEncryptionKey(), userId)
 }
+
+// connectionCreationMutex is used to lock the creation of database connections
+var connCreationMutex = sync.Mutex{}
 
 func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
 
@@ -107,22 +113,27 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 
 	// find cached connection
 	cachedConn, found := d.cache.Get(connectionKey)
+
+	// if we didn't find a cached connection, lock the user mutex for
+	// database connection creation incase user fires off multiple requests
+	if !found {
+		// lock mutex
+		connCreationMutex.Lock()
+		defer connCreationMutex.Unlock()
+
+		//fmt.Println("after mutex firing " + connectionKey + " for user " + fmt.Sprintf("%v", user.ID))
+		cachedConn, found = d.cache.Get(connectionKey)
+		if found {
+			connectionId = cachedConn.(uint)
+		}
+	}
+
+	// if we found a cached connection, return it
 	if found {
 		connectionId = cachedConn.(uint)
 
 		// If existing connection exists, return it
 		if _, ok := d.remoteDatabases[connectionType][connectionId]; ok {
-			//fmt.Println("Returning cached lookup")
-			db, err := d.remoteDatabases[connectionType][connectionId].DB()
-			if err != nil {
-				d.logger.Printf("Debug: MySQL ping err [%v]", err)
-			}
-
-			err = db.Ping()
-			if err != nil {
-				d.logger.Printf("Debug: MySQL ping err [%v]", err)
-			}
-
 			return d.remoteDatabases[connectionType][connectionId]
 		}
 	}
@@ -153,16 +164,6 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 
 		// If existing connection exists, return it
 		if _, ok := d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID]; ok {
-			db, err := d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID].DB()
-			if err != nil {
-				d.logger.Printf("Debug: MySQL ping err [%v]", err)
-			}
-
-			err = db.Ping()
-			if err != nil {
-				d.logger.Printf("Debug: MySQL ping err [%v]", err)
-			}
-
 			return d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID]
 		}
 	}
@@ -191,7 +192,7 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 
 	// create new connection since we don't have one
 	dsn := fmt.Sprintf(
-		"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local&timeout=1s",
+		"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local&timeout=3s",
 		dbUsername,
 		dbPassword,
 		dbHost,
@@ -203,6 +204,8 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 	if env.GetBool("MYSQL_QUERY_LOGGING", "false") {
 		logMode = logger.Info
 	}
+
+	//fmt.Printf("[database_resolver] creating new connection for user [%v] with dsn [%v]\n", user.ID, dsn)
 
 	db, err := gorm.Open(
 		mysql.New(mysql.Config{
@@ -220,18 +223,19 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 
 	if err != nil {
 		d.logger.Printf("[database_resolver] MySQL conn err [%v]", err)
+		return nil
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
 		d.logger.Printf("[database_resolver] MySQL fetch err [%v]", err)
+		return nil
 	}
 
 	sqlDB.SetConnMaxLifetime(time.Minute * 3)
 	sqlDB.SetMaxIdleConns(env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"))
 	sqlDB.SetMaxOpenConns(env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"))
 
-	// cache instance pointer to memory
 	d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID] = db
 
 	return db
@@ -417,4 +421,50 @@ func (d *Resolver) GetUserConnection(user models.User) models.UserServerDatabase
 	d.cache.Set(key, conn, 10*time.Minute)
 
 	return conn
+}
+
+// failedConnectionAttempts holds the number of failed connection attempts
+var failedConnectionAttempts = map[uint]uint{}
+
+// connectionKeepAlive is used to keep connections alive
+func (d *Resolver) connectionKeepAlive() {
+	for {
+		time.Sleep(1 * time.Second)
+
+		// loop through all connections
+		for _, connections := range d.remoteDatabases {
+			for connectionId, connection := range connections {
+				if connection != nil {
+					// ping connection
+					db, err := connection.DB()
+					if err != nil {
+						d.logger.Printf("[database_resolver] MySQL fetch err [%v]", err)
+						continue
+					}
+
+					// if we have a failed connection attempt
+					if err := db.Ping(); err != nil {
+						d.logger.Printf("[database_resolver] MySQL ping err [%v]", err)
+						// if we have a failed connection attempt
+						if _, ok := failedConnectionAttempts[connectionId]; ok {
+							// increment
+							failedConnectionAttempts[connectionId] = failedConnectionAttempts[connectionId] + 1
+
+							// if we have 3 failed attempts, destroy connection
+							if failedConnectionAttempts[connectionId] >= 3 {
+								// delete map entry
+								delete(d.remoteDatabases["default"], connectionId)
+								delete(d.remoteDatabases["eqemu_content"], connectionId)
+
+								d.logger.Printf("[database_resolver] destroying connection %v after 3 failed attempts to ping\n", connectionId)
+							}
+						} else {
+							// init failed connection attempt
+							failedConnectionAttempts[connectionId] = 1
+						}
+					}
+				}
+			}
+		}
+	}
 }
