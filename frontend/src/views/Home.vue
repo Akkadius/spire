@@ -3,11 +3,15 @@
     <div class="row justify-content-center">
       <div class="col-12 col-lg-12 col-xl-12 content-pop mt-0">
 
-        <div class="container-fluid">
+        <div class="container-fluid" style="min-height: 100vh">
 
           <div class="row" id="changelog">
             <div class="col-12">
-              <v-runtime-template class="changelog markdown-body" :template="changelog"/>
+              <v-runtime-template
+                class="changelog markdown-body"
+                :template="changelog"
+
+              />
             </div>
           </div>
 

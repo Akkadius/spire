@@ -1,8 +1,9 @@
-## [3.9.5] 1/13/2024
+## [3.9.6] 1/13/2024
 
 * **Database Connections** Fix core issue database connection management logic where database connections that failed to established could be cached and used in subsequent requests
 * **Database** Update Spire with latest EQEmulator schema changes
 * **Spire Admin** Tweaks to the UI to keep parts of the UI jumping around while the page is loading
+* **News** News page now takes the full page on initial load
 
 ## [3.9.1] 1/7/2024
 
