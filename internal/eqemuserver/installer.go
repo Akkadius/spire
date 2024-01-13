@@ -21,6 +21,7 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -2021,6 +2022,16 @@ func (a *Installer) setWindowsPerlPath() error {
 	return nil
 }
 
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
+
 func (a *Installer) setPostInstallConfigValues() error {
 	// load the config
 	config := a.config.Get()
@@ -2038,6 +2049,8 @@ func (a *Installer) setPostInstallConfigValues() error {
 		// boat zones mainly
 		config.WebAdmin.Launcher.StaticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,abysmal,firiona,overthere"
 	}
+
+	config.Server.World.Longname = fmt.Sprintf("Akka's Windows PEQ Installer [%v]", RandStringRunes(10))
 
 	err := a.config.Save(config)
 	if err != nil {
