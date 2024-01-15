@@ -35,13 +35,17 @@
               <div class="form-group col-md-6">
                 <label class="form-label">Public Address</label>
                 <input type="text" class="form-control" v-model="config.server.world.address"/>
-                <small class="form-text mt-3 eq-alert">If your server is on the internet, you will need to specify your public address. When on a LAN behind a NAT you will need both this and <b>localaddress</b> set </small>
+                <small class="form-text mt-3 eq-alert">If your server is on the internet, you will need to specify your
+                  public address. When on a LAN behind a NAT you will need both this and <b>localaddress</b> set
+                </small>
               </div>
 
               <div class="form-group col-md-6">
                 <label class="form-label">Local Address</label>
                 <input type="text" class="form-control" v-model="config.server.world.localaddress"/>
-                <small class="form-text mt-3 eq-alert">If you are on a LAN you will need this address set to the local address of your host so that others on your network can properly be routed to your gameserver. Do not use 127.0.0.1</small>
+                <small class="form-text mt-3 eq-alert">If you are on a LAN you will need this address set to the local
+                  address of your host so that others on your network can properly be routed to your gameserver. Do not
+                  use 127.0.0.1</small>
               </div>
             </div>
           </eq-tab>
@@ -364,7 +368,8 @@
       <eq-tab class="fade-in" name="UCS">
 
         <div class="mb-3">
-          Universal Chat Service (UCS) is a service that allows you to connect to the in game chat server. It also runs mail services.
+          Universal Chat Service (UCS) is a service that allows you to connect to the in game chat server. It also runs
+          mail services.
         </div>
 
         <div class="form-row">
@@ -574,7 +579,6 @@
 import EqWindow        from "@/components/eq-ui/EQWindow.vue";
 import EqTabs          from "@/components/eq-ui/EQTabs.vue";
 import EqTab           from "@/components/eq-ui/EQTab.vue";
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import {SpireApi}      from "@/app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import EqWindowComplex from "@/components/eq-ui/EQWindowComplex.vue";
@@ -690,12 +694,49 @@ export default {
     },
 
     submitServerConfig: async function () {
+
+      // remove empty content_database configs
       if (!this.config.server.content_database) {
         delete this.config.server.content_database
       }
-
       if (this.config.server.content_database && Object.keys(this.config.server.content_database).length === 0) {
         delete this.config.server.content_database
+      }
+
+      // remove empty loginserver configs
+      if (this.config.server.world.loginserver1 && Object.keys(this.config.server.world.loginserver1).length === 0) {
+        delete this.config.server.world.loginserver1
+      }
+
+      if (this.config.server.world.loginserver2 && Object.keys(this.config.server.world.loginserver2).length === 0) {
+        delete this.config.server.world.loginserver2
+      }
+
+      if (this.config.server.world.loginserver3 && Object.keys(this.config.server.world.loginserver3).length === 0) {
+        delete this.config.server.world.loginserver3
+      }
+
+      // loop through the above if checks dynamically 1-3
+      for (let i = 1; i <= 3; i++) {
+        if (this.config.server.world[`loginserver${i}`] && Object.keys(this.config.server.world[`loginserver${i}`]).length === 0) {
+          delete this.config.server.world[`loginserver${i}`]
+        }
+        if (this.config.server.world[`loginserver${i}`]
+          && typeof this.config.server.world[`loginserver${i}`].host !== 'undefined'
+          && this.config.server.world[`loginserver${i}`].host === '') {
+          delete this.config.server.world[`loginserver${i}`]
+        }
+      }
+
+      // if loginserver 3 is defined and 2 is not, move 3 to 2
+      if (this.config.server.world.loginserver3 && !this.config.server.world.loginserver2) {
+        this.config.server.world.loginserver2 = this.config.server.world.loginserver3
+        delete this.config.server.world.loginserver3
+      }
+      // if loginserver 2 is defined and 1 is not, move 2 to 1
+      if (this.config.server.world.loginserver2 && !this.config.server.world.loginserver1) {
+        this.config.server.world.loginserver1 = this.config.server.world.loginserver2
+        delete this.config.server.world.loginserver2
       }
 
       try {

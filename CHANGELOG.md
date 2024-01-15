@@ -1,3 +1,8 @@
+## [3.9.8] 1/15/2024
+
+* **Spire Admin** Fix issue where editing server configuration would create empty loginserver entries
+* **Spire Admin** Added more resiliency around server configuration editing for loginserver blocks. If loginserver 3 is defined and loginserver 2 is not, it will now create loginserver 2 and fill it with default values. Same goes for position 2 and 1. This will prevent the server from failing to boot due to missing loginserver blocks.
+
 ## [3.9.7] 1/13/2024
 
 * **Database Connections** Fix core issue database connection management logic where database connections that failed to established could be cached and used in subsequent requests

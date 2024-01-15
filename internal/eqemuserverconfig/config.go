@@ -84,15 +84,17 @@ type EQEmuConfigJson struct {
 			} `json:"api,omitempty"`
 			Address      string `json:"address,omitempty"`
 			Localaddress string `json:"localaddress,omitempty"`
-			Loginserver1 struct {
+			Loginserver1 *struct {
 				Port     string `json:"port"`
 				Account  string `json:"account"`
 				Password string `json:"password"`
 				Host     string `json:"host"`
+				Legacy   string `json:"legacy,omitempty"`
 			} `json:"loginserver1,omitempty"`
-			Loginserver2 struct {
+			Loginserver2 *struct {
 				Account  string `json:"account"`
 				Password string `json:"password"`
+				Legacy   string `json:"legacy,omitempty"`
 				Host     string `json:"host"`
 				Port     string `json:"port"`
 			} `json:"loginserver2,omitempty"`
@@ -108,10 +110,10 @@ type EQEmuConfigJson struct {
 			Key          string `json:"key"`
 			Shortname    string `json:"shortname"`
 			Longname     string `json:"longname"`
-			Loginserver3 struct {
+			Loginserver3 *struct {
 				Account  string `json:"account"`
 				Password string `json:"password"`
-				Legacy   string `json:"legacy"`
+				Legacy   string `json:"legacy,omitempty"`
 				Host     string `json:"host"`
 				Port     string `json:"port"`
 			} `json:"loginserver3,omitempty"`
