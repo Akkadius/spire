@@ -322,6 +322,7 @@ export class Tasks {
       "replay_timer_group": 0,
       "request_timer_seconds": 0,
       "request_timer_group": 0,
+      "enabled": 1,
       "task_activities": [{
         "taskid": 2,
         "activityid": 0,
@@ -402,7 +403,8 @@ export class Tasks {
       "delivertonpc": 0,
       "zones": "21",
       "zone_version": -1,
-      "optional": 0
+      "optional": 0,
+      "enabled": 1
     }
   }
 

@@ -1,3 +1,7 @@
+## [3.9.9] 1/23/2024
+
+* **Task Editor** Fix issue where new tasks were not getting inserted with enabled `1`
+
 ## [3.9.8] 1/15/2024
 
 * **Spire Admin** Fix issue where editing server configuration would create empty loginserver entries
