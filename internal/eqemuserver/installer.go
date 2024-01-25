@@ -218,6 +218,7 @@ func (a *Installer) Install() error {
 			a.disableQuickEdit,
 			a.createWindowsServerScripts,
 			a.initWindowsWget, // TODO: Remove this when perl utility script is deprecated from world
+			a.installVcRuntime,
 			a.setWindowsPerlPath,
 			a.setWindowsMysqlPath,
 			a.publishWindowsPorts,
@@ -2355,6 +2356,39 @@ func (a *Installer) publishWindowsPorts() error {
 	_, _ = a.Exec(ExecConfig{command: "cmd.exe", args: []string{"/c", fmt.Sprintf("netsh advfirewall firewall add rule name=\"EQEmu Spire (TCP) (%v)\" dir=in action=allow protocol=TCP localport=%v", a.installConfig.SpireWebPort, a.installConfig.SpireWebPort)}})
 
 	a.DoneBanner("Publishing Windows Firewall rules")
+
+	return nil
+}
+
+func (a *Installer) installVcRuntime() error {
+	a.Banner("Installing Visual C++ Runtime")
+
+	// download the latest binaries
+	tempPath := filepath.Join(os.TempDir(), "vc_runtime.exe")
+	fmt.Printf("Downloading binaries to [%v]\n", tempPath)
+	err := download.WithProgress(
+		tempPath,
+		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/VC_redist.x64.exe",
+	)
+	if err != nil {
+		return err
+	}
+
+	// run the redist
+	_, err = a.Exec(
+		ExecConfig{
+			command: tempPath,
+			args: []string{
+				"/passive",
+				"/norestart",
+			},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	a.DoneBanner("Installing Visual C++ Runtime")
 
 	return nil
 }

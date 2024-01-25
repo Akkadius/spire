@@ -1,3 +1,7 @@
+## [3.9.10] 1/24/2024
+
+* **Installer** Add back auto installing VC runtime 2015-2019 for Windows users still using Windows 10
+
 ## [3.9.9] 1/23/2024
 
 * **Task Editor** Fix issue where new tasks were not getting inserted with enabled `1`
