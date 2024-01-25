@@ -1,6 +1,7 @@
-## [3.9.10] 1/24/2024
+## [3.9.11] 1/24/2024
 
 * **Installer** Add back auto installing VC runtime 2015-2019 for Windows users still using Windows 10
+* **Installer** Shorten the server name randomized string to 5 from 10 to prevent UI display issues and make it easier to identify
 
 ## [3.9.9] 1/23/2024
 

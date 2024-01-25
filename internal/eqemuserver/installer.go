@@ -2051,7 +2051,7 @@ func (a *Installer) setPostInstallConfigValues() error {
 		config.WebAdmin.Launcher.StaticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,abysmal,firiona,overthere"
 	}
 
-	config.Server.World.Longname = fmt.Sprintf("Akka's Windows PEQ Installer [%v]", RandStringRunes(10))
+	config.Server.World.Longname = fmt.Sprintf("Akka's Windows PEQ Installer [%v]", RandStringRunes(5))
 
 	err := a.config.Save(config)
 	if err != nil {
