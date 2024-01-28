@@ -643,6 +643,8 @@ export default {
         { name: "Immune to NPC Aggro", ability: 50 },
         { name: "Immune to Memory Fades", ability: 52 },
         { name: "Immune to Open", ability: 53 },
+        { name: "Immune to Assassinate", ability: 54 },
+        { name: "Immune to Headshot", ability: 55 },
       ]
     }
   },
