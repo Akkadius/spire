@@ -1,3 +1,11 @@
+## [3.10.0] 1/28/2024
+
+* **Spire Admin** Message of the day should now be functional again
+* **Spire Admin** Spire now has a server lock / unlock button and status icon that is now present in the admin header visible on all admin pages.
+* **Spire Admin** The dashboard page now has a "Server Addresses" section that displays server world address and local address with copy to clipboard functionality if they are present in the server configuration.
+* **Spire Admin** The dashboard page now has a "Networking Interfaces" section that displays interfaces and realtime bandwidth utilization.
+* **Special Abilities Calculator** Adds support in Special Abilities Calculator for `Immune to Assassinate` and `Immune to Headshot` abilities. (Kinglykrab)
+
 ## [3.9.11] 1/24/2024
 
 * **Installer** Add back auto installing VC runtime 2015-2019 for Windows users still using Windows 10

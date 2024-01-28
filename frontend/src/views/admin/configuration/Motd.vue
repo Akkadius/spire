@@ -58,8 +58,6 @@ export default {
     }
   },
   async created() {
-    const response = await OcculusClient.getServerMotd()
-    this.motd      = response.value
     this.loaded    = true
 
     let r = await (new VariableApi(...SpireApi.cfg())).listVariables()
