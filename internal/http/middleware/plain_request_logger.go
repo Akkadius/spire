@@ -223,6 +223,7 @@ func LoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
 
 			// ignore logging for the below paths
 			ignoreLogPaths := []string{
+				"/api/v1/admin/system/network",
 				"/api/v1/admin/system/cpu",
 				"/api/v1/admin/system/resource-usage-summary",
 				"/api/v1/eqemuserver/client-list",

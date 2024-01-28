@@ -61,6 +61,8 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/zone-list", a.getZoneList, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/server-stats", a.getServerStats, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-lock-status", a.getServerLockedStatus, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/toggle-server-lock", a.toggleServerLock, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/reload-types", a.getReloadTypes, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/reload/:type", a.reload, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/update-type", a.getUpdateType, nil),
@@ -989,4 +991,76 @@ func (a *Controller) preflight(c echo.Context) error {
 	c.Response().Flush()
 
 	return nil
+}
+
+// getLockStatus returns the lock status of the server
+// helper method
+func (a *Controller) getLockStatus() bool {
+	cfg := a.serverconfig.Get()
+
+	// first, pull lock status from world API if it is available
+	// fall back to config
+	locked := false
+	status, err := a.eqemuserverapi.GetLockStatus()
+	if err == nil {
+		fmt.Printf("pulling status from world api [%v]\n", status)
+		locked = status
+	} else {
+		fmt.Printf("pulling status from config [%v]\n", cfg.Server.World.Locked)
+		locked = cfg.Server.World.Locked
+	}
+
+	return locked
+}
+
+func (a *Controller) toggleServerLock(c echo.Context) error {
+	cfg := a.serverconfig.Get()
+	locked := a.getLockStatus()
+
+	// toggle lock
+	if locked {
+		locked = false
+	} else {
+		locked = true
+	}
+
+	cfg.Server.World.Locked = locked
+
+	err := a.serverconfig.Save(cfg)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to save config [%v]", err.Error())},
+		)
+	}
+
+	err = a.eqemuserverapi.SetLockStatus(locked)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to set lock status [%v]", err.Error())},
+		)
+	}
+
+	lockedMessage := "unlocked"
+	if locked {
+		lockedMessage = "locked"
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"message": fmt.Sprintf("Server is now %v", lockedMessage),
+			"locked":  locked,
+		},
+	)
+}
+
+func (a *Controller) getServerLockedStatus(c echo.Context) error {
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"locked": a.getLockStatus(),
+		},
+	)
 }

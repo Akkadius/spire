@@ -10,7 +10,7 @@
       <div class="row row-cards" :style="loaded ? 'opacity:1' : 'opacity:.3'">
         <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
         <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
-        <dashboard-counter name="Server Uptime" :counter="stats.uptime.includes('{') ? '' : formatUptime(stats.uptime)"/>
+        <dashboard-counter name="Server Uptime" :counter="stats && stats.uptime && stats.uptime.includes('{') ? '' : formatUptime(stats && stats.uptime ? stats.uptime : '')"/>
       </div>
 
       <div class="row row-cards">
@@ -20,6 +20,7 @@
             <div class="col-sm-6 col-lg-6">
               <dashboard-process-counts/>
 
+              <dashboard-networking-info/>
               <dashboard-system-info-v2/>
             </div>
             <div class="col-sm-6 col-lg-6">
@@ -52,9 +53,11 @@ import {OS}                         from "@/app/os/os";
 import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
 import {SpireApi}                   from "@/app/api/spire-api";
 import DashboardSystemInfoV2        from "@/views/admin/components/DashboardSystemInfoV2.vue";
+import DashboardNetworkingInfo      from "@/views/admin/components/DashboardNetworkingInfo.vue";
 
 export default {
   components: {
+    DashboardNetworkingInfo,
     DashboardSystemInfoV2,
     PlayersOnlineComponent,
     DashboardCounter,
