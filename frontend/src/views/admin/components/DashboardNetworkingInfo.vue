@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="card" v-if="net && net.length > 0">
+    <div class="card" v-if="net && Object.keys(net).length > 0">
       <div class="card-header">
         <h4 class="card-header-title">
           Networking Interfaces
@@ -117,13 +117,8 @@ export default {
           this.net[n.name]['bytes_sent'] = n['bytesSent']
         }
 
-        console.log(this.net)
         this.$forceUpdate()
-
       }
-    },
-    bytesToGbytes: function (bytes) {
-      return parseFloat(bytes / 1024 / 1024 / 1024).toFixed(2)
     },
 
     bytesToMbytes: function (bytes) {

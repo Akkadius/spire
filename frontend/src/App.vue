@@ -7,6 +7,7 @@
     />
     <keypress-commands-modal/>
     <router-view></router-view>
+    <app-update-modal :release="release" :current-version="currentVersion"/>
   </div>
 </template>
 
@@ -21,12 +22,21 @@ import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 import {ROUTE}                  from "@/routes";
 import UserContext              from "@/app/user/UserContext";
 import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.vue";
+import semver                   from "semver";
+import AppUpdateModal           from "@/components/modals/AppUpdateModal.vue";
 
 export default {
   name: "App",
-  components: { KeypressCommandsModal },
+  components: { AppUpdateModal, KeypressCommandsModal },
   async beforeMount() {
     await AppEnv.init()
+  },
+
+  data() {
+    return {
+      release: {},
+      currentVersion: "",
+    }
   },
 
   async mounted() {
@@ -54,6 +64,8 @@ export default {
     setTimeout(() => {
       AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
     }, 1)
+
+    this.checkForUpdates()
   },
 
   created() {
@@ -223,6 +235,53 @@ export default {
           e.setAttribute('href', '/eq-asset-preview-master/assets/sprites/spell-icons-legacy-' + i + '.css')
         }
       }
+    },
+
+    checkForUpdates() {
+      if (!AppEnv.isAppLocal()) {
+        console.log("skipping update check, not local app")
+        return
+      }
+
+      const current       = AppEnv.getVersion()
+      this.currentVersion = current
+      const last_checked  = LocalSettings.getLastCheckedUpdateTime()
+      const now           = new Date().getTime() / 1000
+
+      // check if we've checked in the last 1 hour
+      if (now - last_checked < 3600) {
+        console.log("skipping update check, checked in last hour")
+        this.release = JSON.parse(LocalSettings.getLatestReleasePayload())
+        return
+      }
+
+      let latest = "0.0.0";
+
+      // fetch from github releases akkadius/spire
+      const url = 'https://api.github.com/repos/akkadius/spire/releases/latest'
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          latest       = data.tag_name.replace("v", "")
+          this.release = data
+          const ignoredUpdateVersion = LocalSettings.getIgnoredUpdateVersion()
+
+          if (semver.gt(latest, current)) {
+            console.log("update available")
+            if (ignoredUpdateVersion !== latest) {
+              this.$bvModal.show('app-update-modal')
+            } else {
+              console.log("update [%s] ignored", latest)
+            }
+          }
+
+          LocalSettings.setLastCheckedUpdateTime(new Date().getTime() / 1000)
+          LocalSettings.setLatestUpdateVersion(latest)
+          LocalSettings.setLatestReleasePayload(JSON.stringify(data))
+
+          this.currentVersion = current
+        })
+        .catch(err => console.error(err))
     }
   },
 

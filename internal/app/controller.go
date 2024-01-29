@@ -2,10 +2,12 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/updater"
 	"github.com/Akkadius/spire/internal/user"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
@@ -13,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"time"
 )
 
 // Controller is the controller for the app
@@ -48,6 +51,7 @@ func (d *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "app/onboard-initialize", d.initializeApp, nil),
 		routes.RegisterRoute(http.MethodGet, "app/changelog", d.changelog, nil),
 		routes.RegisterRoute(http.MethodGet, "app/env", d.env, nil),
+		routes.RegisterRoute(http.MethodPost, "app/update", d.update, nil),
 		routes.RegisterRoute(http.MethodPost, "app/sync", d.sync, nil),
 	}
 }
@@ -142,6 +146,28 @@ func (d *Controller) initializeApp(c echo.Context) error {
 // eventually replace this with something better
 func (d *Controller) sync(c echo.Context) error {
 	d.spireinit.SyncDbName()
+
+	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
+}
+
+// spire update
+func (d *Controller) update(c echo.Context) error {
+	if !env.IsAppEnvLocal() {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Cannot update in non-local environment"})
+	}
+
+	data, _ := d.cache.Get("packageJson")
+	pJson, ok := data.([]byte)
+	if ok {
+		if updater.NewService(pJson).CheckForUpdates(false) {
+			go func() {
+				fmt.Println("Automatically shutting down in 1 second...")
+				time.Sleep(1 * time.Second)
+				os.Exit(0)
+			}()
+			return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
+		}
+	}
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }

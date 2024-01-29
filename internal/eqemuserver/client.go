@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/telnet"
+	"strings"
 )
 
 type Client struct {
@@ -72,6 +73,10 @@ func (c *Client) GetLockStatus() (bool, error) {
 	)
 	if err != nil {
 		return false, err
+	}
+
+	if !strings.Contains(o, "locked") {
+		return false, fmt.Errorf("invalid response from lock_status: %v", o)
 	}
 
 	var r LockStatusResponse

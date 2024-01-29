@@ -71,7 +71,8 @@
               v-for="nav in adminNavs"
               :key="nav.label"
               :config="nav"
-              v-if="isInAdmin()"/>
+              v-if="isInAdmin()"
+            />
 
           </ul>
         </div>
@@ -171,6 +172,14 @@
 
         <h6 class="navbar-heading" v-if="appVersion">
           Version ({{ appEnv }}) {{ appVersion }}
+          <button
+            v-if="hasUpdate"
+            class="btn btn-sm btn-primary ml-1 d-inline-block p-0 pl-2 pr-2"
+            @click="updateSpire()"
+            style="font-size: 11px"
+          >
+            <i class="fa fa-download"></i> Update
+          </button>
         </h6>
 
         <ul class="navbar-nav mb-md-3">
@@ -244,11 +253,24 @@ import {AppEnv}               from "@/app/env/app-env";
 import {Navbar}               from "@/app/navbar";
 import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 import {SpireApi}             from "@/app/api/spire-api";
+import {LocalSettings}        from "@/app/local-settings/localsettings";
+import semver                 from "semver";
 
 export default {
   computed: {
     ROUTE() {
       return ROUTE
+    },
+    hasUpdate() {
+      if (!this.latestAppVersion) {
+        return false
+      }
+
+      if (!this.appVersion) {
+        return false
+      }
+
+      return semver.gt(this.latestAppVersion, this.appVersion)
     }
   },
   components: { DbConnectionStatusPill, NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -263,6 +285,7 @@ export default {
       hideNavbar: false,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
+      latestAppVersion: LocalSettings.getLatestUpdateVersion(),
       appFeatures: AppEnv.getFeatures(),
       botNav: {
         label: "Bots",
@@ -330,19 +353,44 @@ export default {
           routePrefixMatch: "admin/configuration",
           navs: [
             { title: "Server Config", to: ROUTE.ADMIN_SERVER_CONFIG, icon: "fa fa-cog mr-1" },
-            { title: "Crash Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK, icon: "ra ra-fire mr-1", isOcculus: true },
+            {
+              title: "Crash Webhooks",
+              to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
+              icon: "ra ra-fire mr-1",
+              isOcculus: true
+            },
             { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1" },
-            { title: "Quest Hot Reload", to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD, icon: "ra ra-alien-fire mr-1", isOcculus: true },
+            {
+              title: "Quest Hot Reload",
+              to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD,
+              icon: "ra ra-alien-fire mr-1",
+              isOcculus: true
+            },
             { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
             { title: "UCS", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=UCS', icon: "ra ra-speech-bubbles mr-1", exact: true },
-            { title: "World Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=World+Server', icon: "ra ra-double-team mr-1", exact: true },
-            { title: "Zone Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Zone+Server', icon: "ra ra-player mr-1", exact: true },
+            {
+              title: "World Server",
+              to: ROUTE.ADMIN_SERVER_CONFIG + '?s=World+Server',
+              icon: "ra ra-double-team mr-1",
+              exact: true
+            },
+            {
+              title: "Zone Server",
+              to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Zone+Server',
+              icon: "ra ra-player mr-1",
+              exact: true
+            },
           ]
         },
         {
           label: "Database", labelIcon: "fa fa-database mr-1", routePrefixMatch: "admin/database",
           navs: [
-            { title: "Database Config", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Database', icon: "fa fa-cog mr-1", exact: true},
+            {
+              title: "Database Config",
+              to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Database',
+              icon: "fa fa-cog mr-1",
+              exact: true
+            },
             { title: "Database Backups", to: ROUTE.ADMIN_DATABASE_BACKUP, icon: "fa fa-download mr-1" },
           ]
         },
@@ -359,7 +407,12 @@ export default {
           ]
         },
         { label: "Quests", labelIcon: "fa fa-code-fork mr-1", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, isOcculus: true },
-        { label: "Reloading (Global)", labelIcon: "fa fa-refresh mr-1", routePrefixMatch: "admin/tools/player", to: ROUTE.ADMIN_RELOAD },
+        {
+          label: "Reloading (Global)",
+          labelIcon: "fa fa-refresh mr-1",
+          routePrefixMatch: "admin/tools/player",
+          to: ROUTE.ADMIN_RELOAD
+        },
         { label: "Server Update", labelIcon: "fa fa-upload mr-1", to: ROUTE.ADMIN_SERVER_UPDATE },
 
       ],
@@ -464,9 +517,17 @@ export default {
 
     this.parseNinjaKeys()
 
+    setTimeout(() => {
+      this.latestAppVersion = LocalSettings.getLatestUpdateVersion()
+      this.$forceUpdate()
+    }, 1000)
   },
 
   methods: {
+
+    updateSpire() {
+      this.$bvModal.show('app-update-modal')
+    },
 
     openSearch() {
       const ninja = document.querySelector('ninja-keys')
@@ -489,7 +550,7 @@ export default {
 
           keys.push({
             id: n.label,
-            title:  (adminPanelRouteEnabled ? '[Admin] ' : '') + n.label,
+            title: (adminPanelRouteEnabled ? '[Admin] ' : '') + n.label,
             handler: () => {
               this.$router.push(n.to).catch((e) => {
               })
@@ -541,14 +602,14 @@ export default {
       }
 
       let manualRoutes = [
-        {name: "Coffee", route: ROUTE.COFFEE},
-        {name: "Tasks", route: ROUTE.TASKS},
-        {name: "Items", route: ROUTE.ITEMS_LIST},
-        {name: "Spells", route: ROUTE.SPELLS_LIST},
-        {name: "[Quest API] Explorer", route: ROUTE.QUEST_API_EXPLORER},
-        {name: "[Quest API] Explorer (Perl)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=perl`},
-        {name: "[Quest API] Explorer (Lua)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=lua`},
-        {name: "Zones", route: ROUTE.ZONES},
+        { name: "Coffee", route: ROUTE.COFFEE },
+        { name: "Tasks", route: ROUTE.TASKS },
+        { name: "Items", route: ROUTE.ITEMS_LIST },
+        { name: "Spells", route: ROUTE.SPELLS_LIST },
+        { name: "[Quest API] Explorer", route: ROUTE.QUEST_API_EXPLORER },
+        { name: "[Quest API] Explorer (Perl)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=perl` },
+        { name: "[Quest API] Explorer (Lua)", route: `${ROUTE.QUEST_API_EXPLORER}?lang=lua` },
+        { name: "Zones", route: ROUTE.ZONES },
       ]
 
       for (let m of manualRoutes) {
@@ -566,7 +627,7 @@ export default {
 
 
       const ninja = document.querySelector('ninja-keys')
-      ninja.data = keys
+      ninja.data  = keys
     },
 
     isInAdmin() {
