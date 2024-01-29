@@ -103,16 +103,20 @@ export default {
           }
 
           if (typeof this.net[n.name]['bytes_recv'] === 'undefined') {
-            this.net[n.name]['bytes_recv'] = 0
+            this.net[n.name]['bytes_recv']    = 0
+            this.net[n.name]['bytes_recv_ps'] = 0
+          } else {
+            this.net[n.name]['bytes_recv_ps'] = n['bytesRecv'] - this.net[n.name]['bytes_recv']
           }
+
           if (typeof this.net[n.name]['bytes_sent'] === 'undefined') {
-            this.net[n.name]['bytes_sent'] = 0
+            this.net[n.name]['bytes_sent']    = 0
+            this.net[n.name]['bytes_sent_ps'] = 0
+          } else {
+            this.net[n.name]['bytes_sent_ps'] = n['bytesSent'] - this.net[n.name]['bytes_sent']
           }
 
           // track per second
-          this.net[n.name]['bytes_recv_ps'] = n['bytesRecv'] - this.net[n.name]['bytes_recv']
-          this.net[n.name]['bytes_sent_ps'] = n['bytesSent'] - this.net[n.name]['bytes_sent']
-
           this.net[n.name]['bytes_recv'] = n['bytesRecv']
           this.net[n.name]['bytes_sent'] = n['bytesSent']
         }

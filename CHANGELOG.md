@@ -1,4 +1,4 @@
-## [3.11.1] 1/28/2024
+## [3.11.2] 1/28/2024
 
 * **Spire Admin** Message of the day should now be functional again
 * **Spire Admin** Spire now has a server lock / unlock button and status icon that is now present in the admin header visible on all admin pages.
