@@ -1,4 +1,4 @@
-## [3.11.2] 1/28/2024
+## [3.11.3] 1/29/2024
 
 * **Spire Admin** Message of the day should now be functional again
 * **Spire Admin** Spire now has a server lock / unlock button and status icon that is now present in the admin header visible on all admin pages.
@@ -6,8 +6,10 @@
 * **Spire Admin** The dashboard page now has a "Networking Interfaces" section that displays interfaces and realtime bandwidth utilization.
 * **Special Abilities Calculator** Adds support in Special Abilities Calculator for `Immune to Assassinate` and `Immune to Headshot` abilities. (Kinglykrab)
 * **Spire** Add in application update notifications that inform the user when there is an update available. This is a new feature that will be used in the future to notify users of new Spire releases while in the UI. It supports ignoring the update, only checks periodically.
+* **Spire** Add a manual update check button to the navbar.
 
-![image](https://github.com/Akkadius/spire/assets/3319450/f81a21df-7f0b-43c7-a865-b38d59c4cfef)
+![image](https://github.com/Akkadius/spire/assets/3319450/b0576ea5-0ce4-4062-a456-768985faca4b)
+
 
 ## [3.9.11] 1/24/2024
 

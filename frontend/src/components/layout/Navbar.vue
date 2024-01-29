@@ -172,17 +172,27 @@
 
         <h6 class="navbar-heading" v-if="appVersion">
           Version ({{ appEnv }}) {{ appVersion }}
-          <button
-            v-if="hasUpdate"
-            class="btn btn-sm btn-primary ml-1 d-inline-block p-0 pl-2 pr-2"
-            @click="updateSpire()"
-            style="font-size: 11px"
-          >
-            <i class="fa fa-download"></i> Update
-          </button>
         </h6>
 
         <ul class="navbar-nav mb-md-3">
+          <li class="nav-item" v-if="hasUpdate">
+            <a
+              href="#"
+              style="color: yellow"
+              class="nav-link pulsate-highlight-white"
+              data-toggle="modal"
+              @click="checkForSpireUpdate()"
+            >
+              <i class="fe fe-check-circle mr-2"></i>
+              Spire Update Available
+            </a>
+          </li>
+          <li class="nav-item" v-if="!hasUpdate">
+            <a href="#" class="nav-link" data-toggle="modal" @click="checkForSpireUpdate()">
+              <i class="fe fe-check-circle mr-2"></i>
+              Spire Update Check
+            </a>
+          </li>
           <li class="nav-item">
             <a href="#" class="nav-link" data-toggle="modal" @click="openSearch()">
               <i class="fe fe-search mr-2"></i>
@@ -718,6 +728,9 @@ export default {
         sidebar.classList.remove("show");
       }
     },
+    checkForSpireUpdate() {
+      EventBus.$emit("CHECK_SPIRE_UPDATE", true)
+    }
   },
   watch: {
     $route(to, from) {

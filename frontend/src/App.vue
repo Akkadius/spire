@@ -65,14 +65,16 @@ export default {
       AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
     }, 1)
 
-    this.checkForUpdates()
+    this.checkForSpireUpdate()
   },
 
   created() {
     EventBus.$on("SPELL_LEGACY_ICONS_ENABLED", this.loadSpellIconSettings);
+    EventBus.$on("CHECK_SPIRE_UPDATE", this.checkSpireUpdate);
   },
   destroyed() {
     EventBus.$off("SPELL_LEGACY_ICONS_ENABLED", this.loadSpellIconSettings);
+    EventBus.$off("CHECK_SPIRE_UPDATE", this.checkSpireUpdate);
   },
 
   methods: {
@@ -237,7 +239,11 @@ export default {
       }
     },
 
-    checkForUpdates() {
+    checkSpireUpdate() {
+      this.checkForSpireUpdate(true)
+    },
+
+    checkForSpireUpdate(force = false) {
       if (!AppEnv.isAppLocal()) {
         console.log("skipping update check, not local app")
         return
@@ -249,7 +255,7 @@ export default {
       const now           = new Date().getTime() / 1000
 
       // check if we've checked in the last 1 hour
-      if (now - last_checked < 3600) {
+      if (now - last_checked < 3600 && !force) {
         console.log("skipping update check, checked in last hour")
         this.release = JSON.parse(LocalSettings.getLatestReleasePayload())
         return
@@ -273,6 +279,14 @@ export default {
             } else {
               console.log("update [%s] ignored", latest)
             }
+          } else if (force) {
+            console.log("no update available")
+            this.$bvToast.toast("Already up to date", {
+              title: "Spire Update",
+              autoHideDelay: 2000,
+              solid: true,
+              toaster: 'b-toaster-bottom-right',
+            })
           }
 
           LocalSettings.setLastCheckedUpdateTime(new Date().getTime() / 1000)
