@@ -1003,10 +1003,8 @@ func (a *Controller) getLockStatus() bool {
 	locked := false
 	status, err := a.eqemuserverapi.GetLockStatus()
 	if err == nil {
-		fmt.Printf("pulling status from world api [%v]\n", status)
 		locked = status
 	} else {
-		fmt.Printf("pulling status from config [%v]\n", cfg.Server.World.Locked)
 		locked = cfg.Server.World.Locked
 	}
 
