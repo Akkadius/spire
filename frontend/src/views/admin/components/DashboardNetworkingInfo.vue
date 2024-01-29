@@ -78,7 +78,7 @@ export default {
         if (typeof r.data.server.world.address !== 'undefined') {
           v.push({ key: "World Public Address", value: r.data.server.world.address })
         }
-        if (typeof r.data.server.world.address !== 'undefined') {
+        if (typeof r.data.server.world.localaddress !== 'undefined') {
           v.push({ key: "World LAN Address", value: r.data.server.world.localaddress })
         }
       }
