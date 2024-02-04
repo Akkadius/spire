@@ -769,8 +769,6 @@ export default {
         if (e && e.character_id && !Characters.cacheExists(e.character_id) && !characterIds.includes(e.character_id)) {
           characterIds.push(parseInt(e.character_id))
           shouldPreload = true
-
-          console.log(e.character_id)
         }
 
         // event data
