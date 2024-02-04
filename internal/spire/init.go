@@ -158,6 +158,11 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 		c.DbPassword = o.crypt.Encrypt(cfg.Server.Database.Password, o.GetEncKey(user.ID))
 
 		// content db if exists
+		c.ContentDbHost = ""
+		c.ContentDbPort = ""
+		c.ContentDbName = ""
+		c.ContentDbUsername = ""
+		c.ContentDbPassword = ""
 		if cfg.Server.ContentDatabase != nil {
 			if len(cfg.Server.ContentDatabase.Host) > 0 {
 				c.ContentDbHost = cfg.Server.ContentDatabase.Host
@@ -174,15 +179,14 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 			if len(cfg.Server.ContentDatabase.Password) > 0 {
 				c.ContentDbPassword = o.crypt.Encrypt(cfg.Server.ContentDatabase.Password, o.GetEncKey(user.ID))
 			}
-		} else {
-			c.ContentDbHost = ""
-			c.ContentDbPort = ""
-			c.ContentDbName = ""
-			c.ContentDbUsername = ""
-			c.ContentDbPassword = ""
 		}
 
 		// logs db if exists
+		c.LogsDbHost = ""
+		c.LogsDbPort = ""
+		c.LogsDbName = ""
+		c.LogsDbUsername = ""
+		c.LogsDbPassword = ""
 		if cfg.Server.Qsdatabase != nil {
 			if len(cfg.Server.Qsdatabase.Host) > 0 {
 				c.LogsDbHost = cfg.Server.Qsdatabase.Host
@@ -199,12 +203,6 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 			if len(cfg.Server.Qsdatabase.Password) > 0 {
 				c.LogsDbPassword = o.crypt.Encrypt(cfg.Server.Qsdatabase.Password, o.GetEncKey(user.ID))
 			}
-		} else {
-			c.LogsDbHost = ""
-			c.LogsDbPort = ""
-			c.LogsDbName = ""
-			c.LogsDbUsername = ""
-			c.LogsDbPassword = ""
 		}
 
 		db.Save(&c)
