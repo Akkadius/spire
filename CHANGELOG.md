@@ -1,3 +1,7 @@
+## [3.12.0] 3/4/2024
+
+**Database** Implement log database connection resolving. This allows operators to utilize the "QS" database connection type for logs, particularly sinking player event logs to an external database or server. When a QS connection is specified in the `eqemu_config.json` - player event logs will automatically route to that connection. This is useful for operators who want to sink logs to an external database or server for auditing purposes. The database configuration gets synchronized and injected during Spire bootup and also during Spire Admin configuration saving.
+
 ## [3.11.3] 1/29/2024
 
 * **Spire Admin** Message of the day should now be functional again
@@ -9,7 +13,6 @@
 * **Spire** Add a manual update check button to the navbar.
 
 ![image](https://github.com/Akkadius/spire/assets/3319450/b0576ea5-0ce4-4062-a456-768985faca4b)
-
 
 ## [3.9.11] 1/24/2024
 

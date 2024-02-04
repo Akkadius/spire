@@ -89,3 +89,6 @@ database:
       - veteran_reward_templates
       - zone
       - zone_points
+    eqemu_logs:
+      - player_event_log_settings
+      - player_event_logs

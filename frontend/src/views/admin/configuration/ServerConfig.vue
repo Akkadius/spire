@@ -490,11 +490,11 @@
             </div>
 
           </eq-tab>
-          <eq-tab name="QueryServer">
+          <eq-tab name="Logs">
 
             <div class="eq-alert">
               <i class="fe fe-info"></i>
-              This service and connection is optional
+              This service and connection is optional and is currently known as queryserver
             </div>
 
             <div class="form-row mt-3">

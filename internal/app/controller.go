@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
@@ -25,6 +26,7 @@ type Controller struct {
 	spireinit *spire.Init
 	spireuser *user.User
 	settings  *spire.Settings
+	db        *database.Resolver
 }
 
 // NewController returns a new app controller
@@ -34,6 +36,7 @@ func NewController(
 	spireinit *spire.Init,
 	spireuser *user.User,
 	settings *spire.Settings,
+	db *database.Resolver,
 ) *Controller {
 	return &Controller{
 		cache:     cache,
@@ -41,6 +44,7 @@ func NewController(
 		spireinit: spireinit,
 		spireuser: spireuser,
 		settings:  settings,
+		db:        db,
 	}
 }
 
@@ -145,7 +149,8 @@ func (d *Controller) initializeApp(c echo.Context) error {
 // used for local setups
 // eventually replace this with something better
 func (d *Controller) sync(c echo.Context) error {
-	d.spireinit.SyncDbName()
+	d.spireinit.Init()
+	d.db.PurgeDatabaseConnections()
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }

@@ -18,6 +18,11 @@ type ConnectionCreateContext struct {
 	contentDbPort     string
 	contentDbUsername string
 	contentDbPassword string
+	logsDbName        string
+	logsDbHost        string
+	logsDbPort        string
+	logsDbUsername    string
+	logsDbPassword    string
 	createdFromIp     string
 }
 
@@ -70,31 +75,31 @@ func validate(ctx *ConnectionCreateContext) error {
 	return nil
 }
 
-func (c ConnectionCreateContext) DbPassword() string {
+func (c *ConnectionCreateContext) DbPassword() string {
 	return c.dbPassword
 }
 
-func (c ConnectionCreateContext) DbUsername() string {
+func (c *ConnectionCreateContext) DbUsername() string {
 	return c.dbUsername
 }
 
-func (c ConnectionCreateContext) DbPort() string {
+func (c *ConnectionCreateContext) DbPort() string {
 	return c.dbPort
 }
 
-func (c ConnectionCreateContext) DbHost() string {
+func (c *ConnectionCreateContext) DbHost() string {
 	return c.dbHost
 }
 
-func (c ConnectionCreateContext) DbName() string {
+func (c *ConnectionCreateContext) DbName() string {
 	return c.dbName
 }
 
-func (c ConnectionCreateContext) ConnectionName() string {
+func (c *ConnectionCreateContext) ConnectionName() string {
 	return c.connectionName
 }
 
-func (c ConnectionCreateContext) UserId() uint {
+func (c *ConnectionCreateContext) UserId() uint {
 	return c.userId
 }
 
@@ -144,4 +149,44 @@ func (c *ConnectionCreateContext) ContentDbName() string {
 
 func (c *ConnectionCreateContext) SetContentDbName(contentDbName string) {
 	c.contentDbName = contentDbName
+}
+
+func (c *ConnectionCreateContext) LogsDbName() string {
+	return c.logsDbName
+}
+
+func (c *ConnectionCreateContext) SetLogsDbName(logsDbName string) {
+	c.logsDbName = logsDbName
+}
+
+func (c *ConnectionCreateContext) LogsDbHost() string {
+	return c.logsDbHost
+}
+
+func (c *ConnectionCreateContext) SetLogsDbHost(logsDbHost string) {
+	c.logsDbHost = logsDbHost
+}
+
+func (c *ConnectionCreateContext) LogsDbPort() string {
+	return c.logsDbPort
+}
+
+func (c *ConnectionCreateContext) SetLogsDbPort(logsDbPort string) {
+	c.logsDbPort = logsDbPort
+}
+
+func (c *ConnectionCreateContext) LogsDbUsername() string {
+	return c.logsDbUsername
+}
+
+func (c *ConnectionCreateContext) SetLogsDbUsername(logsDbUsername string) {
+	c.logsDbUsername = logsDbUsername
+}
+
+func (c *ConnectionCreateContext) LogsDbPassword() string {
+	return c.logsDbPassword
+}
+
+func (c *ConnectionCreateContext) SetLogsDbPassword(logsDbPassword string) {
+	c.logsDbPassword = logsDbPassword
 }

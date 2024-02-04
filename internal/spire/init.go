@@ -176,6 +176,25 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 			}
 		}
 
+		// logs db if exists
+		if cfg.Server.Qsdatabase != nil {
+			if len(cfg.Server.Qsdatabase.Host) > 0 {
+				c.LogsDbHost = cfg.Server.Qsdatabase.Host
+			}
+			if len(cfg.Server.Qsdatabase.Port) > 0 {
+				c.LogsDbPort = cfg.Server.Qsdatabase.Port
+			}
+			if len(cfg.Server.Qsdatabase.Db) > 0 {
+				c.LogsDbName = cfg.Server.Qsdatabase.Db
+			}
+			if len(cfg.Server.Qsdatabase.Username) > 0 {
+				c.LogsDbUsername = cfg.Server.Qsdatabase.Username
+			}
+			if len(cfg.Server.Qsdatabase.Password) > 0 {
+				c.LogsDbPassword = o.crypt.Encrypt(cfg.Server.Qsdatabase.Password, o.GetEncKey(user.ID))
+			}
+		}
+
 		db.Save(&c)
 
 		return nil
@@ -211,6 +230,25 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 		}
 		if len(cfg.Server.ContentDatabase.Port) > 0 {
 			ctx.SetContentDbPort(cfg.Server.ContentDatabase.Port)
+		}
+	}
+
+	// If any logs params are set
+	if cfg.Server.Qsdatabase != nil {
+		if len(cfg.Server.Qsdatabase.Db) > 0 {
+			ctx.SetLogsDbName(cfg.Server.Qsdatabase.Db)
+		}
+		if len(cfg.Server.Qsdatabase.Host) > 0 {
+			ctx.SetLogsDbHost(cfg.Server.Qsdatabase.Host)
+		}
+		if len(cfg.Server.Qsdatabase.Username) > 0 {
+			ctx.SetLogsDbUsername(cfg.Server.Qsdatabase.Username)
+		}
+		if len(cfg.Server.Qsdatabase.Password) > 0 {
+			ctx.SetLogsDbPassword(cfg.Server.Qsdatabase.Password)
+		}
+		if len(cfg.Server.Qsdatabase.Port) > 0 {
+			ctx.SetLogsDbPort(cfg.Server.Qsdatabase.Port)
 		}
 	}
 

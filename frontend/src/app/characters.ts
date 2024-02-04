@@ -12,6 +12,10 @@ export class Characters {
     return this._cachedCharacters[id]
   }
 
+  static getCacheById(id) {
+    return this._cachedCharacters[id]
+  }
+
   static async get(id) {
     if (this._cachedCharacters[id]) {
       return this._cachedCharacters[id]

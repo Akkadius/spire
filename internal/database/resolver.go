@@ -24,12 +24,24 @@ import (
 // return an error if credentials no longer work
 
 type Resolver struct {
-	connections           *Connections                 // local connections
-	remoteDatabases       map[string]map[uint]*gorm.DB // remote databases only used when Spire resolves connections defined by users
-	logger                *logrus.Logger
-	crypt                 *encryption.Encrypter
-	cache                 *gocache.Cache
-	contentConnectionName string
+	connections     *Connections                 // local connections
+	remoteDatabases map[string]map[uint]*gorm.DB // remote databases only used when Spire resolves connections defined by users
+	logger          *logrus.Logger
+	crypt           *encryption.Encrypter
+	cache           *gocache.Cache
+}
+
+const (
+	connectionTypeDefault = "default"       // default connection type
+	connectionTypeContent = "eqemu_content" // content connection type
+	connectionTypeLogs    = "eqemu_logs"    // logs connection type
+)
+
+// connection types
+var connectionTypes = []string{
+	connectionTypeDefault,
+	connectionTypeContent,
+	connectionTypeLogs,
 }
 
 func NewResolver(
@@ -39,19 +51,19 @@ func NewResolver(
 	cache *gocache.Cache,
 ) *Resolver {
 	i := &Resolver{
-		connections:           connections,
-		remoteDatabases:       map[string]map[uint]*gorm.DB{},
-		logger:                logger,
-		crypt:                 crypt,
-		cache:                 cache,
-		contentConnectionName: "eqemu_content",
+		connections:     connections,
+		remoteDatabases: map[string]map[uint]*gorm.DB{},
+		logger:          logger,
+		crypt:           crypt,
+		cache:           cache,
 	}
 
 	go i.connectionKeepAlive()
 
-	// initialize ahead of time
-	i.remoteDatabases["default"] = map[uint]*gorm.DB{}
-	i.remoteDatabases["eqemu_content"] = map[uint]*gorm.DB{}
+	// initialize
+	for c := range connectionTypes {
+		i.remoteDatabases[connectionTypes[c]] = map[uint]*gorm.DB{}
+	}
 
 	return i
 }
@@ -82,12 +94,12 @@ var connCreationMutex = sync.Mutex{}
 
 func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
 
-	// TODO: Mutex handling in edge cases
-
 	// use default otherwise key off of another connection type
 	connectionType := "default"
-	if model.Connection() == d.contentConnectionName {
-		connectionType = model.Connection()
+	if model.Connection() == connectionTypeContent {
+		connectionType = connectionTypeContent
+	} else if model.Connection() == connectionTypeLogs {
+		connectionType = connectionTypeLogs
 	}
 
 	// init nested map if not set
@@ -176,12 +188,18 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 	dbName := conn.ServerDatabaseConnection.DbName
 
 	// content connection
-	if model.Connection() == d.contentConnectionName && conn.ServerDatabaseConnection.ContentDbUsername != "" {
+	if model.Connection() == connectionTypeContent && conn.ServerDatabaseConnection.ContentDbUsername != "" {
 		dbUsername = conn.ServerDatabaseConnection.ContentDbUsername
 		dbPassword = d.crypt.Decrypt(conn.ServerDatabaseConnection.ContentDbPassword, d.GetEncKey(user.ID))
 		dbHost = conn.ServerDatabaseConnection.ContentDbHost
 		dbPort = conn.ServerDatabaseConnection.ContentDbPort
 		dbName = conn.ServerDatabaseConnection.ContentDbName
+	} else if model.Connection() == connectionTypeLogs && conn.ServerDatabaseConnection.LogsDbUsername != "" {
+		dbUsername = conn.ServerDatabaseConnection.LogsDbUsername
+		dbPassword = d.crypt.Decrypt(conn.ServerDatabaseConnection.LogsDbPassword, d.GetEncKey(user.ID))
+		dbHost = conn.ServerDatabaseConnection.LogsDbHost
+		dbPort = conn.ServerDatabaseConnection.LogsDbPort
+		dbName = conn.ServerDatabaseConnection.LogsDbName
 	}
 
 	// init nested map if not set
@@ -453,8 +471,12 @@ func (d *Resolver) connectionKeepAlive() {
 							// if we have 3 failed attempts, destroy connection
 							if failedConnectionAttempts[connectionId] >= 3 {
 								// delete map entry
-								delete(d.remoteDatabases["default"], connectionId)
-								delete(d.remoteDatabases["eqemu_content"], connectionId)
+
+								for c := range connectionTypes {
+									if _, ok := d.remoteDatabases[connectionTypes[c]][connectionId]; ok {
+										delete(d.remoteDatabases[connectionTypes[c]], connectionId)
+									}
+								}
 
 								d.logger.Printf("[database_resolver] destroying connection %v after 3 failed attempts to ping\n", connectionId)
 							}
@@ -465,6 +487,32 @@ func (d *Resolver) connectionKeepAlive() {
 					}
 				}
 			}
+		}
+	}
+}
+
+// PurgeUserDbCache is used to purge the user database cache
+func (d *Resolver) PurgeUserDbCache(id uint) {
+	d.cache.Delete(fmt.Sprintf("active-connection-%v", id))
+	for c := range connectionTypes {
+		d.cache.Delete(fmt.Sprintf("active-connection-%v-%v", id, connectionTypes[c]))
+	}
+	d.cache.Delete(fmt.Sprintf("active-user-db-connection-%v", id))
+}
+
+// PurgeDatabaseConnections is used to purge the database connections
+func (d *Resolver) PurgeDatabaseConnections() {
+	for c := range connectionTypes {
+		d.remoteDatabases[connectionTypes[c]] = map[uint]*gorm.DB{}
+	}
+
+	// clear cache
+	for key, _ := range d.cache.Items() {
+		if strings.Contains(key, "active-connection-") {
+			d.cache.Delete(key)
+		}
+		if strings.Contains(key, "active-user-db-connection-") {
+			d.cache.Delete(key)
 		}
 	}
 }
