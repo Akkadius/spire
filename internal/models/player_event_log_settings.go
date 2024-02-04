@@ -21,5 +21,5 @@ func (PlayerEventLogSetting) Relationships() []string {
 }
 
 func (PlayerEventLogSetting) Connection() string {
-    return ""
+    return "eqemu_logs"
 }

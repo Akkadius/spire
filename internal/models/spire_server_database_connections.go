@@ -17,6 +17,11 @@ type ServerDatabaseConnection struct {
 	ContentDbName                string                          `json:"content_db_name" gorm:"type:varchar(50);"`
 	ContentDbUsername            string                          `json:"content_db_username" gorm:"type:varchar(50);"`
 	ContentDbPassword            string                          `json:"-" gorm:"type:varchar(250);"`
+	LogsDbHost                   string                          `json:"logs_db_host" gorm:"type:varchar(50);"`
+	LogsDbPort                   string                          `json:"logs_db_port" gorm:"type:varchar(50);"`
+	LogsDbName                   string                          `json:"logs_db_name" gorm:"type:varchar(50);"`
+	LogsDbUsername               string                          `json:"logs_db_username" gorm:"type:varchar(50);"`
+	LogsDbPassword               string                          `json:"-" gorm:"type:varchar(250);"`
 	DiscordWebhookUrl            string                          `json:"-" gorm:"Column:discord_webhook_url;type:varchar(250);"`
 	CreatedFromIp                string                          `json:"created_from_ip" gorm:"type:varchar(50);"`
 	CreatedBy                    uint                            `json:"created_by" gorm:"Column:created_by;default:0"`

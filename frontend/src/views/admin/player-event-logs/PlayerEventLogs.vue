@@ -212,20 +212,20 @@
                 <img
                   class="avatar-img rounded-circle"
                   style="width:20px; border: 1px solid gray"
-                  :src="getClassImage(e.character_datum.class)"
+                  :src="getClassImage(getCharacter(e.character_id).class)"
                 >
 
                 <img
                   class="avatar-img rounded-circle"
                   style="width:20px; border: 1px solid gray"
-                  :src="getRaceImage(e.character_datum.race)"
+                  :src="getRaceImage(getCharacter(e.character_id).race)"
                 >
 
                 <a
                   class="ml-1"
-                  @click="characterId = e.character_datum.id; updateQueryState()"
+                  @click="characterId = e.character_id; updateQueryState()"
                 >
-                  {{ e.character_datum.name }}
+                  {{ getCharacter(e.character_id).name }}
                 </a>
 
               </div>
@@ -634,6 +634,10 @@ export default {
       }
     },
 
+    getCharacter(id) {
+      return Characters.getCacheById(id)
+    },
+
     secondsToHumanTime(seconds) {
       let levels     = [
         [Math.floor(seconds / 31536000), 'y'],
@@ -683,12 +687,7 @@ export default {
       }
 
       let builder = (new SpireQueryBuilder())
-      builder.includes(
-        [
-          "Account",
-          "CharacterDatum",
-        ]
-      )
+      // builder.includes()
 
       if (this.eventType) {
         builder.where("event_type_id", "=", this.eventType)
@@ -765,6 +764,14 @@ export default {
       let itemIds       = []
       let characterIds  = []
       for (let e of events) {
+
+        // top level data
+        if (e && e.character_id && !Characters.cacheExists(e.character_id) && !characterIds.includes(e.character_id)) {
+          characterIds.push(parseInt(e.character_id))
+          shouldPreload = true
+        }
+
+        // event data
         let d = JSON.parse(e.event_data)
         if (d && d.npc_id && !Npcs.cacheExists(d.npc_id) && !npcIds.includes(d.npc_id)) {
           npcIds.push(d.npc_id)

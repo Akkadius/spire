@@ -101,6 +101,8 @@ type Zone struct {
 	UnderworldTeleportIndex   int         `json:"underworld_teleport_index" gorm:"Column:underworld_teleport_index"`
 	LavaDamage                null.Int    `json:"lava_damage" gorm:"Column:lava_damage"`
 	MinLavaDamage             int         `json:"min_lava_damage" gorm:"Column:min_lava_damage"`
+	IdleWhenEmpty             uint8       `json:"idle_when_empty" gorm:"Column:idle_when_empty"`
+	SecondsBeforeIdle         uint        `json:"seconds_before_idle" gorm:"Column:seconds_before_idle"`
 }
 
 func (Zone) TableName() string {

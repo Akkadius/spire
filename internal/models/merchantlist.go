@@ -6,7 +6,7 @@ import (
 
 type Merchantlist struct {
 	Merchantid             int         `json:"merchantid" gorm:"Column:merchantid"`
-	Slot                   int         `json:"slot" gorm:"Column:slot"`
+	Slot                   uint        `json:"slot" gorm:"Column:slot"`
 	Item                   int         `json:"item" gorm:"Column:item"`
 	FactionRequired        int16       `json:"faction_required" gorm:"Column:faction_required"`
 	LevelRequired          uint8       `json:"level_required" gorm:"Column:level_required"`

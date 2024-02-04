@@ -93,10 +93,36 @@ func (c *Create) Handle(ctx *contexts.ConnectionCreateContext) error {
 		}
 	}
 
+	// if using a logs database connection also check it
+	if ctx.LogsDbUsername() != "" {
+		dsn := fmt.Sprintf(
+			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local&timeout=1s",
+			ctx.LogsDbUsername(),
+			ctx.LogsDbPassword(),
+			ctx.LogsDbHost(),
+			ctx.LogsDbPort(),
+			ctx.LogsDbName(),
+		)
+
+		db, err := sql.Open("mysql", dsn)
+		if err != nil {
+			return errors.New(fmt.Sprintf("logs database connection error: %v", err))
+		}
+
+		err = db.Ping()
+		if err != nil {
+			return errors.New(fmt.Sprintf("logs database connection error: %v", err))
+		}
+	}
+
 	// not required so lets not encrypt an empty string
 	contentDbPassword := ""
 	if len(ctx.ContentDbPassword()) > 0 {
 		contentDbPassword = c.crypt.Encrypt(ctx.ContentDbPassword(), c.GetEncKey(ctx.UserId()))
+	}
+	logsDbPassword := ""
+	if len(ctx.LogsDbPassword()) > 0 {
+		logsDbPassword = c.crypt.Encrypt(ctx.LogsDbPassword(), c.GetEncKey(ctx.UserId()))
 	}
 
 	// server database connection
@@ -107,11 +133,21 @@ func (c *Create) Handle(ctx *contexts.ConnectionCreateContext) error {
 	connection.DbName = ctx.DbName()
 	connection.DbUsername = ctx.DbUsername()
 	connection.DbPassword = c.crypt.Encrypt(ctx.DbPassword(), c.GetEncKey(ctx.UserId()))
+
+	// content database connection
 	connection.ContentDbHost = ctx.ContentDbHost()
 	connection.ContentDbPort = ctx.ContentDbPort()
 	connection.ContentDbName = ctx.ContentDbName()
 	connection.ContentDbUsername = ctx.ContentDbUsername()
 	connection.ContentDbPassword = contentDbPassword
+
+	// logs database connection
+	connection.LogsDbHost = ctx.LogsDbHost()
+	connection.LogsDbPort = ctx.LogsDbPort()
+	connection.LogsDbName = ctx.LogsDbName()
+	connection.LogsDbUsername = ctx.LogsDbUsername()
+	connection.LogsDbPassword = logsDbPassword
+
 	connection.CreatedFromIp = ctx.CreatedFromIp()
 	connection.CreatedBy = ctx.UserId()
 	err = c.db.GetSpireDb().Create(&connection).Error
