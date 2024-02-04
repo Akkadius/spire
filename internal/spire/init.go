@@ -174,6 +174,12 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 			if len(cfg.Server.ContentDatabase.Password) > 0 {
 				c.ContentDbPassword = o.crypt.Encrypt(cfg.Server.ContentDatabase.Password, o.GetEncKey(user.ID))
 			}
+		} else {
+			c.ContentDbHost = ""
+			c.ContentDbPort = ""
+			c.ContentDbName = ""
+			c.ContentDbUsername = ""
+			c.ContentDbPassword = ""
 		}
 
 		// logs db if exists
@@ -193,6 +199,12 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 			if len(cfg.Server.Qsdatabase.Password) > 0 {
 				c.LogsDbPassword = o.crypt.Encrypt(cfg.Server.Qsdatabase.Password, o.GetEncKey(user.ID))
 			}
+		} else {
+			c.LogsDbHost = ""
+			c.LogsDbPort = ""
+			c.LogsDbName = ""
+			c.LogsDbUsername = ""
+			c.LogsDbPassword = ""
 		}
 
 		db.Save(&c)

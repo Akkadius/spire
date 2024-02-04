@@ -1,9 +1,10 @@
-## [3.12.0] 2/4/2024
+## [3.12.1] 2/4/2024
 
 * **Database** Implement log database connection resolving. This allows operators to utilize the "QS" database connection type for logs, particularly sinking player event logs to an external database or server. When a QS connection is specified in the `eqemu_config.json` - player event logs will automatically route to that connection. This is useful for operators who want to sink logs to an external database or server for auditing purposes. The database configuration gets synchronized and injected during Spire bootup and also during Spire Admin configuration saving.
 * **Player Event Log Viewer** Player event log request is split from character data bulk loading two split the queries on separate connections
 * **Spire Admin** When making configuration changes in the configuration editor UI - the database connection resolver will flush along with any cached user connections. The `eqemu_config.json` will also be re-injected into the `spire_server_database_connections` table
 * **Database Resolver** Added a connection type of `eqemu_logs` of which `player_event_logs` and `player_event_log_settings` both route to currently.
+* **Configuration Sync** Ensure we also empty fields when they are removed from the `eqemu_config.json` when saving the configuration in Spire Admin
 
 ## [3.11.3] 1/29/2024
 
