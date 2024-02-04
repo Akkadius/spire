@@ -9,6 +9,38 @@ volumes:
   build-cache:
 
 services:
+
+  #############################################
+  # traefik - reverse proxy
+  #############################################
+
+  traefik-spire:
+    restart: always
+    image: "traefik:v2.10"
+    container_name: "traefik-spire"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:80"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--certificatesresolvers.le.acme.email=akkadius1+certbot@gmail.com"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "${IP_ADDRESS}:80:80"
+      - "${IP_ADDRESS}:443:443"
+    volumes:
+      - "./data/letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - backend
+
+  #############################################
+  # spire gets served out of workspace
+  #############################################
+
   workspace:
     restart: unless-stopped
     image: prod
@@ -26,8 +58,23 @@ services:
       APP_ENV: production
       IS_HOSTED_READ_ONLY_MODE: 1
       TERM: xterm-256color
-    ports:
-      - ${IP_ADDRESS:-0.0.0.0}:80:3010
     networks:
       - backend
     command: "air -c .air.prod.toml"
+    depends_on:
+      - traefik-spire
+    labels:
+      - "traefik.enable=true"
+      # http
+      - "traefik.http.routers.spire-http.rule=Host(`spire.akkadius.com`)"
+      - "traefik.http.routers.spire-http.entrypoints=web"
+      - "traefik.http.routers.spire-http.service=spire-http"
+      - "traefik.http.services.spire-http.loadbalancer.server.port=3010"
+      - "traefik.http.routers.spire-http.middlewares=spire-https"
+      - "traefik.http.middlewares.spire-https.redirectscheme.scheme=https"
+      # https
+      - "traefik.http.routers.spire-https.rule=Host(`spire.akkadius.com`)"
+      - "traefik.http.routers.spire-https.entrypoints=websecure"
+      - "traefik.http.routers.spire-https.tls.certresolver=le"
+      - "traefik.http.routers.spire-https.service=spire-https"
+      - "traefik.http.services.spire-https.loadbalancer.server.port=3010"
