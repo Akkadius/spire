@@ -1,3 +1,7 @@
+## [3.12.3] 2/7/2024
+
+* **Spire Admin** Fix issue where the server update page would not load because it was not rejecting errors from https://spire.akkadius.com properly. The error occurred because the hosted site is now **https** (SSL) and we hadn't updated our fetch logic to handle this. This is now fixed and the server update page will load properly again.
+
 ## [3.12.2] 2/4/2024
 
 * **Database** Implement log database connection resolving. This allows operators to utilize the "QS" database connection type for logs, particularly sinking player event logs to an external database or server. When a QS connection is specified in the `eqemu_config.json` - player event logs will automatically route to that connection. This is useful for operators who want to sink logs to an external database or server for auditing purposes. The database configuration gets synchronized and injected during Spire bootup and also during Spire Admin configuration saving.
