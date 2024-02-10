@@ -1,10 +1,11 @@
 package spa
 
 import (
+	"strings"
+
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/gobuffalo/packr"
 	"github.com/sirupsen/logrus"
-	"strings"
 )
 
 type Spa struct {
@@ -35,7 +36,7 @@ func NewSpa(logger *logrus.Logger) *Spa {
 				BasePath:      SpireBasePath,
 				LocalBasePath: SpireLocalBasePath,
 				SpaIndex:      SpireSpaIndex,
-				SkipPaths:     strings.Split(env.Get("SPA_SKIP_PATH_PREFIXES", "/auth,/api,/swagger,/websocket"), ","),
+				SkipPaths:     strings.Split(env.Get("SPA_SKIP_PATH_PREFIXES", "/auth,/api,/swagger,/websocket,/eqsage,/static"), ","),
 			},
 		),
 	}

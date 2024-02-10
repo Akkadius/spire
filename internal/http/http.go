@@ -4,6 +4,13 @@ import (
 	"crypto/subtle"
 	"errors"
 	"fmt"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"os"
+	"regexp"
+	"unicode"
+
 	"github.com/Akkadius/spire/docs"
 	"github.com/Akkadius/spire/internal/banner"
 	"github.com/Akkadius/spire/internal/env"
@@ -14,9 +21,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"os"
-	"unicode"
 
 	_ "github.com/Akkadius/spire/docs"
 )
@@ -84,6 +88,45 @@ func (c *Server) Serve(port uint) error {
 
 	e.GET("/swagger/*", docs.WrapHandler)
 	e.GET("/api/v1/routes", routes.List)
+
+	// Proxy requests to eqsage live site
+
+	// Setup proxy for /eqsage with path rewrite
+	eqsageTarget, _ := url.Parse("https://eqsage.vercel.app")
+	e.Group("/eqsage").Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			proxy := httputil.NewSingleHostReverseProxy(eqsageTarget)
+			proxy.Director = func(req *http.Request) {
+				originalPath := req.URL.Path
+				targetPath := regexp.MustCompile("^/eqsage").ReplaceAllString(originalPath, "")
+				req.URL.Scheme = eqsageTarget.Scheme
+				req.URL.Host = eqsageTarget.Host
+				req.URL.Path = targetPath
+				if targetPath == "" {
+					req.URL.Path = "/"
+				}
+				// Set the Host header to the target host
+				req.Host = eqsageTarget.Host
+			}
+			proxy.ServeHTTP(c.Response(), c.Request())
+			return nil
+		}
+	})
+
+	// Proxy middleware for /static without path rewrite but with Host header adjustment
+	e.Group("/static").Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			proxy := httputil.NewSingleHostReverseProxy(eqsageTarget)
+			proxy.Director = func(req *http.Request) {
+				req.URL.Scheme = eqsageTarget.Scheme
+				req.URL.Host = eqsageTarget.Host
+				// No path rewrite needed for /static, but we ensure the Host header is set
+				req.Host = eqsageTarget.Host
+			}
+			proxy.ServeHTTP(c.Response(), c.Request())
+			return nil
+		}
+	})
 
 	// serve spa as embedded static assets
 	s := spa.NewSpa(c.logger)

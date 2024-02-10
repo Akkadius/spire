@@ -45,6 +45,7 @@ export const ROUTE = {
   BOT_SPELL_EDIT: "/bot-spell/%s",
   PLAYER_ANIMATION_VIEWER: "/player-animation-viewer",
   QUEST_API_EXPLORER: "/quest-api-explorer",
+  SAGE: "/sage",
   RELEASES: "/dev/releases",
   RELEASE: "/dev/release/%s",
   CHANGELOG: "/dev/changelog",
