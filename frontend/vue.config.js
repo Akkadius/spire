@@ -8,13 +8,6 @@ module.exports = {
       ignored: [/node_modules/, /public/],
     },
     proxy: process.env.SAGE_LOCAL_DEV === 'true' ? {
-      // This proxies all asset requests to latest from master from github so we don't have to clone all of them locally
-      "^/eq-asset-preview-master/*": {
-        changeOrigin: true,
-        target:
-          "https://raw.githubusercontent.com/Akkadius/eq-asset-preview/master",
-        pathRewrite: (path) => path.replace(/^\/eq-asset-preview-master/, ""),
-      },
       // Local development for EQ sage -- https://gitlab.com/knervous/eq-sage
       "^/eqsage": {
         changeOrigin: true,

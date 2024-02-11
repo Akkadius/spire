@@ -1,3 +1,7 @@
+## [3.13.0] 2/11/2024
+
+* **Sage** Introduce new page for integration with EQ Sage. Sage, among other things, will be a 3D zone database editor that plugs into the existing Spire API. It is currently in a prototyping/experimental phase and will be undergoing changes to initially support zone editing in a broad sense with details for each individual aspect explored and fine tuned to provide full support for an immersive editing experience. More info can be found in the EQEmu Discord under the #project-requiem channel and any questions can be directed to the creator and maintainer, temp0.
+
 ## [3.12.3] 2/7/2024
 
 * **Spire Admin** Fix issue where the server update page would not load because it was not rejecting errors from https://spire.akkadius.com properly. The error occurred because the hosted site is now **https** (SSL) and we hadn't updated our fetch logic to handle this. This is now fixed and the server update page will load properly again.
