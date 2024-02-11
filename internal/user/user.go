@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/models"
@@ -37,7 +36,7 @@ func NewUser(
 	}
 }
 
-func (s User) CreateUser(user models.User) (models.User, error) {
+func (s *User) CreateUser(user models.User) (models.User, error) {
 	// check if user exists
 	var users []models.User
 	s.db.GetSpireDb().
@@ -74,7 +73,7 @@ func (s User) CreateUser(user models.User) (models.User, error) {
 	return newUser, nil
 }
 
-func (s User) CheckUserLogin(username string, password string) (bool, error, models.User) {
+func (s *User) CheckUserLogin(username string, password string) (bool, error, models.User) {
 	var user models.User
 	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LoginProviderLocal).First(&user)
 
@@ -90,14 +89,11 @@ func (s User) CheckUserLogin(username string, password string) (bool, error, mod
 	return match, nil, user
 }
 
-func (s User) PurgeUserCache(userId uint) {
-	s.cache.Delete(fmt.Sprintf("active-connection-%v", userId))
-	s.cache.Delete(fmt.Sprintf("active-connection-%v-default", userId))
-	s.cache.Delete(fmt.Sprintf("active-connection-%v-eqemu_content", userId))
-	s.cache.Delete(fmt.Sprintf("active-user-db-connection-%v", userId))
+func (s *User) PurgeUserCache(userId uint) {
+	s.db.PurgeUserDbCache(userId)
 }
 
-func (s User) ChangeLocalUserPassword(username string, password string) error {
+func (s *User) ChangeLocalUserPassword(username string, password string) error {
 	var user models.User
 	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LoginProviderLocal).First(&user)
 

@@ -97,6 +97,11 @@ type ConnectionCreateRequest struct {
 	ContentDbPort     string `json:"content_db_port"`
 	ContentDbUsername string `json:"content_db_username"`
 	ContentDbPassword string `json:"content_db_password"`
+	LogsDbName        string `json:"logs_db_name"`
+	LogsDbHost        string `json:"logs_db_host"`
+	LogsDbPort        string `json:"logs_db_port"`
+	LogsDbUsername    string `json:"logs_db_username"`
+	LogsDbPassword    string `json:"logs_db_password"`
 }
 
 func (cc *ConnectionsController) clearConnection(c echo.Context) {
@@ -142,6 +147,23 @@ func (cc *ConnectionsController) create(c echo.Context) error {
 	}
 	if len(r.ContentDbPort) > 0 {
 		ctx.SetContentDbPort(r.ContentDbPort)
+	}
+
+	// If any logs params are set
+	if len(r.LogsDbName) > 0 {
+		ctx.SetLogsDbName(r.LogsDbName)
+	}
+	if len(r.LogsDbHost) > 0 {
+		ctx.SetLogsDbHost(r.LogsDbHost)
+	}
+	if len(r.LogsDbUsername) > 0 {
+		ctx.SetLogsDbUsername(r.LogsDbUsername)
+	}
+	if len(r.LogsDbPassword) > 0 {
+		ctx.SetLogsDbPassword(r.LogsDbPassword)
+	}
+	if len(r.LogsDbPort) > 0 {
+		ctx.SetLogsDbPort(r.LogsDbPort)
 	}
 
 	// created address

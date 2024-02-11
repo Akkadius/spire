@@ -1,3 +1,27 @@
+## [3.12.3] 2/7/2024
+
+* **Spire Admin** Fix issue where the server update page would not load because it was not rejecting errors from https://spire.akkadius.com properly. The error occurred because the hosted site is now **https** (SSL) and we hadn't updated our fetch logic to handle this. This is now fixed and the server update page will load properly again.
+
+## [3.12.2] 2/4/2024
+
+* **Database** Implement log database connection resolving. This allows operators to utilize the "QS" database connection type for logs, particularly sinking player event logs to an external database or server. When a QS connection is specified in the `eqemu_config.json` - player event logs will automatically route to that connection. This is useful for operators who want to sink logs to an external database or server for auditing purposes. The database configuration gets synchronized and injected during Spire bootup and also during Spire Admin configuration saving.
+* **Player Event Log Viewer** Player event log request is split from character data bulk loading two split the queries on separate connections
+* **Spire Admin** When making configuration changes in the configuration editor UI - the database connection resolver will flush along with any cached user connections. The `eqemu_config.json` will also be re-injected into the `spire_server_database_connections` table
+* **Database Resolver** Added a connection type of `eqemu_logs` of which `player_event_logs` and `player_event_log_settings` both route to currently.
+* **Configuration Sync** Ensure we also empty fields when they are removed from the `eqemu_config.json` when saving the configuration in Spire Admin
+
+## [3.11.3] 1/29/2024
+
+* **Spire Admin** Message of the day should now be functional again
+* **Spire Admin** Spire now has a server lock / unlock button and status icon that is now present in the admin header visible on all admin pages.
+* **Spire Admin** The dashboard page now has a "Server Addresses" section that displays server world address and local address with copy to clipboard functionality if they are present in the server configuration.
+* **Spire Admin** The dashboard page now has a "Networking Interfaces" section that displays interfaces and realtime bandwidth utilization.
+* **Special Abilities Calculator** Adds support in Special Abilities Calculator for `Immune to Assassinate` and `Immune to Headshot` abilities. (Kinglykrab)
+* **Spire** Add in application update notifications that inform the user when there is an update available. This is a new feature that will be used in the future to notify users of new Spire releases while in the UI. It supports ignoring the update, only checks periodically.
+* **Spire** Add a manual update check button to the navbar.
+
+![image](https://github.com/Akkadius/spire/assets/3319450/b0576ea5-0ce4-4062-a456-768985faca4b)
+
 ## [3.9.11] 1/24/2024
 
 * **Installer** Add back auto installing VC runtime 2015-2019 for Windows users still using Windows 10

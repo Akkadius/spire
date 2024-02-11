@@ -8,7 +8,19 @@
             {{ pageName }}
           </h6>
 
+
           <h1 class="header-title">
+            <a
+              href="javascript:"
+              @click="toggleServerLock()"
+            >
+              <i
+                :class="'fe ' + (serverLocked ? 'fe-lock' : 'fe-unlock')  + ' pr-2'"
+                :title="serverLocked ? 'Server is locked' : 'Server is unlocked'"
+                :style="`color: ${serverLocked ? 'red' : 'gray'}`"
+              />
+            </a>
+
             <span v-if="stats.server_name">{{ stats.server_name }}</span>
           </h1>
         </div>
@@ -131,6 +143,7 @@ export default {
 
       stats: {},
 
+      serverLocked: false,
 
       cpuPercent: 0,
       memoryPercent: 0,
@@ -157,6 +170,8 @@ export default {
       this.loadServerStats()
     })
 
+    this.getServerLockedStatus()
+
     this.timer = setInterval(() => {
       if (!document.hidden) {
         this.loadServerStats()
@@ -179,6 +194,28 @@ export default {
       }
 
       return '#2c7be5'
+    },
+
+    getServerLockedStatus() {
+      SpireApi.v1().get("eqemuserver/get-lock-status").then((r) => {
+        if (r.status === 200) {
+          this.serverLocked = r.data.locked
+        }
+      })
+    },
+
+    toggleServerLock() {
+      SpireApi.v1().post("eqemuserver/toggle-server-lock").then((r) => {
+        if (r.status === 200) {
+          this.serverLocked = r.data.locked
+          this.$bvToast.toast(r.data.message, {
+            title: "Server Lock",
+            autoHideDelay: 2000,
+            solid: true,
+            toaster: 'b-toaster-bottom-right',
+          })
+        }
+      })
     },
 
     async loadServerStats() {

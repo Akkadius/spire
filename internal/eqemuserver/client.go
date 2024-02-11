@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/telnet"
+	"strings"
 )
 
 type Client struct {
@@ -55,6 +56,52 @@ func (c *Client) GetZoneList() (WorldZoneList, error) {
 	}
 
 	return zoneList, nil
+}
+
+type LockStatusResponse struct {
+	Data struct {
+		Locked bool `json:"locked"`
+	} `json:"data"`
+	ExecutionTime string `json:"execution_time"`
+	Method        string `json:"method"`
+}
+
+// GetLockStatus returns the lock status of the server
+func (c *Client) GetLockStatus() (bool, error) {
+	o, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "api lock_status", EnforceJson: true},
+	)
+	if err != nil {
+		return false, err
+	}
+
+	if !strings.Contains(o, "locked") {
+		return false, fmt.Errorf("invalid response from lock_status: %v", o)
+	}
+
+	var r LockStatusResponse
+	err = json.Unmarshal([]byte(o), &r)
+	if err != nil {
+		return false, err
+	}
+
+	return r.Data.Locked, nil
+}
+
+// SetLockStatus returns the lock status of the server
+func (c *Client) SetLockStatus(locked bool) error {
+	command := "lock"
+	if !locked {
+		command = "unlock"
+	}
+	_, err := c.telnet.Command(
+		telnet.CommandConfig{Command: command},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type WorldClientList struct {

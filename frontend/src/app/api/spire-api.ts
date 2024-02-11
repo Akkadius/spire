@@ -4,7 +4,7 @@ import Debug from "@/app/debug/debug";
 import {ROUTE} from "@/routes";
 
 
-const PUBLIC_SPIRE = "http://spire.akkadius.com/api/v1";
+const PUBLIC_SPIRE = "https://spire.akkadius.com/api/v1";
 
 export class SpireApi {
   static getBasePath() {

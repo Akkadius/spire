@@ -158,6 +158,11 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 		c.DbPassword = o.crypt.Encrypt(cfg.Server.Database.Password, o.GetEncKey(user.ID))
 
 		// content db if exists
+		c.ContentDbHost = ""
+		c.ContentDbPort = ""
+		c.ContentDbName = ""
+		c.ContentDbUsername = ""
+		c.ContentDbPassword = ""
 		if cfg.Server.ContentDatabase != nil {
 			if len(cfg.Server.ContentDatabase.Host) > 0 {
 				c.ContentDbHost = cfg.Server.ContentDatabase.Host
@@ -173,6 +178,30 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 			}
 			if len(cfg.Server.ContentDatabase.Password) > 0 {
 				c.ContentDbPassword = o.crypt.Encrypt(cfg.Server.ContentDatabase.Password, o.GetEncKey(user.ID))
+			}
+		}
+
+		// logs db if exists
+		c.LogsDbHost = ""
+		c.LogsDbPort = ""
+		c.LogsDbName = ""
+		c.LogsDbUsername = ""
+		c.LogsDbPassword = ""
+		if cfg.Server.Qsdatabase != nil {
+			if len(cfg.Server.Qsdatabase.Host) > 0 {
+				c.LogsDbHost = cfg.Server.Qsdatabase.Host
+			}
+			if len(cfg.Server.Qsdatabase.Port) > 0 {
+				c.LogsDbPort = cfg.Server.Qsdatabase.Port
+			}
+			if len(cfg.Server.Qsdatabase.Db) > 0 {
+				c.LogsDbName = cfg.Server.Qsdatabase.Db
+			}
+			if len(cfg.Server.Qsdatabase.Username) > 0 {
+				c.LogsDbUsername = cfg.Server.Qsdatabase.Username
+			}
+			if len(cfg.Server.Qsdatabase.Password) > 0 {
+				c.LogsDbPassword = o.crypt.Encrypt(cfg.Server.Qsdatabase.Password, o.GetEncKey(user.ID))
 			}
 		}
 
@@ -211,6 +240,25 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 		}
 		if len(cfg.Server.ContentDatabase.Port) > 0 {
 			ctx.SetContentDbPort(cfg.Server.ContentDatabase.Port)
+		}
+	}
+
+	// If any logs params are set
+	if cfg.Server.Qsdatabase != nil {
+		if len(cfg.Server.Qsdatabase.Db) > 0 {
+			ctx.SetLogsDbName(cfg.Server.Qsdatabase.Db)
+		}
+		if len(cfg.Server.Qsdatabase.Host) > 0 {
+			ctx.SetLogsDbHost(cfg.Server.Qsdatabase.Host)
+		}
+		if len(cfg.Server.Qsdatabase.Username) > 0 {
+			ctx.SetLogsDbUsername(cfg.Server.Qsdatabase.Username)
+		}
+		if len(cfg.Server.Qsdatabase.Password) > 0 {
+			ctx.SetLogsDbPassword(cfg.Server.Qsdatabase.Password)
+		}
+		if len(cfg.Server.Qsdatabase.Port) > 0 {
+			ctx.SetLogsDbPort(cfg.Server.Qsdatabase.Port)
 		}
 	}
 

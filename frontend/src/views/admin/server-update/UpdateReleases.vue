@@ -313,8 +313,8 @@ export default {
           } catch (e) {
             if (e.response && e.response.data && e.response.data.error) {
               this.error = e.response.data.error
-              return resolve()
             }
+            return resolve()
           }
         }
       });

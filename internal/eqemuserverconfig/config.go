@@ -79,6 +79,7 @@ type EQEmuConfigJson struct {
 		} `json:"ucs,omitempty"`
 		World struct {
 			AutoDatabaseUpdates *bool `json:"auto_database_updates,omitempty"`
+			Locked              bool  `json:"locked,omitempty"`
 			API                 struct {
 				Enabled bool `json:"enabled"`
 			} `json:"api,omitempty"`

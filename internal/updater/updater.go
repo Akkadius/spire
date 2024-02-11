@@ -81,7 +81,7 @@ func (s Service) getAppVersion() (error, EnvResponse) {
 }
 
 // CheckForUpdates checks for updates to the app
-func (s Service) CheckForUpdates() {
+func (s Service) CheckForUpdates(interactive bool) bool {
 
 	// get executable name and path
 	executableName := filepath.Base(os.Args[0])
@@ -106,13 +106,13 @@ func (s Service) CheckForUpdates() {
 	// if being ran from go run main.go
 	if executableName == "main.exe" || executableName == "main" {
 		fmt.Println("[Update] Running as go run main.go, ignoring...")
-		return
+		return false
 	}
 
 	// internet connection check
 	if !isconnected() {
 		fmt.Printf("[Update] Not connected to the internet\n")
-		return
+		return false
 	}
 
 	fmt.Printf("[Update] Checking for updates...\n")
@@ -124,7 +124,7 @@ func (s Service) CheckForUpdates() {
 	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "Akkadius", "spire")
 	if err != nil {
 		log.Println(err)
-		return
+		return false
 	}
 
 	// get app version
@@ -139,7 +139,7 @@ func (s Service) CheckForUpdates() {
 	// already up to date
 	if releaseVersion == localVersion {
 		fmt.Printf("[Update] Spire is already up to date @ [%v]\n", localVersion)
-		return
+		return false
 	}
 
 	// remove asset check file if we have an update
@@ -247,20 +247,21 @@ func (s Service) CheckForUpdates() {
 			}
 
 			// if terminal, wait for user input
-			if isatty.IsTerminal(os.Stdout.Fd()) {
+			if isatty.IsTerminal(os.Stdout.Fd()) && interactive {
 				fmt.Println("")
 				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
 				fmt.Println("")
 				fmt.Print("Press [Enter] to exit spire...")
 				fmt.Println("")
 				bufio.NewReader(os.Stdin).ReadBytes('\n')
+				return true
 			} else {
 				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
+				return true
 			}
-
-			os.Exit(0)
 		}
 	}
+	return false
 }
 
 func debug(msg string) {
