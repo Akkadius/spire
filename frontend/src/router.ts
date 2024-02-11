@@ -232,6 +232,11 @@ const router = new Router({
           meta: {title: "Quest API Explorer"},
         },
         {
+          path: ROUTE.SAGE,
+          component: () => import('./views/sage/Sage.vue'),
+          meta: {title: "Sage"},
+        },
+        {
           path: '/calculators',
           component: () => import('./views/Calculators.vue'),
           meta: {title: "Calculators"},

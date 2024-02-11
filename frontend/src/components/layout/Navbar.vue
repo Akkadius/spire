@@ -109,6 +109,13 @@
             </li>
 
             <li class="nav-item">
+              <router-link class="nav-link " to="/sage">
+                <i class="ra ra-crystal-ball mr-1"></i> Sage
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+
+            <li class="nav-item">
               <router-link class="nav-link " to="/strings-database">
                 <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
                 <b-badge class="ml-3" variant="primary">NEW!</b-badge>
