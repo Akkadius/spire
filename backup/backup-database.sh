@@ -17,8 +17,8 @@ set +e
 # mysqldump
 #############################################
 echo "# Dumping database and compressing"
-MYSQL_BACKUP_NAME=${MARIADB_DATABASE}-$(date +"%m-%d-%Y")
-mysqldump --lock-tables=false -u${MARIADB_USER} -p${MARIADB_PASSWORD} -h mariadb peq >/tmp/${MYSQL_BACKUP_NAME}.sql
+MYSQL_BACKUP_NAME=${MYSQL_SPIRE_DATABASE}-$(date +"%m-%d-%Y")
+mysqldump --lock-tables=false -u${MYSQL_SPIRE_USERNAME} -p${MYSQL_SPIRE_PASSWORD} -h mariadb ${MYSQL_SPIRE_DATABASE} >/tmp/${MYSQL_BACKUP_NAME}.sql
 tar -zcvf ${MYSQL_BACKUP_NAME}.tar.gz ${MYSQL_BACKUP_NAME}.sql
 
 #############################################
