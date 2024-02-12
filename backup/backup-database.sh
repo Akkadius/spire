@@ -18,7 +18,7 @@ set +e
 #############################################
 echo "# Dumping database and compressing"
 MYSQL_BACKUP_NAME=${MARIADB_DATABASE}-$(date +"%m-%d-%Y")
-mysqldump --lock-tables=false -u${MARIADB_USER} -p${MARIADB_PASSWORD} -h mariadb ${MARIADB_DATABASE} >/tmp/${MYSQL_BACKUP_NAME}.sql
+mysqldump --lock-tables=false -u${MARIADB_USER} -p${MARIADB_PASSWORD} -h mariadb peq >/tmp/${MYSQL_BACKUP_NAME}.sql
 tar -zcvf ${MYSQL_BACKUP_NAME}.tar.gz ${MYSQL_BACKUP_NAME}.sql
 
 #############################################
