@@ -78,3 +78,23 @@ services:
       - "traefik.http.routers.spire-https.tls.certresolver=le"
       - "traefik.http.routers.spire-https.service=spire-https"
       - "traefik.http.services.spire-https.loadbalancer.server.port=3010"
+
+  #############################################
+  # backup
+  #############################################
+
+  backup-cron:
+    restart: unless-stopped
+    image: akkadius/eqemu-backup-cron:latest
+    build:
+      context: ./containers/backup-cron
+    hostname: backup-cron
+    tty: true
+    volumes:
+      - ./:/home/backup-cron/
+    environment:
+      TZ: America/Chicago
+    #      HOST_NAME: ${HOSTNAME:-default}
+    #      HOST_DIR: ${PWD}
+    networks:
+      - backend

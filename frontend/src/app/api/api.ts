@@ -170,7 +170,7 @@ export * from './api/spawn2-api';
 // export * from './api/spawn-condition-api';
 // export * from './api/spawn-condition-value-api';
 // export * from './api/spawn-event-api';
-// export * from './api/spawnentry-api';
+export * from './api/spawnentry-api';
 // export * from './api/spawngroup-api';
 // export * from './api/spell-bucket-api';
 // export * from './api/spell-global-api';
