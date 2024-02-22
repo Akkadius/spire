@@ -645,6 +645,8 @@ export default {
         { name: "Immune to Open", ability: 53 },
         { name: "Immune to Assassinate", ability: 54 },
         { name: "Immune to Headshot", ability: 55 },
+        { name: "Immune to Bot Aggro", ability: 56 },
+        { name: "Immune to Bot Damage", ability: 57 },
       ]
     }
   },
