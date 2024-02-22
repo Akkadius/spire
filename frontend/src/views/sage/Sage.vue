@@ -12,6 +12,7 @@ import {Navbar}          from "../../app/navbar";
 import { Zones } from "../../app/zones";
 import { Spawn } from "../../app/spawn";
 import { Npcs } from "../../app/npcs";
+import { Grid } from "../../app/grid";
 export default {
   components: {
 
@@ -34,6 +35,7 @@ export default {
         SpireApi,
         SpireApiTypes,
         SpireQueryBuilder,
+        Grid,
         Zones,
         Spawn,
         Npcs

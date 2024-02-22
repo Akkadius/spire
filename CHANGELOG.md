@@ -1,6 +1,14 @@
-## [3.13.0] 2/11/2024
+## [3.13.1] 2/11/2024
 
-* **Sage** Introduce new page for integration with EQ Sage. Sage, among other things, will be a 3D zone database editor that plugs into the existing Spire API. It is currently in a prototyping/experimental phase and will be undergoing changes to initially support zone editing in a broad sense with details for each individual aspect explored and fine tuned to provide full support for an immersive editing experience. More info can be found in the EQEmu Discord under the #project-requiem channel and any questions can be directed to the creator and maintainer, temp0.
+**Sage** Introduce new page for integration with EQ Sage. Sage, among other things, will be a 3D zone database editor that plugs into the existing Spire API. It is currently in a prototyping/experimental phase and will be undergoing changes to initially support zone editing in a broad sense with details for each individual aspect explored and fine tuned to provide full support for an immersive editing experience. More info can be found in the EQEmu Discord under the #project-requiem channel and any questions can be directed to the creator and maintainer, temp0.
+
+#### Spawn Entry Editing, Pathfinder
+
+![image](https://github.com/Akkadius/spire/assets/3319450/29f34cb6-6961-4287-aadd-cd99a3644c5b)
+
+#### S3D / EQG Zone Region Inspector
+
+![image](https://github.com/Akkadius/spire/assets/3319450/1c88abc3-25a9-4562-a869-976fee530a44)
 
 ## [3.12.3] 2/7/2024
 
