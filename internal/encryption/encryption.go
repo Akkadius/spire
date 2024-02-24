@@ -107,6 +107,17 @@ func (e *Encrypter) Decrypt(encryptedString string, keyString string) string {
 	//Get the nonce size
 	nonceSize := aesGCM.NonceSize()
 
+	if len(enc) == 0 {
+		e.logger.Error("Encrypted data is empty")
+		return ""
+	}
+
+	// validate the nonce size
+	if len(enc) < nonceSize {
+		e.logger.Error("Encrypted data is too short")
+		return ""
+	}
+
 	//Extract the nonce from the encrypted data
 	nonce, ciphertext := enc[:nonceSize], enc[nonceSize:]
 

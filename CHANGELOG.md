@@ -1,3 +1,7 @@
+## [3.13.3] 2/24/2024
+
+**Encryption** Handle scenarios where user may have parts of an encrypted connection defined but the password is empty. Unencrypting an empty password will result in an out of range error. This will now be handled gracefully and the connection will be skipped if the password is empty.
+
 ## [3.13.2] 2/23/2024
 
 **API Updates** Open access to Spire API types for spawn groups, doors, and objects for integration in Sage.
