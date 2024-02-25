@@ -1,3 +1,7 @@
+## [3.13.4] 2/24/2024
+
+**Database** Fix issue where an improperly configured secondary database such as queryserv or content database could keep the database object from being inserted into the Spire database connections properly.
+
 ## [3.13.3] 2/24/2024
 
 **Encryption** Handle scenarios where user may have parts of an encrypted connection defined but the password is empty. Unencrypting an empty password will result in an out of range error. This will now be handled gracefully and the connection will be skipped if the password is empty.

@@ -72,7 +72,7 @@ func (c *Create) Handle(ctx *contexts.ConnectionCreateContext) error {
 	}
 
 	// If using a content database connection also check it
-	if ctx.ContentDbUsername() != "" {
+	if ctx.CheckDbConnection() && ctx.ContentDbUsername() != "" {
 		dsn := fmt.Sprintf(
 			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local&timeout=1s",
 			ctx.ContentDbUsername(),
@@ -94,7 +94,7 @@ func (c *Create) Handle(ctx *contexts.ConnectionCreateContext) error {
 	}
 
 	// if using a logs database connection also check it
-	if ctx.LogsDbUsername() != "" {
+	if ctx.CheckDbConnection() && ctx.LogsDbUsername() != "" {
 		dsn := fmt.Sprintf(
 			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local&timeout=1s",
 			ctx.LogsDbUsername(),

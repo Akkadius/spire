@@ -105,13 +105,13 @@ type ConnectionCreateRequest struct {
 }
 
 func (cc *ConnectionsController) clearConnection(c echo.Context) {
-	user := request.GetUser(c)
-	cc.spireuser.PurgeUserCache(user.ID)
+	u := request.GetUser(c)
+	cc.spireuser.PurgeUserCache(u.ID)
 }
 
 // ConnectionCreateRequest handle
 func (cc *ConnectionsController) create(c echo.Context) error {
-	user := request.GetUser(c)
+	u := request.GetUser(c)
 
 	r := new(ConnectionCreateRequest)
 	if err := c.Bind(r); err != nil {
@@ -120,7 +120,7 @@ func (cc *ConnectionsController) create(c echo.Context) error {
 
 	// context
 	ctx, err := contexts.NewConnectionCreateContext(
-		user.ID,
+		u.ID,
 		r.ConnectionName,
 		r.DbName,
 		r.DbHost,
@@ -173,7 +173,7 @@ func (cc *ConnectionsController) create(c echo.Context) error {
 		ipAddress = remoteAddr[0]
 	}
 	ctx.SetCreatedFromIp(ipAddress)
-
+	ctx.SetCheckSecondaryDbConnection(true)
 	err = cc.dbConnectionCreateService.Handle(ctx)
 	if err != nil {
 		return err

@@ -85,7 +85,10 @@ func (o *Init) Init() {
 		o.SyncDbName()
 
 		if adminUser.ID > 0 {
-			o.CreateDefaultDatabaseConnectionFromConfig(adminUser)
+			err := o.CreateDefaultDatabaseConnectionFromConfig(adminUser)
+			if err != nil {
+				o.logger.Error("failed to create default database connection from config", err)
+			}
 		}
 	}
 }
@@ -264,6 +267,7 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 
 	// created address
 	ctx.SetCreatedFromIp("127.0.0.1")
+	ctx.SetCheckSecondaryDbConnection(false)
 	err = o.dbConnectionCreateService.Handle(ctx)
 	if err != nil {
 		return err

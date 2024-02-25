@@ -6,24 +6,33 @@ import (
 )
 
 type ConnectionCreateContext struct {
-	userId            uint
-	connectionName    string
-	dbName            string
-	dbHost            string
-	dbPort            string
-	dbUsername        string
-	dbPassword        string
-	contentDbName     string
-	contentDbHost     string
-	contentDbPort     string
-	contentDbUsername string
-	contentDbPassword string
-	logsDbName        string
-	logsDbHost        string
-	logsDbPort        string
-	logsDbUsername    string
-	logsDbPassword    string
-	createdFromIp     string
+	userId                     uint
+	connectionName             string
+	dbName                     string
+	dbHost                     string
+	dbPort                     string
+	dbUsername                 string
+	dbPassword                 string
+	contentDbName              string
+	contentDbHost              string
+	contentDbPort              string
+	contentDbUsername          string
+	contentDbPassword          string
+	logsDbName                 string
+	logsDbHost                 string
+	logsDbPort                 string
+	logsDbUsername             string
+	logsDbPassword             string
+	createdFromIp              string
+	checkSecondaryDbConnection bool // use this to check secondary db connections
+}
+
+func (c *ConnectionCreateContext) CheckDbConnection() bool {
+	return c.checkSecondaryDbConnection
+}
+
+func (c *ConnectionCreateContext) SetCheckSecondaryDbConnection(checkDbConnection bool) {
+	c.checkSecondaryDbConnection = checkDbConnection
 }
 
 func NewConnectionCreateContext(
