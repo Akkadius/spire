@@ -5,10 +5,11 @@ export class Setting {
   static DEFAULT_LANGUAGE_PREFERENCE = "default-language-preference";
 
   // spire update
-  static LAST_CHECKED_UPDATE_TIME    = "last-checked-update-time";
-  static LATEST_UPDATE_VERSION       = "latest-update-version";
-  static LATEST_RELEASE_PAYLOAD      = "latest-release-payload";
-  static IGNORED_UPDATE_VERSION      = "ignored-update-version";
+  static LAST_CHECKED_UPDATE_TIME = "last-checked-update-time";
+  static LATEST_UPDATE_VERSION    = "latest-update-version";
+  static LATEST_RELEASE_PAYLOAD   = "latest-release-payload";
+  static IGNORED_UPDATE_VERSION   = "ignored-update-version";
+  static AF                       = "af";
 }
 
 export class LocalSettings {

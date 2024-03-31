@@ -5,6 +5,7 @@
       ref="ninjaKeys"
       placeholder="Where would you like to go?"
     />
+    <af-modal/>
     <keypress-commands-modal/>
     <router-view></router-view>
     <app-update-modal :release="release" :current-version="currentVersion"/>
@@ -24,10 +25,11 @@ import UserContext              from "@/app/user/UserContext";
 import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.vue";
 import semver                   from "semver";
 import AppUpdateModal           from "@/components/modals/AppUpdateModal.vue";
+import AfModal                  from "@/components/modals/AF.vue";
 
 export default {
   name: "App",
-  components: { AppUpdateModal, KeypressCommandsModal },
+  components: { AfModal, AppUpdateModal, KeypressCommandsModal },
   async beforeMount() {
     await AppEnv.init()
   },
@@ -43,6 +45,10 @@ export default {
     this.loadKeypressBindings();
     this.loadWallpaper();
     this.loadSpellIconSettings();
+
+    if (LocalSettings.get(Setting.AF) !== "true") {
+      this.$bvModal.show('af')
+    }
 
     if (typeof AppEnv.getOS() === "undefined") {
       await AppEnv.init()
