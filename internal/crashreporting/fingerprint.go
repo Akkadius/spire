@@ -27,9 +27,8 @@ func FingerPrint(crash string) string {
 			// if string contains " at " then we want only the characters after " at "
 			if strings.Contains(line, " at ") {
 				line = line[strings.Index(line, " at ")+4:]
-			} else {
-				lines += line
 			}
+			lines += line + "\n"
 
 			//fmt.Println("Found stack trace line", line)
 		}
