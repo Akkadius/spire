@@ -151,7 +151,7 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 
 	// connection already exists, let's just update it
 	var c models.ServerDatabaseConnection
-	db.Where("id = 1").First(&c)
+	db.First(&c)
 	if c.ID > 0 {
 		c.Name = cfg.Server.World.Longname
 		c.DbHost = cfg.Server.Database.Host
@@ -383,7 +383,7 @@ func (o *Init) InitApp(r *InitAppRequest) error {
 func (o *Init) SyncDbName() {
 	db := o.connections.SpireDbNoLog()
 	var c models.ServerDatabaseConnection
-	db.Where("id = 1").First(&c)
+	db.First(&c)
 	cfg := o.serverconfig.Get()
 	if c.ID > 0 {
 		c.Name = cfg.Server.World.Longname

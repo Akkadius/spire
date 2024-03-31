@@ -1,6 +1,6 @@
-## [3.13.5] 4/01/2024
+## [3.13.6] 4/01/2024
 
-Feeding the hamsters
+**Database** Fix an issue where we are not updating the local database connection row properly in certain circumstances
 
 ## [3.13.4] 2/24/2024
 
