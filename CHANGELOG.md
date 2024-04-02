@@ -1,3 +1,7 @@
+## [3.13.8] 4/02/2024
+
+**Database** Fix an issue that prevents server configuration page from loading if you are missing the qsdatabase config section in your server config
+
 ## [3.13.7] 4/02/2024
 
 **Database** Fix an issue where we are not updating the local database connection row properly in certain circumstances

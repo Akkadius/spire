@@ -619,6 +619,16 @@ export default {
       }
     }
 
+    if (!this.config.server.qsdatabase) {
+      this.config.server.qsdatabase = {
+        db: "",
+        host: "",
+        port: "",
+        username: "",
+        password: "",
+      }
+    }
+
     if (!this.config.server.content_database) {
       this.config.server.content_database = {
         db: "",
