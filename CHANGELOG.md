@@ -1,4 +1,4 @@
-## [3.13.6] 4/01/2024
+## [3.13.7] 4/02/2024
 
 **Database** Fix an issue where we are not updating the local database connection row properly in certain circumstances
 
