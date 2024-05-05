@@ -307,6 +307,18 @@ func (l *Launcher) Supervisor() {
 		}
 	}
 
+	if l.currentProcessCounts[worldProcessName] == 0 {
+		l.startServerProcess(worldProcessName)
+	}
+
+	if l.runLoginserver && l.currentProcessCounts[loginServerProcessName] == 0 {
+		l.startServerProcess(loginServerProcessName)
+	}
+
+	if l.runQueryServ && l.currentProcessCounts[queryServProcessName] == 0 {
+		l.startServerProcess(queryServProcessName)
+	}
+
 	l.logger.DebugVv().
 		Any("took", time.Now().Sub(now).String()).
 		Any("currentProcessCounts", l.currentProcessCounts).
