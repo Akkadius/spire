@@ -1,3 +1,7 @@
+## [3.13.9] 5/05/2024
+
+**Server Launcher** Remove synthetic 1-second delay on server start/stop/restart
+
 ## [3.13.8] 4/02/2024
 
 **Database** Fix an issue that prevents server configuration page from loading if you are missing the qsdatabase config section in your server config

@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 type ServerLauncherCommand struct {
@@ -75,8 +74,6 @@ func (c *ServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 		_ = c.command.Help()
 		return
 	}
-
-	time.Sleep(1 * time.Second)
 
 	if arg == "stop-server" || arg == "restart-server" {
 		processes, _ := process.Processes()
