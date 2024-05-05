@@ -19,6 +19,7 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/gosimple/slug v1.13.1
 	github.com/hashicorp/go-version v1.6.0
+	github.com/henvic/httpretty v0.1.3
 	github.com/iancoleman/strcase v0.2.0
 	github.com/influxdata/influxdb-client-go/v2 v2.11.0
 	github.com/joho/godotenv v1.4.0
@@ -26,10 +27,11 @@ require (
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.4.0
 	github.com/manifoldco/promptui v0.9.0
-	github.com/mattn/go-isatty v0.0.16
+	github.com/mattn/go-isatty v0.0.19
 	github.com/mholt/archiver/v4 v4.0.0-alpha.7
 	github.com/muesli/termenv v0.13.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/rs/zerolog v1.32.0
 	github.com/schollz/progressbar/v3 v3.12.2
 	github.com/shirou/gopsutil/v3 v3.22.12
 	github.com/sirupsen/logrus v1.9.0
@@ -84,7 +86,6 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
-	github.com/henvic/httpretty v0.1.3 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect

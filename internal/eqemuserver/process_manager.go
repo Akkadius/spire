@@ -18,6 +18,7 @@ type ProcessManager struct {
 	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
 	pathmgmt     *pathmgmt.PathManagement
+	launcher     *Launcher
 }
 
 func NewProcessManager(
@@ -25,12 +26,14 @@ func NewProcessManager(
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
+	launcher *Launcher,
 ) *ProcessManager {
 	return &ProcessManager{
 		logger:       logger,
 		serverconfig: serverconfig,
 		settings:     settings,
 		pathmgmt:     pathmgmt,
+		launcher:     launcher,
 	}
 }
 

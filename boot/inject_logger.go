@@ -2,6 +2,7 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/go-errors/errors"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
@@ -16,6 +17,7 @@ const (
 // wire set for loading the stores.
 var loggerSet = wire.NewSet(
 	provideLogger,
+	logger.ProvideDebugLogger,
 )
 
 // logging provider

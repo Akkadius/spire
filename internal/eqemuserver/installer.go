@@ -2048,7 +2048,7 @@ func (a *Installer) setPostInstallConfigValues() error {
 		config.WebAdmin.Launcher.MinZoneProcesses = 10
 		config.WebAdmin.Launcher.RunSharedMemory = true
 		// boat zones mainly
-		config.WebAdmin.Launcher.StaticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,abysmal,firiona,overthere"
+		config.WebAdmin.Launcher.StaticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,firiona,overthere"
 	}
 
 	config.Server.World.Longname = fmt.Sprintf("Akka's Windows PEQ Installer [%v]", RandStringRunes(5))
