@@ -45,20 +45,22 @@
 
     <div style="max-height: 80vh; overflow-y: scroll">
       <div
-        :class="['card', 'mb-3']"
+        :class="['card', 'mb-3', 'zone-card', 'zone-background-' + zone.zone_name]"
         v-if="getProcessStats(zone.zone_os_pid)"
         v-for="zone in filterZoneList(zoneList)"
+        :style="formatZoneRow(zone)"
       >
         <div
           :class="['card-body', 'lift', 'btn-default', 'card-slim']"
-          style="box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);"
+          :style="'box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);'"
         >
           <div class="row align-items-center">
 
             <div class="col ml-n1">
               <h4 class="mb-1">
 
-                <span class="h2 fe text-muted mb-0 fe-layers mr-3"></span>
+                <span
+                  :class="'h2 fe text-muted mb-0 ' + formatRowIcon(zone) + ' mr-3'"/>
 
                 <a href="#" style="color:#2364d2;font-weight:200;font-size: 18px;" v-if="zone.zone_long_name">
                   {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
@@ -125,7 +127,8 @@
             <div class="col-auto">
               <p
                 :style="'color: ' + getMemUsageColor(zone.zone_os_pid) + ' !important'"
-                class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+                class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)"
+              >
                 {{ parseFloat(getProcessStats(zone.zone_os_pid).memory / 1024 / 1024).toFixed(2) }}MB
               </p>
             </div>
@@ -184,6 +187,7 @@ export default {
       loaded: false,
       zoneServerLoop: null,
       chartLoaded: false,
+      zoneBackgroundImages: {},
 
       // api responses
       error: "",
@@ -204,12 +208,52 @@ export default {
   },
   methods: {
 
+    formatRowIcon(zone) {
+      if (zone.zone_id === 0) {
+        return "fe-loader"
+      }
+
+      if (zone.number_players === 0) {
+        return "fe-loader"
+      }
+
+      return "fe-power"
+    },
+
+    formatZoneRow(zone) {
+      if (zone.zone_id === 0) {
+        return {
+          backgroundColor: 'rgba(0,0,0,.9)',
+          color: '#495057',
+          border: '1px solid #e9ecef',
+          borderRadius: '5px',
+          marginBottom: '10px'
+        }
+      }
+
+      if (zone.number_players === 0) {
+        return {
+          backgroundColor: 'rgba(0,0,0,.9)',
+          color: '#495057',
+          border: '1px solid #e9ecef',
+          borderRadius: '5px',
+          marginBottom: '10px'
+        }
+      }
+
+      return {
+        backgroundColor: '#f8f9fa',
+        border: '1px solid #e9ecef',
+        borderRadius: '5px',
+        marginBottom: '10px'
+      }
+    },
+
     getMemUsageColor(pid) {
       const p = parseFloat(this.getProcessStats(pid).memory / 1024 / 1024)
       if (p > 600) {
         return 'red';
-      }
-      else if (p > 300) {
+      } else if (p > 300) {
         return 'orange';
       }
 
@@ -220,8 +264,7 @@ export default {
       const p = parseFloat(this.getProcessStats(pid).cpu)
       if (p > 15) {
         return 'red';
-      }
-      else if (p > 5) {
+      } else if (p > 5) {
         return 'orange';
       }
 
@@ -297,7 +340,41 @@ export default {
       try {
         const r = await SpireApi.v1().get('eqemuserver/zone-list')
         if (r.status === 200) {
-          this.zoneList     = r.data.zone_list.data
+
+          // sort list
+          // sort by number of players first
+          // then zones with id of 0 always on bottom of list
+          // then sort by zone name
+          this.zoneList = r.data.zone_list.data.sort(
+            (a, b) => {
+              if (a.number_players > b.number_players) {
+                return -1
+              }
+
+              if (a.number_players < b.number_players) {
+                return 1
+              }
+
+              if (a.zone_id === 0) {
+                return 1
+              }
+
+              if (b.zone_id === 0) {
+                return -1
+              }
+
+              if (a.zone_name < b.zone_name) {
+                return -1
+              }
+
+              if (a.zone_name > b.zone_name) {
+                return 1
+              }
+
+              return 0
+            }
+          )
+
           this.processStats = r.data.process_info
           this.error        = ""
         }
@@ -313,8 +390,10 @@ export default {
         }
       }
 
+
       this.loaded = true
     },
+
     filterZoneList(list) {
       let zoneList = []
       for (let z of list) {
@@ -332,30 +411,6 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.zoneServerLoop)
-  },
+  }
 }
 </script>
-
-<style>
-.avatar-image {
-  background-image: url('~@/assets/img/eqemu-avatar.png');
-}
-
-.connector {
-  width: 15px;
-  height: 15px;
-  opacity: .2;
-  border-bottom-left-radius: 8px;
-  border-left: 1px solid #1e375a;
-  border-bottom: 1px solid #1e375a;
-  margin-left: 9px;
-  display: inline-flex;
-}
-
-.image-label {
-  background-color: rgba(35, 100, 210, .07);
-  color: #2364d2;
-  padding: 0 4px;
-  border-radius: 2px;
-}
-</style>

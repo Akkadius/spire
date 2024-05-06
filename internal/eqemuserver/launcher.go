@@ -19,6 +19,7 @@ const (
 	ucsProcessName         = "ucs"
 	queryServProcessName   = "queryserv"
 	loginServerProcessName = "loginserver"
+	processLoopTimer       = 5 * time.Second
 )
 
 type Launcher struct {
@@ -57,10 +58,9 @@ func NewLauncher(
 		currentProcessCounts: make(map[string]int),
 		serverApi:            serverApi,
 	}
-	l.Process()
 
-	// temp
-	l.Start()
+	l.Start() // temp
+	l.Process()
 
 	return l
 }
@@ -131,7 +131,7 @@ func (l *Launcher) Process() {
 				l.Supervisor()
 			}
 
-			time.Sleep(1 * time.Second)
+			time.Sleep(processLoopTimer)
 		}
 	}()
 }
@@ -144,6 +144,7 @@ func (l *Launcher) Start() {
 
 }
 
+// GetServerProcessNames returns a list of server process names
 func (l *Launcher) GetServerProcessNames() []string {
 	return []string{
 		zoneProcessName,
@@ -275,19 +276,9 @@ func (l *Launcher) Supervisor() {
 		}
 	}
 
-	zoneDynamicsToBoot := l.minZoneProcesses - zoneIdleDynamics
-	if zoneDynamicsToBoot > 0 {
-		l.logger.Debug().
-			Any("zoneDynamicsToBoot", zoneDynamicsToBoot).
-			Msg("Supervisor - Booting dynamic zone(s)")
-
-		for i := 0; i < zoneDynamicsToBoot; i++ {
-			l.startServerProcess(zoneProcessName)
-		}
-	}
-
-	// statics
+	// boot statics if needed
 	if len(l.staticZonesToBoot) > 0 {
+		var staticsToBoot []string
 		for _, z := range l.staticZonesToBoot {
 			isInList := false
 			for _, cz := range l.currentOnlineStatics {
@@ -298,12 +289,25 @@ func (l *Launcher) Supervisor() {
 			}
 
 			if !isInList {
-				l.logger.Debug().
-					Any("zone", z).
-					Msg("Supervisor - Booting static zone")
-
 				l.startServerProcess(zoneProcessName, z)
+				staticsToBoot = append(staticsToBoot, z)
 			}
+		}
+
+		l.logger.Debug().
+			Any("staticsToBoot", staticsToBoot).
+			Msg("Supervisor - Booting static zone(s)")
+	}
+
+	// boot dynamics if needed
+	zoneDynamicsToBoot := l.minZoneProcesses - zoneIdleDynamics
+	if zoneDynamicsToBoot > 0 {
+		l.logger.Debug().
+			Any("zoneDynamicsToBoot", zoneDynamicsToBoot).
+			Msg("Supervisor - Booting dynamic zone(s)")
+
+		for i := 0; i < zoneDynamicsToBoot; i++ {
+			l.startServerProcess(zoneProcessName)
 		}
 	}
 
