@@ -10,15 +10,20 @@ import (
 )
 
 func (l *Launcher) startServerProcess(name string, args ...string) {
-	bin := filepath.Join(l.pathmgmt.GetEQEmuServerPath(), "bin", name)
+	bin, err := exec.LookPath(filepath.Join(l.pathmgmt.GetEQEmuServerPath(), "bin", name))
+	if err != nil {
+		return err
+	}
 	cmd := exec.Command(bin, args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, HideWindow: true}
-	// windows HideWindow: true
 
 	cmd.Dir = l.pathmgmt.GetEQEmuServerPath()
 	if err := cmd.Start(); err != nil {
-		return // handle error
+		return err
 	}
 
-	cmd.Process.Release()
+	err = cmd.Process.Release()
+	if err != nil {
+		return err
+	}
 }
