@@ -35,6 +35,7 @@ var commandSet = wire.NewSet(
 	spire.NewServerLauncherCommand,
 	spire.NewCrashAnalyticsCommand,
 	eqemuserver.NewUpdateCommand,
+	eqemuserver.NewLauncherCmd,
 	eqtraders.NewScrapeCommand,
 	eqtraders.NewImportCommand,
 	eqemuchangelog.NewChangelogCommand,
@@ -63,6 +64,7 @@ func ProvideCommands(
 	spireServerLauncherCmd *spire.ServerLauncherCommand,
 	spireCrashAnalyticsCommand *spire.CrashAnalyticsFingerprintBackfillCommand,
 	eQEmuServerUpdateCommand *eqemuserver.UpdateCommand,
+	eQEmuServerLauncherCommand *eqemuserver.LauncherCmd,
 	scrapeEqtradersCommand *eqtraders.ScrapeCommand,
 	importEqtradersCommand *eqtraders.ImportCommand,
 ) []*cobra.Command {
@@ -89,5 +91,6 @@ func ProvideCommands(
 		eQEmuServerUpdateCommand.Command(),
 		scrapeEqtradersCommand.Command(),
 		importEqtradersCommand.Command(),
+		eQEmuServerLauncherCommand.Command(),
 	}
 }

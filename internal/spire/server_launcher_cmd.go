@@ -1,15 +1,14 @@
 package spire
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
+	"syscall"
 )
 
 type ServerLauncherCommand struct {
@@ -47,107 +46,38 @@ func (c *ServerLauncherCommand) Handle(_ *cobra.Command, args []string) {
 		return
 	}
 
-	// loop through files in c.pathmgmt.GetEQEmuServerBinPath() and find the launcher
-	// if it exists, run it with the args
-	files, err := os.ReadDir(c.pathmgmt.GetEQEmuServerBinPath())
+	// Get the path to the currently running executable
+	ex, err := os.Executable()
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
-	// this mapping is for the occulus launcher
-	// until the occulus launcher is entirely replaced
-	argMappings := map[string]string{
-		"start":   "server-launcher",
-		"stop":    "stop-server",
-		"restart": "restart-server",
+	// Resolve any symbolic links to get the actual path
+	exPath, err := filepath.EvalSymlinks(ex)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	var arg string
-	for s := range argMappings {
-		if s == args[0] {
-			arg = argMappings[s]
-		}
+	bin, err := exec.LookPath(exPath)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	// if arg is empty, we didn't find a mapping
-	if arg == "" {
-		_ = c.command.Help()
+	cmd := exec.Command(bin, "eqemu-server:launcher", args[0])
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Dir = c.pathmgmt.GetEQEmuServerPath()
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+
+	if args[0] == "start" {
+		// we do this otherwise we get a zombie process
+		go func() {
+			_ = cmd.Wait()
+		}()
 		return
 	}
-
-	if arg == "stop-server" || arg == "restart-server" {
-		processes, _ := process.Processes()
-		for _, p := range processes {
-			cmdline, _ := p.Cmdline()
-
-			// kill occulus server launcher
-			if strings.Contains(cmdline, "occulus") && strings.Contains(cmdline, "server-launcher") {
-				parent, _ := p.Parent()
-				parentcmd, _ := parent.Cmdline()
-				if parent != nil && strings.Contains(parentcmd, "while") {
-					c.logger.Infof("Killing occulus server-launcher bash-while parent PID (%v)\n", parent.Pid)
-					err := parent.Kill()
-					if err != nil {
-						c.logger.Fatal(err)
-					}
-				}
-
-				c.logger.Infof("Killing occulus server-launcher PID (%v)\n", p.Pid)
-				err := p.Kill()
-				if err != nil {
-					c.logger.Fatal(err)
-				}
-			}
-
-			// kill spire launcher that is running in an infinite bash while loop process keepalive
-			if strings.Contains(cmdline, "spire:launcher start") {
-				parent, _ := p.Parent()
-				parentcmd, _ := parent.Cmdline()
-				if parent != nil && strings.Contains(parentcmd, "while") {
-					c.logger.Infof("Killing spire:launcher bash-while parent PID (%v)\n", parent.Pid)
-					err := parent.Kill()
-					if err != nil {
-						c.logger.Fatal(err)
-					}
-				}
-
-				c.logger.Infof("Killing spire:launcher start PID (%v)\n", p.Pid)
-				err = p.Kill()
-				if err != nil {
-					c.logger.Fatal(err)
-				}
-			}
-		}
-	}
-
-	for _, file := range files {
-		if strings.Contains(file.Name(), "occulus") {
-			// execute the launcher
-			launcherPath := filepath.Join(c.pathmgmt.GetEQEmuServerBinPath(), file.Name())
-			binary, err := exec.LookPath(launcherPath)
-			if err != nil {
-				c.logger.Fatal(err)
-			}
-
-			c.logger.Infof("Running %s %s", binary, arg)
-
-			// run the launcher
-			cmd := exec.Command(binary, arg)
-			cmd.Dir = c.pathmgmt.GetEQEmuServerBinPath()
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err = cmd.Start()
-			if err != nil {
-				c.logger.Fatal(err)
-			}
-
-			// release the process
-			err = cmd.Process.Release()
-			if err != nil {
-				c.logger.Fatal(err)
-			}
-		}
-	}
-
-	fmt.Println("Ran " + arg + " successfully")
+	_ = cmd.Wait()
 }

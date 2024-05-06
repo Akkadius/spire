@@ -81,13 +81,15 @@
 
       <div class="mt-3">
         <div>
-        Min Zone Processes (Ready)
+          Min Zone Processes (Ready)
         </div>
 
         <div>
-        <p class="text-muted">
-          This is the number of zones that Occulus will attempt to keep running <b>without</b> players. For example: if you have 10 zones with players in it and your minZoneProcesses is set to 10, you will have 20 total zones booted.
-        </p>
+          <p class="text-muted">
+            This is the number of zones that Spire will attempt to keep running <b>without</b> players. For example: if
+            you have 10 zones with players in it and your minZoneProcesses is set to 10, you will have 20 total zones
+            booted.
+          </p>
         </div>
         <b-form-input
           type="number"
@@ -96,18 +98,13 @@
         />
       </div>
 
-      <b-alert show variant="danger" class="mt-3" v-if="isWindows()">
-        <i class="fa fa-times"></i> Warning! Windows users the more zone processes you have configured both dynamic and static you will see more command windows spawn during initial server boot. Don't be alarmed!
-      </b-alert>
-
     </div>
   </div>
 </template>
 
 <script>
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-import {Zones}         from "@/app/zones";
-import {AppEnv}        from "@/app/env/app-env";
+import {Zones}    from "@/app/zones";
+import {SpireApi} from "@/app/api/spire-api";
 
 export default {
   name: 'LauncherOptions',
@@ -151,21 +148,18 @@ export default {
     }
   },
   methods: {
-    isWindows() {
-      return AppEnv.getOS().includes("windows")
-    },
     saveLauncherOptions() {
-      setTimeout(() => {
-        console.log(this.staticZones)
-
+      setTimeout(async () => {
         if (this.staticZones && this.staticZones.length > 0) {
           this.launcher.staticZones = this.staticZones.join(",")
-          console.log("lel")
         }
 
-        console.log(this.launcher)
+        try {
+          await SpireApi.v1().post('admin/launcherconfig', this.launcher)
+        } catch (e) {
+          console.log(e)
+        }
 
-        OcculusClient.postLauncherConfig(this.launcher)
       }, 100)
     }
   }

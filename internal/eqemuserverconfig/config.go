@@ -149,7 +149,7 @@ type EQEmuConfigJson struct {
 	Spire struct {
 		EncryptionKey string `json:"encryption_key,omitempty"`
 		HttpPort      int    `json:"http_port,omitempty"`
-		LauncherStart bool   `json:"launcher_start,omitempty"` // starts server launcher
+		LauncherStart bool   `json:"launcher_start"` // starts server launcher
 	} `json:"spire,omitempty"`
 }
 

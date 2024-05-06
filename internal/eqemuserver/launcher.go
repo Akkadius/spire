@@ -43,6 +43,7 @@ type Launcher struct {
 	staticZonesToBoot    []string
 	currentOnlineStatics []string
 	currentProcessCounts map[string]int
+	stopTimer            int // timer in seconds to stop the server
 }
 
 func NewLauncher(
@@ -59,10 +60,10 @@ func NewLauncher(
 		pathmgmt:             pathmgmt,
 		currentProcessCounts: make(map[string]int),
 		serverApi:            serverApi,
+		stopTimer:            0,
 	}
 
-	_ = l.Start() // temp
-	l.Process()
+	l.serverProcessLauncherWatchdog()
 
 	return l
 }
@@ -70,56 +71,104 @@ func NewLauncher(
 // Process runs the process loop for the launcher
 // It only does anything if the server has the launcher set to run
 func (l *Launcher) Process() {
-	go func() {
-		for {
-			now := time.Now()
-			stat, err := os.Stat(l.pathmgmt.GetEQEmuServerConfigFilePath())
-			if err != nil {
-				fmt.Printf("Error getting server config file: %v\n", err)
-			}
-
-			l.logger.DebugVvv().
-				Any("configStatTime", now.Sub(time.Now()).String()).
-				Any("configLastModified", l.configLastModified).
+	for {
+		now := time.Now()
+		stat, err := os.Stat(l.pathmgmt.GetEQEmuServerConfigFilePath())
+		if err != nil {
+			l.logger.Debug().
+				Any("error", err.Error()).
 				Any("isRunning", l.isRunning).
-				Msg("Main launcher process loop")
-
-			if stat.ModTime().After(l.configLastModified) {
-				l.configLastModified = stat.ModTime()
-
-				l.loadServerConfig()
-
-				l.logger.Debug().
-					Any("configLastModified", l.configLastModified).
-					Any("statTime", now.Sub(time.Now()).String()).
-					Any("isRunning", l.isRunning).
-					Any("runSharedMemory", l.runSharedMemory).
-					Any("runLoginserver", l.runLoginserver).
-					Any("runQueryServ", l.runQueryServ).
-					Any("minZoneProcesses", l.minZoneProcesses).
-					Any("staticZones", l.staticZonesToBoot).
-					Msg("Detected server config change")
-			}
-
-			if l.isRunning {
-				err := l.Supervisor()
-				if err != nil {
-					fmt.Printf("Error running server launcher supervisor: %v\n", err)
-				}
-			}
-
-			time.Sleep(processLoopTimer)
+				Msg("Error getting server config file stat")
 		}
-	}()
+
+		l.logger.DebugVvv().
+			Any("configStatTime", now.Sub(time.Now()).String()).
+			Any("configLastModified", l.configLastModified).
+			Any("isRunning", l.isRunning).
+			Msg("Main launcher process loop")
+
+		if stat.ModTime().After(l.configLastModified) {
+			l.configLastModified = stat.ModTime()
+			l.loadServerConfig()
+			l.logger.Debug().
+				Any("configLastModified", l.configLastModified).
+				Any("statTime", now.Sub(time.Now()).String()).
+				Any("isRunning", l.isRunning).
+				Any("runSharedMemory", l.runSharedMemory).
+				Any("runLoginserver", l.runLoginserver).
+				Any("runQueryServ", l.runQueryServ).
+				Any("minZoneProcesses", l.minZoneProcesses).
+				Any("staticZones", l.staticZonesToBoot).
+				Msg("Detected server config change")
+		}
+
+		if l.isRunning {
+			err := l.Supervisor()
+			if err != nil {
+				fmt.Printf("Error running server launcher supervisor: %v\n", err)
+			}
+		}
+
+		time.Sleep(processLoopTimer)
+	}
+}
+
+// StartLauncherProcess starts the launcher process
+func (l *Launcher) StartLauncherProcess() error {
+	cfg := l.serverconfig.Get()
+	cfg.WebAdmin.Launcher.IsRunning = false // shut off legacy launcher in-case it's running
+	cfg.Spire.LauncherStart = true
+	err := l.serverconfig.Save(cfg)
+	if err != nil {
+		return err
+
+	}
+
+	// check if the launcher is already running
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		cmdline, err := p.Cmdline()
+		if err != nil {
+			if strings.Contains(err.Error(), "no such file or directory") {
+				continue
+			}
+
+			l.logger.Debug().
+				Any("error", err.Error()).
+				Any("pid", p.Pid).
+				Msg("Error getting process command line")
+		}
+
+		if strings.Contains(cmdline, "eqemu-server:launcher start") {
+			l.logger.Debug().
+				Any("pid", p.Pid).
+				Any("cmdline", cmdline).
+				Msg("Launcher process already running")
+
+			fmt.Println("Launcher process already running")
+
+			return fmt.Errorf("launcher process already running")
+		}
+	}
+
+	err = l.startLauncherProcess()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Start starts the launcher
+// Only call this from the launcher process itself
 func (l *Launcher) Start() error {
 	l.loadServerConfig()
+
+	fmt.Println("Spire > Starting server launcher")
 
 	// start shared memory if needed
 	// this needs to be started and completed before the server processes
 	if l.runSharedMemory {
+		fmt.Println("Spire > Starting shared memory")
 		err := l.startServerProcessSync(sharedMemoryProcessName)
 		if err != nil {
 			return err
@@ -142,12 +191,15 @@ func (l *Launcher) Restart() error {
 	if err != nil {
 		return err
 	}
-	return l.Start()
+	return l.StartLauncherProcess()
 }
 
 // Stop stops the launcher
 func (l *Launcher) Stop() error {
+	fmt.Println("Spire > Stopping server launcher")
+
 	cfg := l.serverconfig.Get()
+	cfg.WebAdmin.Launcher.IsRunning = false // shut off legacy launcher in-case it's running
 	cfg.Spire.LauncherStart = false
 	err := l.serverconfig.Save(cfg)
 	if err != nil {
@@ -170,16 +222,24 @@ func (l *Launcher) Stop() error {
 				Msg("Error getting process command line")
 		}
 
-		baseProcessName := filepath.Base(cmdline)
+		exe, err := p.Exe()
+		if err != nil {
+			l.logger.Debug().
+				Any("error", err.Error()).
+				Any("pid", p.Pid).
+				Msg("Error getting process exe")
+		}
+
+		baseProcessName := filepath.Base(exe)
 		for _, s := range l.GetServerProcessNames() {
 			if s == baseProcessName {
 				l.logger.Debug().
 					Any("pid", p.Pid).
 					Any("baseProcessName", baseProcessName).
 					Any("cmdline", cmdline).
-					Msg("Supervisor - Killing server process")
+					Msg("Stop - Killing server process")
 
-				if err := p.Kill(); err != nil {
+				if err := p.Terminate(); err != nil {
 					l.logger.Debug().
 						Any("error", err.Error()).
 						Any("pid", p.Pid).
@@ -187,7 +247,28 @@ func (l *Launcher) Stop() error {
 				}
 			}
 		}
+
+		l.logger.DebugVvv().
+			Any("pid", p.Pid).
+			Any("exe", exe).
+			Any("cmdline", cmdline).
+			Any("baseProcessName", baseProcessName).
+			Msg("Stop - Checking process")
+
+		// kill any instances of launchers
+		isServerLauncher := strings.Contains(cmdline, "server-launcher") || strings.Contains(cmdline, "eqemu-server:launcher")
+
+		if isServerLauncher && p.Pid != int32(os.Getpid()) {
+			if err := p.Terminate(); err != nil {
+				l.logger.Debug().
+					Any("error", err.Error()).
+					Any("pid", p.Pid).
+					Msg("Error killing process")
+			}
+		}
 	}
+
+	fmt.Println("Spire > Stopped server launcher")
 
 	return nil
 }
@@ -325,6 +406,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot world if needed
 	if l.currentProcessCounts[worldProcessName] == 0 {
+		fmt.Println("Spire > Starting World")
 		err := l.startServerProcess(worldProcessName)
 		if err != nil {
 			return err
@@ -333,6 +415,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot loginserver if needed
 	if l.runLoginserver && l.currentProcessCounts[loginServerProcessName] == 0 {
+		fmt.Println("Spire > Starting LoginServer")
 		err := l.startServerProcess(loginServerProcessName)
 		if err != nil {
 			return err
@@ -341,6 +424,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot queryserv if needed
 	if l.runQueryServ && l.currentProcessCounts[queryServProcessName] == 0 {
+		fmt.Println("Spire > Starting QueryServ")
 		err := l.startServerProcess(queryServProcessName)
 		if err != nil {
 			return err
@@ -349,6 +433,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot ucs if needed
 	if l.currentProcessCounts[ucsProcessName] == 0 {
+		fmt.Println("Spire > Starting UCS")
 		err := l.startServerProcess(ucsProcessName)
 		if err != nil {
 			return err
@@ -367,6 +452,14 @@ func (l *Launcher) Supervisor() error {
 				}
 			}
 
+			// check if the zone is in staticsToBoot
+			for _, cz := range staticsToBoot {
+				if cz == z {
+					isInList = true
+					break
+				}
+			}
+
 			if !isInList {
 				err := l.startServerProcess(zoneProcessName, z)
 				if err != nil {
@@ -374,6 +467,10 @@ func (l *Launcher) Supervisor() error {
 				}
 				staticsToBoot = append(staticsToBoot, z)
 			}
+		}
+
+		if len(staticsToBoot) > 0 {
+			fmt.Printf("Spire > Started Static Zones (%v) [%+v]\n", len(staticsToBoot), staticsToBoot)
 		}
 
 		l.logger.Debug().
@@ -394,6 +491,8 @@ func (l *Launcher) Supervisor() error {
 				return err
 			}
 		}
+
+		fmt.Printf("Spire > Started Dynamic Zones (%v)\n", zoneDynamicsToBoot)
 	}
 
 	l.logger.DebugVv().
@@ -438,11 +537,6 @@ func (l *Launcher) startServerProcessSync(name string, args ...string) error {
 // this is called on startup and when the server config changes
 func (l *Launcher) loadServerConfig() {
 	cfg := l.serverconfig.Get()
-	if cfg.Spire.LauncherStart {
-		l.logger.Debug().
-			Msg("Starting server launcher")
-	}
-
 	l.isRunning = cfg.Spire.LauncherStart
 	l.runSharedMemory = cfg.WebAdmin.Launcher.RunSharedMemory
 	l.runLoginserver = cfg.WebAdmin.Launcher.RunLoginserver
@@ -467,4 +561,61 @@ func (l *Launcher) loadServerConfig() {
 	}
 
 	l.staticZonesToBoot = staticZonesToBoot
+}
+
+func (l *Launcher) SetStopTimer(timer int) {
+	l.stopTimer = timer
+}
+
+// StopCancel stops the server cancel
+func (l *Launcher) StopCancel() error {
+	// handle
+
+	return nil
+}
+
+func (l *Launcher) serverProcessLauncherWatchdog() {
+	go func() {
+		for {
+			l.loadServerConfig()
+			if l.isRunning {
+
+				isLauncherRunning := false
+
+				processes, _ := process.Processes()
+				for _, p := range processes {
+					cmdline, err := p.Cmdline()
+					if err != nil {
+						if strings.Contains(err.Error(), "no such file or directory") {
+							continue
+						}
+
+						l.logger.Debug().
+							Any("error", err.Error()).
+							Any("pid", p.Pid).
+							Msg("Error getting process command line")
+					}
+
+					if strings.Contains(cmdline, "eqemu-server:launcher start") {
+						isLauncherRunning = true
+						break
+					}
+				}
+
+				if !isLauncherRunning {
+					l.logger.Debug().
+						Msg("Launcher process not running - starting")
+
+					err := l.startLauncherProcess()
+					if err != nil {
+						l.logger.Debug().
+							Any("error", err.Error()).
+							Msg("Error starting launcher process")
+					}
+				}
+			}
+
+			time.Sleep(10 * time.Second)
+		}
+	}()
 }

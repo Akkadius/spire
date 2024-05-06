@@ -189,6 +189,7 @@ import CheckMarkAnimated from "@/components/CheckMarkAnimated.vue";
 import EqTabs            from "@/components/eq-ui/EQTabs.vue";
 import EqTab             from "@/components/eq-ui/EQTab.vue";
 import ErrorMarkAnimated from "@/components/ErrorMarkAnimated.vue";
+import {SpireApi}        from "@/app/api/spire-api";
 
 const Convert = require('ansi-to-html');
 const convert = new Convert();
@@ -233,8 +234,15 @@ export default {
   },
 
   async mounted() {
-    const result  = await OcculusClient.getLauncherConfig();
-    this.launcher = result.data;
+    try {
+      const r = await SpireApi.v1().get('admin/launcherconfig')
+      if (r.status === 200) {
+        if (r.data) {
+          this.launcher = r.data
+        }
+      }
+    } catch (e) {
+    }
   },
   methods: {
     startServerModal() {
@@ -269,8 +277,6 @@ export default {
     },
 
     async runPreflightChecks() {
-      // await OcculusClient.stopServer()
-
       this.startModalSize = "xl"
       this.preflight      = true
 
@@ -326,10 +332,16 @@ export default {
 
     },
 
-    startServer(e) {
-      OcculusClient.startServer();
-      this.notify("Server Start", "Server is starting!");
-      this.notifyProcessChange()
+    async startServer(e) {
+      try {
+        await SpireApi.v1().post('eqemuserver/server/start')
+        this.notify("Server Start", "Server is starting!");
+        this.notifyProcessChange()
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.notify("Launcher Error", e.response.data.error);
+        }
+      }
     },
 
     getStreamFormatted(m) {
@@ -346,8 +358,15 @@ export default {
     stopServerModal() {
       this.$root.$emit('bv::show::modal', 'stop-server-modal')
     },
-    stopServer() {
-      OcculusClient.stopServer({ timer: this.delayedStop });
+    async stopServer() {
+      try {
+        await SpireApi.v1().post('eqemuserver/server/stop', { timer: this.delayedStop })
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.notify("Launcher Error", e.response.data.error);
+        }
+      }
+
       if (this.delayedStop > 0) {
         this.notify("Server Stopped", "Server delayed stop timer started!");
       } else {
@@ -363,8 +382,13 @@ export default {
       this.$root.$emit('bv::show::modal', 'restart-server-modal')
       this.delayedRestart = 0;
     },
-    restartServer() {
-      OcculusClient.restartServer({ timer: this.delayedRestart });
+    async restartServer() {
+      try {
+        await SpireApi.v1().post('eqemuserver/server/restart', { timer: this.delayedRestart })
+      } catch (e) {
+        console.log(e)
+      }
+
       if (this.delayedRestart > 0) {
         this.notify("Server Restarted", "Server restart warning timer has been started!");
       } else {
@@ -380,8 +404,13 @@ export default {
       this.$root.$emit('bv::show::modal', 'cancel-restart-server-modal')
       this.delayedRestart = 0;
     },
-    cancelRestartServer() {
-      OcculusClient.cancelRestartServer({ cancel: 1 });
+    async cancelRestartServer() {
+      try {
+        await SpireApi.v1().post('eqemuserver/server/cancel-stop')
+      } catch (e) {
+        console.log(e)
+      }
+
       this.notify("Server Restart Cancelled", "Server restart has been cancelled");
     },
 

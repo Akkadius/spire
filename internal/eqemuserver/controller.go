@@ -34,6 +34,7 @@ type Controller struct {
 	settings       *spire.Settings
 	serverconfig   *eqemuserverconfig.Config
 	updater        *Updater
+	launcher       *Launcher
 }
 
 func NewController(
@@ -44,6 +45,7 @@ func NewController(
 	pathmgmt *pathmgmt.PathManagement,
 	settings *spire.Settings,
 	updater *Updater,
+	launcher *Launcher,
 ) *Controller {
 	return &Controller{
 		db:             db,
@@ -53,6 +55,7 @@ func NewController(
 		pathmgmt:       pathmgmt,
 		updater:        updater,
 		settings:       settings,
+		launcher:       launcher,
 	}
 }
 
@@ -83,6 +86,10 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "eqemuserver/log/:file", a.deleteFileLog, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/log-search/:search", a.logSearch, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/pre-flight/:process", a.preflight, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/start", a.serverStart, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop", a.serverStop, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/restart", a.serverRestart, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
 	}
 }
 
@@ -132,7 +139,7 @@ func (a *Controller) getServerStats(c echo.Context) error {
 			return err
 		}
 
-		if strings.Contains(cmdline, "server-launcher") {
+		if strings.Contains(cmdline, "eqemu-server:launcher") {
 			r.LauncherOnline = true
 		}
 		if strings.Contains(cmdline, "world") {
@@ -1060,5 +1067,89 @@ func (a *Controller) getServerLockedStatus(c echo.Context) error {
 		echo.Map{
 			"locked": a.getLockStatus(),
 		},
+	)
+}
+
+func (a *Controller) serverStart(c echo.Context) error {
+	err := a.launcher.StartLauncherProcess()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to start server [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server started successfully"},
+	)
+}
+
+type StopOptions struct {
+	Timer int `json:"timer"` // seconds
+}
+
+func (a *Controller) serverStop(c echo.Context) error {
+	var stop StopOptions
+	err := c.Bind(&stop)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Failed to bind config")
+	}
+
+	if stop.Timer > 0 {
+		a.launcher.SetStopTimer(stop.Timer)
+	}
+
+	err = a.launcher.Stop()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to stop server [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server stopped successfully"},
+	)
+}
+
+func (a *Controller) serverRestart(c echo.Context) error {
+	var stop StopOptions
+	err := c.Bind(&stop)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Failed to bind config")
+	}
+
+	if stop.Timer > 0 {
+		a.launcher.SetStopTimer(stop.Timer)
+	}
+
+	err = a.launcher.Restart()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to restart server [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server restarted successfully"},
+	)
+}
+
+func (a *Controller) serverStopCancel(c echo.Context) error {
+	err := a.launcher.StopCancel()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to cancel server stop [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server stop cancelled successfully"},
 	)
 }
