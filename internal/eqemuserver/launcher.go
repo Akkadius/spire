@@ -124,31 +124,9 @@ func (l *Launcher) StartLauncherProcess() error {
 
 	}
 
-	// check if the launcher is already running
-	processes, _ := process.Processes()
-	for _, p := range processes {
-		cmdline, err := p.Cmdline()
-		if err != nil {
-			if strings.Contains(err.Error(), "no such file or directory") {
-				continue
-			}
-
-			l.logger.Debug().
-				Any("error", err.Error()).
-				Any("pid", p.Pid).
-				Msg("Error getting process command line")
-		}
-
-		if strings.Contains(cmdline, "eqemu-server:launcher start") {
-			l.logger.Debug().
-				Any("pid", p.Pid).
-				Any("cmdline", cmdline).
-				Msg("Launcher process already running")
-
-			fmt.Println("Launcher process already running")
-
-			return fmt.Errorf("launcher process already running")
-		}
+	err = l.checkIfLauncherIsRunning()
+	if err != nil {
+		return err
 	}
 
 	err = l.startLauncherProcess()
@@ -161,6 +139,11 @@ func (l *Launcher) StartLauncherProcess() error {
 // Start starts the launcher
 // Only call this from the launcher process itself
 func (l *Launcher) Start() error {
+	err := l.checkIfLauncherIsRunning()
+	if err != nil {
+		return err
+	}
+
 	l.loadServerConfig()
 
 	fmt.Println("Spire > Starting server launcher")
@@ -177,7 +160,7 @@ func (l *Launcher) Start() error {
 
 	cfg := l.serverconfig.Get()
 	cfg.Spire.LauncherStart = true
-	err := l.serverconfig.Save(cfg)
+	err = l.serverconfig.Save(cfg)
 	if err != nil {
 		return err
 	}
@@ -191,6 +174,8 @@ func (l *Launcher) Restart() error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Spire > Restarting server launcher")
 	return l.StartLauncherProcess()
 }
 
@@ -618,4 +603,34 @@ func (l *Launcher) serverProcessLauncherWatchdog() {
 			time.Sleep(10 * time.Second)
 		}
 	}()
+}
+
+func (l *Launcher) checkIfLauncherIsRunning() error {
+	// check if the launcher is already running
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		cmdline, err := p.Cmdline()
+		if err != nil {
+			if strings.Contains(err.Error(), "no such file or directory") {
+				continue
+			}
+
+			l.logger.Debug().
+				Any("error", err.Error()).
+				Any("pid", p.Pid).
+				Msg("Error getting process command line")
+		}
+
+		if strings.Contains(cmdline, "eqemu-server:launcher start") && p.Pid != int32(os.Getpid()) {
+			l.logger.Debug().
+				Any("pid", p.Pid).
+				Any("cmdline", cmdline).
+				Msg("Launcher process already running")
+
+			fmt.Println("Launcher process already running")
+
+			return fmt.Errorf("launcher process already running")
+		}
+	}
+	return nil
 }
