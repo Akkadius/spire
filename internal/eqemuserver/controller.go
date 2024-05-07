@@ -1096,9 +1096,7 @@ func (a *Controller) serverStop(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind config")
 	}
 
-	if stop.Timer > 0 {
-		a.launcher.SetStopTimer(stop.Timer)
-	}
+	a.launcher.SetStopTimer(stop.Timer)
 
 	err = a.launcher.Stop()
 	if err != nil {
@@ -1121,9 +1119,7 @@ func (a *Controller) serverRestart(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind config")
 	}
 
-	if stop.Timer > 0 {
-		a.launcher.SetStopTimer(stop.Timer)
-	}
+	a.launcher.SetStopTimer(stop.Timer)
 
 	err = a.launcher.Restart()
 	if err != nil {
