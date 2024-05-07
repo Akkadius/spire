@@ -57,4 +57,5 @@ var serviceSet = wire.NewSet(
 	eqemuserver.NewUpdater,
 	eqemuserver.NewProcessManager,
 	eqemuserver.NewLauncher,
+	eqemuserver.NewQuestHotReloadWatcher,
 )

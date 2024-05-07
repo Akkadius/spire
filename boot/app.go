@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/spire"
 	gocache "github.com/patrickmn/go-cache"
@@ -24,6 +25,7 @@ type App struct {
 	router        *routes.Router
 	desktop       *desktop.WebBoot
 	onboarding    *spire.Init
+	watcher       *eqemuserver.QuestHotReloadWatcher
 }
 
 func (a App) Cache() *gocache.Cache {
@@ -53,6 +55,7 @@ func NewApplication(
 	router *routes.Router,
 	desktop *desktop.WebBoot,
 	onboarding *spire.Init,
+	watcher *eqemuserver.QuestHotReloadWatcher,
 ) App {
 	return App{
 		context:       context.Background(),
@@ -65,5 +68,6 @@ func NewApplication(
 		router:        router,
 		desktop:       desktop,
 		onboarding:    onboarding,
+		watcher:       watcher,
 	}
 }

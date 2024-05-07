@@ -8,6 +8,7 @@ require (
 	github.com/chzyer/readline v1.5.1
 	github.com/danilopolani/gocialite v1.0.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fsnotify/fsnotify v1.4.7
 	github.com/gammazero/workerpool v1.1.3
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/go-errors/errors v1.4.2

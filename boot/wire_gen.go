@@ -360,6 +360,7 @@ func InitializeApplication() (App, error) {
 	importCommand := eqtraders.NewImportCommand(db, logrusLogger)
 	v := ProvideCommands(helloWorldCommand, adminPingOcculus, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, occulusUpdateCommand, serverLauncherCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(logrusLogger, server, config)
-	bootApp := NewApplication(db, logrusLogger, cache, v, resolver, connections, router, webBoot, init)
+	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(debugLogger, config, pathManagement, eqemuserverClient)
+	bootApp := NewApplication(db, logrusLogger, cache, v, resolver, connections, router, webBoot, init, questHotReloadWatcher)
 	return bootApp, nil
 }
