@@ -406,7 +406,7 @@ export default {
     },
     async cancelRestartServer() {
       try {
-        await SpireApi.v1().post('eqemuserver/server/cancel-stop')
+        await SpireApi.v1().post('eqemuserver/server/stop-cancel')
       } catch (e) {
         console.log(e)
       }

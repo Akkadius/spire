@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -23,6 +24,11 @@ const (
 	sharedMemoryProcessName = "shared_memory"
 	processLoopTimer        = 1 * time.Second
 )
+
+// stopTimerMutex is used to lock the stop timer
+// web requests are in goroutines and have the potential
+// to write to the stop timer at the same time
+var stopTimerMutex = sync.Mutex{}
 
 type Launcher struct {
 	logger       *logger.DebugLogger
@@ -183,13 +189,50 @@ func (l *Launcher) Restart() error {
 func (l *Launcher) Stop() error {
 	fmt.Println("Spire > Stopping server launcher")
 
+	if l.stopTimer > 0 {
+		fmt.Printf("Spire > Stopping server in %v minute(s)\n", l.stopTimer/60)
+
+		// message every minute
+		timeToStop := time.Now().Add(time.Duration(l.stopTimer) * time.Second)
+
+		_ = l.serverApi.MessageWorld(
+			fmt.Sprintf(
+				"[SERVER MESSAGE] The world will be coming down in [%v] minute(s), please log out before this time...",
+				timeToStop.Sub(time.Now()).Round(time.Minute).Minutes(),
+			),
+		)
+
+		for {
+			if l.stopTimer == 0 {
+				fmt.Println("Spire > Timed stop cancelled")
+				return nil
+			}
+
+			if time.Now().After(timeToStop) {
+				fmt.Println("Spire > Stopping server after timed restart")
+				break
+			}
+
+			if time.Now().Second() == 0 {
+				fmt.Printf("Spire > Server will stop in %v minute(s)\n", timeToStop.Sub(time.Now()).Minutes())
+				_ = l.serverApi.MessageWorld(
+					fmt.Sprintf(
+						"[SERVER MESSAGE] The world will be coming down in [%v] minute(s), please log out before this time...",
+						timeToStop.Sub(time.Now()).Round(time.Minute).Minutes(),
+					),
+				)
+			}
+
+			time.Sleep(1 * time.Second)
+		}
+	}
+
 	cfg := l.serverconfig.Get()
 	cfg.WebAdmin.Launcher.IsRunning = false // shut off legacy launcher in-case it's running
 	cfg.Spire.LauncherStart = false
 	err := l.serverconfig.Save(cfg)
 	if err != nil {
 		return err
-
 	}
 
 	// kill all server processes
@@ -549,12 +592,20 @@ func (l *Launcher) loadServerConfig() {
 }
 
 func (l *Launcher) SetStopTimer(timer int) {
+	stopTimerMutex.Lock()
 	l.stopTimer = timer
+	stopTimerMutex.Unlock()
 }
 
 // StopCancel stops the server cancel
 func (l *Launcher) StopCancel() error {
-	// handle
+	stopTimerMutex.Lock()
+	l.stopTimer = 0
+	stopTimerMutex.Unlock()
+
+	fmt.Println("Spire > Timed stop cancelled")
+
+	_ = l.serverApi.MessageWorld("[SERVER MESSAGE] Server shutdown cancelled")
 
 	return nil
 }
