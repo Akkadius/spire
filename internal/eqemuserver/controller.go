@@ -1086,14 +1086,14 @@ func (a *Controller) serverStart(c echo.Context) error {
 }
 
 type StopOptions struct {
-	Timer int `json:"timer"` // seconds
+	Timer int `json:"timer,omitempty"` // seconds
 }
 
 func (a *Controller) serverStop(c echo.Context) error {
 	var stop StopOptions
 	err := c.Bind(&stop)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Failed to bind config")
+		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
 	}
 
 	a.launcher.SetStopTimer(stop.Timer)
@@ -1116,7 +1116,7 @@ func (a *Controller) serverRestart(c echo.Context) error {
 	var stop StopOptions
 	err := c.Bind(&stop)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "Failed to bind config")
+		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
 	}
 
 	a.launcher.SetStopTimer(stop.Timer)

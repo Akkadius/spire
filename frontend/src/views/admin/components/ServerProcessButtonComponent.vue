@@ -120,7 +120,7 @@
         header="Stop Announcement Warning"
       >
         <b-card-text>
-          <b-form-radio v-model="delayedStop" name="some-radios" value="0">None</b-form-radio>
+          <b-form-radio v-model="delayedStop" name="some-radios" :value="0">None</b-form-radio>
           <b-form-radio v-model="delayedStop" name="some-radios" :value="5 * 60">5 Minute(s)</b-form-radio>
           <b-form-radio v-model="delayedStop" name="some-radios" :value="10 * 60">10 Minute(s)</b-form-radio>
           <b-form-radio v-model="delayedStop" name="some-radios" :value="15 * 60">15 Minute(s)</b-form-radio>
