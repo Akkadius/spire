@@ -245,3 +245,14 @@ func (c *Client) MessageWorld(message string) error {
 
 	return nil
 }
+
+func (c *Client) ReloadQuestsForZone(zone string) error {
+	_, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "reloadzonequests " + zone},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

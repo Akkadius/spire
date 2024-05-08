@@ -2,14 +2,19 @@ package eqemuserver
 
 import (
 	"fmt"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/logger"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/rfsnotify"
 	"github.com/fsnotify/fsnotify"
 	"log"
 	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -18,12 +23,13 @@ type QuestHotReloadWatcher struct {
 	serverconfig *eqemuserverconfig.Config
 	pathmgmt     *pathmgmt.PathManagement
 	serverApi    *Client
+	db           *database.Resolver
 
 	// properties
 	configLastModified time.Time
 	isRunning          bool
 	watcher            *rfsnotify.RWatcher
-	fileSizes          map[string]int
+	zones              []models.Zone
 }
 
 func NewQuestHotReloadWatcher(
@@ -31,16 +37,19 @@ func NewQuestHotReloadWatcher(
 	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
 	serverApi *Client,
+	db *database.Resolver,
 ) *QuestHotReloadWatcher {
 	l := &QuestHotReloadWatcher{
 		logger:       logger,
 		serverconfig: serverconfig,
 		pathmgmt:     pathmgmt,
 		serverApi:    serverApi,
+		db:           db,
 	}
 
 	if env.IsAppEnvLocal() {
 		go func() {
+			l.loadZones()
 			l.Process()
 		}()
 	}
@@ -126,6 +135,8 @@ func (l *QuestHotReloadWatcher) Start() {
 
 	var fileSizes map[string]int
 
+	done := make(chan bool)
+
 	// Start listening for events.
 	go func(l *QuestHotReloadWatcher) {
 		for {
@@ -136,7 +147,12 @@ func (l *QuestHotReloadWatcher) Start() {
 			select {
 			case event, ok := <-l.watcher.Events:
 				if !ok {
-					break
+					fmt.Println("Spire > Watcher error > Closing watcher")
+					if l.watcher != nil {
+						l.watcher.Close()
+					}
+					l.watcher = nil
+					return
 				}
 
 				// if event is create or write
@@ -176,11 +192,24 @@ func (l *QuestHotReloadWatcher) Start() {
 					fileSizes[event.Name] = int(fileInfo.Size())
 
 					// send reload request to server
-					fmt.Printf("Spire > Hot Quest Reload > Reloading quests from [%s]\n", event.Name)
+					fmt.Printf("Spire > Quest Hot Reload > Reloading quests from [%s]\n", event.Name)
+
+					err = l.reloadQuestForFile(event.Name)
+					if err != nil {
+						l.logger.Debug().
+							Any("error", err.Error()).
+							Any("file", event.Name).
+							Msg("Error reloading quest")
+					}
 				}
 
 			case err, ok := <-l.watcher.Errors:
 				if !ok {
+					fmt.Println("Spire > Watcher error > Closing watcher")
+					if l.watcher != nil {
+						l.watcher.Close()
+					}
+					l.watcher = nil
 					return
 				}
 				log.Println("error:", err)
@@ -188,7 +217,28 @@ func (l *QuestHotReloadWatcher) Start() {
 		}
 	}(l)
 
-	fmt.Println("Watching for changes in", l.pathmgmt.GetQuestsDir())
+	fmt.Println("Spire > Quest Hot Reload > Watching for changes in", l.pathmgmt.GetQuestsDir())
+
+	// walk the path and add all files to the file sizes map
+	err = filepath.Walk(l.pathmgmt.GetQuestsDir(), func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			if fileSizes == nil {
+				fileSizes = make(map[string]int)
+			}
+
+			if _, ok := fileSizes[path]; !ok {
+				fileSizes[path] = 0
+			}
+
+			fileSizes[path] = int(info.Size())
+		}
+
+		return nil
+	})
 
 	// Add a path.
 	err = l.watcher.AddRecursive(l.pathmgmt.GetQuestsDir())
@@ -198,6 +248,47 @@ func (l *QuestHotReloadWatcher) Start() {
 			Msg("Error adding path to watcher")
 	}
 
-	// Block main goroutine forever.
-	<-make(chan struct{})
+	<-done
+}
+
+func (l *QuestHotReloadWatcher) reloadQuestForFile(name string) error {
+	// /home/eqemu/server/quests/halas/zone_controller.pl
+	// get the zone name from the path, traverse from the end
+	parts := strings.Split(name, filepath.Join(string(os.PathSeparator)))
+	folderName := parts[len(parts)-2]
+
+	var zone models.Zone
+	for _, z := range l.zones {
+		if z.ShortName.String == folderName {
+			zone = z
+			break
+		}
+	}
+
+	if zone.ID > 0 {
+		fmt.Printf("Spire > Reloading quests for zone [%s]\n", zone.ShortName.String)
+		err := l.serverApi.ReloadQuestsForZone(zone.ShortName.String)
+		if err != nil {
+			return err
+		}
+	}
+
+	// regex string match name against "lua_modules" "plugins" "global"
+	// if match, reload all quests
+	regex := "lua_modules|plugins|global"
+	if matched, _ := regexp.MatchString(regex, name); matched {
+		fmt.Printf("Spire > Reloading all quests\n")
+		err := l.serverApi.ReloadQuestsForZone("all")
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (l *QuestHotReloadWatcher) loadZones() {
+	var results []models.Zone
+	_ = l.db.GetEqemuDb().Find(&results).Error
+	l.zones = results
 }

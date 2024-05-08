@@ -34,7 +34,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/logger"
-	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/query"
@@ -67,9 +66,6 @@ func InitializeApplication() (App, error) {
 	cache := provideCache()
 	mysql := backup.NewMysql(logrusLogger, pathManagement)
 	helloWorldCommand := cmd.NewHelloWorldCommand(db, logrusLogger, mysql, pathManagement)
-	processManagement := occulus.NewProcessManagement(pathManagement, logrusLogger)
-	proxy := occulus.NewProxy(logrusLogger, config, processManagement)
-	adminPingOcculus := cmd.NewAdminPingOcculus(db, logrusLogger, config, proxy)
 	connections := provideAppDbConnections(config, logrusLogger)
 	encrypter := encryption.NewEncrypter(logrusLogger, config)
 	resolver := database.NewResolver(connections, logrusLogger, encrypter, cache)
@@ -109,7 +105,6 @@ func InitializeApplication() (App, error) {
 	permissionsController := permissions.NewController(logrusLogger, resolver, service)
 	userController := user.NewController(resolver, logrusLogger, userUser, encrypter)
 	settingsController := spire.NewSettingController(resolver, logrusLogger, encrypter, settings)
-	occulusController := occulus.NewController(logrusLogger, resolver, proxy)
 	telnetClient := telnet.NewClient(logrusLogger)
 	eqemuserverClient := eqemuserver.NewClient(telnetClient)
 	updater := eqemuserver.NewUpdater(resolver, logrusLogger, config, settings, pathManagement)
@@ -122,7 +117,7 @@ func InitializeApplication() (App, error) {
 	handler := websocket.NewHandler(logrusLogger, pathManagement)
 	websocketController := websocket.NewController(logrusLogger, pathManagement, handler)
 	systemController := system.NewController(logrusLogger)
-	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, deployController, assetsController, permissionsController, userController, settingsController, occulusController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
+	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, deployController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
 	userEvent := auditlog.NewUserEvent(resolver, logrusLogger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(resolver, logrusLogger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(resolver, logrusLogger, userEvent)
@@ -338,7 +333,7 @@ func InitializeApplication() (App, error) {
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(resolver, logrusLogger, cache, settings, init)
 	spireAssets := assets.NewSpireAssets(logrusLogger, pathManagement)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, contextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
-	server := http.NewServer(logrusLogger, router, processManagement)
+	server := http.NewServer(logrusLogger, router)
 	httpServeCommand := cmd.NewHttpServeCommand(logrusLogger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router, logrusLogger)
 	configurationCommand := generators.NewGenerateConfigurationCommand(resolver, logrusLogger)
@@ -350,7 +345,6 @@ func InitializeApplication() (App, error) {
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(logrusLogger, pathManagement)
 	initCommand := spire.NewInitCommand(logrusLogger, init)
 	changePasswordCommand := user.NewChangePasswordCommand(resolver, logrusLogger, encrypter, userUser)
-	occulusUpdateCommand := spire.NewOcculusUpdateCommand(logrusLogger, processManagement)
 	serverLauncherCommand := spire.NewServerLauncherCommand(logrusLogger, pathManagement)
 	crashAnalyticsFingerprintBackfillCommand := spire.NewCrashAnalyticsCommand(logrusLogger, pathManagement, resolver)
 	processManager := eqemuserver.NewProcessManager(logrusLogger, config, settings, pathManagement, launcher)
@@ -358,9 +352,9 @@ func InitializeApplication() (App, error) {
 	launcherCmd := eqemuserver.NewLauncherCmd(logrusLogger, launcher)
 	scrapeCommand := eqtraders.NewScrapeCommand(db, logrusLogger)
 	importCommand := eqtraders.NewImportCommand(db, logrusLogger)
-	v := ProvideCommands(helloWorldCommand, adminPingOcculus, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, occulusUpdateCommand, serverLauncherCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, scrapeCommand, importCommand)
+	v := ProvideCommands(helloWorldCommand, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, serverLauncherCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(logrusLogger, server, config)
-	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(debugLogger, config, pathManagement, eqemuserverClient)
+	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(debugLogger, config, pathManagement, eqemuserverClient, resolver)
 	bootApp := NewApplication(db, logrusLogger, cache, v, resolver, connections, router, webBoot, init, questHotReloadWatcher)
 	return bootApp, nil
 }

@@ -13,11 +13,9 @@ import (
 
 	"github.com/Akkadius/spire/docs"
 	"github.com/Akkadius/spire/internal/banner"
-	"github.com/Akkadius/spire/internal/env"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
-	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -26,20 +24,17 @@ import (
 )
 
 type Server struct {
-	logger  *logrus.Logger
-	router  *routes.Router
-	occulus *occulus.ProcessManagement
+	logger *logrus.Logger
+	router *routes.Router
 }
 
 func NewServer(
 	logger *logrus.Logger,
 	router *routes.Router,
-	occulus *occulus.ProcessManagement,
 ) *Server {
 	return &Server{
-		logger:  logger,
-		router:  router,
-		occulus: occulus,
+		logger: logger,
+		router: router,
 	}
 }
 
@@ -137,14 +132,6 @@ func (c *Server) Serve(port uint) error {
 	e.HideBanner = true
 
 	banner.Print()
-
-	// only run Occulus initialization in local environment
-	if env.IsAppEnvLocal() {
-		err := c.occulus.Run()
-		if err != nil {
-			c.logger.Error(err)
-		}
-	}
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }

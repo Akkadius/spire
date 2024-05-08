@@ -18,7 +18,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/query"
 	"github.com/Akkadius/spire/internal/questapi"
@@ -56,7 +55,6 @@ var httpSet = wire.NewSet(
 	permissions.NewController,
 	user.NewController,
 	spire.NewSettingController,
-	occulus.NewController,
 	staticmaps.NewStaticMapController,
 	deploy.NewDeployController,
 	eqemuserver.NewController,
@@ -194,7 +192,6 @@ func provideControllers(
 	permissionsController *permissions.Controller,
 	usersController *user.Controller,
 	settingsController *spire.SettingsController,
-	occulusController *occulus.Controller,
 	eqemuserverController *eqemuserver.Controller,
 	eqemuserverPublicController *eqemuserver.PublicController,
 	serverconfigController *eqemuserverconfig.Controller,
@@ -218,7 +215,6 @@ func provideControllers(
 			clientFilesController,
 			permissionsController,
 			usersController,
-			occulusController,
 			eqemuserverController,
 			serverconfigController,
 			backupController,
