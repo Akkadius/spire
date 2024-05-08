@@ -63,7 +63,11 @@
             <td class="text-center">
               <check-mark-animated style="height: 20px; width: 20px" v-if="p.checkSuccess"/>
               <b-spinner small v-if="!p.checkSuccess && (!p.message || p.message.includes('Running'))"/>
-              <error-mark-animated v-if="!p.checkSuccess && (p.message && !p.message.includes('Running'))" style="height: 30px; width: 30px" class="ml-1"/>
+              <error-mark-animated
+                v-if="!p.checkSuccess && (p.message && !p.message.includes('Running'))"
+                style="height: 30px; width: 30px"
+                class="ml-1"
+              />
             </td>
             <td class="text-center">{{ p.desc }} {{ (!p.required ? '*' : '') }}</td>
             <td><span v-if="p.message" v-html="p.message"></span></td>
@@ -179,7 +183,6 @@
 
 <script>
 
-import {OcculusClient}   from "@/app/api/eqemu-admin-client-occulus";
 import {EventBus}        from "@/app/event-bus/event-bus";
 import LauncherOptions   from "@/views/admin/components/LauncherOptions.vue";
 import {HttpStream}      from "@/app/httpstream/http-stream";
@@ -315,8 +318,7 @@ export default {
               }
               this.$forceUpdate()
             });
-        }
-        catch (e) {
+        } catch (e) {
           // failed for some reason
           if (!this.processTypes[i].message) {
             this.processTypes[i].checkSuccess = false

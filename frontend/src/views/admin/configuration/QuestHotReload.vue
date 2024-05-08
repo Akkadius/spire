@@ -33,10 +33,10 @@
         </div>
         <div class="col-9">
           <small class="text-muted">
-            This enables Quest Hot reloading within Occulus.
+            This enables Quest Hot reloading within Spire.
           </small>
           <div class="mt-3">
-            When you make changes to your quest files, Occulus will immediately signal your game server to reload the
+            When you make changes to your quest files, Spire will immediately signal your game server to reload the
             appropriate zone's quests for you to help speed up development feedback loops
           </div>
         </div>

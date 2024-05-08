@@ -1436,15 +1436,6 @@ func (a *Installer) initSpire() error {
 		return err
 	}
 
-	_, err = a.Exec(ExecConfig{
-		command:    spirePath,
-		args:       []string{"spire:occulus-update"},
-		hidestring: a.installConfig.SpireAdminPassword,
-	})
-	if err != nil {
-		return err
-	}
-
 	a.DoneBanner("Initializing Spire")
 	return nil
 }

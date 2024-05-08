@@ -57,7 +57,6 @@ export default {
         await this.checkIfUserNeedsToAuth()
       }
 
-      AppEnv.routeCheckOcculus(this.$route, this.$router)
       AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
     })
 

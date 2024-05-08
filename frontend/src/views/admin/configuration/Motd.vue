@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import {SpireApi}      from "@/app/api/spire-api";
 import {VariableApi}   from "@/app/api/api/variable-api";
 import EqWindow        from "@/components/eq-ui/EQWindow.vue";
@@ -58,7 +57,7 @@ export default {
     }
   },
   async created() {
-    this.loaded    = true
+    this.loaded = true
 
     let r = await (new VariableApi(...SpireApi.cfg())).listVariables()
     if (r.status === 200) {

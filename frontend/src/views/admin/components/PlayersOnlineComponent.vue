@@ -121,7 +121,6 @@ import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants
 import eqClientVersionConstants    from "@/app/constants/eq-client-version-constants";
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import {ROUTE}                     from "@/routes";
-import {OcculusClient}             from "@/app/api/eqemu-admin-client-occulus";
 import {SpireApi}                  from "@/app/api/spire-api";
 
 export default {
@@ -276,8 +275,7 @@ export default {
 
     try {
       await this.buildPlayersOnlineList()
-    }
-    catch (e) {
+    } catch (e) {
     }
 
     this.loaded = true

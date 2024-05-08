@@ -1,5 +1,4 @@
 import * as util from 'util'
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export class EqemuWebsocketClient {
   private uuid: string = ''
@@ -18,11 +17,12 @@ export class EqemuWebsocketClient {
   }
 
   getWebsocketUrl() {
-    let url  = new URL(OcculusClient.getBaseUrl());
+    // let url  = new URL(OcculusClient.getBaseUrl());
     // @ts-ignore
     url.port = this.port
 
-    return url
+    // return url
+    return ""
   }
 
   /**
@@ -30,10 +30,10 @@ export class EqemuWebsocketClient {
    */
   public async initClient(port: number) {
     this.ws = new Promise(async (resolve, reject) => {
-      const auth = await OcculusClient.getWebsocketAuthorization()
-      this.port  = port
-      this.ws    = new WebSocket('ws://' + this.getWebsocketUrl().host)
-      this.uuid  = this.generateUUID()
+      // const auth = await OcculusClient.getWebsocketAuthorization()
+      this.port = port
+      // this.ws   = new WebSocket('ws://' + this.getWebsocketUrl().host)
+      this.uuid = this.generateUUID()
 
       this.ws.onerror = (event: any) => {
         this.log(util.format('Error %s', JSON.stringify(event)))
@@ -48,7 +48,7 @@ export class EqemuWebsocketClient {
       try {
         this.ws.onopen = (event: any) => {
           this.log(util.format('Opened %s', JSON.stringify(event)))
-          this.send('login', [auth.account_name, auth.password])
+          // this.send('login', [auth.account_name, auth.password])
           this.ws.onmessage = (event: any) => {
             const response = JSON.parse(event.data)
             const loggedIn =

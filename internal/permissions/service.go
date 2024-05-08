@@ -51,7 +51,6 @@ func (s *Service) RegisterManualResources() map[string][]string {
 
 		// admin server
 		"Server Configuration":    {"admin/serverconfig"},
-		"Server Admin Occulus":    {"admin/occulus"},
 		"Server System Resources": {"admin/system"},
 		"Server Update / Build": {
 			"eqemuserver/build",
