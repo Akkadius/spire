@@ -48,10 +48,10 @@ func NewQuestHotReloadWatcher(
 	}
 
 	if env.IsAppEnvLocal() {
-		go func() {
+		go func(l *QuestHotReloadWatcher) {
 			l.loadZones()
 			l.Process()
-		}()
+		}(l)
 	}
 
 	return l
@@ -265,20 +265,22 @@ func (l *QuestHotReloadWatcher) reloadQuestForFile(name string) error {
 		}
 	}
 
-	if zone.ID > 0 {
-		fmt.Printf("Spire > Reloading quests for zone [%s]\n", zone.ShortName.String)
-		err := l.serverApi.ReloadQuestsForZone(zone.ShortName.String)
-		if err != nil {
-			return err
+	if zone.ID == 0 {
+		// regex string match name against "lua_modules" "plugins" "global"
+		// if match, reload all quests
+		regex := "lua_modules|plugins|global"
+		if matched, _ := regexp.MatchString(regex, name); matched {
+			fmt.Printf("Spire > Reloading all quests\n")
+			err := l.serverApi.ReloadQuestsForZone("all")
+			if err != nil {
+				return err
+			}
 		}
 	}
 
-	// regex string match name against "lua_modules" "plugins" "global"
-	// if match, reload all quests
-	regex := "lua_modules|plugins|global"
-	if matched, _ := regexp.MatchString(regex, name); matched {
-		fmt.Printf("Spire > Reloading all quests\n")
-		err := l.serverApi.ReloadQuestsForZone("all")
+	if zone.ID > 0 {
+		fmt.Printf("Spire > Reloading quests for zone [%s]\n", zone.ShortName.String)
+		err := l.serverApi.ReloadQuestsForZone(zone.ShortName.String)
 		if err != nil {
 			return err
 		}
