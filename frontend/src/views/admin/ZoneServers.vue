@@ -313,7 +313,7 @@ export default {
     },
 
     formatZoneName(name) {
-      return name.replaceAll("UNKNOWN", "Idle")
+      return name.replaceAll("UNKNOWN", "Idle, ready to boot")
     },
 
     async killZone(pid) {
