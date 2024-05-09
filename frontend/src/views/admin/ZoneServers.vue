@@ -223,7 +223,7 @@ export default {
     formatZoneRow(zone) {
       if (zone.zone_id === 0) {
         return {
-          backgroundColor: 'rgba(0,0,0,.9)',
+          backgroundColor: 'rgba(0,0,0,.8)',
           color: '#495057',
           border: '1px solid #e9ecef',
           borderRadius: '5px',
@@ -233,9 +233,11 @@ export default {
 
       if (zone.number_players === 0) {
         return {
-          backgroundColor: 'rgba(0,0,0,.9)',
+          backgroundColor: 'rgba(0,0,0,1)',
           color: '#495057',
-          border: '1px solid #e9ecef',
+          border: '1px solid white',
+          // inner shadow white
+          // boxShadow: 'inset 0 0 13px rgba(255,255,255,.1)',
           borderRadius: '5px',
           marginBottom: '10px'
         }
