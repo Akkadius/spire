@@ -169,7 +169,8 @@ func (l *QuestHotReloadWatcher) Start() {
 					// get file size and store it
 					fileInfo, err := os.Stat(event.Name)
 					if err != nil {
-						log.Println(err)
+						l.logger.Debug().Any("error", err.Error()).Msg("Error getting file info")
+						break
 					}
 
 					if fileInfo.Size() == 0 {
