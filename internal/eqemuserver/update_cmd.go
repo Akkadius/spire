@@ -19,13 +19,13 @@ import (
 )
 
 type UpdateCommand struct {
-	logger         *logrus.Logger
-	command        *cobra.Command
-	serverconfig   *eqemuserverconfig.Config
-	settings       *spire.Settings
-	pathmgmt       *pathmgmt.PathManagement
-	processmanager *ProcessManager
-	updater        *Updater
+	logger       *logrus.Logger
+	command      *cobra.Command
+	serverconfig *eqemuserverconfig.Config
+	settings     *spire.Settings
+	pathmgmt     *pathmgmt.PathManagement
+	launcher     *Launcher
+	updater      *Updater
 }
 
 func (c *UpdateCommand) Command() *cobra.Command {
@@ -45,17 +45,17 @@ func NewUpdateCommand(
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
-	processmanager *ProcessManager,
+	launcher *Launcher,
 	updater *Updater,
 
 ) *UpdateCommand {
 	i := &UpdateCommand{
-		logger:         logger,
-		serverconfig:   serverconfig,
-		settings:       settings,
-		pathmgmt:       pathmgmt,
-		processmanager: processmanager,
-		updater:        updater,
+		logger:       logger,
+		serverconfig: serverconfig,
+		settings:     settings,
+		pathmgmt:     pathmgmt,
+		updater:      updater,
+		launcher:     launcher,
 		command: &cobra.Command{
 			Use:   "eqemu-server:update",
 			Short: "Extends Spire Admin server update functionality",
@@ -204,11 +204,11 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 
 				if answer == "y" {
 					fmt.Println("Stopping server")
-					c.processmanager.Stop()
+					c.launcher.Stop()
 				}
 			} else {
 				fmt.Println("Stopping server")
-				c.processmanager.Stop()
+				c.launcher.Stop()
 			}
 		}
 
@@ -232,11 +232,11 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 
 				if answer == "y" {
 					fmt.Println("Starting server")
-					c.processmanager.Start()
+					c.launcher.Start()
 				}
 			} else {
 				fmt.Println("Starting server")
-				c.processmanager.Start()
+				c.launcher.Start()
 			}
 		} else {
 			fmt.Println("Server is already up to date")
