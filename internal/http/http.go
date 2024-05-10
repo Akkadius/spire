@@ -4,6 +4,8 @@ import (
 	"crypto/subtle"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -24,17 +26,20 @@ import (
 )
 
 type Server struct {
-	logger *logrus.Logger
-	router *routes.Router
+	logger  *logrus.Logger
+	router  *routes.Router
+	watcher *eqemuserver.QuestHotReloadWatcher
 }
 
 func NewServer(
 	logger *logrus.Logger,
 	router *routes.Router,
+	watcher *eqemuserver.QuestHotReloadWatcher,
 ) *Server {
 	return &Server{
-		logger: logger,
-		router: router,
+		logger:  logger,
+		router:  router,
+		watcher: watcher,
 	}
 }
 
@@ -55,6 +60,8 @@ func NewServer(
 // Serve runs a http server
 func (c *Server) Serve(port uint) error {
 	e := echo.New()
+
+	env.SetAppWebserver()
 
 	BootstrapMiddleware(e, c.router)
 	if err := BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
@@ -122,6 +129,8 @@ func (c *Server) Serve(port uint) error {
 			return nil
 		}
 	})
+
+	c.watcher.Run()
 
 	// serve spa as embedded static assets
 	s := spa.NewSpa(c.logger)

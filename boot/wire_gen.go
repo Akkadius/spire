@@ -333,7 +333,8 @@ func InitializeApplication() (App, error) {
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(resolver, logrusLogger, cache, settings, init)
 	spireAssets := assets.NewSpireAssets(logrusLogger, pathManagement)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, contextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
-	server := http.NewServer(logrusLogger, router)
+	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(debugLogger, config, pathManagement, eqemuserverClient, resolver)
+	server := http.NewServer(logrusLogger, router, questHotReloadWatcher)
 	httpServeCommand := cmd.NewHttpServeCommand(logrusLogger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router, logrusLogger)
 	configurationCommand := generators.NewGenerateConfigurationCommand(resolver, logrusLogger)
@@ -353,7 +354,6 @@ func InitializeApplication() (App, error) {
 	importCommand := eqtraders.NewImportCommand(db, logrusLogger)
 	v := ProvideCommands(helloWorldCommand, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, serverLauncherCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(logrusLogger, server, config)
-	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(debugLogger, config, pathManagement, eqemuserverClient, resolver)
-	bootApp := NewApplication(db, logrusLogger, cache, v, resolver, connections, router, webBoot, init, questHotReloadWatcher)
+	bootApp := NewApplication(db, logrusLogger, cache, v, resolver, connections, router, webBoot, init)
 	return bootApp, nil
 }

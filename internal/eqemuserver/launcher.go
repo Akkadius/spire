@@ -2,11 +2,16 @@ package eqemuserver
 
 import (
 	"fmt"
+	"github.com/Akkadius/spire/internal/discord"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
+	"github.com/Akkadius/spire/internal/rfsnotify"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/fsnotify/fsnotify"
 	"github.com/shirou/gopsutil/v3/process"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -36,6 +41,7 @@ type Launcher struct {
 	settings     *spire.Settings
 	pathmgmt     *pathmgmt.PathManagement
 	serverApi    *Client
+	watcher      *rfsnotify.RWatcher
 
 	// properties
 	configLastModified   time.Time
@@ -50,6 +56,11 @@ type Launcher struct {
 	currentOnlineStatics []string
 	currentProcessCounts map[string]int
 	stopTimer            int // timer in seconds to stop the server
+
+	// meta properties
+	watchCrashLogs bool
+	discordWebhook string
+	serverLongName string
 }
 
 func NewLauncher(
@@ -570,6 +581,17 @@ func (l *Launcher) loadServerConfig() {
 	l.runLoginserver = cfg.WebAdmin.Launcher.RunLoginserver
 	l.runQueryServ = cfg.WebAdmin.Launcher.RunQueryServ
 	l.minZoneProcesses = cfg.WebAdmin.Launcher.MinZoneProcesses
+	l.serverLongName = cfg.Server.World.Longname
+
+	if env.IsAppWebserver() && cfg.WebAdmin != nil {
+		if cfg.WebAdmin.Discord != nil {
+			l.watchCrashLogs = len(cfg.WebAdmin.Discord.CrashLogWebhook) > 0
+			if l.watchCrashLogs {
+				l.discordWebhook = cfg.WebAdmin.Discord.CrashLogWebhook
+				l.StartCrashLogWatcher()
+			}
+		}
+	}
 
 	var staticZonesToBoot []string
 
@@ -684,4 +706,106 @@ func (l *Launcher) checkIfLauncherIsRunning() error {
 		}
 	}
 	return nil
+}
+
+func (l *Launcher) StartCrashLogWatcher() {
+	if !l.watchCrashLogs {
+		return
+	}
+
+	if l.watcher != nil {
+		return
+	}
+
+	var err error
+
+	// Create new watcher.
+	l.watcher, err = rfsnotify.NewWatcher()
+	if err != nil {
+		l.logger.Debug().
+			Any("error", err.Error()).
+			Msg("Error creating watcher")
+		return
+	}
+
+	defer l.watcher.Close()
+
+	done := make(chan bool)
+
+	// Start listening for events.
+	go func(l *Launcher) {
+		for {
+			if l.watcher == nil {
+				return
+			}
+
+			select {
+			case event, ok := <-l.watcher.Events:
+				if !ok {
+					fmt.Println("Spire > Crash Log Watcher error > Closing watcher")
+					if l.watcher != nil {
+						l.watcher.Close()
+					}
+					l.watcher = nil
+					return
+				}
+
+				// if event is create or write
+				if event.Op == fsnotify.Create {
+					fmt.Println("Spire > Crash Log Watcher > Detected crash log change", event.Name)
+
+					// ship to discord
+					filename := filepath.Base(event.Name)
+					contents, err := os.ReadFile(event.Name)
+					if err != nil {
+						l.logger.Debug().
+							Any("error", err.Error()).
+							Msg("Error reading crash log file")
+					}
+
+					discord.SendMessage(
+						l.discordWebhook,
+						fmt.Sprintf(
+							"**Crash Report** | **Server** [%s] **File** [%s] ",
+							l.serverLongName,
+							filename,
+						),
+						string(contents),
+					)
+
+				}
+
+			case err, ok := <-l.watcher.Errors:
+				if !ok {
+					fmt.Println("Spire > Crash Log Watcher error > Closing watcher")
+					if l.watcher != nil {
+						l.watcher.Close()
+					}
+					l.watcher = nil
+					return
+				}
+				log.Println("error:", err)
+			}
+		}
+	}(l)
+
+	// Add a path.
+	path := filepath.Join(l.pathmgmt.GetLogsDirPath(), "crashes")
+
+	fmt.Println("Spire > Crash Log Watcher > Watching for changes in", path)
+
+	// check if the path exists
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		l.logger.Debug().Any("path", path).Msg("Crash path does not exist")
+		return // path does not exist
+	}
+
+	err = l.watcher.AddRecursive(path)
+	if err != nil {
+		l.logger.Debug().
+			Any("error", err.Error()).
+			Msg("Error adding path to watcher")
+	}
+
+	<-done
 }

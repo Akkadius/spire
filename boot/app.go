@@ -55,7 +55,6 @@ func NewApplication(
 	router *routes.Router,
 	desktop *desktop.WebBoot,
 	onboarding *spire.Init,
-	watcher *eqemuserver.QuestHotReloadWatcher,
 ) App {
 	return App{
 		context:       context.Background(),
@@ -68,6 +67,5 @@ func NewApplication(
 		router:        router,
 		desktop:       desktop,
 		onboarding:    onboarding,
-		watcher:       watcher,
 	}
 }

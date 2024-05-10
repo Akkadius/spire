@@ -47,14 +47,19 @@ func NewQuestHotReloadWatcher(
 		db:           db,
 	}
 
-	if env.IsAppEnvLocal() {
-		go func(l *QuestHotReloadWatcher) {
-			l.loadZones()
-			l.Process()
-		}(l)
+	return l
+}
+
+func (l *QuestHotReloadWatcher) Run() {
+	if !env.IsAppEnvLocal() {
+		return
 	}
 
-	return l
+	l.loadZones()
+
+	go func(l *QuestHotReloadWatcher) {
+		l.Process()
+	}(l)
 }
 
 // Process runs the process loop for the QuestHotReloadWatcher
@@ -128,7 +133,10 @@ func (l *QuestHotReloadWatcher) Start() {
 	// Create new watcher.
 	l.watcher, err = rfsnotify.NewWatcher()
 	if err != nil {
-		log.Fatal(err)
+		l.logger.Debug().
+			Any("error", err.Error()).
+			Msg("Error creating watcher")
+		return
 	}
 
 	defer l.watcher.Close()

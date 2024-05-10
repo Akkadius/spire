@@ -3,6 +3,7 @@ package discord
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -31,4 +32,39 @@ func SendDiscordWebhook(webhookUrl string, msg string) error {
 		return err
 	}
 	return nil
+}
+
+// SendMessage sends a message to a discord webhook
+func SendMessage(webhookUrl, header, contents string) {
+	chunkCount := 1
+	for _, chunk := range chunkString(contents, 1800) {
+		_ = SendDiscordWebhook(
+			webhookUrl,
+			header+fmt.Sprintf(" **Chunk** [%v]\n```\n%v\n```", chunkCount, chunk),
+		)
+		chunkCount++
+	}
+}
+
+// chunkSubstr splits a string into chunks of a given size
+func chunkString(s string, chunkSize int) []string {
+	if len(s) == 0 {
+		return nil
+	}
+	if chunkSize >= len(s) {
+		return []string{s}
+	}
+	var chunks []string = make([]string, 0, (len(s)-1)/chunkSize+1)
+	currentLen := 0
+	currentStart := 0
+	for i := range s {
+		if currentLen == chunkSize {
+			chunks = append(chunks, s[currentStart:i])
+			currentLen = 0
+			currentStart = i
+		}
+		currentLen++
+	}
+	chunks = append(chunks, s[currentStart:])
+	return chunks
 }
