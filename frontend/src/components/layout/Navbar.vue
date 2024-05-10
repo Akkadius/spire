@@ -373,8 +373,7 @@ export default {
             {
               title: "Crash Webhooks",
               to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
-              icon: "ra ra-fire mr-1",
-              isOcculus: true
+              icon: "ra ra-fire mr-1"
             },
             { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1" },
             {

@@ -22,7 +22,7 @@
       <div class="form-group col-md-12 mb-0 p-0">
         <label class="form-label">Crash Logs Webhook</label>
         <small class="d-block text-muted">
-          When a process crash occurs, Occulus will send crash logs to this webhook
+          When a process crash occurs, Spire will send crash logs to this webhook
         </small>
 
         <input

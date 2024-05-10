@@ -292,7 +292,7 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
           component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
-          meta: {title: "Discord Crash Webhook", occulus: true},
+          meta: {title: "Discord Crash Webhook"},
         },
         {
           path: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS,
