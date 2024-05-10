@@ -1240,9 +1240,9 @@ func (a *Installer) createLinuxServerScripts() error {
 
 	// create a map of scripts
 	serverScripts := map[string]string{
-		"start":   "./spire spire:launcher start && echo \"Server started\"",
-		"stop":    "./spire spire:launcher stop; echo \"Server stopped\"",
-		"restart": "./spire spire:launcher restart; echo \"Server restarting\"",
+		"start":   "./spire eqemu-server:launcher start && echo \"Server started\"",
+		"stop":    "./spire eqemu-server:launcher stop; echo \"Server stopped\"",
+		"restart": "./spire eqemu-server:launcher restart; echo \"Server restarting\"",
 	}
 
 	for s := range serverScripts {
@@ -1888,9 +1888,9 @@ func (a *Installer) createWindowsServerScripts() error {
 
 	// create a map of scripts
 	serverScripts := map[string]string{
-		"server_restart.bat":         "spire.exe spire:launcher restart\n@echo off\necho Server is restarting\ntimeout /T 3 /NOBREAK > nul",
-		"server_start.bat":           "spire.exe spire:launcher start\n@echo off\necho Server is starting\ntimeout /T 3 /NOBREAK > nul",
-		"server_stop.bat":            "spire.exe spire:launcher stop\n@echo off\necho Server is stopping\ntimeout /T 3 /NOBREAK > nul",
+		"server_restart.bat":         "spire.exe eqemu-server:launcher restart\n@echo off\necho Server is restarting\ntimeout /T 3 /NOBREAK > nul",
+		"server_start.bat":           "spire.exe eqemu-server:launcher start\n@echo off\necho Server is starting\ntimeout /T 3 /NOBREAK > nul",
+		"server_stop.bat":            "spire.exe eqemu-server:launcher stop\n@echo off\necho Server is stopping\ntimeout /T 3 /NOBREAK > nul",
 		"spire_start.bat":            "TASKKILL /IM spire.exe /F\nstart /min spire.exe > logs/spire.log 2>&1",
 		"spire_stop.bat":             "TASKKILL /IM spire.exe /F",
 		"spire_web.bat":              fmt.Sprintf("start http://localhost:%v", a.installConfig.SpireWebPort),
