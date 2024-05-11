@@ -531,6 +531,10 @@ func (l *Launcher) loadServerConfig() {
 	l.minZoneProcesses = cfg.WebAdmin.Launcher.MinZoneProcesses
 	l.serverLongName = cfg.Server.World.Longname
 
+	if l.minZoneProcesses < 1 {
+		l.minZoneProcesses = 5
+	}
+
 	if env.IsAppWebserver() && cfg.WebAdmin != nil {
 		if cfg.WebAdmin.Discord != nil {
 			l.watchCrashLogs = len(cfg.WebAdmin.Discord.CrashLogWebhook) > 0
@@ -554,7 +558,9 @@ func (l *Launcher) loadServerConfig() {
 		}
 
 		if !isInList {
-			staticZonesToBoot = append(staticZonesToBoot, z)
+			if len(z) > 0 {
+				staticZonesToBoot = append(staticZonesToBoot, z)
+			}
 		}
 	}
 
