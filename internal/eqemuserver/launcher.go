@@ -101,7 +101,7 @@ func (l *Launcher) Process() {
 		}
 
 		l.logger.DebugVvv().
-			Any("configStatTime", now.Sub(time.Now()).String()).
+			Any("configStatTime", time.Now().Sub(now).String()).
 			Any("configLastModified", l.configLastModified).
 			Any("isRunning", l.isRunning).
 			Msg("Main launcher process loop")
@@ -111,7 +111,7 @@ func (l *Launcher) Process() {
 			l.loadServerConfig()
 			l.logger.Debug().
 				Any("configLastModified", l.configLastModified).
-				Any("statTime", now.Sub(time.Now()).String()).
+				Any("statTime", time.Now().Sub(now).String()).
 				Any("isRunning", l.isRunning).
 				Any("runSharedMemory", l.runSharedMemory).
 				Any("runLoginserver", l.runLoginserver).

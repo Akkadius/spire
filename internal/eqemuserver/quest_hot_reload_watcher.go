@@ -76,7 +76,7 @@ func (l *QuestHotReloadWatcher) Process() {
 		}
 
 		l.logger.DebugVvv().
-			Any("configStatTime", now.Sub(time.Now()).String()).
+			Any("configStatTime", time.Now().Sub(now).String()).
 			Any("configLastModified", l.configLastModified).
 			Any("isRunning", l.isRunning).
 			Msg("Main QuestHotReloadWatcher process loop")
@@ -86,7 +86,7 @@ func (l *QuestHotReloadWatcher) Process() {
 			l.loadServerConfig()
 			l.logger.Debug().
 				Any("configLastModified", l.configLastModified).
-				Any("statTime", now.Sub(time.Now()).String()).
+				Any("statTime", time.Now().Sub(now).String()).
 				Any("isRunning", l.isRunning).
 				Msg("Detected server config change")
 		}
