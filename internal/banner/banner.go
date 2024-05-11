@@ -1,6 +1,16 @@
 package banner
 
-import "fmt"
+import (
+	_ "embed"
+	"fmt"
+)
+
+//go:embed spire-logo.png
+var logo []byte
+
+func GetLogo() []byte {
+	return logo
+}
 
 func Print() {
 	fmt.Println(`                                                                                                    

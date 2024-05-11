@@ -6,9 +6,12 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/anaskhan96/soup v1.2.5
 	github.com/chzyer/readline v1.5.1
+	github.com/creack/pty v1.1.21
 	github.com/danilopolani/gocialite v1.0.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/disintegration/imaging v1.6.2
 	github.com/fsnotify/fsnotify v1.4.7
+	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/gammazero/workerpool v1.1.3
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/go-errors/errors v1.4.2
@@ -28,6 +31,7 @@ require (
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.4.0
 	github.com/manifoldco/promptui v0.9.0
+	github.com/mat/besticon v3.12.0+incompatible
 	github.com/mattn/go-isatty v0.0.19
 	github.com/mholt/archiver/v4 v4.0.0-alpha.7
 	github.com/muesli/termenv v0.13.0
@@ -45,8 +49,9 @@ require (
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/ziutek/telnet v0.0.0-20180329124119-c3b780dc415b
 	golang.org/x/crypto v0.14.0
-	golang.org/x/net v0.16.0
+	golang.org/x/net v0.17.0
 	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1
+	golang.org/x/sys v0.13.0
 	golang.org/x/text v0.13.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.4.1
@@ -123,8 +128,8 @@ require (
 	github.com/volatiletech/strmangle v0.0.4 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/mod v0.13.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
 	golang.org/x/tools v0.14.0 // indirect

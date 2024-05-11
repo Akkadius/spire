@@ -4,8 +4,10 @@ import (
 	"crypto/subtle"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/internal/banner"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserver"
+	"github.com/Akkadius/spire/internal/imgcat"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -14,7 +16,6 @@ import (
 	"unicode"
 
 	"github.com/Akkadius/spire/docs"
-	"github.com/Akkadius/spire/internal/banner"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
@@ -140,7 +141,7 @@ func (c *Server) Serve(port uint) error {
 	e.HTTPErrorHandler = errorHandler
 	e.HideBanner = true
 
-	banner.Print()
+	imgcat.Render(banner.GetLogo())
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }
