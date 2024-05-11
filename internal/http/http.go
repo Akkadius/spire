@@ -85,7 +85,8 @@ func (c *Server) Serve(port uint) error {
 	}
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
-		Format: "[${time_rfc3339}] [${status}] [${method}] [${uri}] [${latency_human}]\n",
+		//Format: "[${time_rfc3339}] [${status}] [${method}] [${uri}] [${latency_human}]\n",
+		Format: "[${status}] [${method}] [${uri}] [${latency_human}]\n",
 		Output: e.Logger.Output(),
 	}))
 

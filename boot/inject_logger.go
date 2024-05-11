@@ -29,7 +29,8 @@ func provideLogger() (*logrus.Logger, error) {
 	}
 
 	baseLogger.SetFormatter(&logrus.TextFormatter{
-		FullTimestamp:          true,
+		DisableTimestamp:       true,
+		FullTimestamp:          false,
 		TimestampFormat:        "2006-01-02 15:04:05",
 		ForceColors:            true,
 		DisableLevelTruncation: true,
