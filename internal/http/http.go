@@ -5,9 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/banner"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/imgcat"
+	"github.com/Akkadius/spire/internal/logger"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -27,20 +29,23 @@ import (
 )
 
 type Server struct {
-	logger  *logrus.Logger
-	router  *routes.Router
-	watcher *eqemuserver.QuestHotReloadWatcher
+	logger    *logrus.Logger
+	appLogger *logger.AppLogger
+	router    *routes.Router
+	watcher   *eqemuserver.QuestHotReloadWatcher
 }
 
 func NewServer(
 	logger *logrus.Logger,
+	appLogger *logger.AppLogger,
 	router *routes.Router,
 	watcher *eqemuserver.QuestHotReloadWatcher,
 ) *Server {
 	return &Server{
-		logger:  logger,
-		router:  router,
-		watcher: watcher,
+		logger:    logger,
+		appLogger: appLogger,
+		router:    router,
+		watcher:   watcher,
 	}
 }
 
@@ -86,7 +91,11 @@ func (c *Server) Serve(port uint) error {
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
 		//Format: "[${time_rfc3339}] [${status}] [${method}] [${uri}] [${latency_human}]\n",
-		Format: "[${status}] [${method}] [${uri}] [${latency_human}]\n",
+		Format: fmt.Sprintf(
+			"%sSpire › API ›%s [${status}] [${method}] [${uri}] [${latency_human}]\n",
+			console.BoldWhite,
+			console.Reset,
+		),
 		Output: e.Logger.Output(),
 	}))
 
@@ -141,8 +150,11 @@ func (c *Server) Serve(port uint) error {
 
 	e.HTTPErrorHandler = errorHandler
 	e.HideBanner = true
+	e.HidePort = true
 
 	imgcat.Render(banner.GetLogo())
+
+	c.appLogger.Info().Any("port", port).Msgf("Starting Spire HTTP server")
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }

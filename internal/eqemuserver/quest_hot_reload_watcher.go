@@ -19,7 +19,7 @@ import (
 )
 
 type QuestHotReloadWatcher struct {
-	logger       *logger.DebugLogger
+	logger       *logger.AppLogger
 	serverconfig *eqemuserverconfig.Config
 	pathmgmt     *pathmgmt.PathManagement
 	serverApi    *Client
@@ -33,7 +33,7 @@ type QuestHotReloadWatcher struct {
 }
 
 func NewQuestHotReloadWatcher(
-	logger *logger.DebugLogger,
+	logger *logger.AppLogger,
 	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
 	serverApi *Client,
@@ -84,6 +84,8 @@ func (l *QuestHotReloadWatcher) Process() {
 		if stat.ModTime().After(l.configLastModified) {
 			l.configLastModified = stat.ModTime()
 			l.loadServerConfig()
+			l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Detected server config change, reloading watcher")
+
 			l.logger.Debug().
 				Any("configLastModified", l.configLastModified).
 				Any("statTime", time.Now().Sub(now).String()).
@@ -226,7 +228,7 @@ func (l *QuestHotReloadWatcher) Start() {
 		}
 	}(l)
 
-	fmt.Println("Spire > Quest Hot Reload > Watching for changes in", l.pathmgmt.GetQuestsDir())
+	l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Starting Quest Hot Reload Watcher")
 
 	// walk the path and add all files to the file sizes map
 	err = filepath.Walk(l.pathmgmt.GetQuestsDir(), func(path string, info os.FileInfo, err error) error {

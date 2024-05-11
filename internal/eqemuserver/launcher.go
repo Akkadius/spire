@@ -38,7 +38,7 @@ const (
 var stopTimerMutex = sync.Mutex{}
 
 type Launcher struct {
-	logger       *logger.DebugLogger
+	logger       *logger.AppLogger
 	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
 	pathmgmt     *pathmgmt.PathManagement
@@ -66,7 +66,7 @@ type Launcher struct {
 }
 
 func NewLauncher(
-	logger *logger.DebugLogger,
+	logger *logger.AppLogger,
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
@@ -164,13 +164,12 @@ func (l *Launcher) Start() error {
 	}
 
 	l.loadServerConfig()
-
-	fmt.Println("Spire > Starting server launcher")
+	l.logger.Info().Msg("Starting server launcher")
 
 	// start shared memory if needed
 	// this needs to be started and completed before the server processes
 	if l.runSharedMemory {
-		fmt.Println("Spire > Starting shared memory")
+		l.logger.Info().Msg("Starting shared memory")
 		err := l.startServerProcessSync(sharedMemoryProcessName)
 		if err != nil {
 			return err
@@ -194,16 +193,17 @@ func (l *Launcher) Restart() error {
 		return err
 	}
 
-	fmt.Println("Spire > Restarting server launcher")
+	l.logger.Info().Msg("Restarting server launcher")
+
 	return l.StartLauncherProcess()
 }
 
 // Stop stops the launcher
 func (l *Launcher) Stop() error {
-	fmt.Println("Spire > Stopping server launcher")
+	l.logger.Info().Msg("Stopping server launcher")
 
 	if l.stopTimer > 0 {
-		fmt.Printf("Spire > Stopping server in %v minute(s)\n", l.stopTimer/60)
+		l.logger.Info().Msgf("Stopping server in %v minute(s)", l.stopTimer/60)
 
 		// message every minute
 		timeToStop := time.Now().Add(time.Duration(l.stopTimer) * time.Second)
@@ -217,17 +217,18 @@ func (l *Launcher) Stop() error {
 
 		for {
 			if l.stopTimer == 0 {
-				fmt.Println("Spire > Timed stop cancelled")
+				l.logger.Info().Msg("Stop - Timer cancelled")
 				return nil
 			}
 
 			if time.Now().After(timeToStop) {
-				fmt.Println("Spire > Stopping server after timed restart")
+				l.logger.Info().Msg("Stopping server after timed restart")
 				break
 			}
 
 			if time.Now().Second() == 0 {
-				fmt.Printf("Spire > Server will stop in %v minute(s)\n", timeToStop.Sub(time.Now()).Minutes())
+				l.logger.Info().Msgf("Server will stop in %v minute(s)", timeToStop.Sub(time.Now()).Minutes())
+
 				_ = l.serverApi.MessageWorld(
 					fmt.Sprintf(
 						"[SERVER MESSAGE] The world will be coming down in [%v] minute(s), please log out before this time...",
@@ -260,6 +261,8 @@ func (l *Launcher) Stop() error {
 					Any("cmdline", proc.Cmdline).
 					Msg("Stop - Killing server process")
 
+				l.logger.Info().Any("pid", p.Pid).Any("process", proc.BaseProcessName).Msg("Killing server process")
+
 				if err := p.Terminate(); err != nil {
 					l.logger.Debug().
 						Any("error", err.Error()).
@@ -289,7 +292,7 @@ func (l *Launcher) Stop() error {
 		}
 	}
 
-	fmt.Println("Spire > Stopped server launcher")
+	l.logger.Info().Msg("Stopped server launcher")
 
 	return nil
 }
@@ -393,7 +396,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot world if needed
 	if l.currentProcessCounts[worldProcessName] == 0 {
-		fmt.Println("Spire > Starting World")
+		l.logger.Info().Msg("Starting World")
 		err := l.startServerProcess(worldProcessName)
 		if err != nil {
 			return err
@@ -402,7 +405,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot loginserver if needed
 	if l.runLoginserver && l.currentProcessCounts[loginServerProcessName] == 0 {
-		fmt.Println("Spire > Starting LoginServer")
+		l.logger.Info().Msg("Starting Loginserver")
 		err := l.startServerProcess(loginServerProcessName)
 		if err != nil {
 			return err
@@ -411,7 +414,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot queryserv if needed
 	if l.runQueryServ && l.currentProcessCounts[queryServProcessName] == 0 {
-		fmt.Println("Spire > Starting QueryServ")
+		l.logger.Info().Msg("Starting QueryServ")
 		err := l.startServerProcess(queryServProcessName)
 		if err != nil {
 			return err
@@ -420,7 +423,7 @@ func (l *Launcher) Supervisor() error {
 
 	// boot ucs if needed
 	if l.currentProcessCounts[ucsProcessName] == 0 {
-		fmt.Println("Spire > Starting UCS")
+		l.logger.Info().Msg("Starting UCS")
 		err := l.startServerProcess(ucsProcessName)
 		if err != nil {
 			return err
@@ -457,7 +460,7 @@ func (l *Launcher) Supervisor() error {
 		}
 
 		if len(staticsToBoot) > 0 {
-			fmt.Printf("Spire > Started Static Zones (%v) [%+v]\n", len(staticsToBoot), staticsToBoot)
+			l.logger.Info().Msgf("Starting Static Zones (%v) [%+v]", len(staticsToBoot), staticsToBoot)
 		}
 
 		l.logger.Debug().
@@ -479,7 +482,7 @@ func (l *Launcher) Supervisor() error {
 			}
 		}
 
-		fmt.Printf("Spire > Started Dynamic Zones (%v)\n", zoneDynamicsToBoot)
+		l.logger.Info().Msgf("Starting Dynamic Zones (%v)", zoneDynamicsToBoot)
 	}
 
 	l.logger.DebugVv().
@@ -579,7 +582,7 @@ func (l *Launcher) StopCancel() error {
 	l.stopTimer = 0
 	stopTimerMutex.Unlock()
 
-	fmt.Println("Spire > Timed stop cancelled")
+	l.logger.Info().Msg("Timed stop cancelled")
 
 	_ = l.serverApi.MessageWorld("[SERVER MESSAGE] Server shutdown cancelled")
 
@@ -648,8 +651,9 @@ func (l *Launcher) checkIfLauncherIsRunning() error {
 				Msg("Error getting process command line")
 		}
 
-		if strings.Contains(cmdline, "eqemu-server:launcher start") && p.Pid != int32(os.Getpid()) {
+		if strings.Contains(cmdline, "eqemu-server:launcher start") && p.Pid != int32(os.Getpid()) && !strings.Contains(cmdline, "go run") {
 			l.logger.Debug().
+				Any("os.Getpid()", os.Getpid()).
 				Any("pid", p.Pid).
 				Any("cmdline", cmdline).
 				Msg("Launcher process already running")
@@ -696,7 +700,7 @@ func (l *Launcher) StartCrashLogWatcher() {
 			select {
 			case event, ok := <-l.watcher.Events:
 				if !ok {
-					fmt.Println("Spire > Crash Log Watcher error > Closing watcher")
+					l.logger.Info().Msg("Crash Log Watcher error - Closing watcher")
 					if l.watcher != nil {
 						l.watcher.Close()
 					}
@@ -706,7 +710,7 @@ func (l *Launcher) StartCrashLogWatcher() {
 
 				// if event is create or write
 				if event.Op == fsnotify.Create {
-					fmt.Println("Spire > Crash Log Watcher > Detected crash log change", event.Name)
+					l.logger.Info().Any("event.Name", event.Name).Msg("Crash Log Watcher - Detected crash log change")
 
 					// ship to discord
 					filename := filepath.Base(event.Name)
@@ -731,7 +735,7 @@ func (l *Launcher) StartCrashLogWatcher() {
 
 			case err, ok := <-l.watcher.Errors:
 				if !ok {
-					fmt.Println("Spire > Crash Log Watcher error > Closing watcher")
+					l.logger.Info().Msg("Crash Log Watcher error - Closing watcher")
 					if l.watcher != nil {
 						l.watcher.Close()
 					}
@@ -746,7 +750,7 @@ func (l *Launcher) StartCrashLogWatcher() {
 	// Add a path.
 	path := filepath.Join(l.pathmgmt.GetLogsDirPath(), "crashes")
 
-	fmt.Println("Spire > Crash Log Watcher > Watching for changes in", path)
+	l.logger.Info().Any("path", path).Msg("Crash Log Watcher - Watching for changes")
 
 	// check if the path exists
 	if _, err := os.Stat(path); os.IsNotExist(err) {

@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func ProvideDebugLogger() *DebugLogger {
-	l := NewDebugLogger()
+func ProvideAppLogger() *AppLogger {
+	l := NewAppLogger()
 
 	// If the user supplies -v, -vv, -vvv, etc, set the logger verbosity.
 	for _, arg := range os.Args {

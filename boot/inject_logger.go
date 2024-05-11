@@ -17,7 +17,7 @@ const (
 // wire set for loading the stores.
 var loggerSet = wire.NewSet(
 	provideLogger,
-	logger.ProvideDebugLogger,
+	logger.ProvideAppLogger,
 )
 
 // logging provider
