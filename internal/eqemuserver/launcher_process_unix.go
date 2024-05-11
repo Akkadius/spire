@@ -49,7 +49,18 @@ func (l *Launcher) startLauncherProcess() error {
 		return err
 	}
 
-	cmd := exec.Command(bin, "eqemu-server:launcher", "start")
+	// copy the binary to os tmp dir
+	tmpBin := filepath.Join(os.TempDir(), filepath.Base(bin))
+	if err := copyFile(bin, tmpBin); err != nil {
+		return err
+	}
+
+	// chmod
+	if err := os.Chmod(tmpBin, 0755); err != nil {
+		return err
+	}
+
+	cmd := exec.Command(tmpBin, "eqemu-server:launcher", "start")
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 	cmd.Dir = l.pathmgmt.GetEQEmuServerPath()
 	if err := cmd.Start(); err != nil {
