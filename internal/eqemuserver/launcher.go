@@ -15,6 +15,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -249,33 +250,13 @@ func (l *Launcher) Stop() error {
 	// kill all server processes
 	processes, _ := process.Processes()
 	for _, p := range processes {
-		cmdline, err := p.Cmdline()
-		if err != nil {
-			if strings.Contains(err.Error(), "no such file or directory") {
-				continue
-			}
-
-			l.logger.Debug().
-				Any("error", err.Error()).
-				Any("pid", p.Pid).
-				Msg("Error getting process command line")
-		}
-
-		exe, err := p.Exe()
-		if err != nil {
-			l.logger.Debug().
-				Any("error", err.Error()).
-				Any("pid", p.Pid).
-				Msg("Error getting process exe")
-		}
-
-		baseProcessName := filepath.Base(exe)
+		proc := l.getProcessDetails(p)
 		for _, s := range l.GetServerProcessNames() {
-			if s == baseProcessName {
+			if s == proc.BaseProcessName {
 				l.logger.Debug().
 					Any("pid", p.Pid).
-					Any("baseProcessName", baseProcessName).
-					Any("cmdline", cmdline).
+					Any("baseProcessName", proc.BaseProcessName).
+					Any("cmdline", proc.Cmdline).
 					Msg("Stop - Killing server process")
 
 				if err := p.Terminate(); err != nil {
@@ -289,13 +270,13 @@ func (l *Launcher) Stop() error {
 
 		l.logger.DebugVvv().
 			Any("pid", p.Pid).
-			Any("exe", exe).
-			Any("cmdline", cmdline).
-			Any("baseProcessName", baseProcessName).
+			Any("exe", proc.Exe).
+			Any("cmdline", proc.Cmdline).
+			Any("baseProcessName", proc.BaseProcessName).
 			Msg("Stop - Checking process")
 
 		// kill any instances of launchers
-		isServerLauncher := strings.Contains(cmdline, "server-launcher") || strings.Contains(cmdline, "eqemu-server:launcher")
+		isServerLauncher := strings.Contains(proc.Cmdline, "server-launcher") || strings.Contains(proc.Cmdline, "eqemu-server:launcher")
 
 		if isServerLauncher && p.Pid != int32(os.Getpid()) {
 			if err := p.Terminate(); err != nil {
@@ -337,47 +318,13 @@ func (l *Launcher) Supervisor() error {
 
 	processes, _ := process.Processes()
 	for _, p := range processes {
-		cmdline, err := p.Cmdline()
-		if err != nil {
-			if strings.Contains(err.Error(), "no such file or directory") {
-				continue
-			}
-
-			l.logger.Debug().
-				Any("error", err.Error()).
-				Any("pid", p.Pid).
-				Msg("Error getting process command line")
-		}
-
-		cwd, err := p.Cwd()
-		if err != nil {
-			if strings.Contains(err.Error(), "no such file or directory") {
-				continue
-			}
-			if strings.Contains(err.Error(), "permission denied") {
-				continue
-			}
-			l.logger.Debug().
-				Any("error", err.Error()).
-				Any("pid", p.Pid).
-				Msg("Error getting process cwd")
-		}
-
-		exe, err := p.Exe()
-		if err != nil {
-			l.logger.Debug().
-				Any("error", err.Error()).
-				Any("pid", p.Pid).
-				Msg("Error getting process exe")
-		}
-
-		baseProcessName := filepath.Base(exe)
+		proc := l.getProcessDetails(p)
 		for _, s := range l.GetServerProcessNames() {
-			if s == baseProcessName {
+			if s == proc.BaseProcessName {
 				l.logger.DebugVv().
 					Any("pid", p.Pid).
-					Any("baseProcessName", baseProcessName).
-					Any("cmdline", cmdline).
+					Any("baseProcessName", proc.BaseProcessName).
+					Any("cmdline", proc.Cmdline).
 					Msg("Supervisor - Found server process")
 
 				if _, ok := l.currentProcessCounts[s]; !ok {
@@ -388,7 +335,7 @@ func (l *Launcher) Supervisor() error {
 					// get arg
 					// check if it's in the static zones
 					// if it is, add it to the current online statics
-					arg := strings.Split(cmdline, " ")
+					arg := strings.Split(proc.Cmdline, " ")
 					if len(arg) > 1 {
 						for _, z := range l.staticZonesToBoot {
 							if z == arg[1] {
@@ -418,9 +365,9 @@ func (l *Launcher) Supervisor() error {
 
 		l.logger.DebugVvv().
 			Any("pid", p.Pid).
-			Any("cwd", cwd).
-			Any("exe", exe).
-			Any("cmdline", cmdline).
+			Any("cwd", proc.Cwd).
+			Any("exe", proc.Exe).
+			Any("cmdline", proc.Cmdline).
 			Msg("Supervisor - Checking process")
 	}
 
@@ -808,4 +755,70 @@ func (l *Launcher) StartCrashLogWatcher() {
 	}
 
 	<-done
+}
+
+type ProcessDetails struct {
+	Pid             int32
+	Cmdline         string
+	Cwd             string
+	Exe             string
+	BaseProcessName string
+}
+
+func (l *Launcher) getProcessDetails(p *process.Process) ProcessDetails {
+	cmdline, err := p.Cmdline()
+	if err != nil {
+		if strings.Contains(err.Error(), "no such file or directory") {
+			return ProcessDetails{}
+		}
+
+		l.logger.Debug().
+			Any("error", err.Error()).
+			Any("pid", p.Pid).
+			Msg("Error getting process command line")
+	}
+	if runtime.GOOS == "windows" {
+		cmdline = strings.ReplaceAll(cmdline, ".exe", "")
+	}
+
+	cwd, err := p.Cwd()
+	if err != nil {
+		if strings.Contains(err.Error(), "no such file or directory") {
+			return ProcessDetails{}
+		}
+		if strings.Contains(err.Error(), "permission denied") {
+			return ProcessDetails{}
+		}
+		l.logger.Debug().
+			Any("error", err.Error()).
+			Any("pid", p.Pid).
+			Msg("Error getting process cwd")
+	}
+	if runtime.GOOS == "windows" {
+		cwd = strings.ReplaceAll(cwd, ".exe", "")
+	}
+
+	exe, err := p.Exe()
+	if err != nil {
+		l.logger.Debug().
+			Any("error", err.Error()).
+			Any("pid", p.Pid).
+			Msg("Error getting process exe")
+	}
+	if runtime.GOOS == "windows" {
+		exe = strings.ReplaceAll(exe, ".exe", "")
+	}
+
+	baseProcessName := filepath.Base(exe)
+	if runtime.GOOS == "windows" {
+		baseProcessName = strings.ReplaceAll(baseProcessName, ".exe", "")
+	}
+
+	return ProcessDetails{
+		Pid:             p.Pid,
+		Cmdline:         cmdline,
+		Cwd:             cwd,
+		Exe:             exe,
+		BaseProcessName: baseProcessName,
+	}
 }
