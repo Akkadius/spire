@@ -7,13 +7,11 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/k0kubun/pp/v3"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"os"
 )
 
 type CrashAnalyticsFingerprintBackfillCommand struct {
-	logger   *logrus.Logger
 	command  *cobra.Command
 	db       *database.Resolver
 	pathmgmt *pathmgmt.PathManagement
@@ -24,12 +22,10 @@ func (c *CrashAnalyticsFingerprintBackfillCommand) Command() *cobra.Command {
 }
 
 func NewCrashAnalyticsCommand(
-	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
 	db *database.Resolver,
 ) *CrashAnalyticsFingerprintBackfillCommand {
 	i := &CrashAnalyticsFingerprintBackfillCommand{
-		logger:   logger,
 		pathmgmt: pathmgmt,
 		db:       db,
 		command: &cobra.Command{

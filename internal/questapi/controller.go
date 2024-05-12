@@ -5,22 +5,19 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Controller struct {
-	logger  *logrus.Logger
 	parser  *ParseService
 	sourcer *ExamplesGithubSourcer
 }
 
 func NewController(
-	logger *logrus.Logger,
 	parser *ParseService,
 	sourcer *ExamplesGithubSourcer,
 ) *Controller {
-	return &Controller{logger: logger, parser: parser, sourcer: sourcer}
+	return &Controller{parser: parser, sourcer: sourcer}
 }
 
 func (d *Controller) Routes() []*routes.Route {

@@ -2,13 +2,11 @@ package questapi
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"time"
 )
 
 type ParseCommand struct {
-	logger  *logrus.Logger
 	command *cobra.Command
 	parser  *ParseService
 }
@@ -18,12 +16,10 @@ func (c *ParseCommand) Command() *cobra.Command {
 }
 
 func NewParseCommand(
-	logger *logrus.Logger,
 	parser *ParseService,
 ) *ParseCommand {
 	i := &ParseCommand{
 		parser: parser,
-		logger: logger,
 		command: &cobra.Command{
 			Use:   "quest:parse",
 			Short: "Parses EQEmu/Server Quest API source files for documentation",

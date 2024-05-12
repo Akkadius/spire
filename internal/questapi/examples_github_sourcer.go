@@ -3,23 +3,20 @@ package questapi
 import (
 	"github.com/Akkadius/spire/internal/github"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
 type ExamplesGithubSourcer struct {
-	logger     *logrus.Logger
 	cache      *gocache.Cache
 	downloader *github.SourceDownloader
 	files      map[string]string
 }
 
 func NewExamplesGithubSourcer(
-	logger *logrus.Logger,
 	cache *gocache.Cache,
 	downloader *github.SourceDownloader,
 ) *ExamplesGithubSourcer {
-	return &ExamplesGithubSourcer{logger: logger, cache: cache, downloader: downloader}
+	return &ExamplesGithubSourcer{cache: cache, downloader: downloader}
 }
 
 const (

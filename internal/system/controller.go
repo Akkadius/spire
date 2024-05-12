@@ -9,22 +9,16 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/net"
 	"github.com/shirou/gopsutil/v3/process"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"path/filepath"
 	"strconv"
 )
 
 type Controller struct {
-	logger *logrus.Logger
 }
 
-func NewController(
-	logger *logrus.Logger,
-) *Controller {
-	return &Controller{
-		logger: logger,
-	}
+func NewController() *Controller {
+	return &Controller{}
 }
 
 func (a *Controller) Routes() []*routes.Route {
