@@ -472,7 +472,7 @@ func (a *Installer) clonePeqQuests() error {
 	repoPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "quests")
 	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 		URL:      "https://github.com/ProjectEQ/projecteqquests.git",
-		Progress: a.logger.GetWriter(),
+		Progress: os.Stdout,
 	})
 
 	if err != nil && !errors.Is(err, git.ErrRepositoryAlreadyExists) {
@@ -496,7 +496,7 @@ func (a *Installer) clonePeqQuests() error {
 		}
 
 		// Pull the latest changes from the origin remote and merge into the current branch
-		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.GetWriter()})
+		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: os.Stdout})
 		if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
 			return fmt.Errorf("could not pull: %v", err)
 		}
@@ -701,7 +701,7 @@ func (a *Installer) cloneEQEmuSource() error {
 	repoPath := a.installConfig.CodePath
 	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 		URL:               "https://github.com/EQEmu/Server.git",
-		Progress:          a.logger.GetWriter(),
+		Progress:          os.Stdout,
 		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 	})
 
@@ -727,7 +727,7 @@ func (a *Installer) cloneEQEmuSource() error {
 		}
 
 		// Pull the latest changes from the origin remote and merge into the current branch
-		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.GetWriter()})
+		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: os.Stdout})
 		if err != nil && err != git.NoErrAlreadyUpToDate {
 			return fmt.Errorf("could not pull: %v", err)
 		}
