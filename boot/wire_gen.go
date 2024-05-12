@@ -103,7 +103,7 @@ func InitializeApplication() (App, error) {
 	assetsController := assets.NewController(logrusLogger, resolver)
 	permissionsController := permissions.NewController(logrusLogger, resolver, service)
 	userController := user.NewController(resolver, logrusLogger, userUser, encrypter)
-	settingsController := spire.NewSettingController(resolver, logrusLogger, encrypter, settings)
+	settingsController := spire.NewSettingController(resolver, encrypter, settings)
 	telnetClient := telnet.NewClient(logrusLogger)
 	eqemuserverClient := eqemuserver.NewClient(telnetClient)
 	updater := eqemuserver.NewUpdater(resolver, logrusLogger, config, settings, pathManagement)
