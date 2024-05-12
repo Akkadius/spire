@@ -353,6 +353,6 @@ func InitializeApplication() (App, error) {
 	importCommand := eqtraders.NewImportCommand(db, logrusLogger)
 	v := ProvideCommands(helloWorldCommand, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, launcherShimCmd, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(logrusLogger, server, config)
-	bootApp := NewApplication(db, logrusLogger, cache, v, resolver, connections, router, webBoot, init)
+	bootApp := NewApplication(db, cache, v, resolver, connections, router, webBoot, init)
 	return bootApp, nil
 }
