@@ -8,21 +8,18 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/sirupsen/logrus"
 )
 
 type Create struct {
-	db     *database.Resolver
-	logger *logrus.Logger
-	crypt  *encryption.Encrypter
+	db    *database.Resolver
+	crypt *encryption.Encrypter
 }
 
 func NewCreate(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 ) *Create {
-	return &Create{db: db, logger: logger, crypt: crypt}
+	return &Create{db: db, crypt: crypt}
 }
 
 func (c *Create) GetEncKey(userId uint) string {

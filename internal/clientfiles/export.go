@@ -4,17 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"strings"
 )
 
 type Exporter struct {
-	logger *logrus.Logger
+	logger *logger.AppLogger
 }
 
-func NewExporter(logger *logrus.Logger) *Exporter {
+func NewExporter(logger *logger.AppLogger) *Exporter {
 	return &Exporter{logger: logger}
 }
 
@@ -22,7 +22,7 @@ func (e *Exporter) getDatabase(g *gorm.DB) *sql.DB {
 	// get database instance
 	db, err := g.DB()
 	if err != nil {
-		e.logger.Warn(err)
+		e.logger.Warn().Err(err).Msg("failed to get database instance")
 	}
 
 	return db
@@ -34,7 +34,7 @@ func (e *Exporter) ExportSpells(db *gorm.DB) string {
 
 	columns, err := database.GetTableSchema(db, "spells_new")
 	if err != nil {
-		e.logger.Warn(err)
+		e.logger.Warn().Err(err).Msg("failed to get table schema")
 	}
 
 	var rows []string
@@ -56,7 +56,7 @@ func (e *Exporter) ExportDbStr(db *gorm.DB) string {
 
 	columns, err := database.GetTableSchema(db, "db_str")
 	if err != nil {
-		e.logger.Warn(err)
+		e.logger.Warn().Err(err).Msg("failed to get table schema")
 	}
 
 	var rows []string
