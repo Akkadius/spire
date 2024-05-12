@@ -211,7 +211,7 @@ func InitializeApplication() (App, error) {
 	dynamicZoneController := crudcontrollers.NewDynamicZoneController(resolver, userEvent)
 	dynamicZoneMemberController := crudcontrollers.NewDynamicZoneMemberController(resolver, userEvent)
 	dynamicZoneTemplateController := crudcontrollers.NewDynamicZoneTemplateController(resolver, userEvent)
-	eventlogController := crudcontrollers.NewEventlogController(resolver, logrusLogger, userEvent)
+	eventlogController := crudcontrollers.NewEventlogController(resolver, userEvent)
 	expeditionController := crudcontrollers.NewExpeditionController(resolver, userEvent)
 	expeditionLockoutController := crudcontrollers.NewExpeditionLockoutController(resolver, userEvent)
 	expeditionMemberController := crudcontrollers.NewExpeditionMemberController(resolver, logrusLogger)
