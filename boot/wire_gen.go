@@ -91,7 +91,7 @@ func InitializeApplication() (App, error) {
 	examplesGithubSourcer := questapi.NewExamplesGithubSourcer(logrusLogger, cache, sourceDownloader)
 	questapiController := questapi.NewController(logrusLogger, parseService, examplesGithubSourcer)
 	appController := app.NewController(cache, init, userUser, settings, resolver)
-	queryController := query.NewController(resolver, logrusLogger)
+	queryController := query.NewController(resolver, appLogger)
 	exporter := clientfiles.NewExporter(logrusLogger)
 	importer := clientfiles.NewImporter(logrusLogger)
 	clientfilesController := clientfiles.NewController(logrusLogger, exporter, importer, resolver)

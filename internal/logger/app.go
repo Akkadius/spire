@@ -162,6 +162,10 @@ func (l *AppLogger) Fatal() *zerolog.Event {
 	return l.infoLogger.Fatal()
 }
 
+func (l *AppLogger) Warn() *zerolog.Event {
+	return l.infoLogger.Warn()
+}
+
 // Debug is -v level logging
 func (l *AppLogger) Debug() *zerolog.Event {
 	if l.debugLevel >= 1 {
