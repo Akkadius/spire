@@ -8,14 +8,12 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type LocalUserAuthMiddleware struct {
 	db        *database.Resolver
 	cache     *gocache.Cache
-	logger    *logrus.Logger
 	debug     int
 	spireInit *spire.Init
 	settings  *spire.Settings
@@ -23,14 +21,12 @@ type LocalUserAuthMiddleware struct {
 
 func NewLocalUserAuthMiddleware(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	cache *gocache.Cache,
 	settings *spire.Settings,
 	spireInit *spire.Init,
 ) *LocalUserAuthMiddleware {
 	return &LocalUserAuthMiddleware{
 		db:        db,
-		logger:    logger,
 		cache:     cache,
 		settings:  settings,
 		spireInit: spireInit,

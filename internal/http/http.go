@@ -62,7 +62,7 @@ func NewServer(
 func (c *Server) Serve(port uint) error {
 	e := echo.New()
 
-	env.SetAppWebserver()
+	env.SetAppModeWebserver()
 
 	BootstrapMiddleware(e, c.router)
 	if err := BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {

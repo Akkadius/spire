@@ -148,18 +148,18 @@ const (
 	AppCli       = "cli"
 )
 
-func IsAppWebserver() bool {
+func IsAppModeWebserver() bool {
 	return os.Getenv("APP_MODE") == AppWebserver
 }
 
-func IsAppCli() bool {
+func IsAppModeCli() bool {
 	return os.Getenv("APP_MODE") == AppCli
 }
 
-func SetAppCli() {
+func SetAppModeCli() {
 	_ = os.Setenv("APP_MODE", AppCli)
 }
 
-func SetAppWebserver() {
+func SetAppModeWebserver() {
 	_ = os.Setenv("APP_MODE", AppWebserver)
 }

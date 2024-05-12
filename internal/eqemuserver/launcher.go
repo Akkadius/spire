@@ -82,7 +82,9 @@ func NewLauncher(
 		stopTimer:            0,
 	}
 
-	l.serverProcessLauncherWatchdog()
+	if env.IsAppModeWebserver() {
+		l.serverProcessLauncherWatchdog()
+	}
 
 	return l
 }
@@ -538,7 +540,7 @@ func (l *Launcher) loadServerConfig() {
 		l.minZoneProcesses = 5
 	}
 
-	if env.IsAppWebserver() && cfg.WebAdmin != nil {
+	if env.IsAppModeWebserver() && cfg.WebAdmin != nil {
 		if cfg.WebAdmin.Discord != nil {
 			l.watchCrashLogs = len(cfg.WebAdmin.Discord.CrashLogWebhook) > 0
 			if l.watchCrashLogs {
