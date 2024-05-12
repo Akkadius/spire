@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
@@ -18,6 +19,7 @@ type PermissionsMiddleware struct {
 	cache       *gocache.Cache
 	permissions *permissions.Service
 	logger      *logger.AppLogger
+	debug       int
 }
 
 func NewPermissionsMiddleware(
@@ -31,6 +33,7 @@ func NewPermissionsMiddleware(
 		logger:      logger,
 		cache:       cache,
 		permissions: permissions,
+		debug:       env.GetInt("PERMISSIONS_DEBUG", "0"),
 	}
 }
 
@@ -65,13 +68,15 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 							resource = strings.TrimSpace(params[3])
 						}
 
-						r.logger.DebugVvv().
-							Any("user", user.ID).
-							Any("connectionId", connectionId).
-							Any("pass", pass).
-							Any("resource", resource).
-							Any("url", c.Request().URL.Path).
-							Msg("permissions middleware")
+						if r.debug > 0 {
+							r.logger.DebugVvv().
+								Any("user", user.ID).
+								Any("connectionId", connectionId).
+								Any("pass", pass).
+								Any("resource", resource).
+								Any("url", c.Request().URL.Path).
+								Msg("permissions middleware")
+						}
 
 						// did not pass ACL
 						if !pass {

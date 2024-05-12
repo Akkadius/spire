@@ -72,7 +72,7 @@ func InitializeApplication() (App, error) {
 	resolver := database.NewResolver(connections, appLogger, encrypter, cache)
 	userUser := user.NewUser(resolver, logrusLogger, encrypter, cache)
 	createCommand := user.NewCreateCommand(resolver, logrusLogger, encrypter, userUser)
-	modelGeneratorCommand := generators.NewModelGeneratorCommand(db, logrusLogger)
+	modelGeneratorCommand := generators.NewModelGeneratorCommand(db, appLogger)
 	controllerGeneratorCmd := generators.NewControllerGeneratorCommand(db, logrusLogger)
 	helloWorldController := controllers.NewHelloWorldController(db, logrusLogger)
 	controller := auth.NewController(resolver, userUser, cache)
