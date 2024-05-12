@@ -2,17 +2,16 @@ package generators
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
-	"io/ioutil"
 	"os"
 	"strings"
 )
 
 type ControllerGeneratorCmd struct {
 	db      *gorm.DB
-	logger  *logrus.Logger
+	logger  *logger.AppLogger
 	command *cobra.Command
 }
 
@@ -20,7 +19,7 @@ func (g *ControllerGeneratorCmd) Command() *cobra.Command {
 	return g.command
 }
 
-func NewControllerGeneratorCommand(db *gorm.DB, logger *logrus.Logger) *ControllerGeneratorCmd {
+func NewControllerGeneratorCommand(db *gorm.DB, logger *logger.AppLogger) *ControllerGeneratorCmd {
 	i := &ControllerGeneratorCmd{
 		db:     db,
 		logger: logger,
@@ -65,7 +64,7 @@ func (g *ControllerGeneratorCmd) Handle(_ *cobra.Command, args []string) {
 		}
 	}
 
-	NewSyncControllersToInjector(g.logger).Sync()
+	NewSyncControllersToInjector().Sync()
 }
 
 func (g *ControllerGeneratorCmd) Validate(_ *cobra.Command, _ []string) error {
@@ -73,15 +72,15 @@ func (g *ControllerGeneratorCmd) Validate(_ *cobra.Command, _ []string) error {
 }
 
 func (g *ControllerGeneratorCmd) writeTypesFile() {
-	b, err := ioutil.ReadFile("./internal/generators/templates/crud_controller_types.go")
+	b, err := os.ReadFile("./internal/generators/templates/crud_controller_types.go")
 	if err != nil {
-		g.logger.Fatal(err)
+		g.logger.Fatal().Err(err).Msg("Failed to read template file")
 	}
 
 	// create file
 	file, err := os.Create("./internal/http/crudcontrollers/a_types.go")
 	if err != nil {
-		g.logger.Fatal(err)
+		g.logger.Fatal().Err(err).Msg("Failed to create file")
 	}
 
 	defer file.Close()
@@ -89,6 +88,6 @@ func (g *ControllerGeneratorCmd) writeTypesFile() {
 	// write contents
 	_, err = file.WriteString(string(b))
 	if err != nil {
-		g.logger.Fatal(err)
+		g.logger.Fatal().Err(err).Msg("Failed to write file")
 	}
 }
