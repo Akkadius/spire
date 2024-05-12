@@ -8,8 +8,7 @@
             {{ pageName }}
           </h6>
 
-
-          <h1 class="header-title">
+          <h1 class="header-title" style="    font-size: 1.1rem;">
             <a
               href="javascript:"
               @click="toggleServerLock()"

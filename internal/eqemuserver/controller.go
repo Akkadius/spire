@@ -1034,14 +1034,7 @@ func (a *Controller) toggleServerLock(c echo.Context) error {
 		)
 	}
 
-	err = a.eqemuserverapi.SetLockStatus(locked)
-	if err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Failed to set lock status [%v]", err.Error())},
-		)
-	}
-
+	_ = a.eqemuserverapi.SetLockStatus(locked)
 	lockedMessage := "unlocked"
 	if locked {
 		lockedMessage = "locked"
