@@ -14,7 +14,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/gammazero/workerpool v1.1.3
 	github.com/gertd/go-pluralize v0.2.1
-	github.com/go-errors/errors v1.4.2
 	github.com/go-git/go-git/v5 v5.9.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gobuffalo/packr v1.30.1
@@ -39,7 +38,6 @@ require (
 	github.com/rs/zerolog v1.32.0
 	github.com/schollz/progressbar/v3 v3.12.2
 	github.com/shirou/gopsutil/v3 v3.22.12
-	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.1

@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/anaskhan96/soup"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -14,7 +15,6 @@ import (
 )
 
 type RaceModelMapsCommand struct {
-	logger  *logrus.Logger
 	command *cobra.Command
 }
 
@@ -64,9 +64,8 @@ type RaceData struct {
 	Race []RaceEntry `json:"races"`
 }
 
-func NewRaceModelMapsCommand(logger *logrus.Logger) *RaceModelMapsCommand {
+func NewRaceModelMapsCommand() *RaceModelMapsCommand {
 	i := &RaceModelMapsCommand{
-		logger: logger,
 		command: &cobra.Command{
 			Use:   "generate:race-model-maps",
 			Short: "Generates race model maps from Shendares data export",
@@ -332,9 +331,9 @@ func (c *RaceModelMapsCommand) FetchAndCache(url string, file string) string {
 	cacheFile := fmt.Sprintf("%s/%s", os.TempDir(), file)
 
 	if _, err := os.Stat(cacheFile); err == nil {
-		content, err := ioutil.ReadFile(cacheFile)
+		content, err := os.ReadFile(cacheFile)
 		if err != nil {
-			c.logger.Fatal(err)
+			log.Fatal(err)
 		}
 		return string(content)
 	}
@@ -342,21 +341,21 @@ func (c *RaceModelMapsCommand) FetchAndCache(url string, file string) string {
 	// fetch contents
 	resp, err := http.Get(url)
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	defer resp.Body.Close()
 
 	// read contents
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// create file
 	f, err := os.Create(cacheFile)
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	defer f.Close()
@@ -364,7 +363,7 @@ func (c *RaceModelMapsCommand) FetchAndCache(url string, file string) string {
 	// write contents
 	_, err2 := f.Write(body)
 	if err2 != nil {
-		c.logger.Fatal(err2)
+		log.Fatal(err2)
 	}
 
 	return string(body)

@@ -150,6 +150,10 @@ func getCallerMeta() string {
 //	return l.infoLogger
 //}
 
+func (l *AppLogger) GetWriter() zerolog.Logger {
+	return l.infoLogger.With().Caller().Logger()
+}
+
 func (l *AppLogger) Info() *zerolog.Event {
 	return l.infoLogger.Info()
 }

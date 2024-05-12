@@ -3,21 +3,17 @@ package eqemuserverconfig
 import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Controller struct {
-	logger       *logrus.Logger
 	serverconfig *Config
 }
 
 func NewController(
-	logger *logrus.Logger,
 	serverconfig *Config,
 ) *Controller {
 	return &Controller{
-		logger:       logger,
 		serverconfig: serverconfig,
 	}
 }

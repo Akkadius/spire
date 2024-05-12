@@ -106,11 +106,7 @@ func InitializeApplication() (App, error) {
 	launcher := eqemuserver.NewLauncher(appLogger, config, settings, pathManagement, eqemuserverClient)
 	eqemuserverController := eqemuserver.NewController(resolver, eqemuserverClient, config, pathManagement, settings, updater, launcher)
 	publicController := eqemuserver.NewPublicController(resolver, eqemuserverClient, config, pathManagement, settings, updater)
-	logrusLogger, err := provideLogger()
-	if err != nil {
-		return App{}, err
-	}
-	eqemuserverconfigController := eqemuserverconfig.NewController(logrusLogger, config)
+	eqemuserverconfigController := eqemuserverconfig.NewController(config)
 	backupController := backup.NewController(mysql, pathManagement)
 	handler := websocket.NewHandler(pathManagement)
 	websocketController := websocket.NewController(pathManagement, handler)
@@ -338,7 +334,7 @@ func InitializeApplication() (App, error) {
 	migrateCommand := spire.NewMigrateCommand(connections)
 	parseCommand := questapi.NewParseCommand(parseService)
 	exampleTestCommand := questapi.NewExampleTestCommand(examplesGithubSourcer)
-	raceModelMapsCommand := generators.NewRaceModelMapsCommand(logrusLogger)
+	raceModelMapsCommand := generators.NewRaceModelMapsCommand()
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, changelog)
 	testFilesystemCommand := cmd.NewTestFilesystemCommand(pathManagement)
 	initCommand := spire.NewInitCommand(init)

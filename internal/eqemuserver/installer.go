@@ -18,7 +18,6 @@ import (
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/process"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"io"
@@ -39,43 +38,22 @@ type Installer struct {
 	pathmanager   *pathmgmt.PathManagement
 	config        *eqemuserverconfig.Config
 	loginConfig   *eqemuloginserver.Config
-	logger        *logrus.Logger
+	logger        *logger.AppLogger
 	stepTime      time.Time
 	totalTime     time.Time
 	installConfig *InstallConfig
 }
 
-func getLogger() *logrus.Logger {
-	l := logrus.New()
-	l.SetFormatter(&logrus.TextFormatter{
-		DisableTimestamp:       true,
-		ForceColors:            true,
-		DisableLevelTruncation: false,
-		PadLevelText:           true,
-	})
-
-	// base level
-	l.SetLevel(logrus.InfoLevel)
-
-	// debug logging
-	if len(os.Getenv("DEBUG")) > 0 {
-		l.SetLevel(logrus.DebugLevel)
-	}
-
-	return l
-}
-
 func NewInstaller() *Installer {
 	// TODO: Clean this up
-	logrus := getLogger()
 	appLogger := logger.ProvideAppLogger()
 	pathmanager := pathmgmt.NewPathManagement(appLogger)
 	i := &Installer{
-		logger:        logrus,
+		logger:        appLogger,
 		pathmanager:   pathmanager,
 		config:        eqemuserverconfig.NewConfig(appLogger, pathmanager),
 		installConfig: &InstallConfig{},
-		loginConfig:   eqemuloginserver.NewConfig(logrus, pathmanager),
+		loginConfig:   eqemuloginserver.NewConfig(appLogger, pathmanager),
 	}
 
 	return i
@@ -494,7 +472,7 @@ func (a *Installer) clonePeqQuests() error {
 	repoPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "quests")
 	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 		URL:      "https://github.com/ProjectEQ/projecteqquests.git",
-		Progress: a.logger.Writer(),
+		Progress: a.logger.GetWriter(),
 	})
 
 	if err != nil && !errors.Is(err, git.ErrRepositoryAlreadyExists) {
@@ -518,7 +496,7 @@ func (a *Installer) clonePeqQuests() error {
 		}
 
 		// Pull the latest changes from the origin remote and merge into the current branch
-		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.Writer()})
+		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.GetWriter()})
 		if err != nil && !errors.Is(err, git.NoErrAlreadyUpToDate) {
 			return fmt.Errorf("could not pull: %v", err)
 		}
@@ -723,7 +701,7 @@ func (a *Installer) cloneEQEmuSource() error {
 	repoPath := a.installConfig.CodePath
 	_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 		URL:               "https://github.com/EQEmu/Server.git",
-		Progress:          a.logger.Writer(),
+		Progress:          a.logger.GetWriter(),
 		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 	})
 
@@ -749,7 +727,7 @@ func (a *Installer) cloneEQEmuSource() error {
 		}
 
 		// Pull the latest changes from the origin remote and merge into the current branch
-		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.Writer()})
+		err = w.Pull(&git.PullOptions{RemoteName: "origin", Progress: a.logger.GetWriter()})
 		if err != nil && err != git.NoErrAlreadyUpToDate {
 			return fmt.Errorf("could not pull: %v", err)
 		}
@@ -1834,7 +1812,7 @@ func (a *Installer) getWindowsMysqlPath() string {
 	// get folders in folder using go
 	entries, err := os.ReadDir(filepath.Join(a.getWindowsProgramFilesPath()))
 	if err != nil {
-		a.logger.Fatal(err)
+		a.logger.Fatal().Err(err).Msg("could not read directory")
 	}
 
 	// first look for mariadb
@@ -2260,7 +2238,7 @@ func (a *Installer) compileBinaries() error {
 	// get system memory available
 	memory, err := mem.VirtualMemory()
 	if err != nil {
-		a.logger.Fatal(err)
+		a.logger.Fatal().Err(err).Msg("could not get system memory")
 	}
 
 	// get system memory available in GB
