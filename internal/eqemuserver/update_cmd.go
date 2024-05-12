@@ -3,14 +3,13 @@ package eqemuserver
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	version "github.com/hashicorp/go-version"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/process"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -19,7 +18,7 @@ import (
 )
 
 type UpdateCommand struct {
-	logger       *logrus.Logger
+	logger       *logger.AppLogger
 	command      *cobra.Command
 	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
@@ -41,7 +40,7 @@ var compileLocation string
 
 // NewUpdateCommand creates a new spire:init command
 func NewUpdateCommand(
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
@@ -86,7 +85,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 
 		info, err := c.updater.GetBuildInfo()
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("Failed to get build info")
 		}
 
 		// set build cores if not set
@@ -97,7 +96,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 			// get system memory available
 			memory, err := mem.VirtualMemory()
 			if err != nil {
-				c.logger.Fatal(err)
+				c.logger.Fatal().Err(err).Msg("Failed to get system memory")
 			}
 
 			// get system memory available in GB
@@ -115,7 +114,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 		}
 
 		if compileLocation != "" {
-			c.logger.Info("Setting compile location: " + compileLocation)
+			c.logger.Info().Any("location", compileLocation).Msg("Setting compile location")
 
 			c.settings.SetSetting(spire.SettingBuildLocation, compileLocation)
 		}
@@ -166,7 +165,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 	if updateType == spire.UpdateTypeRelease {
 		latestVer, err := c.updater.GetLatestReleaseVersion()
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("Failed to get latest release version")
 		}
 
 		fmt.Printf(" %*s | %v\n", padSize, "Latest Release", latestVer)
@@ -180,12 +179,12 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 
 		localVersion, err := version.NewVersion(info.ServerVersion)
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("Failed to get local version")
 		}
 
 		latestVersion, err := version.NewVersion(latestVer)
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("Failed to get latest version")
 		}
 
 		if localVersion.GreaterThanOrEqual(latestVersion) {
@@ -221,7 +220,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 			)
 			err := c.updater.InstallRelease(release)
 			if err != nil {
-				c.logger.Fatal(err)
+				c.logger.Fatal().Err(err).Msg("Failed to install release")
 			}
 
 			if !auto {
@@ -246,7 +245,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 	// handle self compiled
 	if updateType == spire.UpdateTypeSelfCompiled {
 		if runtime.GOOS != "linux" {
-			c.logger.Fatal("Self compiled updates are only supported on linux")
+			c.logger.Fatal().Any("os", runtime.GOOS).Msg("Self compiled updates are only supported on linux")
 		}
 
 		fmt.Println("Starting")
@@ -262,7 +261,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 		cmd.Dir = info.SourceDirectory
 		err := cmd.Run()
 		if err != nil {
-			log.Println(err)
+			c.logger.Info().Err(err).Msg("Failed to pull latest changes")
 		}
 
 		c.LineBreak()
@@ -274,7 +273,7 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 		cmd.Stdout = os.Stdout
 		err = cmd.Run()
 		if err != nil {
-			log.Println(err)
+			c.logger.Info().Err(err).Msg("Failed to build server")
 		}
 
 		c.LineBreak()

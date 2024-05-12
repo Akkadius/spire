@@ -8,26 +8,22 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Controller struct {
 	db        *database.Resolver
-	logger    *logrus.Logger
 	spireuser *User
 	crypt     *encryption.Encrypter
 }
 
 func NewController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	spireuser *User,
 	crypt *encryption.Encrypter,
 ) *Controller {
 	return &Controller{
 		db:        db,
-		logger:    logger,
 		spireuser: spireuser,
 		crypt:     crypt,
 	}

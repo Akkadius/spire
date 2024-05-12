@@ -5,7 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"log"
 	"net"
 	gohttp "net/http"
@@ -18,13 +18,13 @@ import (
 )
 
 type WebBoot struct {
-	logger *logrus.Logger
+	logger *logger.AppLogger
 	server *http.Server
 	config *eqemuserverconfig.Config
 }
 
 func NewWebBoot(
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	server *http.Server,
 	config *eqemuserverconfig.Config,
 ) *WebBoot {
@@ -65,7 +65,7 @@ func (c *WebBoot) Boot() {
 	// start web server
 	go func() {
 		if err := c.server.Serve(uint(port)); err != nil {
-			c.logger.WithError(err).Fatal(err.Error())
+			c.logger.Fatal().Err(err).Msg("Failed to start web server")
 		}
 	}()
 
@@ -73,7 +73,7 @@ func (c *WebBoot) Boot() {
 	web := fmt.Sprintf("http://localhost:%v", port)
 	err := waitForSiteToBeAvailable(web, time.Minute*15)
 	if err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to open browser window")
 	}
 	openBrowser(web)
 

@@ -1,15 +1,14 @@
 package user
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 type ChangePasswordCommand struct {
 	db      *database.Resolver
-	logger  *logrus.Logger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
 	user    *User
@@ -21,15 +20,13 @@ func (c *ChangePasswordCommand) Command() *cobra.Command {
 
 func NewChangePasswordCommand(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	user *User,
 ) *ChangePasswordCommand {
 	i := &ChangePasswordCommand{
-		db:     db,
-		logger: logger,
-		crypt:  crypt,
-		user:   user,
+		db:    db,
+		crypt: crypt,
+		user:  user,
 		command: &cobra.Command{
 			Use:   "user:change-password [username] [new-password]",
 			Short: "Changes a local database user's password",
@@ -50,9 +47,9 @@ func (c *ChangePasswordCommand) Handle(_ *cobra.Command, args []string) {
 	// change password
 	err := c.user.ChangeLocalUserPassword(username, password)
 	if err != nil {
-		c.logger.Errorf("Error changing password for user %s: %v", username, err)
+		fmt.Printf("Error changing password for user %s: %v\n", username, err)
 		return
 	}
 
-	c.logger.Infof("Password changed for user %s", username)
+	fmt.Printf("Password changed for user %s\n", username)
 }

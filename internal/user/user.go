@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/models"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -16,23 +15,20 @@ const (
 )
 
 type User struct {
-	db     *database.Resolver
-	logger *logrus.Logger
-	crypt  *encryption.Encrypter
-	cache  *gocache.Cache
+	db    *database.Resolver
+	crypt *encryption.Encrypter
+	cache *gocache.Cache
 }
 
 func NewUser(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	cache *gocache.Cache,
 ) *User {
 	return &User{
-		db:     db,
-		logger: logger,
-		crypt:  crypt,
-		cache:  cache,
+		db:    db,
+		crypt: crypt,
+		cache: cache,
 	}
 }
 
