@@ -2,7 +2,7 @@
 
 ### Occulus Deprecation
 
-Occulus has been ported natively to Spire. All remaining features have been ported over to Spire and Occulus has been deprecated. You can safely delete your Occulus binary.
+Occulus has been ported natively to Spire. All remaining features have been ported over to Spire and Occulus has been deprecated. You can safely delete your Occulus binary. If you had your server already started during the update you will need to stop and restart your server to see the new features and use the new launcher.
 
 ### Changes
 
