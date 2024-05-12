@@ -10,6 +10,7 @@ type GuildMember struct {
 	Banker         uint8  `json:"banker" gorm:"Column:banker"`
 	PublicNote     string `json:"public_note" gorm:"Column:public_note"`
 	Alt            uint8  `json:"alt" gorm:"Column:alt"`
+	Online         uint8  `json:"online" gorm:"Column:online"`
 }
 
 func (GuildMember) TableName() string {

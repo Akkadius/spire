@@ -12,6 +12,12 @@ type StartingItem struct {
 	ZoneIdList             null.String `json:"zone_id_list" gorm:"Column:zone_id_list"`
 	ItemId                 uint        `json:"item_id" gorm:"Column:item_id"`
 	ItemCharges            uint8       `json:"item_charges" gorm:"Column:item_charges"`
+	AugmentOne             uint        `json:"augment_one" gorm:"Column:augment_one"`
+	AugmentTwo             uint        `json:"augment_two" gorm:"Column:augment_two"`
+	AugmentThree           uint        `json:"augment_three" gorm:"Column:augment_three"`
+	AugmentFour            uint        `json:"augment_four" gorm:"Column:augment_four"`
+	AugmentFive            uint        `json:"augment_five" gorm:"Column:augment_five"`
+	AugmentSix             uint        `json:"augment_six" gorm:"Column:augment_six"`
 	Status                 int32       `json:"status" gorm:"Column:status"`
 	InventorySlot          int32       `json:"inventory_slot" gorm:"Column:inventory_slot"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`

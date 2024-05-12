@@ -19,6 +19,7 @@ type GroundSpawn struct {
 	MaxAllowed             uint        `json:"max_allowed" gorm:"Column:max_allowed"`
 	Comment                string      `json:"comment" gorm:"Column:comment"`
 	RespawnTimer           uint        `json:"respawn_timer" gorm:"Column:respawn_timer"`
+	FixZ                   uint8       `json:"fix_z" gorm:"Column:fix_z"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`

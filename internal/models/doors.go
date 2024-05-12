@@ -36,6 +36,7 @@ type Door struct {
 	Buffer                 float32     `json:"buffer" gorm:"Column:buffer"`
 	ClientVersionMask      uint        `json:"client_version_mask" gorm:"Column:client_version_mask"`
 	IsLdonDoor             int16       `json:"is_ldon_door" gorm:"Column:is_ldon_door"`
+	CloseTimerMs           uint16      `json:"close_timer_ms" gorm:"Column:close_timer_ms"`
 	DzSwitchId             int         `json:"dz_switch_id" gorm:"Column:dz_switch_id"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
