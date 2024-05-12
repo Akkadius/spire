@@ -540,12 +540,24 @@ export default {
     },
 
     filterZoneList(list) {
+      const search = this.search.toLowerCase()
+
       let zoneList = []
       for (let z of list) {
+        let clients = this.getClientByInternalZoneId(z.id)
+        let matchesClient = false
+        for (let c of clients) {
+          if (c.name.toLowerCase().includes(search)) {
+            matchesClient = true
+            break
+          }
+        }
+
         if (
-          z.zone_name.toLowerCase().includes(this.search) ||
-          z.zone_long_name.toLowerCase().includes(this.search) ||
-          z.client_port.toString().includes(this.search)
+          z.zone_name.toLowerCase().includes(search) ||
+          z.zone_long_name.toLowerCase().includes(search) ||
+          z.client_port.toString().includes(search) ||
+          matchesClient
         ) {
           zoneList.push(z)
         }
