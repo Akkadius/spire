@@ -83,7 +83,7 @@ func InitializeApplication() (App, error) {
 	pluralizeClient := pluralize.NewClient()
 	service := permissions.NewService(resolver, cache, logrusLogger, pluralizeClient)
 	settings := spire.NewSettings(connections, logrusLogger)
-	init := spire.NewInit(connections, config, logrusLogger, settings, cache, encrypter, create, userUser)
+	init := spire.NewInit(connections, config, appLogger, settings, cache, encrypter, create, userUser)
 	connectionsController := controllers.NewConnectionsController(resolver, logrusLogger, cache, create, check, service, init, userUser)
 	sourceDownloader := github.NewGithubSourceDownloader(logrusLogger, cache)
 	parseService := questapi.NewParseService(logrusLogger, cache, sourceDownloader)

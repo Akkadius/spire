@@ -9,11 +9,11 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/user"
 	"github.com/go-sql-driver/mysql"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	gormMysql "gorm.io/driver/mysql"
 	"strconv"
 )
@@ -22,7 +22,7 @@ import (
 // where this lives may change
 type Init struct {
 	connections               *database.Connections
-	logger                    *logrus.Logger
+	logger                    *logger.AppLogger
 	isInitialized             bool // determines if spire as an app is initialized or not
 	serverconfig              *eqemuserverconfig.Config
 	dbConnectionCreateService *connection.Create
@@ -35,7 +35,7 @@ type Init struct {
 func NewInit(
 	connections *database.Connections,
 	serverconfig *eqemuserverconfig.Config,
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	settings *Settings,
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
@@ -87,7 +87,7 @@ func (o *Init) Init() {
 		if adminUser.ID > 0 {
 			err := o.CreateDefaultDatabaseConnectionFromConfig(adminUser)
 			if err != nil {
-				o.logger.Error("failed to create default database connection from config", err)
+				o.logger.Error().Err(err).Msg("failed to create default database connection from config")
 			}
 		}
 	}
@@ -108,7 +108,7 @@ func (o *Init) GetConnectionInfo() *mysql.Config {
 	if ok {
 		p, err := mysql.ParseDSN(f.DSN)
 		if err != nil {
-			o.logger.Error(err)
+			o.logger.Error().Err(err).Msg("failed to parse dsn")
 		}
 
 		return p
