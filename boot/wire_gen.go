@@ -17,7 +17,6 @@ import (
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/console/cmd"
 	"github.com/Akkadius/spire/internal/database"
-	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
@@ -101,7 +100,6 @@ func InitializeApplication() (App, error) {
 	authedController := eqemuanalytics.NewAuthedController(logrusLogger, resolver)
 	changelog := eqemuchangelog.NewChangelog()
 	eqemuchangelogController := eqemuchangelog.NewController(logrusLogger, resolver, changelog)
-	deployController := deploy.NewDeployController(logrusLogger)
 	assetsController := assets.NewController(logrusLogger, resolver)
 	permissionsController := permissions.NewController(logrusLogger, resolver, service)
 	userController := user.NewController(resolver, logrusLogger, userUser, encrypter)
@@ -117,7 +115,7 @@ func InitializeApplication() (App, error) {
 	handler := websocket.NewHandler(pathManagement)
 	websocketController := websocket.NewController(pathManagement, handler)
 	systemController := system.NewController(logrusLogger)
-	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, deployController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
+	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
 	userEvent := auditlog.NewUserEvent(resolver, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(resolver, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(resolver, userEvent)

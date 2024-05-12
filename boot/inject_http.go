@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/auth"
 	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
-	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
@@ -56,7 +55,6 @@ var httpSet = wire.NewSet(
 	user.NewController,
 	spire.NewSettingController,
 	staticmaps.NewStaticMapController,
-	deploy.NewDeployController,
 	eqemuserver.NewController,
 	eqemuserver.NewPublicController,
 	eqemuserverconfig.NewController,
@@ -187,7 +185,6 @@ func provideControllers(
 	analyticsController *eqemuanalytics.Controller,
 	authedAnalyticsController *eqemuanalytics.AuthedController,
 	changelogController *eqemuchangelog.Controller,
-	deployController *deploy.DeployController,
 	assetsController *assets.Controller,
 	permissionsController *permissions.Controller,
 	usersController *user.Controller,
@@ -228,7 +225,6 @@ func provideControllers(
 			staticMaps,
 			assetsController,
 			changelogController,
-			deployController,
 			eqemuserverPublicController,
 		},
 		v1Analytics: []routes.Controller{
