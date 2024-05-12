@@ -18,34 +18,29 @@ import (
 	"unicode"
 
 	"github.com/Akkadius/spire/docs"
+	_ "github.com/Akkadius/spire/docs"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/sirupsen/logrus"
-
-	_ "github.com/Akkadius/spire/docs"
 )
 
 type Server struct {
-	logger    *logrus.Logger
-	appLogger *logger.AppLogger
-	router    *routes.Router
-	watcher   *eqemuserver.QuestHotReloadWatcher
+	logger  *logger.AppLogger
+	router  *routes.Router
+	watcher *eqemuserver.QuestHotReloadWatcher
 }
 
 func NewServer(
-	logger *logrus.Logger,
-	appLogger *logger.AppLogger,
+	logger *logger.AppLogger,
 	router *routes.Router,
 	watcher *eqemuserver.QuestHotReloadWatcher,
 ) *Server {
 	return &Server{
-		logger:    logger,
-		appLogger: appLogger,
-		router:    router,
-		watcher:   watcher,
+		logger:  logger,
+		router:  router,
+		watcher: watcher,
 	}
 }
 
@@ -71,7 +66,7 @@ func (c *Server) Serve(port uint) error {
 
 	BootstrapMiddleware(e, c.router)
 	if err := BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to bootstrap controllers")
 	}
 
 	// basic auth if env passed
@@ -154,7 +149,7 @@ func (c *Server) Serve(port uint) error {
 
 	imgcat.Render(banner.GetLogo())
 
-	c.appLogger.Info().Any("port", port).Msgf("Starting Spire HTTP server")
+	c.logger.Info().Any("port", port).Msgf("Starting Spire HTTP server")
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }

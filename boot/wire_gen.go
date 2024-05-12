@@ -334,7 +334,7 @@ func InitializeApplication() (App, error) {
 	spireAssets := assets.NewSpireAssets(logrusLogger, pathManagement)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, contextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
 	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(appLogger, config, pathManagement, eqemuserverClient, resolver)
-	server := http.NewServer(logrusLogger, appLogger, router, questHotReloadWatcher)
+	server := http.NewServer(appLogger, router, questHotReloadWatcher)
 	httpServeCommand := cmd.NewHttpServeCommand(logrusLogger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router, logrusLogger)
 	configurationCommand := generators.NewGenerateConfigurationCommand(resolver, logrusLogger)

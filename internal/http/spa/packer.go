@@ -2,9 +2,9 @@ package spa
 
 import (
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gobuffalo/packr"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"net/url"
 	"os"
@@ -22,7 +22,7 @@ type Packer struct {
 	fs      http.Handler
 	handler echo.HandlerFunc
 	box     packr.Box
-	logger  *logrus.Logger
+	logger  *logger.AppLogger
 	config  PackedSpaServeConfig
 }
 
@@ -30,7 +30,7 @@ func (s Packer) Handler() echo.HandlerFunc {
 	return s.handler
 }
 
-// The configuration required to serve the packaged SPA app
+// PackedSpaServeConfig is the configuration for the PackedSpaService
 type PackedSpaServeConfig struct {
 	BasePath      string   // Root path from where the SPA is served
 	LocalBasePath string   // The path that the SPA is located from the relative context of this provider
@@ -38,8 +38,8 @@ type PackedSpaServeConfig struct {
 	SkipPaths     []string // Route prefixes to skip entirely
 }
 
-// New up an instance of packaged spa service
-func NewPackedSpaService(logger *logrus.Logger, config PackedSpaServeConfig) *Packer {
+// NewPackedSpaService creates a new instance of the PackedSpaService
+func NewPackedSpaService(logger *logger.AppLogger, config PackedSpaServeConfig) *Packer {
 	s := &Packer{}
 	s.config = config
 	s.logger = logger
@@ -73,6 +73,7 @@ func contains(slice []string, val string) bool {
 	return false
 }
 
+// MiddlewareHandler returns a middleware handler for the PackedSpaService
 // This middleware handler is for the most part a static middleware handler for handling static assets
 // The main difference between this middleware and a generic static middleware is that it provides assets that live
 // within a static asset compiler that gets bundled within the compiled resulting binary /packed-spa/index.html
@@ -100,7 +101,7 @@ func (s Packer) MiddlewareHandler() echo.MiddlewareFunc {
 			if name == "/" || name == "\\" {
 				index, err := s.box.Find(s.config.SpaIndex)
 				if err != nil {
-					s.logger.Error(err)
+					s.logger.Error().Err(err).Msg("error finding spa index")
 				}
 				return c.HTML(http.StatusOK, string(index))
 			}
@@ -122,7 +123,7 @@ func (s Packer) MiddlewareHandler() echo.MiddlewareFunc {
 					// eg: /spa/nested/route
 					index, err := s.box.Find(s.config.SpaIndex)
 					if err != nil {
-						s.logger.Error(err)
+						s.logger.Error().Err(err).Msg("error finding spa index")
 					}
 
 					return c.HTML(http.StatusOK, string(index))
@@ -135,7 +136,7 @@ func (s Packer) MiddlewareHandler() echo.MiddlewareFunc {
 	}
 }
 
-// Packaged Spa Controller is a provider to easily handle registration of the necessary route handlers
+// PackagedSpaController is a provider to easily handle registration of the necessary route handlers
 type PackagedSpaController struct {
 	service *Packer
 }

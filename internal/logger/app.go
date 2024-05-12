@@ -144,8 +144,20 @@ func newInfoLogger() *zerolog.Logger {
 	return &logger
 }
 
+//func (l *AppLogger) Logger() *zerolog.Logger {
+//	return l.infoLogger
+//}
+
 func (l *AppLogger) Info() *zerolog.Event {
 	return l.infoLogger.Info()
+}
+
+func (l *AppLogger) Error() *zerolog.Event {
+	return l.infoLogger.Error()
+}
+
+func (l *AppLogger) Fatal() *zerolog.Event {
+	return l.infoLogger.Fatal()
 }
 
 // Debug is -v level logging
