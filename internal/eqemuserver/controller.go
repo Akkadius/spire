@@ -131,7 +131,6 @@ type ServerStatsResponse struct {
 
 func (a *Controller) getServerStats(c echo.Context) error {
 	var r ServerStatsResponse
-
 	processes, _ := process.Processes()
 	for _, p := range processes {
 		cmdline, err := p.Cmdline()

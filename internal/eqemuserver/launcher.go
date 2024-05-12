@@ -592,11 +592,22 @@ func (l *Launcher) StopCancel() error {
 func (l *Launcher) serverProcessLauncherWatchdog() {
 	go func() {
 		for {
-			l.loadServerConfig()
+			stat, err := os.Stat(l.pathmgmt.GetEQEmuServerConfigFilePath())
+			if err != nil {
+				l.logger.Debug().
+					Any("error", err.Error()).
+					Any("isRunning", l.isRunning).
+					Msg("Error getting server config file stat")
+			}
+
+			if stat.ModTime().After(l.configLastModified) {
+				l.configLastModified = stat.ModTime()
+				l.loadServerConfig()
+				l.logger.Debug().Msg("Watchdog - Detected server config change")
+			}
+
 			if l.isRunning {
-
 				isLauncherRunning := false
-
 				processes, _ := process.Processes()
 				for _, p := range processes {
 					cmdline, err := p.Cmdline()
