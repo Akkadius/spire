@@ -13,7 +13,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
-	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
@@ -28,7 +27,6 @@ import (
 
 type Controller struct {
 	db             *database.Resolver
-	logger         *logrus.Logger
 	eqemuserverapi *Client
 	pathmgmt       *pathmgmt.PathManagement
 	settings       *spire.Settings
@@ -39,7 +37,6 @@ type Controller struct {
 
 func NewController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	api *Client,
 	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
@@ -49,7 +46,6 @@ func NewController(
 ) *Controller {
 	return &Controller{
 		db:             db,
-		logger:         logger,
 		eqemuserverapi: api,
 		serverconfig:   serverconfig,
 		pathmgmt:       pathmgmt,
@@ -350,7 +346,7 @@ func (a *Controller) build(c echo.Context) error {
 	cmd.Dir = r.SourceDirectory
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
+		return err
 	}
 
 	cmd.Stderr = cmd.Stdout
@@ -963,7 +959,7 @@ func (a *Controller) preflight(c echo.Context) error {
 	cmd.Dir = a.pathmgmt.GetEQEmuServerPath()
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
+		return err
 	}
 
 	cmd.Stderr = cmd.Stdout

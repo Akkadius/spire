@@ -110,7 +110,7 @@ func InitializeApplication() (App, error) {
 	eqemuserverClient := eqemuserver.NewClient(telnetClient)
 	updater := eqemuserver.NewUpdater(resolver, logrusLogger, config, settings, pathManagement)
 	launcher := eqemuserver.NewLauncher(appLogger, config, settings, pathManagement, eqemuserverClient)
-	eqemuserverController := eqemuserver.NewController(resolver, logrusLogger, eqemuserverClient, config, pathManagement, settings, updater, launcher)
+	eqemuserverController := eqemuserver.NewController(resolver, eqemuserverClient, config, pathManagement, settings, updater, launcher)
 	publicController := eqemuserver.NewPublicController(resolver, logrusLogger, eqemuserverClient, config, pathManagement, settings, updater)
 	eqemuserverconfigController := eqemuserverconfig.NewController(logrusLogger, config)
 	backupController := backup.NewController(logrusLogger, mysql, pathManagement)
