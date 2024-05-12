@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/net/websocket"
 	"io"
 	"log"
@@ -17,16 +16,13 @@ import (
 )
 
 type Handler struct {
-	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
 }
 
 func NewHandler(
-	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
 ) *Handler {
 	return &Handler{
-		logger:   logger,
 		pathmgmt: pathmgmt,
 	}
 }
@@ -49,7 +45,7 @@ func (h *Handler) HandleExecServerBin(ws *websocket.Conn, msg string) error {
 	var m SpireExecCommand
 	err := json.Unmarshal([]byte(msg), &m)
 	if err != nil {
-		h.logger.Println(err)
+		return err
 	}
 
 	// execute and get a pipe

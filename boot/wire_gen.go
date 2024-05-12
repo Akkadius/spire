@@ -114,7 +114,7 @@ func InitializeApplication() (App, error) {
 	publicController := eqemuserver.NewPublicController(resolver, logrusLogger, eqemuserverClient, config, pathManagement, settings, updater)
 	eqemuserverconfigController := eqemuserverconfig.NewController(logrusLogger, config)
 	backupController := backup.NewController(logrusLogger, mysql, pathManagement)
-	handler := websocket.NewHandler(logrusLogger, pathManagement)
+	handler := websocket.NewHandler(pathManagement)
 	websocketController := websocket.NewController(pathManagement, handler)
 	systemController := system.NewController(logrusLogger)
 	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, deployController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
