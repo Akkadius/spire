@@ -4,18 +4,16 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"net/http"
 )
 
 type HelloWorldController struct {
-	db     *gorm.DB
-	logger *logrus.Logger
+	db *gorm.DB
 }
 
-func NewHelloWorldController(db *gorm.DB, logger *logrus.Logger) *HelloWorldController {
-	return &HelloWorldController{db: db, logger: logger}
+func NewHelloWorldController(db *gorm.DB) *HelloWorldController {
+	return &HelloWorldController{db: db}
 }
 
 func (h *HelloWorldController) Routes() []*routes.Route {

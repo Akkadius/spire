@@ -73,7 +73,7 @@ func InitializeApplication() (App, error) {
 	createCommand := user.NewCreateCommand(resolver, appLogger, encrypter, userUser)
 	modelGeneratorCommand := generators.NewModelGeneratorCommand(db, appLogger)
 	controllerGeneratorCmd := generators.NewControllerGeneratorCommand(db, logrusLogger)
-	helloWorldController := controllers.NewHelloWorldController(db, logrusLogger)
+	helloWorldController := controllers.NewHelloWorldController(db)
 	controller := auth.NewController(resolver, userUser, cache)
 	meController := user.NewMeController()
 	client := influx.NewClient()
