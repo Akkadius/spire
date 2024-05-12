@@ -7,23 +7,20 @@ import (
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
 
 type Controller struct {
 	db     *database.Resolver
-	logger *logrus.Logger
 	influx *influx.Client
 }
 
 func NewController(
-	logger *logrus.Logger,
 	influx *influx.Client,
 	db *database.Resolver,
 ) *Controller {
-	return &Controller{logger: logger, influx: influx, db: db}
+	return &Controller{influx: influx, db: db}
 }
 
 func (a *Controller) Routes() []*routes.Route {
