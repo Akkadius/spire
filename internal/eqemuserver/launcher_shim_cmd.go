@@ -1,12 +1,11 @@
 package eqemuserver
 
 import (
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 type LauncherShimCmd struct {
-	logger   *logrus.Logger
 	command  *cobra.Command
 	launcher *Launcher
 }
@@ -16,11 +15,9 @@ func (c *LauncherShimCmd) Command() *cobra.Command {
 }
 
 func NewLauncherShimCmd(
-	logger *logrus.Logger,
 	launcher *Launcher,
 ) *LauncherShimCmd {
 	i := &LauncherShimCmd{
-		logger:   logger,
 		launcher: launcher,
 		command: &cobra.Command{
 			Use:   "spire:launcher [start|stop|restart]",
@@ -41,26 +38,26 @@ func (c *LauncherShimCmd) Handle(_ *cobra.Command, args []string) {
 	}
 
 	if len(args) > 1 {
-		c.logger.Fatal("too many arguments")
+		log.Fatalf("invalid argument count\n")
 	}
 
 	switch args[0] {
 	case "start":
 		err := c.launcher.StartLauncherProcess()
 		if err != nil {
-			c.logger.Fatal(err)
+			log.Fatal(err)
 		}
 	case "stop":
 		err := c.launcher.Stop()
 		if err != nil {
-			c.logger.Fatal(err)
+			log.Fatal(err)
 		}
 	case "restart":
 		err := c.launcher.Restart()
 		if err != nil {
-			c.logger.Fatal(err)
+			log.Fatal(err)
 		}
 	default:
-		c.logger.Fatal("invalid argument")
+		log.Fatal("invalid argument")
 	}
 }

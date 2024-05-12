@@ -9,7 +9,6 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"os/exec"
@@ -18,7 +17,6 @@ import (
 
 type PublicController struct {
 	db             *database.Resolver
-	logger         *logrus.Logger
 	eqemuserverapi *Client
 	pathmgmt       *pathmgmt.PathManagement
 	settings       *spire.Settings
@@ -28,7 +26,6 @@ type PublicController struct {
 
 func NewPublicController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	api *Client,
 	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
@@ -37,7 +34,6 @@ func NewPublicController(
 ) *PublicController {
 	return &PublicController{
 		db:             db,
-		logger:         logger,
 		eqemuserverapi: api,
 		serverconfig:   serverconfig,
 		pathmgmt:       pathmgmt,
