@@ -5,8 +5,8 @@ import (
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/unzip"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +14,6 @@ import (
 )
 
 type SourceDownloader struct {
-	logger         *logrus.Logger
 	cache          *gocache.Cache
 	sourceUserDir  bool // if set, sources files to user directory
 	sourcedDirPath string
@@ -29,8 +28,8 @@ func (g *SourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
 	g.sourceUserDir = sourceUserDir
 }
 
-func NewGithubSourceDownloader(logger *logrus.Logger, cache *gocache.Cache) *SourceDownloader {
-	return &SourceDownloader{logger: logger, cache: cache, readFiles: true}
+func NewGithubSourceDownloader(cache *gocache.Cache) *SourceDownloader {
+	return &SourceDownloader{cache: cache, readFiles: true}
 }
 
 type SourceResult struct {
@@ -57,7 +56,7 @@ func (g *SourceDownloader) Source(org string, repo string, branch string, forceR
 	if forceRefresh {
 		err := os.RemoveAll(repoDir)
 		if err != nil {
-			g.logger.Error(err)
+			fmt.Println(err)
 		}
 	}
 
@@ -65,13 +64,13 @@ func (g *SourceDownloader) Source(org string, repo string, branch string, forceR
 	if _, err := os.Stat(repoDir); os.IsNotExist(err) || forceRefresh {
 		err := g.downloadFile(zipFileLocalLoc, repoZipUrl)
 		if err != nil {
-			g.logger.Error(err)
+			fmt.Println(err)
 		}
 
 		uz := unzip.New(zipFileLocalLoc, repoDir)
 		err = uz.Extract()
 		if err != nil {
-			g.logger.Error(err)
+			fmt.Println(err)
 		}
 	}
 
@@ -95,14 +94,14 @@ func (g *SourceDownloader) Source(org string, repo string, branch string, forceR
 				// stat file
 				fi, err := os.Stat(path)
 				if err != nil {
-					g.logger.Error(err)
+					fmt.Println(err)
 				}
 
 				// if regular file - not dir
 				if fi.Mode().IsRegular() {
 					data, err := ioutil.ReadFile(path)
 					if err != nil {
-						g.logger.Error(err)
+						fmt.Println(err)
 					}
 
 					// construct relative path
@@ -121,7 +120,7 @@ func (g *SourceDownloader) Source(org string, repo string, branch string, forceR
 			},
 		)
 		if err != nil {
-			g.logger.Error(err)
+			fmt.Println(err)
 		}
 	}
 
@@ -129,7 +128,7 @@ func (g *SourceDownloader) Source(org string, repo string, branch string, forceR
 	if _, err := os.Stat(zipFileLocalLoc); err == nil {
 		err = os.Remove(zipFileLocalLoc)
 		if err != nil {
-			g.logger.Fatal(err)
+			log.Fatal(err)
 		}
 	}
 
@@ -158,7 +157,7 @@ func (g *SourceDownloader) downloadFile(filepath string, url string) error {
 func (g *SourceDownloader) GetSourceRoot() string {
 	userDir, err := os.UserCacheDir()
 	if err != nil {
-		g.logger.Error(err)
+		fmt.Println(err)
 	}
 	if len(userDir) > 0 {
 		return userDir

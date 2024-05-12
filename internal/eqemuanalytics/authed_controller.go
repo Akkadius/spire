@@ -8,7 +8,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"github.com/volatiletech/null/v8"
 	"net/http"
 	"os"
@@ -16,17 +15,14 @@ import (
 )
 
 type AuthedController struct {
-	logger *logrus.Logger
-	db     *database.Resolver
+	db *database.Resolver
 }
 
 func NewAuthedController(
-	logger *logrus.Logger,
 	db *database.Resolver,
 ) *AuthedController {
 	return &AuthedController{
-		logger: logger,
-		db:     db,
+		db: db,
 	}
 }
 
@@ -85,7 +81,7 @@ func (a *AuthedController) markCrashResolved(c echo.Context) error {
 			),
 		)
 		if err != nil {
-			a.logger.Error(err)
+			fmt.Println(err)
 		}
 	}()
 
@@ -140,7 +136,7 @@ func (a *AuthedController) markCrashUnresolved(c echo.Context) error {
 			),
 		)
 		if err != nil {
-			a.logger.Error(err)
+			fmt.Println(err)
 		}
 	}()
 
