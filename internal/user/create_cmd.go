@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 type CreateCommand struct {
 	db      *database.Resolver
-	logger  *logrus.Logger
+	logger  *logger.AppLogger
 	command *cobra.Command
 	crypt   *encryption.Encrypter
 	user    *User
@@ -21,7 +21,7 @@ func (c *CreateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewCreateCommand(db *database.Resolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *User) *CreateCommand {
+func NewCreateCommand(db *database.Resolver, logger *logger.AppLogger, crypt *encryption.Encrypter, user *User) *CreateCommand {
 	i := &CreateCommand{
 		db:     db,
 		logger: logger,
@@ -59,11 +59,11 @@ func (c *CreateCommand) Handle(_ *cobra.Command, args []string) {
 	// new user
 	newUser, err := c.user.CreateUser(user)
 	if err != nil {
-		c.logger.Error(err)
+		c.logger.Error().Err(err).Msg("Failed to create user")
 	}
 
 	if newUser.ID > 0 {
-		c.logger.Infof("[user] Created user ID [%v]", newUser.ID)
+		c.logger.Info().Msgf("[user] Created user ID [%v]", newUser.ID)
 	}
 }
 
