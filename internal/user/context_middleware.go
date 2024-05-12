@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"strings"
@@ -16,19 +15,17 @@ import (
 )
 
 type ContextMiddleware struct {
-	db     *database.Resolver
-	cache  *gocache.Cache
-	logger *logrus.Logger
+	db    *database.Resolver
+	cache *gocache.Cache
 }
 
 func NewContextMiddleware(
 	db *database.Resolver,
 	cache *gocache.Cache,
-	logger *logrus.Logger) *ContextMiddleware {
+) *ContextMiddleware {
 	return &ContextMiddleware{
-		db:     db,
-		cache:  cache,
-		logger: logger,
+		db:    db,
+		cache: cache,
 	}
 }
 
@@ -96,8 +93,6 @@ func (m ContextMiddleware) successHandler(c echo.Context) {
 	if err != nil {
 		panic("Failed to convert JWT UserID")
 	}
-
-	//m.logger.Debugln(fmt.Sprintf("JWT validation success as user [%v]", userId))
 
 	// cache user context for 10 minutes to refrain from repeated DB hits
 	userKey := fmt.Sprintf("user-%v", userId)
