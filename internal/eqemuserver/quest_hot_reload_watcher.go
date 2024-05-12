@@ -1,7 +1,6 @@
 package eqemuserver
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
@@ -114,7 +113,7 @@ func (l *QuestHotReloadWatcher) loadServerConfig() {
 }
 
 func (l *QuestHotReloadWatcher) Stop() {
-	fmt.Println("Spire > Stopping watcher")
+	l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Stopping Quest Hot Reload Watcher")
 
 	if l.watcher != nil {
 		err := l.watcher.Close()
@@ -156,7 +155,7 @@ func (l *QuestHotReloadWatcher) Start() {
 			select {
 			case event, ok := <-l.watcher.Events:
 				if !ok {
-					fmt.Println("Spire > Watcher error > Closing watcher")
+					l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Watcher error, closing watcher")
 					if l.watcher != nil {
 						l.watcher.Close()
 					}
@@ -201,9 +200,6 @@ func (l *QuestHotReloadWatcher) Start() {
 
 					fileSizes[event.Name] = int(fileInfo.Size())
 
-					// send reload request to server
-					fmt.Printf("Spire > Quest Hot Reload > Reloading quests from [%s]\n", event.Name)
-
 					err = l.reloadQuestForFile(event.Name)
 					if err != nil {
 						l.logger.Debug().
@@ -215,7 +211,7 @@ func (l *QuestHotReloadWatcher) Start() {
 
 			case err, ok := <-l.watcher.Errors:
 				if !ok {
-					fmt.Println("Spire > Watcher error > Closing watcher")
+					l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Watcher error, closing watcher")
 					if l.watcher != nil {
 						l.watcher.Close()
 					}
@@ -280,7 +276,7 @@ func (l *QuestHotReloadWatcher) reloadQuestForFile(name string) error {
 		// if match, reload all quests
 		regex := "lua_modules|plugins|global"
 		if matched, _ := regexp.MatchString(regex, name); matched {
-			fmt.Printf("Spire > Reloading all quests\n")
+			l.logger.Info().Any("file", name).Msg("Reloading all quests")
 			err := l.serverApi.ReloadQuestsForZone("all")
 			if err != nil {
 				return err
@@ -289,7 +285,7 @@ func (l *QuestHotReloadWatcher) reloadQuestForFile(name string) error {
 	}
 
 	if zone.ID > 0 {
-		fmt.Printf("Spire > Reloading quests for zone [%s]\n", zone.ShortName.String)
+		l.logger.Info().Any("file", name).Any("zone", zone.ShortName.String).Msg("Reloading quests")
 		err := l.serverApi.ReloadQuestsForZone(zone.ShortName.String)
 		if err != nil {
 			return err
