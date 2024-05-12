@@ -60,14 +60,10 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	logrusLogger, err := provideLogger()
-	if err != nil {
-		return App{}, err
-	}
 	mysql := backup.NewMysql(pathManagement)
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logrusLogger, mysql, pathManagement)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, mysql, pathManagement)
 	connections := provideAppDbConnections(config, appLogger)
-	encrypter := encryption.NewEncrypter(logrusLogger, config)
+	encrypter := encryption.NewEncrypter(appLogger, config)
 	resolver := database.NewResolver(connections, appLogger, encrypter, cache)
 	userUser := user.NewUser(resolver, encrypter, cache)
 	createCommand := user.NewCreateCommand(resolver, appLogger, encrypter, userUser)
@@ -96,10 +92,10 @@ func InitializeApplication() (App, error) {
 	clientfilesController := clientfiles.NewController(exporter, importer, resolver)
 	staticMapController := staticmaps.NewStaticMapController(resolver)
 	releases := eqemuanalytics.NewReleases()
-	eqemuanalyticsController := eqemuanalytics.NewController(logrusLogger, resolver, releases)
+	eqemuanalyticsController := eqemuanalytics.NewController(resolver, releases)
 	authedController := eqemuanalytics.NewAuthedController(resolver)
 	changelog := eqemuchangelog.NewChangelog()
-	eqemuchangelogController := eqemuchangelog.NewController(logrusLogger, resolver, changelog)
+	eqemuchangelogController := eqemuchangelog.NewController(resolver, changelog)
 	assetsController := assets.NewController(resolver)
 	permissionsController := permissions.NewController(resolver, service)
 	userController := user.NewController(resolver, userUser, encrypter)
@@ -110,6 +106,10 @@ func InitializeApplication() (App, error) {
 	launcher := eqemuserver.NewLauncher(appLogger, config, settings, pathManagement, eqemuserverClient)
 	eqemuserverController := eqemuserver.NewController(resolver, eqemuserverClient, config, pathManagement, settings, updater, launcher)
 	publicController := eqemuserver.NewPublicController(resolver, eqemuserverClient, config, pathManagement, settings, updater)
+	logrusLogger, err := provideLogger()
+	if err != nil {
+		return App{}, err
+	}
 	eqemuserverconfigController := eqemuserverconfig.NewController(logrusLogger, config)
 	backupController := backup.NewController(mysql, pathManagement)
 	handler := websocket.NewHandler(pathManagement)
@@ -345,7 +345,7 @@ func InitializeApplication() (App, error) {
 	changePasswordCommand := user.NewChangePasswordCommand(resolver, encrypter, userUser)
 	crashAnalyticsFingerprintBackfillCommand := spire.NewCrashAnalyticsCommand(pathManagement, resolver)
 	updateCommand := eqemuserver.NewUpdateCommand(appLogger, config, settings, pathManagement, launcher, updater)
-	launcherCmd := eqemuserver.NewLauncherCmd(logrusLogger, launcher)
+	launcherCmd := eqemuserver.NewLauncherCmd(appLogger, launcher)
 	launcherShimCmd := eqemuserver.NewLauncherShimCmd(launcher)
 	scrapeCommand := eqtraders.NewScrapeCommand(db)
 	importCommand := eqtraders.NewImportCommand(db)

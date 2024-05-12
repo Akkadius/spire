@@ -1,14 +1,14 @@
 package eqemuserver
 
 import (
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/spf13/cobra"
 )
 
 type LauncherCmd struct {
-	logger   *logrus.Logger
-	command  *cobra.Command
-	launcher *Launcher
+	logger   *logger.AppLogger `json:"logger,omitempty"`
+	command  *cobra.Command    `json:"command,omitempty"`
+	launcher *Launcher         `json:"launcher,omitempty"`
 }
 
 func (c *LauncherCmd) Command() *cobra.Command {
@@ -16,7 +16,7 @@ func (c *LauncherCmd) Command() *cobra.Command {
 }
 
 func NewLauncherCmd(
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	launcher *Launcher,
 ) *LauncherCmd {
 	i := &LauncherCmd{
@@ -41,27 +41,27 @@ func (c *LauncherCmd) Handle(_ *cobra.Command, args []string) {
 	}
 
 	if len(args) > 1 {
-		c.logger.Fatal("too many arguments")
+		c.logger.Fatal().Msg("too many arguments")
 	}
 
 	switch args[0] {
 	case "start":
 		err := c.launcher.Start()
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("failed to start launcher")
 		}
 		c.launcher.Process()
 	case "stop":
 		err := c.launcher.Stop()
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("failed to stop launcher")
 		}
 	case "restart":
 		err := c.launcher.Restart()
 		if err != nil {
-			c.logger.Fatal(err)
+			c.logger.Fatal().Err(err).Msg("failed to restart launcher")
 		}
 	default:
-		c.logger.Fatal("invalid argument")
+		c.logger.Fatal().Msg("invalid command")
 	}
 }

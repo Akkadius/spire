@@ -4,23 +4,19 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Controller struct {
-	logger    *logrus.Logger
 	db        *database.Resolver
 	changelog *Changelog
 }
 
 func NewController(
-	logger *logrus.Logger,
 	db *database.Resolver,
 	changelog *Changelog,
 ) *Controller {
 	return &Controller{
-		logger:    logger,
 		db:        db,
 		changelog: changelog,
 	}
