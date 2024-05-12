@@ -6,15 +6,14 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/k0kubun/pp/v3"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
 )
 
 type TestFilesystemCommand struct {
-	logger   *logrus.Logger
 	command  *cobra.Command
 	pathmgmt *pathmgmt.PathManagement
 }
@@ -24,11 +23,9 @@ func (c *TestFilesystemCommand) Command() *cobra.Command {
 }
 
 func NewTestFilesystemCommand(
-	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
 ) *TestFilesystemCommand {
 	i := &TestFilesystemCommand{
-		logger:   logger,
 		pathmgmt: pathmgmt,
 		command: &cobra.Command{
 			Use:   "test:filesystem",
@@ -56,7 +53,7 @@ func (c *TestFilesystemCommand) Handle(_ *cobra.Command, args []string) {
 	worldBin := c.pathmgmt.GetWorldBinPath()
 	pp.Printf("World bin path is [%v]\n", worldBin)
 	if _, err := os.Stat(worldBin); errors.Is(err, os.ErrNotExist) {
-		c.logger.Fatalf("Failed to find World binary to fetch version")
+		log.Fatalf("Failed to find World binary to fetch version")
 	}
 	pp.Printf("World bin path exists [%v]\n", worldBin)
 
@@ -65,7 +62,7 @@ func (c *TestFilesystemCommand) Handle(_ *cobra.Command, args []string) {
 	cmd.Dir = c.pathmgmt.GetEQEmuServerPath()
 	output, err := cmd.Output()
 	if err != nil {
-		c.logger.Fatalf(err.Error())
+		log.Fatalf(err.Error())
 	}
 
 	// not all binaries simply output json alone
@@ -85,7 +82,7 @@ func (c *TestFilesystemCommand) Handle(_ *cobra.Command, args []string) {
 	var v ServerVersionInfo
 	err = json.Unmarshal([]byte(n), &v)
 	if err != nil {
-		c.logger.Fatalf(err.Error())
+		log.Fatalf(err.Error())
 	}
 
 	fmt.Println("Server version")

@@ -6,23 +6,19 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
 
 type ExpeditionMemberController struct {
-	db	 *database.Resolver
-	logger *logrus.Logger
+	db *database.Resolver
 }
 
 func NewExpeditionMemberController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 ) *ExpeditionMemberController {
 	return &ExpeditionMemberController{
-		db:	 db,
-		logger: logger,
+		db: db,
 	}
 }
 
@@ -215,7 +211,7 @@ func (e *ExpeditionMemberController) deleteExpeditionMember(c echo.Context) erro
 	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")

@@ -6,24 +6,20 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/anaskhan96/soup"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"net/url"
 	"strings"
 )
 
 type Controller struct {
-	logger *logrus.Logger
-	db     *database.Resolver
+	db *database.Resolver
 }
 
 func NewController(
-	logger *logrus.Logger,
 	db *database.Resolver,
 ) *Controller {
 	return &Controller{
-		logger: logger,
-		db:     db,
+		db: db,
 	}
 }
 

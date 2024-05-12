@@ -14,7 +14,6 @@ import (
 	"github.com/Akkadius/spire/internal/user"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"strconv"
@@ -24,7 +23,6 @@ import (
 
 type ConnectionsController struct {
 	db                        *database.Resolver
-	logger                    *logrus.Logger
 	cache                     *gocache.Cache
 	dbConnectionCreateService *connection.Create
 	dbConnectionCheckService  *connection.Check
@@ -35,7 +33,6 @@ type ConnectionsController struct {
 
 func NewConnectionsController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	cache *gocache.Cache,
 	dbConnectionCreateService *connection.Create,
 	dbConnectionCheckService *connection.Check,
@@ -45,7 +42,6 @@ func NewConnectionsController(
 ) *ConnectionsController {
 	return &ConnectionsController{
 		db:                        db,
-		logger:                    logger,
 		cache:                     cache,
 		permissions:               permissions,
 		dbConnectionCreateService: dbConnectionCreateService,

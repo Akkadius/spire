@@ -4,24 +4,20 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"path/filepath"
 )
 
 type Controller struct {
-	logger   *logrus.Logger
 	mysql    *Mysql
 	pathmgmt *pathmgmt.PathManagement
 }
 
 func NewController(
-	logger *logrus.Logger,
 	mysql *Mysql,
 	pathmgmt *pathmgmt.PathManagement,
 ) *Controller {
 	return &Controller{
-		logger:   logger,
 		mysql:    mysql,
 		pathmgmt: pathmgmt,
 	}
