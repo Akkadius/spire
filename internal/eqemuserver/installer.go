@@ -68,7 +68,7 @@ func getLogger() *logrus.Logger {
 func NewInstaller() *Installer {
 	// TODO: Clean this up
 	logrus := getLogger()
-	appLogger := logger.NewAppLogger()
+	appLogger := logger.ProvideAppLogger()
 	pathmanager := pathmgmt.NewPathManagement(logrus)
 	i := &Installer{
 		logger:        logrus,

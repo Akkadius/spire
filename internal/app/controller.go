@@ -160,7 +160,7 @@ func (d *Controller) update(c echo.Context) error {
 	data, _ := d.cache.Get("packageJson")
 	pJson, ok := data.([]byte)
 	if ok {
-		if updater.NewService(pJson).CheckForUpdates(false) {
+		if updater.NewUpdater(pJson).CheckForUpdates(false) {
 			go func() {
 				fmt.Println("Automatically shutting down in 1 second...")
 				time.Sleep(1 * time.Second)

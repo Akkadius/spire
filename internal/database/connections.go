@@ -14,15 +14,15 @@ type Connections struct {
 	logger  *logger.AppLogger
 }
 
-func (c Connections) EqemuDb() *gorm.DB {
+func (c *Connections) EqemuDb() *gorm.DB {
 	return c.eqemuDb
 }
 
-func (c Connections) SpireDb() *gorm.DB {
+func (c *Connections) SpireDb() *gorm.DB {
 	return c.spireDb
 }
 
-func (c Connections) SpireDbNoLog() *gorm.DB {
+func (c *Connections) SpireDbNoLog() *gorm.DB {
 	return c.spireDb.Session(&gorm.Session{Logger: gormLogger.Default.LogMode(gormLogger.Silent)})
 }
 
@@ -50,7 +50,7 @@ var spireTables = []models.Modelable{
 	&models.Setting{},
 }
 
-func (c Connections) SpireMigrate(drop bool) error {
+func (c *Connections) SpireMigrate(drop bool) error {
 	for _, table := range spireTables {
 		if drop {
 			c.logger.Info().Msgf("Dropping table [%v]\n", table.TableName())
@@ -66,7 +66,7 @@ func (c Connections) SpireMigrate(drop bool) error {
 		if !migrator.HasTable(table) {
 			c.logger.Info().Msgf("[Database] Creating table [%v]", table.TableName())
 		} else {
-			c.logger.Info().Msgf("[Database] Already has table [%v]", table.TableName())
+			c.logger.Debug().Msgf("[Database] Already has table [%v]", table.TableName())
 		}
 
 		// always run migration incase there are schema changes
@@ -78,7 +78,7 @@ func (c Connections) SpireMigrate(drop bool) error {
 	return nil
 }
 
-func (c Connections) GetMigrationTables() []string {
+func (c *Connections) GetMigrationTables() []string {
 	var tables []string
 	for _, table := range spireTables {
 		tables = append(tables, table.TableName())
