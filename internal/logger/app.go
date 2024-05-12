@@ -34,10 +34,12 @@ func newDebugLogger() *zerolog.Logger {
 		return ""
 	}
 	output.FormatMessage = func(i interface{}) string {
+		callerMeta := getCallerMeta()
 		filename := filepath.Base(os.Args[0])
 		return fmt.Sprintf(
-			"   %s%s%s %s(%s)%s",
+			"   %s%s%s%s %s(%s)%s",
 			console.HighIntensityBlack,
+			callerMeta,
 			i,
 			console.Reset,
 			console.FadedGray,
@@ -59,79 +61,13 @@ func newDebugLogger() *zerolog.Logger {
 	return &logger
 }
 
-func getPackage(levelsUp int) string {
-	// Retrieve the caller's function name
-	pc, _, _, _ := runtime.Caller(levelsUp)
-	fn := runtime.FuncForPC(pc)
-
-	// Get the package name from the function name
-	if fn != nil {
-		fullFuncName := fn.Name()
-		lastDot := strings.LastIndex(fullFuncName, ".")
-		if lastDot > 0 {
-			lastDot = strings.LastIndex(fullFuncName[:lastDot], ".")
-			if lastDot > 0 {
-				return fullFuncName[:lastDot]
-			}
-		}
-	}
-
-	return ""
-}
-
 func newInfoLogger() *zerolog.Logger {
 	output := zerolog.ConsoleWriter{Out: os.Stderr}
 	output.FormatLevel = func(i interface{}) string {
 		return ""
 	}
 	output.FormatMessage = func(i interface{}) string {
-		pc := make([]uintptr, 20) // adjust the number of frames to retrieve
-		n := runtime.Callers(0, pc)
-		frames := runtime.CallersFrames(pc[:n])
-
-		callerType := ""
-		callerPackage := ""
-		for {
-			frame, more := frames.Next()
-
-			if strings.Contains(frame.Function, "log") {
-				continue
-			}
-
-			//fmt.Printf("- %s\n", frame.Function)
-			if !more {
-				break
-			}
-
-			pkg := frame.Function
-			if strings.Contains(pkg, "(*") {
-				callerType = pkg
-
-				// extract type from github.com/Akkadius/spire/internal/eqemuserver.(*QuestHotReloadWatcher)
-				// to QuestHotReloadWatcher
-				split := strings.Split(pkg, "(*")
-				if len(split) > 1 {
-					callerType = split[1]
-					callerType = strings.TrimSuffix(callerType, ")")
-					callerType = strings.TrimSpace(callerType)
-					callerType = strings.ReplaceAll(callerType, ")", "")
-
-					// get package
-					callerSplit := strings.Split(split[0], "/")
-					if len(callerSplit) > 0 {
-						callerPackage = callerSplit[len(callerSplit)-1]
-						callerPackage = strings.ReplaceAll(callerPackage, ".", "")
-					}
-				}
-
-				break
-			}
-		}
-
-		var callerMeta string
-		if callerType != "" {
-			callerMeta = fmt.Sprintf("%s (%s) › ", callerType, callerPackage)
-		}
+		callerMeta := getCallerMeta()
 
 		return fmt.Sprintf(
 			"%sSpire › %s%s%s%s%s",
@@ -155,6 +91,59 @@ func newInfoLogger() *zerolog.Logger {
 
 	logger := zerolog.New(output)
 	return &logger
+}
+
+// getCallerMeta returns the caller type and package
+// Example: QuestHotReloadWatcher (eqemuserver) ›
+func getCallerMeta() string {
+	pc := make([]uintptr, 20) // adjust the number of frames to retrieve
+	n := runtime.Callers(0, pc)
+	frames := runtime.CallersFrames(pc[:n])
+
+	callerType := ""
+	callerPackage := ""
+	for {
+		frame, more := frames.Next()
+		if strings.Contains(frame.Function, "log") {
+			continue
+		}
+
+		//fmt.Printf("- %s\n", frame.Function)
+		if !more {
+			break
+		}
+
+		pkg := frame.Function
+		if strings.Contains(pkg, "(*") {
+			callerType = pkg
+
+			// extract type from github.com/Akkadius/spire/internal/eqemuserver.(*QuestHotReloadWatcher)
+			// to QuestHotReloadWatcher
+			split := strings.Split(pkg, "(*")
+			if len(split) > 1 {
+				callerType = split[1]
+				callerType = strings.TrimSuffix(callerType, ")")
+				callerType = strings.TrimSpace(callerType)
+				callerType = strings.ReplaceAll(callerType, ")", "")
+
+				// get package
+				callerSplit := strings.Split(split[0], "/")
+				if len(callerSplit) > 0 {
+					callerPackage = callerSplit[len(callerSplit)-1]
+					callerPackage = strings.ReplaceAll(callerPackage, ".", "")
+				}
+			}
+
+			break
+		}
+	}
+
+	var callerMeta string
+	if callerType != "" {
+		callerMeta = fmt.Sprintf("%s (%s) › ", callerType, callerPackage)
+	}
+
+	return callerMeta
 }
 
 //func (l *AppLogger) Logger() *zerolog.Logger {
