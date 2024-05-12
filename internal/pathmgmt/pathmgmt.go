@@ -2,8 +2,8 @@ package pathmgmt
 
 import (
 	"errors"
-	"fmt"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/logger"
 	"log"
 	"os"
 	"path/filepath"
@@ -11,13 +11,15 @@ import (
 )
 
 type PathManagement struct {
-	logger     *logrus.Logger
+	logger     *logger.AppLogger
 	serverPath string
+	debugging  bool
 }
 
-func NewPathManagement(logger *logrus.Logger) *PathManagement {
+func NewPathManagement(logger *logger.AppLogger) *PathManagement {
 	m := &PathManagement{
-		logger: logger,
+		logger:    logger,
+		debugging: env.GetInt("PATH_MGMT_DEBUG", "0") == 1,
 	}
 
 	return m
@@ -48,18 +50,18 @@ func (m *PathManagement) GetEQEmuServerPath() string {
 	// first detect top level config
 	topLevelPath := filepath.Join(cwd, eqemuConfigFileName)
 	if _, err := os.Stat(topLevelPath); err == nil {
-		m.debug("[GetEQEmuServerPath] top level config path found @ [%v]", topLevelPath)
+		m.debug("top level config path found @ [%v]", topLevelPath)
 		return filepath.Dir(topLevelPath)
 	}
 
 	// second detect one level up (we're in bin folder)
 	parentLevelPath := filepath.Join(cwd, "..", eqemuConfigFileName)
 	if _, err := os.Stat(parentLevelPath); err == nil {
-		m.debug("[GetEQEmuServerPath] parent level config path found @ [%v]", parentLevelPath)
+		m.debug("parent level config path found @ [%v]", parentLevelPath)
 		return filepath.Dir(parentLevelPath)
 	}
 
-	m.debug("[GetEQEmuServerPath] server path not found...")
+	m.debug("server path not found...")
 
 	return ""
 }
@@ -67,11 +69,11 @@ func (m *PathManagement) GetEQEmuServerPath() string {
 func (m *PathManagement) GetEQEmuServerConfigFilePath() string {
 	path := filepath.Join(m.GetEQEmuServerPath(), eqemuConfigFileName)
 	if _, err := os.Stat(path); err == nil {
-		m.debug("[GetEQEmuServerConfigFilePath] found @ [%v]", path)
+		m.debug("found @ [%v]", path)
 		return path
 	}
 
-	m.debug("[GetEQEmuServerConfigFilePath] path not found...")
+	m.debug("path not found...")
 
 	return ""
 }
@@ -83,12 +85,8 @@ func (m *PathManagement) GetEqemuLoginServerConfigPath() string {
 }
 
 func (m *PathManagement) debug(msg string, a ...interface{}) {
-	if len(os.Getenv("DEBUG")) >= 3 {
-		if len(a) > 0 {
-			m.logger.Debug("[pathmgmt.go] " + fmt.Sprintf(msg, a...) + "\n")
-			return
-		}
-		m.logger.Debug("[pathmgmt.go] " + fmt.Sprintf(msg) + "\n")
+	if m.debugging {
+		m.logger.Debug().Msgf(msg, a...)
 	}
 }
 

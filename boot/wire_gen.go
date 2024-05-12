@@ -53,17 +53,17 @@ import (
 
 func InitializeApplication() (App, error) {
 	appLogger := logger.ProvideAppLogger()
-	logrusLogger, err := provideLogger()
-	if err != nil {
-		return App{}, err
-	}
-	pathManagement := pathmgmt.NewPathManagement(logrusLogger)
+	pathManagement := pathmgmt.NewPathManagement(appLogger)
 	config := eqemuserverconfig.NewConfig(appLogger, pathManagement)
 	db, err := provideEQEmuLocalDatabase(config)
 	if err != nil {
 		return App{}, err
 	}
 	cache := provideCache()
+	logrusLogger, err := provideLogger()
+	if err != nil {
+		return App{}, err
+	}
 	mysql := backup.NewMysql(pathManagement)
 	helloWorldCommand := cmd.NewHelloWorldCommand(db, logrusLogger, mysql, pathManagement)
 	connections := provideAppDbConnections(config, appLogger)
@@ -101,7 +101,7 @@ func InitializeApplication() (App, error) {
 	changelog := eqemuchangelog.NewChangelog()
 	eqemuchangelogController := eqemuchangelog.NewController(logrusLogger, resolver, changelog)
 	assetsController := assets.NewController(resolver)
-	permissionsController := permissions.NewController(logrusLogger, resolver, service)
+	permissionsController := permissions.NewController(resolver, service)
 	userController := user.NewController(resolver, userUser, encrypter)
 	settingsController := spire.NewSettingController(resolver, encrypter, settings)
 	telnetClient := telnet.NewClient(appLogger)
@@ -140,7 +140,7 @@ func InitializeApplication() (App, error) {
 	botCreateCombinationController := crudcontrollers.NewBotCreateCombinationController(resolver, userEvent)
 	botDatumController := crudcontrollers.NewBotDatumController(resolver, userEvent)
 	botGroupController := crudcontrollers.NewBotGroupController(resolver, logrusLogger, userEvent)
-	botGroupMemberController := crudcontrollers.NewBotGroupMemberController(resolver, logrusLogger, userEvent)
+	botGroupMemberController := crudcontrollers.NewBotGroupMemberController(resolver, userEvent)
 	botGuildMemberController := crudcontrollers.NewBotGuildMemberController(resolver, logrusLogger, userEvent)
 	botHealRotationController := crudcontrollers.NewBotHealRotationController(resolver, userEvent)
 	botHealRotationMemberController := crudcontrollers.NewBotHealRotationMemberController(resolver, userEvent)

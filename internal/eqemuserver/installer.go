@@ -69,7 +69,7 @@ func NewInstaller() *Installer {
 	// TODO: Clean this up
 	logrus := getLogger()
 	appLogger := logger.ProvideAppLogger()
-	pathmanager := pathmgmt.NewPathManagement(logrus)
+	pathmanager := pathmgmt.NewPathManagement(appLogger)
 	i := &Installer{
 		logger:        logrus,
 		pathmanager:   pathmanager,
