@@ -85,13 +85,25 @@ func newInfoLogger() *zerolog.Logger {
 		return ""
 	}
 	output.FormatMessage = func(i interface{}) string {
+		pc := make([]uintptr, 20) // adjust the number of frames to retrieve
+		n := runtime.Callers(0, pc)
+		frames := runtime.CallersFrames(pc[:n])
+
 		callerType := ""
 		callerPackage := ""
-		//now := time.Now()
-		for i := 0; i < 20; i++ {
-			pkg := getPackage(i)
-			//pp.Println(getPackage(i))
-			//fmt.Println("took ", time.Since(now).String())
+		for {
+			frame, more := frames.Next()
+
+			if strings.Contains(frame.Function, "log") {
+				continue
+			}
+
+			//fmt.Printf("- %s\n", frame.Function)
+			if !more {
+				break
+			}
+
+			pkg := frame.Function
 			if strings.Contains(pkg, "(*") {
 				callerType = pkg
 
@@ -102,6 +114,7 @@ func newInfoLogger() *zerolog.Logger {
 					callerType = split[1]
 					callerType = strings.TrimSuffix(callerType, ")")
 					callerType = strings.TrimSpace(callerType)
+					callerType = strings.ReplaceAll(callerType, ")", "")
 
 					// get package
 					callerSplit := strings.Split(split[0], "/")
