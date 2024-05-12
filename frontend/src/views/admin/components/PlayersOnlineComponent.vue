@@ -66,7 +66,7 @@
               v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)"
               :key="client.name"
             >
-              <td class="w-10" style="text-align:center">
+              <td style="text-align:center">
                 <div class="avatar-list avatar-list-stacked">
                   <img class="avatar-img rounded-circle" style="width:25px" :src="getClassImage(client.class)">
                   <img class="avatar-img rounded-circle" style="width:25px" :src="getRaceImage(client.race)">

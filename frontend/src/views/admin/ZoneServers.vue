@@ -45,13 +45,13 @@
 
     <div style="max-height: 80vh; overflow-y: scroll">
       <div
-        :class="['card', 'mb-3', 'zone-card', 'zone-background-' + zone.zone_name]"
+        :class="['card', 'mb-3', 'fade-in', 'zone-card', 'zone-background-' + zone.zone_name]"
         v-if="getProcessStats(zone.zone_os_pid)"
         v-for="zone in filterZoneList(zoneList)"
         :style="formatZoneRow(zone)"
       >
         <div
-          :class="['card-body', 'lift', 'btn-default', 'card-slim']"
+          :class="['card-body', 'btn-default', 'card-slim', 'zone-card-body']"
           :style="'box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);'"
         >
           <div class="row align-items-center">
@@ -60,11 +60,12 @@
               <h4 class="mb-1">
 
                 <span
-                  :class="'h2 fe text-muted mb-0 ' + formatRowIcon(zone) + ' mr-3'"/>
+                  :class="'h2 fe mb-0 ' + formatRowIcon(zone) + ' mr-3'"
+                />
 
-                <a href="#" style="color:#2364d2;font-weight:200;font-size: 18px;" v-if="zone.zone_long_name">
+                <h3 v-if="zone.zone_long_name" class="d-inline-block header-title">
                   {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
-                </a>
+                </h3>
 
                 <span
                   style="color:#666;font-weight:200;font-size: 18px;"
@@ -78,8 +79,8 @@
             </div>
 
             <div class="col-auto" v-if="zone.zone_name">
-              <p class="card-text small text-muted mb-1 mt-2">
-              <span class="text-muted ml-2" style="font-size:12px">
+              <p class="mb-1 mt-2">
+              <span class="ml-2">
                   {{ formatZoneName(zone.zone_name) }}
                   ({{ zone.zone_id }})
                   <span v-if="zone.instance_id">Instance: {{ zone.instance_id }}</span>
@@ -88,35 +89,35 @@
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2">
-              <span class="text-muted ml-2" style="font-size:12px">
+              <p class="mb-1 mt-2">
+              <span class="ml-2">
                   {{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}
               </span>
               </p>
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2">
+              <p class="mb-1 mt-2">
                 <i class="fe fe-proc"></i> PID {{ zone.zone_os_pid }}
               </p>
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2">
+              <p class="mb-1 mt-2">
                 <i class="fe fe-cloud"></i> Port {{ zone.client_port }}
               </p>
             </div>
 
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2">
+              <p class="mb-1 mt-2">
                 <i class="fe fe-users"></i> {{ zone.number_players }}
               </p>
             </div>
 
             <div class="col-auto">
               <p
-                class="card-text small text-muted mb-1 mt-2 fade-in"
+                class="mb-1 mt-2 fade-in"
                 :style="'color: ' + getCpuUsageColor(zone.zone_os_pid) + ' !important'"
                 v-if="getProcessStats(zone.zone_os_pid)"
               >
@@ -127,40 +128,79 @@
             <div class="col-auto">
               <p
                 :style="'color: ' + getMemUsageColor(zone.zone_os_pid) + ' !important'"
-                class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)"
+                class="mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)"
               >
                 {{ parseFloat(getProcessStats(zone.zone_os_pid).memory / 1024 / 1024).toFixed(2) }}MB
               </p>
             </div>
 
             <div class="col-auto">
-              <p class="card-text small text-muted mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+              <p class="mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
                 <i class="fe fe-clock"></i>
                 {{ parseFloat(getProcessStats(zone.zone_os_pid).elapsed / 1000 / 60 / 60).toFixed(2) }}h
               </p>
             </div>
 
-            <div class="col-auto">
-              <router-link
-                class="text-muted"
-                style="font-size:12px"
-                :to="'zoneservers/' +zone.client_port + '/logs'"
-              >
-                <i class="fa fa-eye"></i> Logs
-              </router-link>
-            </div>
+<!--            <div class="col-auto">-->
+<!--              <router-link-->
+<!--                style="font-size:12px"-->
+<!--                :to="'zoneservers/' +zone.client_port + '/logs'"-->
+<!--              >-->
+<!--                <i class="fa fa-eye"></i> Logs-->
+<!--              </router-link>-->
+<!--            </div>-->
 
             <div class="col-auto">
-              <a
-                class="text-muted"
-                href="javascript:void(0)"
+              <button
+                class="btn btn-sm btn-danger"
                 @click="killZone(zone.zone_os_pid)"
                 style="font-size:12px"
               >
                 <i class="fa fa-power-off"></i> Kill Zone
-              </a>
+              </button>
             </div>
 
+          </div>
+
+          <div
+            class="row pl-0 mt-3"
+            v-if="zone.number_players > 0"
+            style="border-top: 1px solid rgba(0, 0, 0, .2); padding-top: 10px; margin-top: 10px;"
+          >
+            <div class="col-auto">
+              <div class="d-flex flex-wrap">
+                <div
+                  class="fade-in"
+                  v-for="(c, index) in getClientByInternalZoneId(zone.id)"
+                  :key="c.id"
+                >
+
+                  <div
+                    class="avatar-group mr-3"
+                    :title="formatPlayerTooltip(c)"
+                  >
+                    <img
+                      class="avatar-img rounded-circle avatar-xs"
+                      :src="getClassImage(c.class)"
+                      style="border: 1px solid #666;"
+                    >
+
+                    <img
+                      class="avatar-img rounded-circle avatar-xs"
+                      :src="getRaceImage(c.race)"
+                      style="margin-left: -.80625rem; border: 1px solid #666;"
+                    >
+
+                    <small
+                      style="line-height: 24px; margin-left: 5px;"
+                    >
+                      {{ c.name }}
+                      {{ c.guild ? '<' + c.guild + '>' : ''}}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -171,9 +211,13 @@
 </template>
 
 <script>
-import {ROUTE}         from "@/routes";
-import {SpireApi}      from "@/app/api/spire-api";
-import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
+import {ROUTE}             from "@/routes";
+import {SpireApi}          from "@/app/api/spire-api";
+import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
+import {DB_RACES_ICONS}    from "@/app/constants/eq-race-icon-constants";
+import util                from "util";
+import {DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
+import {DB_CLASSES_ICONS}  from "@/app/constants/eq-class-icon-constants";
 
 export default {
   name: "ZoneServers",
@@ -186,8 +230,12 @@ export default {
       processStats: {},
       loaded: false,
       zoneServerLoop: null,
+      clientPollingLoop: null,
       chartLoaded: false,
       zoneBackgroundImages: {},
+
+      clients: [],
+      guilds: {},
 
       // api responses
       error: "",
@@ -208,6 +256,88 @@ export default {
   },
   methods: {
 
+    loadGuilds() {
+      SpireApi.v1().get("guilds?limit=1000000").then((r) => {
+        if (r.status === 200) {
+          this.guilds = r.data
+          console.log(r.data)
+        }
+      })
+    },
+
+    getRaceImage: raceId => {
+      if (DB_RACES_ICONS[raceId]) {
+        return require('@/assets/img/icons/classes-races/item_' + DB_RACES_ICONS[raceId] + '.png')
+      }
+
+      return 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+    },
+
+    getClassImage: classId => {
+      if (DB_CLASSES_ICONS[classId]) {
+        return require('@/assets/img/icons/classes-races/item_' + DB_CLASSES_ICONS[classId] + '.png')
+      }
+
+      return 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+    },
+
+    formatPlayerTooltip(c) {
+      return util.format(
+        "%s (%s)",
+        c.name,
+        DB_PLAYER_CLASSES[c.class] ? DB_PLAYER_CLASSES[c.class] : c.class
+      )
+    },
+
+    getClientByInternalZoneId(id) {
+      let clients = this.clients.filter((c) => {
+        return c.server && c.server.id === id
+      })
+
+      let list = []
+      for (let c of clients) {
+        let guild = "";
+
+        if (c.guild_id && this.guilds[c.guild_id]) {
+          guild = this.guilds[c.guild_id].name
+        }
+
+        list.push({
+          id: c.id,
+          name: c.name,
+          race: c.race,
+          class: c.class,
+          guild: guild,
+        })
+
+        // let id = 100;
+        // for (let x = 0; x < 22; x++) {
+        //   for (let i = 0; i < 11; i++) {
+        //     list.push({
+        //       id: id,
+        //       name: Math.random().toString(36),
+        //       race: c.race + i,
+        //       class: c.class + i,
+        //       guild: guild,
+        //     })
+        //     id++
+        //   }
+        // }
+
+      }
+
+      return list
+    },
+
+    async getPlayers() {
+      const r = await SpireApi.v1().get("eqemuserver/client-list")
+      if (r.status === 200) {
+        this.clients = r.data.data
+
+        console.log(this.clients)
+      }
+    },
+
     formatRowIcon(zone) {
       if (zone.zone_id === 0) {
         return "fe-loader"
@@ -224,7 +354,7 @@ export default {
       if (zone.zone_id === 0) {
         return {
           backgroundColor: 'rgba(0,0,0,.8)',
-          color: '#495057',
+          color: 'rgba(255, 255, 255, .7) !important',
           border: '1px solid #e9ecef',
           borderRadius: '5px',
           marginBottom: '10px'
@@ -234,7 +364,7 @@ export default {
       if (zone.number_players === 0) {
         return {
           backgroundColor: 'rgba(0,0,0,1)',
-          color: '#495057',
+          color: 'rgba(255, 255, 255, .9) !important',
           border: '1px solid white',
           // inner shadow white
           // boxShadow: 'inset 0 0 13px rgba(255,255,255,.1)',
@@ -246,6 +376,7 @@ export default {
       return {
         backgroundColor: '#f8f9fa',
         border: '1px solid #e9ecef',
+        color: 'rgba(18,38,63,1) !important',
         borderRadius: '5px',
         marginBottom: '10px'
       }
@@ -259,7 +390,7 @@ export default {
         return 'orange';
       }
 
-      return '#95aac9';
+      return '';
     },
 
     getCpuUsageColor(pid) {
@@ -270,11 +401,12 @@ export default {
         return 'orange';
       }
 
-      return '#95aac9';
+      return '';
     },
 
     init() {
       this.getZoneList()
+      this.loadGuilds()
 
       if (!this.zoneServerLoop) {
         this.zoneServerLoop = setInterval(() => {
@@ -282,6 +414,15 @@ export default {
             this.getZoneList()
           }
         }, 1000)
+
+
+        this.getPlayers()
+        this.clientPollingLoop = setInterval(() => {
+          if (!document.hidden) {
+            this.getPlayers()
+          }
+        }, 5000)
+
       }
     },
 
@@ -377,6 +518,8 @@ export default {
             }
           )
 
+          console.log(this.zoneList)
+
           this.processStats = r.data.process_info
           this.error        = ""
         }
@@ -413,6 +556,16 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.zoneServerLoop)
+    clearInterval(this.clientPollingLoop)
   }
 }
 </script>
+
+<style>
+.zone-card-body {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+}
+</style>
