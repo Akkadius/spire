@@ -53,12 +53,13 @@ import (
 // Injectors from wire.go:
 
 func InitializeApplication() (App, error) {
+	appLogger := logger.ProvideAppLogger()
 	logrusLogger, err := provideLogger()
 	if err != nil {
 		return App{}, err
 	}
 	pathManagement := pathmgmt.NewPathManagement(logrusLogger)
-	config := eqemuserverconfig.NewConfig(logrusLogger, pathManagement)
+	config := eqemuserverconfig.NewConfig(appLogger, pathManagement)
 	db, err := provideEQEmuLocalDatabase(config)
 	if err != nil {
 		return App{}, err
@@ -73,7 +74,6 @@ func InitializeApplication() (App, error) {
 	createCommand := user.NewCreateCommand(resolver, logrusLogger, encrypter, userUser)
 	modelGeneratorCommand := generators.NewModelGeneratorCommand(db, logrusLogger)
 	controllerGeneratorCmd := generators.NewControllerGeneratorCommand(db, logrusLogger)
-	appLogger := logger.ProvideAppLogger()
 	helloWorldController := controllers.NewHelloWorldController(db, logrusLogger)
 	controller := auth.NewController(resolver, logrusLogger, userUser, cache)
 	meController := user.NewMeController()
@@ -118,7 +118,7 @@ func InitializeApplication() (App, error) {
 	websocketController := websocket.NewController(logrusLogger, pathManagement, handler)
 	systemController := system.NewController(logrusLogger)
 	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, deployController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
-	userEvent := auditlog.NewUserEvent(resolver, logrusLogger, cache)
+	userEvent := auditlog.NewUserEvent(resolver, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(resolver, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(resolver, userEvent)
 	aaRankEffectController := crudcontrollers.NewAaRankEffectController(resolver, userEvent)

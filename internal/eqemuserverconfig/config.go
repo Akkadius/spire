@@ -2,22 +2,21 @@ package eqemuserverconfig
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 )
 
 // Config is the struct type
 type Config struct {
-	logger   *logrus.Logger
+	logger   *logger.AppLogger
 	pathmgmt *pathmgmt.PathManagement
 	config   EQEmuConfigJson
 }
 
 // NewConfig creates a new Config struct
-func NewConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *Config {
+func NewConfig(logger *logger.AppLogger, pathmgmt *pathmgmt.PathManagement) *Config {
 	return &Config{
 		logger:   logger,
 		pathmgmt: pathmgmt,
@@ -156,36 +155,24 @@ type EQEmuConfigJson struct {
 // Get returns the eqemu config json
 func (e *Config) Get() EQEmuConfigJson {
 	cfg := e.pathmgmt.GetEQEmuServerConfigFilePath()
-	e.debug("path [%v]", cfg)
-
 	if len(cfg) > 0 {
-		e.debug("Reading eqemu config file [%v]", cfg)
+		e.logger.Debug().Any("path", cfg).Msg("Reading eqemu config file")
 
 		body, err := os.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
 		if err != nil {
-			e.logger.Fatalf("unable to read file: %v", err)
+			e.logger.Fatal().Err(err).Any("path", cfg).Msg("unable to read eqemu config file")
 		}
 
 		config := EQEmuConfigJson{}
 		err = json.Unmarshal(body, &config)
 		if err != nil {
-			e.logger.Fatalf("unable to unmarshal file [%v] error [%v]", cfg, err)
+			e.logger.Fatal().Err(err).Any("path", cfg).Msg("unable to unmarshal eqemu config file")
 		}
 
 		return config
 	}
 
 	return EQEmuConfigJson{}
-}
-
-func (e *Config) debug(msg string, a ...interface{}) {
-	if len(os.Getenv("DEBUG")) >= 3 {
-		if len(a) > 0 {
-			e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
-			return
-		}
-		e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
-	}
 }
 
 // Exists will return true if the eqemu_config.json file exists

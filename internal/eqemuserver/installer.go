@@ -9,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/eqemuloginserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/password"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
@@ -66,14 +67,15 @@ func getLogger() *logrus.Logger {
 
 func NewInstaller() *Installer {
 	// TODO: Clean this up
-	logger := getLogger()
-	pathmanager := pathmgmt.NewPathManagement(logger)
+	logrus := getLogger()
+	appLogger := logger.NewAppLogger()
+	pathmanager := pathmgmt.NewPathManagement(logrus)
 	i := &Installer{
-		logger:        logger,
+		logger:        logrus,
 		pathmanager:   pathmanager,
-		config:        eqemuserverconfig.NewConfig(logger, pathmanager),
+		config:        eqemuserverconfig.NewConfig(appLogger, pathmanager),
 		installConfig: &InstallConfig{},
-		loginConfig:   eqemuloginserver.NewConfig(logger, pathmanager),
+		loginConfig:   eqemuloginserver.NewConfig(logrus, pathmanager),
 	}
 
 	return i
