@@ -348,7 +348,7 @@ export default {
         return "fe-loader"
       }
 
-      return "fe-power"
+      return "fe-chevron-right"
     },
 
     formatZoneRow(zone) {
@@ -519,7 +519,7 @@ export default {
             }
           )
 
-f          this.processStats = r.data.process_info
+          this.processStats = r.data.process_info
           this.error        = ""
         }
       } catch (e) {
