@@ -1,3 +1,7 @@
+## [4.0.3] 5/12/2024
+
+**Spire Admin Zoneservers** Fix issue where incorrect guild was being displayed in the zone server list for players.
+
 ## [4.0.2] 5/12/2024
 
 ### Occulus Deprecation

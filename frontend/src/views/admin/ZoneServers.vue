@@ -301,8 +301,14 @@ export default {
       for (let c of clients) {
         let guild = "";
 
-        if (c.guild_id && this.guilds[c.guild_id]) {
-          guild = this.guilds[c.guild_id].name
+        if (c.guild_id) {
+          let g = this.guilds.find((g) => {
+            return g.id === c.guild_id
+          })
+
+          if (g) {
+            guild = g.name
+          }
         }
 
         list.push({
