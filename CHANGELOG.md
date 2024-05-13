@@ -1,3 +1,11 @@
+## [4.0.4] 5/12/2024
+
+### Spire Admin Launcher Fixes
+
+* Fix an issue with how dynamics are calculated when determining the number of zone processes to start
+* Run a second pass at processes after server stop to ensure all processes are killed after attempting soft termination
+* Return out of the supervisor loop when the World API is not responding
+
 ## [4.0.3] 5/12/2024
 
 **Spire Admin Zoneservers** Fix issue where incorrect guild was being displayed in the zone server list for players.

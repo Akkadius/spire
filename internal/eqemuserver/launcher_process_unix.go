@@ -23,6 +23,8 @@ func (l *Launcher) startServerProcess(name string, args ...string) error {
 		return err
 	}
 
+	l.currentProcessCounts[name]++
+
 	// we do this otherwise we get a zombie process
 	go func() {
 		_ = cmd.Wait()

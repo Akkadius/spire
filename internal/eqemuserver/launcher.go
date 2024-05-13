@@ -269,6 +269,18 @@ func (l *Launcher) Stop() error {
 					l.logger.Debug().
 						Any("error", err.Error()).
 						Any("pid", p.Pid).
+						Msg("Error terminating process")
+				}
+			}
+		}
+
+		for _, s := range l.GetServerProcessNames() {
+			if s == proc.BaseProcessName {
+				err := p.Kill()
+				if err != nil {
+					l.logger.Debug().
+						Any("error", err.Error()).
+						Any("pid", p.Pid).
 						Msg("Error killing process")
 				}
 			}
@@ -353,7 +365,6 @@ func (l *Launcher) Supervisor() error {
 										break
 									}
 								}
-
 								if !isInList {
 									l.currentOnlineStatics = append(l.currentOnlineStatics, z)
 								}
@@ -375,25 +386,6 @@ func (l *Launcher) Supervisor() error {
 			Any("exe", proc.Exe).
 			Any("cmdline", proc.Cmdline).
 			Msg("Supervisor - Checking process")
-	}
-
-	list, err := l.serverApi.GetZoneList()
-	if err != nil {
-		l.logger.Debug().
-			Any("error", err.Error()).
-			Msg("Error getting zone list")
-	}
-
-	zoneAssignedDynamics := 0
-	zoneIdleDynamics := 0
-	for _, z := range list.Data {
-		if !z.IsStaticZone {
-			if z.ZoneID == 0 {
-				zoneIdleDynamics++
-				continue
-			}
-			zoneAssignedDynamics++
-		}
 	}
 
 	// boot world if needed
@@ -429,6 +421,24 @@ func (l *Launcher) Supervisor() error {
 		err := l.startServerProcess(ucsProcessName)
 		if err != nil {
 			return err
+		}
+	}
+
+	list, err := l.serverApi.GetZoneList()
+	if err != nil {
+		l.logger.Debug().Any("error", err.Error()).Msg("Error getting zone list")
+		return nil
+	}
+
+	zoneAssignedDynamics := 0
+	zoneIdleDynamics := 0
+	for _, z := range list.Data {
+		if !z.IsStaticZone {
+			if z.ZoneID == 0 {
+				zoneIdleDynamics++
+				continue
+			}
+			zoneAssignedDynamics++
 		}
 	}
 
@@ -471,20 +481,21 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	// boot dynamics if needed
-	zoneDynamicsToBoot := l.minZoneProcesses - zoneIdleDynamics
-	if zoneDynamicsToBoot > 0 {
-		l.logger.Debug().
-			Any("zoneDynamicsToBoot", zoneDynamicsToBoot).
-			Msg("Supervisor - Booting dynamic zone(s)")
-
-		for i := 0; i < zoneDynamicsToBoot; i++ {
-			err := l.startServerProcess(zoneProcessName)
-			if err != nil {
-				return err
-			}
+	for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (zoneAssignedDynamics + l.minZoneProcesses) {
+		err := l.startServerProcess(zoneProcessName)
+		if err != nil {
+			return err
 		}
 
-		l.logger.Info().Msgf("Starting Dynamic Zones (%v)", zoneDynamicsToBoot)
+		bootedTotalDynamics := l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
+		targetDynamics := zoneAssignedDynamics + l.minZoneProcesses
+
+		l.logger.Info().
+			Any("bootedTotalDynamics", bootedTotalDynamics).
+			Any("zoneAssignedDynamics", zoneAssignedDynamics).
+			Any("minZoneProcesses", l.minZoneProcesses).
+			Any("targetDynamics", targetDynamics).
+			Msg("Starting Dynamic Zone")
 	}
 
 	l.logger.DebugVv().
@@ -492,7 +503,6 @@ func (l *Launcher) Supervisor() error {
 		Any("currentProcessCounts", l.currentProcessCounts).
 		Any("currentZoneDynamics", l.currentZoneDynamics).
 		Any("currentZoneStatics", l.currentZoneStatics).
-		Any("zoneDynamicsToBoot", zoneDynamicsToBoot).
 		Any("zoneIdleDynamics", zoneIdleDynamics).
 		Any("zoneAssignedDynamics", zoneAssignedDynamics).
 		Any("statics - staticZonesToBoot", l.staticZonesToBoot).

@@ -154,7 +154,7 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 		data, err = c.t.ReadUntil(linebreak)
 		c.debug("Read operation took %v", time.Since(start))
 		if err != nil {
-			c.logger.Warn().Err(err).Msg("Failed to read from telnet")
+			c.logger.Warn().Err(err).Msg("Warning - Failed to read from telnet, this may mean World API is down and not accepting connections.")
 			c.Close()
 			return "", err
 		}
