@@ -8,6 +8,7 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
@@ -596,17 +597,25 @@ type DashboardStatsResponse struct {
 }
 
 func (a *Controller) getDashboardStats(c echo.Context) error {
-	tables := []string{"account", "character_data", "guilds", "items", "npc_types"}
 	counts := make(map[string]int64)
-	for _, table := range tables {
-		var count int64
-		a.db.GetEqemuDb().Raw(fmt.Sprintf("select count(*) as count from %v", table)).Scan(&count)
-		counts[table] = count
-	}
 
 	uptime, err := a.eqemuserverapi.GetWorldUptime()
 	if err != nil {
 		uptime = "Server offline"
+	}
+
+	tableModels := []models.Modelable{
+		models.Item{},
+		models.Account{},
+		models.CharacterDatum{},
+		models.Guild{},
+		models.NpcType{},
+	}
+
+	for _, model := range tableModels {
+		var count int64
+		a.db.QueryContext(model, c).Count(&count)
+		counts[model.TableName()] = count
 	}
 
 	r := DashboardStatsResponse{
