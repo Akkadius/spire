@@ -260,7 +260,6 @@ export default {
       SpireApi.v1().get("guilds?limit=1000000").then((r) => {
         if (r.status === 200) {
           this.guilds = r.data
-          console.log(r.data)
         }
       })
     },
@@ -290,6 +289,10 @@ export default {
     },
 
     getClientByInternalZoneId(id) {
+      if (!this.clients) {
+        return []
+      }
+
       let clients = this.clients.filter((c) => {
         return c.server && c.server.id === id
       })
@@ -333,8 +336,6 @@ export default {
       const r = await SpireApi.v1().get("eqemuserver/client-list")
       if (r.status === 200) {
         this.clients = r.data.data
-
-        console.log(this.clients)
       }
     },
 
@@ -518,9 +519,7 @@ export default {
             }
           )
 
-          console.log(this.zoneList)
-
-          this.processStats = r.data.process_info
+f          this.processStats = r.data.process_info
           this.error        = ""
         }
       } catch (e) {
