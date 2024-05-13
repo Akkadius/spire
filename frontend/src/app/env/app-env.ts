@@ -146,17 +146,6 @@ export class AppEnv {
     await this.init()
   }
 
-  // a check that happens during routing if within an Occulus-based
-  // module to re-route the user to a notification view that informs the user
-  // that occulus and local is required
-  static routeCheckOcculus(to: Route, router: VueRouter) {
-    // @ts-ignore
-    if (to && to.meta && to.meta.occulus && !AppEnv.isAppLocal()) {
-      router.push(ROUTE.ADMIN_OCCULUS_REQUIRED).catch((e) => {
-      })
-    }
-  }
-
   static routeCheckSpireInitialized(to: Route, router: VueRouter) {
     // @ts-ignore
     if (!AppEnv.isSpireInitialized() && to.fullPath !== ROUTE.SPIRE_INITIALIZE) {

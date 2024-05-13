@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"net/http"
@@ -17,18 +16,15 @@ import (
 
 type ItemTickController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewItemTickController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *ItemTickController {
 	return &ItemTickController{
 		db:       db,
-		logger:   logger,
 		auditLog: auditLog,
 	}
 }
@@ -265,7 +261,7 @@ func (e *ItemTickController) deleteItemTick(c echo.Context) error {
 	// primary key param
 	itId, err := strconv.Atoi(c.Param("itId"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 	params = append(params, itId)
 	keys = append(keys, "it_id = ?")

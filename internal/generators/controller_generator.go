@@ -3,10 +3,10 @@ package generators
 import (
 	"bytes"
 	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"github.com/k0kubun/pp/v3"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 	"text/template"
@@ -19,11 +19,11 @@ type GenerateControllerContext struct {
 
 type ControllerGenerator struct {
 	options   GenerateControllerContext
-	logger    *logrus.Logger
+	logger    *logger.AppLogger
 	pluralize *pluralize.Client
 }
 
-func NewControllerGenerator(options GenerateControllerContext, logger *logrus.Logger) *ControllerGenerator {
+func NewControllerGenerator(options GenerateControllerContext, logger *logger.AppLogger) *ControllerGenerator {
 	return &ControllerGenerator{
 		options:   options,
 		logger:    logger,
@@ -185,7 +185,7 @@ func (gc *ControllerGenerator) Generate() {
 	var out bytes.Buffer
 	err = tpl.ExecuteTemplate(&out, "crud_controller.tmpl", templateData)
 	if err != nil {
-		gc.logger.Fatal(err)
+		gc.logger.Fatal().Err(err).Msg("Failed to execute template")
 	}
 
 	// write file
@@ -194,7 +194,7 @@ func (gc *ControllerGenerator) Generate() {
 	// create file
 	file, err := os.Create(fileName)
 	if err != nil {
-		gc.logger.Fatal(err)
+		gc.logger.Fatal().Err(err).Msg("Failed to create file")
 	}
 
 	defer file.Close()
@@ -202,7 +202,7 @@ func (gc *ControllerGenerator) Generate() {
 	// write contents
 	_, err = file.WriteString(out.String())
 	if err != nil {
-		gc.logger.Fatal(err)
+		gc.logger.Fatal().Err(err).Msg("Failed to write file")
 	}
 
 	fmt.Println(fmt.Sprintf("Generated [%v] from Entity [%v]\n", fileName, templateData.EntityName))

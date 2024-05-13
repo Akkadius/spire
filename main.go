@@ -27,7 +27,7 @@ func main() {
 
 	// self update service
 	if len(os.Args) == 1 {
-		if updater.NewService(packageJson).CheckForUpdates(true) {
+		if updater.NewUpdater(packageJson).CheckForUpdates(true) {
 			os.Exit(0)
 		}
 	}

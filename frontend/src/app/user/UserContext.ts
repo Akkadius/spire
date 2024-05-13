@@ -2,7 +2,6 @@
 
 import {MeApi} from "@/app/api";
 import {SpireApi} from "../api/spire-api";
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 const TOKEN_KEY = 'spire-web-access-token-' + location.host;
 
@@ -80,7 +79,6 @@ export default class UserContext {
   static storeAccessToken(accessToken: string) {
     if (typeof (Storage) !== 'undefined') {
       localStorage.setItem(TOKEN_KEY, accessToken)
-      OcculusClient.storeAccessToken(accessToken)
     }
   }
 
@@ -100,8 +98,6 @@ export default class UserContext {
   static deleteAccessToken() {
     if (typeof (Storage) !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY)
-      // remove legacy occulus token as well
-      localStorage.removeItem('access_token')
     }
   }
 

@@ -2,22 +2,21 @@ package eqemuloginserver
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 )
 
 // Config is the struct type
 type Config struct {
-	logger   *logrus.Logger
+	logger   *logger.AppLogger
 	pathmgmt *pathmgmt.PathManagement
 	config   LoginConfigJson
 }
 
 // NewConfig creates a new Config struct
-func NewConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *Config {
+func NewConfig(logger *logger.AppLogger, pathmgmt *pathmgmt.PathManagement) *Config {
 	return &Config{
 		logger:   logger,
 		pathmgmt: pathmgmt,
@@ -87,13 +86,13 @@ func (e *Config) Get() LoginConfigJson {
 
 		body, err := os.ReadFile(e.pathmgmt.GetEqemuLoginServerConfigPath())
 		if err != nil {
-			e.logger.Fatalf("unable to read file: %v", err)
+			e.logger.Fatal().Err(err).Msg("unable to read login.json file")
 		}
 
 		config := LoginConfigJson{}
 		err = json.Unmarshal(body, &config)
 		if err != nil {
-			e.logger.Fatalf("unable to unmarshal file [%v] error [%v]", cfg, err)
+			e.logger.Fatal().Err(err).Any("body", string(body)).Msg("unable to unmarshal login.json file")
 		}
 
 		return config
@@ -104,11 +103,7 @@ func (e *Config) Get() LoginConfigJson {
 
 func (e *Config) debug(msg string, a ...interface{}) {
 	if len(os.Getenv("DEBUG")) >= 3 {
-		if len(a) > 0 {
-			e.logger.Debug("[config.go] " + fmt.Sprintf(msg, a...) + "\n")
-			return
-		}
-		e.logger.Debug("[config.go] " + fmt.Sprintf(msg) + "\n")
+		e.logger.Debug().Msgf(msg, a...)
 	}
 }
 

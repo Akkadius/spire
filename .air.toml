@@ -7,6 +7,7 @@ root = "."
 
 [build]
 # Just plain old shell command. You could use `make` as well.
+
 cmd = "go build -o /tmp/bin/app ."
 # Binary file yields from `cmd`.
 bin = "/bin/main"

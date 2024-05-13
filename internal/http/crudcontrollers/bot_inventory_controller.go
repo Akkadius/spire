@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"net/http"
@@ -17,18 +16,15 @@ import (
 
 type BotInventoryController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewBotInventoryController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *BotInventoryController {
 	return &BotInventoryController{
 		db:       db,
-		logger:   logger,
 		auditLog: auditLog,
 	}
 }
@@ -265,7 +261,7 @@ func (e *BotInventoryController) deleteBotInventory(c echo.Context) error {
 	// primary key param
 	inventoriesIndex, err := strconv.Atoi(c.Param("inventoriesIndex"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 	params = append(params, inventoriesIndex)
 	keys = append(keys, "inventories_index = ?")

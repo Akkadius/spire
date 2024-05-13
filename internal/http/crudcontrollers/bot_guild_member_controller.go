@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
@@ -16,18 +15,15 @@ import (
 
 type BotGuildMemberController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewBotGuildMemberController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *BotGuildMemberController {
 	return &BotGuildMemberController{
 		db:       db,
-		logger:   logger,
 		auditLog: auditLog,
 	}
 }
@@ -257,7 +253,7 @@ func (e *BotGuildMemberController) deleteBotGuildMember(c echo.Context) error {
 	// primary key param
 	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [BotId]"})
 	}
 	params = append(params, botId)
 	keys = append(keys, "bot_id = ?")

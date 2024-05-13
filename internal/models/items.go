@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/volatiletech/null/v8"
-	"time"
 )
 
 type Item struct {
@@ -140,7 +139,7 @@ type Item struct {
 	UNK124                  int                     `json:"unk_124" gorm:"Column:UNK124"`
 	Attuneable              int                     `json:"attuneable" gorm:"Column:attuneable"`
 	Nopet                   int                     `json:"nopet" gorm:"Column:nopet"`
-	Updated                 time.Time               `json:"updated" gorm:"Column:updated"`
+	Updated                 null.Time               `json:"updated" gorm:"Column:updated"`
 	Comment                 string                  `json:"comment" gorm:"Column:comment"`
 	UNK127                  int                     `json:"unk_127" gorm:"Column:UNK127"`
 	Pointtype               int                     `json:"pointtype" gorm:"Column:pointtype"`

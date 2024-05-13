@@ -4,10 +4,9 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/volatiletech/null/v8"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -15,10 +14,10 @@ import (
 
 type DbSchemaConfig struct {
 	db     *sql.DB
-	logger *logrus.Logger
+	logger *logger.AppLogger
 }
 
-func NewDbSchemaConfig(db *sql.DB, logger *logrus.Logger) *DbSchemaConfig {
+func NewDbSchemaConfig(db *sql.DB, logger *logger.AppLogger) *DbSchemaConfig {
 	return &DbSchemaConfig{db: db, logger: logger}
 }
 
@@ -63,7 +62,7 @@ func (c *DbSchemaConfig) Generate(dbName string) error {
 		return err
 	}
 
-	tableColumnResponses := make(map[string][]DbSchemaRowResult, 0)
+	tableColumnResponses := make(map[string][]DbSchemaRowResult)
 
 	defer rows.Close()
 	for rows.Next() {
@@ -110,7 +109,7 @@ func (c *DbSchemaConfig) Generate(dbName string) error {
 	// create config
 	file, err := os.Create(dbSchemaConfig)
 	if err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to create file")
 	}
 
 	defer file.Close()
@@ -118,10 +117,10 @@ func (c *DbSchemaConfig) Generate(dbName string) error {
 	// write config
 	_, err = file.Write(b.Bytes())
 	if err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to create file")
 	}
 
-	c.logger.Infof("Wrote configuration [%v]", dbSchemaConfig)
+	c.logger.Info().Any("dbSchemaConfig", dbSchemaConfig).Msg("Wrote configuration")
 
 	return nil
 }
@@ -129,7 +128,7 @@ func (c *DbSchemaConfig) Generate(dbName string) error {
 func (c *DbSchemaConfig) GenerateKeys() error {
 	keys, err := getDbTableKeys()
 	if err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to get db table keys")
 	}
 
 	// yaml
@@ -151,10 +150,10 @@ func (c *DbSchemaConfig) GenerateKeys() error {
 	// write config
 	_, err = file.Write(b.Bytes())
 	if err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to write file")
 	}
 
-	c.logger.Infof("Wrote configuration [%v]", dbSchemaKeysConfig)
+	c.logger.Info().Any("dbSchemaKeysConfig", dbSchemaKeysConfig).Msg("Wrote configuration")
 
 	return nil
 }
@@ -169,7 +168,7 @@ func GetDbSchemaConfig() map[string][]DbSchemaRowResult {
 
 	m := map[string][]DbSchemaRowResult{}
 
-	config, err := ioutil.ReadFile(dbSchemaConfig)
+	config, err := os.ReadFile(dbSchemaConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -214,7 +213,7 @@ func GetDbSchemaKeysConfig() map[string][]DbSchemaRowResult {
 
 	m := map[string][]DbSchemaRowResult{}
 
-	config, err := ioutil.ReadFile(dbSchemaKeysConfig)
+	config, err := os.ReadFile(dbSchemaKeysConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -237,7 +236,7 @@ func GetDbSchemaKeysConfigTable(table string) []DbSchemaRowResult {
 
 // get database tables from config
 func GetDatabaseTables() []string {
-	tables := []string{}
+	var tables []string
 	for table := range GetDbSchemaConfig() {
 		// skip spire tables
 		if strings.Contains("spire_", table) {

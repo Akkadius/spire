@@ -234,3 +234,25 @@ func (c *Client) GetWorldUptime() (string, error) {
 
 	return o, nil
 }
+
+func (c *Client) MessageWorld(message string) error {
+	_, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "emote world 15 " + message},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) ReloadQuestsForZone(zone string) error {
+	_, err := c.telnet.Command(
+		telnet.CommandConfig{Command: "reloadzonequests " + zone},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -3,15 +3,13 @@ package generators
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"github.com/k0kubun/pp/v3"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
-	"io/ioutil"
 	"os"
 	"sort"
 	"strings"
@@ -24,13 +22,13 @@ type GenerateModelContext struct {
 
 type GenerateModel struct {
 	options      GenerateModelContext
-	logger       *logrus.Logger
+	logger       *logger.AppLogger
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
 	debugEnabled bool
 }
 
-func NewGenerateModel(options GenerateModelContext, logger *logrus.Logger, gorm *gorm.DB) *GenerateModel {
+func NewGenerateModel(options GenerateModelContext, logger *logger.AppLogger, gorm *gorm.DB) *GenerateModel {
 	return &GenerateModel{
 		options:   options,
 		logger:    logger,
@@ -301,14 +299,14 @@ func (g *GenerateModel) Generate() {
 			// Create new cmd
 			file, err := os.Create(fileName)
 			if err != nil {
-				g.logger.Fatal(err)
+				g.logger.Fatal().Err(err).Msg("error creating file")
 			}
 
 			defer file.Close()
 
 			_, err = file.WriteString(t)
 			if err != nil {
-				g.logger.Fatal(err)
+				g.logger.Fatal().Err(err).Msg("error writing to file")
 			}
 
 			fmt.Println(fmt.Sprintf("Generated [%v]", fileName))
@@ -333,7 +331,7 @@ func (g *GenerateModel) Generate() {
 		// create file
 		f, err := os.Create("internal/http/staticmaps/model-relationships.json")
 		if err != nil {
-			g.logger.Fatal(err)
+			g.logger.Fatal().Err(err).Msg("error creating file")
 		}
 
 		defer f.Close()
@@ -341,7 +339,7 @@ func (g *GenerateModel) Generate() {
 		// write
 		_, err = f.Write(jsonData)
 		if err != nil {
-			g.logger.Fatal(err)
+			g.logger.Fatal().Err(err).Msg("error writing to file")
 		}
 	}
 
@@ -399,7 +397,7 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 				if relation.RemoteTable == parentTable {
 					g.debug(
 						fmt.Sprintf(
-							"---- [getNestedRelationshipsFromTable] [%v] remote table [%v] is a parent table [%v] skipping\n",
+							"---- [getNestedRelationshipsFromTable] [%v] remote table [%v] is a parent table [%v] skipping",
 							level,
 							relation.RemoteTable,
 							parentTable,
@@ -574,16 +572,16 @@ const dbRelationshipConfig = "./internal/generators/config/db-relationships.yml"
 
 func (g *GenerateModel) loadRelationships() []ForeignKeyMappings {
 	// load yaml
-	databaseSchemaYaml, err := ioutil.ReadFile(dbRelationshipConfig)
+	databaseSchemaYaml, err := os.ReadFile(dbRelationshipConfig)
 	if err != nil {
-		g.logger.Fatal(err)
+		g.logger.Fatal().Err(err).Msg("error creating file")
 	}
 
 	// unmarshal yaml
 	dbRelationships := make(map[string][]string, 0)
 	err = yaml.Unmarshal(databaseSchemaYaml, &dbRelationships)
 	if err != nil {
-		g.logger.Fatalf("error: %v", err)
+		g.logger.Fatal().Err(err).Msg("error unmarshalling yaml")
 	}
 
 	relationships := []ForeignKeyMappings{}
@@ -598,12 +596,11 @@ func (g *GenerateModel) loadRelationships() []ForeignKeyMappings {
 			relationSignature := strings.TrimSpace(split[1])
 
 			if !g.isValidRelationshipType(relationType) {
-				g.logger.Fatalf(
-					"Invalid relationship type [%v] [%v] in [%v]!\n",
-					relationType,
-					relationSignature,
-					dbRelationshipConfig,
-				)
+				g.logger.Info().
+					Any("relationType", relationType).
+					Any("relationSignature", relationSignature).
+					Any("dbRelationshipConfig", dbRelationshipConfig).
+					Msg("Invalid relationship type")
 			}
 
 			// split: local_key->remote_table:remote_key
@@ -643,6 +640,6 @@ func (g *GenerateModel) isValidRelationshipType(relationshipType string) bool {
 
 func (g *GenerateModel) debug(msg string) {
 	if g.debugEnabled || env.GetInt("DEBUG", "0") > 0 {
-		console.Info("[Debug] [model_generator.go] " + msg)
+		g.logger.Debug().Msg(msg)
 	}
 }

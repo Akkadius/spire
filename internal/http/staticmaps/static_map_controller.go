@@ -6,19 +6,16 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type StaticMapController struct {
-	db     *database.Resolver
-	logger *logrus.Logger
+	db *database.Resolver
 }
 
-func NewStaticMapController(db *database.Resolver, logger *logrus.Logger) *StaticMapController {
+func NewStaticMapController(db *database.Resolver) *StaticMapController {
 	return &StaticMapController{
-		db:     db,
-		logger: logger,
+		db: db,
 	}
 }
 
@@ -54,7 +51,7 @@ var (
 )
 
 func (q *StaticMapController) getStaticMapFileCompressed(c echo.Context) error {
-	file := []byte{}
+	var file []byte
 	switch c.Param("file") {
 	case "emitters.json":
 		file = emittersMap

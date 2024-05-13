@@ -5,13 +5,13 @@ import (
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"net/http"
@@ -21,7 +21,7 @@ import (
 )
 
 type Service struct {
-	logger    *logrus.Logger
+	logger    *logger.AppLogger
 	db        *database.Resolver
 	cache     *gocache.Cache
 	pluralize *pluralize.Client
@@ -31,7 +31,7 @@ type Service struct {
 func NewService(
 	db *database.Resolver,
 	cache *gocache.Cache,
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	pluralize *pluralize.Client,
 ) *Service {
 	return &Service{
@@ -51,7 +51,6 @@ func (s *Service) RegisterManualResources() map[string][]string {
 
 		// admin server
 		"Server Configuration":    {"admin/serverconfig"},
-		"Server Admin Occulus":    {"admin/occulus"},
 		"Server System Resources": {"admin/system"},
 		"Server Update / Build": {
 			"eqemuserver/build",
@@ -302,14 +301,10 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 	p := s.getUserPermissions(c, user, connectionId)
 
 	if s.debug >= 3 {
-		s.logger.Debugf(
-			"[permissions] user [%v] (%v) owner [%v] readAll [%v] writeAll [%v]\n",
-			user.UserName,
-			user.ID,
-			p.isConnectionOwner,
-			p.canReadAll,
-			p.canWriteAll,
-		)
+		s.logger.Debug().
+			Any("permissions", p).
+			Any("user", user).
+			Msg("Checking permissions")
 	}
 
 	// if connection owner, they can access everything
@@ -345,24 +340,22 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 
 				if prefix == resource || isManualRouteMatch {
 					if s.debug >= 3 {
-						s.logger.Info(
-							pp.Sprintf(
-								"[permissions] user [%v] FOUND MATCH FOR PREFIX [%v] for route [%v]\n",
-								user.UserName,
-								prefix,
-								c.Request().URL.Path,
-							),
-						)
+						s.logger.Debug().
+							Any("permissions", p).
+							Any("user", user).
+							Str("prefix", prefix).
+							Str("route", c.Request().URL.Path).
+							Msg("Found match for prefix")
 					}
 
 					if isWriteRequest && up.CanWrite {
 						if s.debug >= 3 {
-							s.logger.Debugf(
-								"[permissions] user [%v] (%v) prefix [%v] can write, passing rules\n",
-								user.UserName,
-								user.ID,
-								prefix,
-							)
+							s.logger.Debug().
+								Any("permissions", p).
+								Any("user", user).
+								Str("prefix", prefix).
+								Str("route", c.Request().URL.Path).
+								Msg("Can write, passing rules")
 						}
 
 						return true
@@ -370,12 +363,12 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 
 					if !isWriteRequest && up.CanRead {
 						if s.debug >= 3 {
-							s.logger.Debugf(
-								"[permissions] user [%v] (%v) prefix [%v] can read, passing rules\n",
-								user.UserName,
-								user.ID,
-								prefix,
-							)
+							s.logger.Debug().
+								Any("permissions", p).
+								Any("user", user).
+								Str("prefix", prefix).
+								Str("route", c.Request().URL.Path).
+								Msg("Can read, passing rules")
 						}
 
 						return true
@@ -390,10 +383,7 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 
 func (s *Service) ClearUserPermissionsCache(userId uint64) {
 	if s.debug >= 3 {
-		s.logger.Debugf(
-			"[permissions] Clearing cache permissions for user id [%v]\n",
-			userId,
-		)
+		s.logger.Debug().Any("userId", userId).Msg("Clearing cache permissions for user id")
 	}
 
 	cacheKey := fmt.Sprintf("user-permissions-%v", userId)
@@ -447,14 +437,12 @@ func (s *Service) getUserPermissions(c echo.Context, user models.User, connectio
 
 			// detailed logging
 			if s.debug >= 3 {
-				s.logger.Print(
-					pp.Sprintf(
-						"Server ID [%v] Resource [%v] Read [%v] Write [%v]\n",
-						up.ServerDatabaseConnectionId,
-						up.ResourceName,
-						up.CanRead,
-						up.CanWrite,
-					),
+				s.logger.Debug().Msgf(
+					"Server ID [%v] Resource [%v] Read [%v] Write [%v]\n",
+					up.ServerDatabaseConnectionId,
+					up.ResourceName,
+					up.CanRead,
+					up.CanWrite,
 				)
 			}
 

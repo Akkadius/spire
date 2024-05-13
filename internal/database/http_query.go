@@ -119,7 +119,7 @@ func (d *Resolver) QueryContext(model models.Modelable, c echo.Context) *gorm.DB
 	if len(queryParamLimit) > 0 {
 		l, err := strconv.Atoi(queryParamLimit)
 		if err != nil {
-			d.logger.Warn(err)
+			d.logger.Info().Err(err).Msg("unable to parse queryParamLimit")
 		}
 		queryLimit = l
 	}
@@ -130,7 +130,7 @@ func (d *Resolver) QueryContext(model models.Modelable, c echo.Context) *gorm.DB
 	if len(queryParamOffset) > 0 {
 		queryOffset, err := strconv.Atoi(queryParamOffset)
 		if err != nil {
-			d.logger.Warn(err)
+			d.logger.Info().Err(err).Msg("unable to parse queryParamOffset")
 		}
 		query = query.Offset(queryOffset * queryLimit)
 	}
@@ -148,7 +148,7 @@ func (d *Resolver) QueryContext(model models.Modelable, c echo.Context) *gorm.DB
 		if isInt(association) {
 			rLevels, err := strconv.Atoi(association)
 			if err != nil {
-				d.logger.Warn(err)
+				d.logger.Info().Err(err).Msg("unable to parse association")
 			}
 			for _, relation := range model.Relationships() {
 				if strings.Contains(relation, ".") {

@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"strings"
@@ -16,19 +15,17 @@ import (
 )
 
 type ContextMiddleware struct {
-	db     *database.Resolver
-	cache  *gocache.Cache
-	logger *logrus.Logger
+	db    *database.Resolver
+	cache *gocache.Cache
 }
 
 func NewContextMiddleware(
 	db *database.Resolver,
 	cache *gocache.Cache,
-	logger *logrus.Logger) *ContextMiddleware {
+) *ContextMiddleware {
 	return &ContextMiddleware{
-		db:     db,
-		cache:  cache,
-		logger: logger,
+		db:    db,
+		cache: cache,
 	}
 }
 
@@ -68,10 +65,6 @@ func (m ContextMiddleware) skipperHeader(c echo.Context) bool {
 		return false
 	}
 
-	if strings.Contains(c.Request().RequestURI, "admin/occulus/download/") {
-		return true
-	}
-
 	// When we don't send an authorization header, we assume that the request
 	// is not an authenticated user we will simply use the local default
 	// PEQ database instance
@@ -83,10 +76,6 @@ func (m ContextMiddleware) skipperQuery(c echo.Context) bool {
 	// If we send a query param header then we will go through our JWT signature validation logic
 	if c.QueryParam("jwt") != "" {
 		return false
-	}
-
-	if strings.Contains(c.Request().RequestURI, "admin/occulus/download/") {
-		return true
 	}
 
 	// When we don't send an authorization header, we assume that the request
@@ -104,8 +93,6 @@ func (m ContextMiddleware) successHandler(c echo.Context) {
 	if err != nil {
 		panic("Failed to convert JWT UserID")
 	}
-
-	//m.logger.Debugln(fmt.Sprintf("JWT validation success as user [%v]", userId))
 
 	// cache user context for 10 minutes to refrain from repeated DB hits
 	userKey := fmt.Sprintf("user-%v", userId)

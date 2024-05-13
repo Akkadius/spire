@@ -10,10 +10,10 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gammazero/workerpool"
 	"github.com/gosimple/slug"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -27,7 +27,6 @@ import (
 
 type ScrapeCommand struct {
 	db      *gorm.DB
-	logger  *logrus.Logger
 	command *cobra.Command
 }
 
@@ -40,11 +39,9 @@ var singleRecipe string
 
 func NewScrapeCommand(
 	db *gorm.DB,
-	logger *logrus.Logger,
 ) *ScrapeCommand {
 	i := &ScrapeCommand{
-		db:     db,
-		logger: logger,
+		db: db,
 		command: &cobra.Command{
 			Use:   "eq-traders:scrape [expansion_number]",
 			Short: "A command for scraping / downloading eq traders recipes. Use eq-traders:import to import the data into the database.",
@@ -64,11 +61,11 @@ func NewScrapeCommand(
 func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	err := os.MkdirAll("data/eqtraders", os.ModePerm)
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 	err = os.MkdirAll("data/eqtraders/site-cache/", os.ModePerm)
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	list := []ExpansionRecipe{
@@ -414,7 +411,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	} else {
 		expansionId, err := strconv.Atoi(expansion)
 		if err != nil {
-			c.logger.Error(err)
+			fmt.Println(err)
 		}
 		for _, r := range list {
 			if r.ExpId == expansionId {
@@ -428,11 +425,11 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	// dump recipes to json file recipes.json
 	data, err := json.MarshalIndent(recipes, "", " ")
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 	err = os.WriteFile("data/eqtraders/recipes.json", data, 0644)
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	//pp.Println(string(data))
@@ -475,7 +472,7 @@ func (c *ScrapeCommand) getStringInBetween(str, before, after string) string {
 var recipeWriteMutex = &sync.Mutex{}
 
 func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
-	c.logger.Info("Parsing recipe page: ", r.Url+"&printer=normal")
+	fmt.Println("Parsing recipe page: ", r.Url+"&printer=normal")
 
 	// get page slug
 	hash := md5.Sum([]byte(r.Url))
@@ -488,7 +485,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		// read cache file
 		data, err := os.ReadFile(file)
 		if err != nil {
-			c.logger.Error(err)
+			fmt.Println(err)
 		}
 
 		contents = string(data)
@@ -498,20 +495,20 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 	if len(contents) == 0 {
 		resp, err := http.Get(r.Url + "&printer=normal")
 		if err != nil {
-			c.logger.Error(err)
+			fmt.Println(err)
 		}
 
 		defer resp.Body.Close()
 
 		data, err := io.ReadAll(resp.Body)
 		if err != nil {
-			c.logger.Error(err)
+			fmt.Println(err)
 		}
 
 		// write site cache
 		err = os.WriteFile(file, data, 0644)
 		if err != nil {
-			c.logger.Error(err)
+			fmt.Println(err)
 		}
 
 		// some pages are formatted strange and have an extra <td> beginning of the row
@@ -522,7 +519,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(contents)))
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	wp := workerpool.New(50)
@@ -537,11 +534,11 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			recipeName := strings.TrimSpace(s.Find("td a").First().Text())
 			recipeNameHtml, err := s.Find("td").First().Html()
 			if err != nil {
-				c.logger.Error(err)
+				fmt.Println(err)
 			}
 			recipe, err := s.Find("td").Next().Html()
 			if err != nil {
-				c.logger.Error(err)
+				fmt.Println(err)
 			}
 			recipeText := s.Find("td").Next().Text()
 
@@ -571,7 +568,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				noFail = true
 				trivialInt, err = strconv.Atoi(trivial)
 				if err != nil {
-					c.logger.Errorf("error parsing trivial [%v] err [%v]", trivial, err.Error())
+					fmt.Println("error parsing trivial [%v] err [%v]", trivial, err.Error())
 				}
 			} else if strings.Contains(trivial, "no fail") {
 				noFail = true
@@ -593,7 +590,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 					quantity, err = strconv.Atoi(qty)
 					if err != nil {
-						c.logger.Errorf("error parsing component quantity [%v] err [%v]", qty, err.Error())
+						fmt.Println("error parsing component quantity [%v] err [%v]", qty, err.Error())
 					}
 				}
 
@@ -620,7 +617,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 					objectType := c.getObjectTypeFromName(name)
 					if objectType.Type > 0 {
-						//c.logger.Infof("world container [%v] resolved to object type [%v] for recipe [%v]", name, objectType.Type, recipeName)
+						//fmt.Println("world container [%v] resolved to object type [%v] for recipe [%v]", name, objectType.Type, recipeName)
 						inList = append(inList, Item{
 							ItemId:   objectType.Type,
 							ItemName: name,
@@ -628,7 +625,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 						})
 						continue
 					}
-					c.logger.Infof("world container [%v] not found, attempting to resolve to object type for recipe [%v]", name, recipeName)
+					fmt.Println("world container [%v] not found, attempting to resolve to object type for recipe [%v]", name, recipeName)
 					continue
 				}
 
@@ -649,7 +646,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			if len(yield) > 0 {
 				yieldInt, err = strconv.Atoi(yield)
 				if err != nil {
-					c.logger.Errorf("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
+					fmt.Println("error parsing yield [%v] for recipe [%v] err [%v]", yield, recipeName, err.Error())
 				}
 			}
 
@@ -669,7 +666,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					qty := c.getStringInBetween(s, "(", ")")
 					quantity, err = strconv.Atoi(qty)
 					if err != nil {
-						c.logger.Errorf("error parsing returns quantity [%v] err [%v]", qty, err.Error())
+						fmt.Println("error parsing returns quantity [%v] err [%v]", qty, err.Error())
 					}
 				}
 
@@ -698,7 +695,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					qty := c.getStringInBetween(s, "(", ")")
 					quantity, err = strconv.Atoi(qty)
 					if err != nil {
-						c.logger.Errorf("error parsing failure quantity [%v] err [%v]", qty, err.Error())
+						fmt.Println("error parsing failure quantity [%v] err [%v]", qty, err.Error())
 					}
 				}
 
@@ -800,7 +797,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				learnedItem = re.ReplaceAllString(learnedItem, "")
 
 				if len(learnedItem) > 0 {
-					c.logger.Infof("learned item [%v] for recipe [%v]", learnedItem, recipeName)
+					fmt.Println("learned item [%v] for recipe [%v]", learnedItem, recipeName)
 				}
 			}
 
@@ -873,14 +870,14 @@ func (c *ScrapeCommand) getItemIdFromHtml(html string) int {
 
 	resp, err := http.Get(url + "&printer=normal")
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	itemId := c.getStringInBetween(string(data), "EQ item ID: ", "<")
@@ -904,13 +901,13 @@ func (c *ScrapeCommand) SaveItemCache() {
 	// Encoding the map
 	err := e.Encode(itemLookupCache)
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	// write to file
 	err = os.WriteFile(filepath.Join("./data/eqtraders/item-lookup-cache.gob"), b.Bytes(), 0644)
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 }
 
@@ -922,7 +919,7 @@ func (c *ScrapeCommand) LoadItemCache() {
 
 	b, err := os.ReadFile(file)
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	d := gob.NewDecoder(bytes.NewReader(b))
@@ -930,7 +927,7 @@ func (c *ScrapeCommand) LoadItemCache() {
 	// Decoding the serialized data
 	err = d.Decode(&itemLookupCache)
 	if err != nil {
-		c.logger.Error(err)
+		fmt.Println(err)
 	}
 
 	// copy to read only cache

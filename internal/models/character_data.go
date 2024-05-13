@@ -63,6 +63,7 @@ type CharacterDatum struct {
 	Int                          uint                         `json:"int" gorm:"Column:int"`
 	Agi                          uint                         `json:"agi" gorm:"Column:agi"`
 	Wis                          uint                         `json:"wis" gorm:"Column:wis"`
+	ExtraHaste                   int                          `json:"extra_haste" gorm:"Column:extra_haste"`
 	ZoneChangeCount              uint                         `json:"zone_change_count" gorm:"Column:zone_change_count"`
 	Toxicity                     uint                         `json:"toxicity" gorm:"Column:toxicity"`
 	HungerLevel                  uint                         `json:"hunger_level" gorm:"Column:hunger_level"`

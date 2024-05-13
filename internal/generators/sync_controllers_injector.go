@@ -5,18 +5,17 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/iancoleman/strcase"
-	"github.com/sirupsen/logrus"
+	"log"
 	"os"
 	"strings"
 	"text/template"
 )
 
 type SyncControllersToInjector struct {
-	logger *logrus.Logger
 }
 
-func NewSyncControllersToInjector(logger *logrus.Logger) *SyncControllersToInjector {
-	return &SyncControllersToInjector{logger: logger}
+func NewSyncControllersToInjector() *SyncControllersToInjector {
+	return &SyncControllersToInjector{}
 }
 
 const crudInjectFile = "./boot/inject_http_crud_controllers.go"
@@ -32,17 +31,17 @@ type injectHttpCrudControllerTmpl struct {
 func (s *SyncControllersToInjector) Sync() {
 	files, err := os.ReadDir(crudControllerPath)
 	if err != nil {
-		s.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
-	controllerNames := []string{}
+	var controllerNames []string
 
 	// fetch struct names
 	for _, f := range files {
 		//fmt.Println(f.Name())
 		file, err := os.Open(fmt.Sprintf("%v%v", crudControllerPath, f.Name()))
 		if err != nil {
-			s.logger.Fatal(err)
+			log.Fatal(err)
 		}
 		defer file.Close()
 
@@ -59,7 +58,7 @@ func (s *SyncControllersToInjector) Sync() {
 		}
 
 		if err := scanner.Err(); err != nil {
-			s.logger.Fatal(err)
+			log.Fatal(err)
 		}
 	}
 
@@ -92,13 +91,13 @@ func (s *SyncControllersToInjector) Sync() {
 	// create file
 	file, err := os.Create(fileName)
 	if err != nil {
-		s.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// write contents
 	_, err = file.WriteString(out.String())
 	if err != nil {
-		s.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	fmt.Println(fmt.Sprintf("Synced controllers to [%v]\n", crudInjectFile))

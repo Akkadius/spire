@@ -4,6 +4,12 @@ import (
 	"crypto/subtle"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/internal/banner"
+	"github.com/Akkadius/spire/internal/console"
+	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/eqemuserver"
+	"github.com/Akkadius/spire/internal/imgcat"
+	"github.com/Akkadius/spire/internal/logger"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -12,34 +18,29 @@ import (
 	"unicode"
 
 	"github.com/Akkadius/spire/docs"
-	"github.com/Akkadius/spire/internal/banner"
-	"github.com/Akkadius/spire/internal/env"
+	_ "github.com/Akkadius/spire/docs"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
-	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/sirupsen/logrus"
-
-	_ "github.com/Akkadius/spire/docs"
 )
 
 type Server struct {
-	logger  *logrus.Logger
+	logger  *logger.AppLogger
 	router  *routes.Router
-	occulus *occulus.ProcessManagement
+	watcher *eqemuserver.QuestHotReloadWatcher
 }
 
 func NewServer(
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	router *routes.Router,
-	occulus *occulus.ProcessManagement,
+	watcher *eqemuserver.QuestHotReloadWatcher,
 ) *Server {
 	return &Server{
 		logger:  logger,
 		router:  router,
-		occulus: occulus,
+		watcher: watcher,
 	}
 }
 
@@ -61,9 +62,11 @@ func NewServer(
 func (c *Server) Serve(port uint) error {
 	e := echo.New()
 
+	env.SetAppModeWebserver()
+
 	BootstrapMiddleware(e, c.router)
 	if err := BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
-		c.logger.Fatal(err)
+		c.logger.Fatal().Err(err).Msg("Failed to bootstrap controllers")
 	}
 
 	// basic auth if env passed
@@ -82,7 +85,12 @@ func (c *Server) Serve(port uint) error {
 	}
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
-		Format: "[${time_rfc3339}] [${status}] [${method}] [${uri}] [${latency_human}]\n",
+		//Format: "[${time_rfc3339}] [${status}] [${method}] [${uri}] [${latency_human}]\n",
+		Format: fmt.Sprintf(
+			"%sSpire › API ›%s [${status}] [${method}] [${uri}] [${latency_human}]\n",
+			console.BoldWhite,
+			console.Reset,
+		),
 		Output: e.Logger.Output(),
 	}))
 
@@ -128,6 +136,8 @@ func (c *Server) Serve(port uint) error {
 		}
 	})
 
+	c.watcher.Run()
+
 	// serve spa as embedded static assets
 	s := spa.NewSpa(c.logger)
 	e.GET("/*", s.Spa().Handler(), middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}))
@@ -135,16 +145,11 @@ func (c *Server) Serve(port uint) error {
 
 	e.HTTPErrorHandler = errorHandler
 	e.HideBanner = true
+	e.HidePort = true
 
-	banner.Print()
+	imgcat.Render(banner.GetLogo())
 
-	// only run Occulus initialization in local environment
-	if env.IsAppEnvLocal() {
-		err := c.occulus.Run()
-		if err != nil {
-			c.logger.Error(err)
-		}
-	}
+	c.logger.Info().Any("port", port).Msgf("Starting Spire HTTP server")
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }

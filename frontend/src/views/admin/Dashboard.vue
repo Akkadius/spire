@@ -10,7 +10,10 @@
       <div class="row row-cards" :style="loaded ? 'opacity:1' : 'opacity:.3'">
         <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
         <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
-        <dashboard-counter name="Server Uptime" :counter="stats && stats.uptime && stats.uptime.includes('{') ? '' : formatUptime(stats && stats.uptime ? stats.uptime : '')"/>
+        <dashboard-counter
+          name="Server Uptime"
+          :counter="stats && stats.uptime && stats.uptime.includes('{') ? '' : formatUptime(stats && stats.uptime ? stats.uptime : '')"
+        />
       </div>
 
       <div class="row row-cards">
@@ -46,10 +49,7 @@ import ServerProcessButtonComponent from "@/views/admin/components/ServerProcess
 import DashboardProcessCounts       from "@/views/admin/components/DashboardProcessCounts";
 import DashboardCpuInfo             from "@/views/admin/components/DashboardCpuInfo";
 import DashboardSystemInfo          from "@/views/admin/components/DashboardSystemInfo";
-import Timer                        from "@/app/timer/timer";
-import {OcculusClient}              from "@/app/api/eqemu-admin-client-occulus";
 import DashboardCounter             from "@/views/admin/components/DashboardCounter.vue";
-import {OS}                         from "@/app/os/os";
 import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
 import {SpireApi}                   from "@/app/api/spire-api";
 import DashboardSystemInfoV2        from "@/views/admin/components/DashboardSystemInfoV2.vue";

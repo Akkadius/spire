@@ -5,6 +5,7 @@ import (
 )
 
 type GuildBank struct {
+	ID          uint        `json:"id" gorm:"Column:id"`
 	Guildid     uint        `json:"guildid" gorm:"Column:guildid"`
 	Area        uint8       `json:"area" gorm:"Column:area"`
 	Slot        uint        `json:"slot" gorm:"Column:slot"`

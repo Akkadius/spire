@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"net/http"
@@ -17,18 +16,15 @@ import (
 
 type AdventureStatController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewAdventureStatController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *AdventureStatController {
 	return &AdventureStatController{
 		db:       db,
-		logger:   logger,
 		auditLog: auditLog,
 	}
 }
@@ -265,7 +261,7 @@ func (e *AdventureStatController) deleteAdventureStat(c echo.Context) error {
 	// primary key param
 	playerId, err := strconv.Atoi(c.Param("playerId"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 	params = append(params, playerId)
 	keys = append(keys, "player_id = ?")

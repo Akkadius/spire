@@ -266,11 +266,6 @@ const router = new Router({
 
     // Admin
     {
-      path: ROUTE.ADMIN_OCCULUS_REQUIRED,
-      component: () => import('./views/admin/OcculusRequire.vue'),
-      meta: {title: "Occulus Required"},
-    },
-    {
       path: ROUTE.ADMIN_ROOT,
       component: () => import('./views/admin/layout/AdminLayout.vue'),
       children: [
@@ -297,7 +292,7 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
           component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
-          meta: {title: "Discord Crash Webhook", occulus: true},
+          meta: {title: "Discord Crash Webhook"},
         },
         {
           path: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS,
@@ -312,7 +307,7 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD,
           component: () => import('./views/admin/configuration/QuestHotReload.vue'),
-          meta: {title: "Quest Hot Reload Settings", occulus: true},
+          meta: {title: "Quest Hot Reload Settings"},
         },
         {
           path: ROUTE.ADMIN_DATABASE_BACKUP,
@@ -327,7 +322,7 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CONFIG_MOTD,
           component: () => import('./views/admin/configuration/Motd.vue'),
-          meta: {title: "Message of the Day", occulus: true},
+          meta: {title: "Message of the Day"},
         },
         {
           path: ROUTE.ADMIN_LOG_SETTINGS,
@@ -361,11 +356,6 @@ const router = new Router({
           path: ROUTE.ADMIN_SERVER_UPDATE,
           component: () => import('./views/admin/server-update/ServerUpdate.vue'),
           meta: {title: "Server Update"},
-        },
-        {
-          path: ROUTE.ADMIN_TOOL_SERVER_QUESTS,
-          component: () => import('./views/admin/tools/ServerQuests.vue'),
-          meta: {title: "Quests Management", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS,
@@ -435,7 +425,6 @@ router.beforeEach(async (to, from, next) => {
   // console.log(to)
 
   if (typeof AppEnv.getEnv() !== 'undefined') {
-    AppEnv.routeCheckOcculus(to, router)
     AppEnv.routeCheckSpireInitialized(to, router)
   }
 

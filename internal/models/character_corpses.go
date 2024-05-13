@@ -53,6 +53,10 @@ type CharacterCorpse struct {
 	Wc7              null.Uint  `json:"wc_7" gorm:"Column:wc_7"`
 	Wc8              null.Uint  `json:"wc_8" gorm:"Column:wc_8"`
 	Wc9              null.Uint  `json:"wc_9" gorm:"Column:wc_9"`
+	RezTime          uint       `json:"rez_time" gorm:"Column:rez_time"`
+	GmExp            uint       `json:"gm_exp" gorm:"Column:gm_exp"`
+	KilledBy         uint       `json:"killed_by" gorm:"Column:killed_by"`
+	Rezzable         uint8      `json:"rezzable" gorm:"Column:rezzable"`
 }
 
 func (CharacterCorpse) TableName() string {

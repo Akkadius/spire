@@ -119,14 +119,6 @@ func IsAppEnvTesting() bool {
 		isTestSuffixFromArguments()
 }
 
-func IsAppEnvLocalOrTesting() bool {
-	return IsAppEnvLocal() || IsAppEnvTesting()
-}
-
-func IsAppEnvStaging() bool {
-	return os.Getenv("APP_ENV") == AppEnvStaging
-}
-
 func IsAppEnvProduction() bool {
 	return os.Getenv("APP_ENV") == AppEnvProduction
 }
@@ -139,10 +131,6 @@ func IsHostedReadOnlyModeEnabled() bool {
 		os.Getenv("IS_HOSTED_READ_ONLY_MODE") != "0"
 }
 
-func IsAppEnvStagingOrProduction() bool {
-	return IsAppEnvStaging() || IsAppEnvProduction()
-}
-
 func isTestSuffixFromArguments() bool {
 	anyArgumentContainsTestSuffix := false
 
@@ -153,4 +141,25 @@ func isTestSuffixFromArguments() bool {
 	}
 
 	return anyArgumentContainsTestSuffix
+}
+
+const (
+	AppWebserver = "web"
+	AppCli       = "cli"
+)
+
+func IsAppModeWebserver() bool {
+	return os.Getenv("APP_MODE") == AppWebserver
+}
+
+func IsAppModeCli() bool {
+	return os.Getenv("APP_MODE") == AppCli
+}
+
+func SetAppModeCli() {
+	_ = os.Setenv("APP_MODE", AppCli)
+}
+
+func SetAppModeWebserver() {
+	_ = os.Setenv("APP_MODE", AppWebserver)
 }

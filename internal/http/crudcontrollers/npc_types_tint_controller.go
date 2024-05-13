@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"net/http"
@@ -17,18 +16,15 @@ import (
 
 type NpcTypesTintController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewNpcTypesTintController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *NpcTypesTintController {
 	return &NpcTypesTintController{
 		db:       db,
-		logger:   logger,
 		auditLog: auditLog,
 	}
 }
@@ -265,7 +261,7 @@ func (e *NpcTypesTintController) deleteNpcTypesTint(c echo.Context) error {
 	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")

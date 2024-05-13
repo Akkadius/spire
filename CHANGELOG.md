@@ -1,3 +1,28 @@
+## [4.0.0] 5/12/2024
+
+### Occulus Deprecation
+
+Occulus has been ported natively to Spire. All remaining features have been ported over to Spire and Occulus has been deprecated. You can safely delete your Occulus binary. If you had your server already started during the update you will need to stop and restart your server to see the new features and use the new launcher.
+
+### Changes
+
+* **Console Logging** Console logging has been improved to be more verbose and informative. The entire logging system has been overhauled to provide more information to the user and be more useful for debugging for development.
+* **Banner** Spire now renders the image banner on bootup in the console.
+
+#### Spire Admin
+
+* **Server Launcher** Has been ported natively to Spire featuring improved performance, stability, and reliability. Windows will no longer spawn a separate window for the launcher or for each of the server processes. This will be a huge quality of life improvement for Windows users.
+* **Quest Hot Reload** Has been ported natively to Spire featuring improved performance, stability, and reliability.
+* **Crash Log Watcher** Has been ported natively to Spire.
+* **Zone Server** The zone server page has had a UI overhaul, featuring a differentiation between active, inactive, and static zones. Players now show visually on this page. You can now search by zone name or player name. You can also kill zone processes directly from the UI.
+* **Server Locking** Fix error with locking server while offline.
+
+![image](https://github.com/Akkadius/spire/assets/3319450/c0e7e515-a3d2-4345-bb25-56f1696fb57f)
+
+![image](https://github.com/Akkadius/spire/assets/3319450/74ea9159-68e4-422a-ba83-af1588492243)
+
+![image](https://github.com/Akkadius/spire/assets/3319450/8c87292e-775c-40a2-9238-3724af75a5a0)
+
 ## [3.13.9] 5/05/2024
 
 **Server Launcher** Remove synthetic 1-second delay on server start/stop/restart

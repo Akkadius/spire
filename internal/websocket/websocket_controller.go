@@ -2,28 +2,25 @@ package websocket
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/net/websocket"
 	"net/http"
 )
 
 type Controller struct {
-	logger   *logrus.Logger
 	pathmgmt *pathmgmt.PathManagement
 	handler  *Handler
 }
 
 func NewController(
-	logger *logrus.Logger,
 	pathmgmt *pathmgmt.PathManagement,
 	handler *Handler,
 ) *Controller {
 	return &Controller{
-		logger:   logger,
 		pathmgmt: pathmgmt,
 		handler:  handler,
 	}
@@ -77,7 +74,7 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 				var m SpireWebsocketMessage
 				err = json.Unmarshal([]byte(msg), &m)
 				if err != nil {
-					a.logger.Println(err)
+					fmt.Println(err)
 				}
 
 				if m.Action == "hello" {

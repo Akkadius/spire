@@ -3,21 +3,17 @@ package eqemuserverconfig
 import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type Controller struct {
-	logger       *logrus.Logger
 	serverconfig *Config
 }
 
 func NewController(
-	logger *logrus.Logger,
 	serverconfig *Config,
 ) *Controller {
 	return &Controller{
-		logger:       logger,
 		serverconfig: serverconfig,
 	}
 }
@@ -26,6 +22,8 @@ func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "admin/serverconfig", a.get, nil),
 		routes.RegisterRoute(http.MethodPost, "admin/serverconfig", a.save, nil),
+		routes.RegisterRoute(http.MethodGet, "admin/launcherconfig", a.getLauncherConfig, nil),
+		routes.RegisterRoute(http.MethodPost, "admin/launcherconfig", a.saveLauncherConfig, nil),
 	}
 }
 
@@ -49,6 +47,60 @@ func (a *Controller) save(c echo.Context) error {
 	}
 
 	err = a.serverconfig.Save(config)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, config)
+}
+
+type LauncherConfig struct {
+	RunSharedMemory    bool   `json:"runSharedMemory"`
+	RunLoginserver     bool   `json:"runLoginserver"`
+	RunQueryServ       bool   `json:"runQueryServ"`
+	IsRunning          bool   `json:"isRunning"`
+	SpireLauncherStart bool   `json:"spireLauncherStart"`
+	MinZoneProcesses   int    `json:"minZoneProcesses"`
+	StaticZones        string `json:"staticZones"`
+}
+
+func (a *Controller) getLauncherConfig(c echo.Context) error {
+	cfg := a.serverconfig.Get()
+	l := LauncherConfig{
+		RunSharedMemory:    cfg.WebAdmin.Launcher.RunSharedMemory,
+		RunLoginserver:     cfg.WebAdmin.Launcher.RunLoginserver,
+		RunQueryServ:       cfg.WebAdmin.Launcher.RunQueryServ,
+		IsRunning:          cfg.WebAdmin.Launcher.IsRunning,
+		SpireLauncherStart: cfg.Spire.LauncherStart,
+		MinZoneProcesses:   cfg.WebAdmin.Launcher.MinZoneProcesses,
+		StaticZones:        cfg.WebAdmin.Launcher.StaticZones,
+	}
+
+	return c.JSON(http.StatusOK, l)
+}
+
+func (a *Controller) saveLauncherConfig(c echo.Context) error {
+	var config LauncherConfig
+	err := c.Bind(&config)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Failed to bind config")
+	}
+
+	cfg := a.serverconfig.Get()
+	cfg.WebAdmin.Launcher.RunSharedMemory = config.RunSharedMemory
+	cfg.WebAdmin.Launcher.RunLoginserver = config.RunLoginserver
+	cfg.WebAdmin.Launcher.RunQueryServ = config.RunQueryServ
+	cfg.WebAdmin.Launcher.IsRunning = config.IsRunning
+	cfg.WebAdmin.Launcher.MinZoneProcesses = config.MinZoneProcesses
+	cfg.WebAdmin.Launcher.StaticZones = config.StaticZones
+	cfg.Spire.LauncherStart = config.SpireLauncherStart
+
+	// both launchers shouldn't be running at the same time
+	if cfg.Spire.LauncherStart {
+		cfg.WebAdmin.Launcher.IsRunning = false
+	}
+
+	err = a.serverconfig.Save(cfg)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

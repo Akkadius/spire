@@ -2,7 +2,6 @@ package eqemuchangelog
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 	"strconv"
@@ -10,7 +9,6 @@ import (
 
 type ChangelogCommand struct {
 	db        *gorm.DB
-	logger    *logrus.Logger
 	command   *cobra.Command
 	changelog *Changelog
 }
@@ -19,10 +17,9 @@ func (c *ChangelogCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewChangelogCommand(db *gorm.DB, logger *logrus.Logger, changelog *Changelog) *ChangelogCommand {
+func NewChangelogCommand(db *gorm.DB, changelog *Changelog) *ChangelogCommand {
 	i := &ChangelogCommand{
-		db:     db,
-		logger: logger,
+		db: db,
 		command: &cobra.Command{
 			Use:   "eqemu-server:changelog [days-back]",
 			Short: "Generates eqemu changelog",
@@ -42,7 +39,7 @@ func (c *ChangelogCommand) Handle(cmd *cobra.Command, args []string) {
 	if len(args) == 1 {
 		intVar, err := strconv.Atoi(args[0])
 		if err != nil {
-			c.logger.Error(err)
+			fmt.Printf("Invalid argument [%v] must be an integer\n", args[0])
 		}
 		days = intVar
 	}

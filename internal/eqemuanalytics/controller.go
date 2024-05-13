@@ -9,7 +9,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"strconv"
@@ -18,18 +17,15 @@ import (
 )
 
 type Controller struct {
-	logger   *logrus.Logger
 	db       *database.Resolver
 	releases *Releases
 }
 
 func NewController(
-	logger *logrus.Logger,
 	db *database.Resolver,
 	releases *Releases,
 ) *Controller {
 	return &Controller{
-		logger:   logger,
 		db:       db,
 		releases: releases,
 	}
@@ -129,7 +125,7 @@ func (a *Controller) serverCrashReport(c echo.Context) error {
 				),
 			)
 			if err != nil {
-				a.logger.Error(err)
+				fmt.Println(err)
 			}
 		}()
 	}

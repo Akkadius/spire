@@ -4,16 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"gorm.io/gorm"
 	"strings"
 )
 
 type Importer struct {
-	logger *logrus.Logger
+	logger *logger.AppLogger
 }
 
-func NewImporter(logger *logrus.Logger) *Importer {
+func NewImporter(logger *logger.AppLogger) *Importer {
 	return &Importer{logger: logger}
 }
 
@@ -21,7 +21,7 @@ func (i *Importer) getDatabase(g *gorm.DB) *sql.DB {
 	// get database instance
 	db, err := g.DB()
 	if err != nil {
-		i.logger.Warn(err)
+		i.logger.Warn().Err(err).Msg("failed to get database instance")
 	}
 
 	return db
@@ -45,18 +45,18 @@ func (i *Importer) ImportSpells(db *gorm.DB, fileContents string) (ImportResult,
 	dbColumnsStr := "`" + strings.Join(dbColumns, "`, `") + "`"
 
 	// build parameter bindings string
-	params := []string{}
+	var params []string
 	for _, _ = range dbColumns {
 		params = append(params, "?")
 	}
 	paramsStr := strings.Join(params, ",")
 
 	// vars
-	placeholders := []string{}
+	var placeholders []string
 	var values []interface{}
 	chunk := 0
 
-	i.logger.Debugf("[import] Database columns [%v]\n", len(dbColumns))
+	i.logger.Debug().Any("columns", len(dbColumns)).Msg("Importing spells")
 
 	// loop through lines
 	processedRows := 0
@@ -92,7 +92,7 @@ func (i *Importer) ImportSpells(db *gorm.DB, fileContents string) (ImportResult,
 		processedRows++
 	}
 
-	i.logger.Debugf("[import] Processed rows [%v]\n", processedRows)
+	i.logger.Debug().Any("processedRows", processedRows).Msg("Processed rows")
 
 	err := i.insertBulk(db, "spells_new", dbColumnsStr, placeholders, values)
 	if err != nil {
@@ -113,7 +113,7 @@ func (i *Importer) ImportDbStr(db *gorm.DB, fileContents string) (ImportResult, 
 	// purge
 	rowsDeleted := db.Exec("DELETE FROM db_str").RowsAffected
 
-	placeholders := []string{}
+	var placeholders []string
 	var values []interface{}
 	chunk := 0
 

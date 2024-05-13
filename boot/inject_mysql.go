@@ -5,9 +5,9 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"gorm.io/driver/mysql"
-	"gorm.io/gorm/logger"
+	gormLogger "gorm.io/gorm/logger"
 	"log"
 	"os"
 	"strconv"
@@ -26,15 +26,15 @@ var databaseSet = wire.NewSet(
 )
 
 // we need to do this because
-func provideAppDbConnections(serverconfig *eqemuserverconfig.Config, logger *logrus.Logger) *database.Connections {
+func provideAppDbConnections(serverconfig *eqemuserverconfig.Config, logger *logger.AppLogger) *database.Connections {
 	eqEmuLocalDatabase, err := provideEQEmuLocalDatabase(serverconfig)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal().Err(err).Msg("unable to provide eqemu local database")
 	}
 
 	spireDatabase, err := provideSpireDatabase(serverconfig)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal().Err(err).Msg("unable to provide spire database")
 	}
 
 	// if we're local, we assume our emulator database
@@ -129,9 +129,9 @@ func provideEQEmuLocalDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB
 		return nil, err
 	}
 
-	logMode := logger.Silent
+	logMode := gormLogger.Silent
 	if config.EnableLogging {
-		logMode = logger.Info
+		logMode = gormLogger.Info
 	}
 
 	db, err := gorm.Open(mysql.New(mysql.Config{
@@ -150,7 +150,7 @@ func provideEQEmuLocalDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
 			FullSaveAssociations:                     false,
-			Logger:                                   logger.Default.LogMode(logMode),
+			Logger:                                   gormLogger.Default.LogMode(logMode),
 		},
 	)
 
@@ -220,9 +220,9 @@ func provideSpireDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB, err
 		return nil, err
 	}
 
-	logMode := logger.Silent
+	logMode := gormLogger.Silent
 	if config.EnableLogging {
-		logMode = logger.Info
+		logMode = gormLogger.Info
 	}
 
 	db, err := gorm.Open(mysql.New(mysql.Config{
@@ -241,7 +241,7 @@ func provideSpireDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB, err
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
 			FullSaveAssociations:                     false,
-			Logger:                                   logger.Default.LogMode(logMode),
+			Logger:                                   gormLogger.Default.LogMode(logMode),
 		},
 	)
 

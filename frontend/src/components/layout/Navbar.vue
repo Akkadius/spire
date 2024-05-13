@@ -373,15 +373,13 @@ export default {
             {
               title: "Crash Webhooks",
               to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
-              icon: "ra ra-fire mr-1",
-              isOcculus: true
+              icon: "ra ra-fire mr-1"
             },
             { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1" },
             {
               title: "Quest Hot Reload",
               to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD,
-              icon: "ra ra-alien-fire mr-1",
-              isOcculus: true
+              icon: "ra ra-alien-fire mr-1"
             },
             { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
             { title: "UCS", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=UCS', icon: "ra ra-speech-bubbles mr-1", exact: true },
@@ -423,7 +421,6 @@ export default {
             { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
           ]
         },
-        { label: "Quests", labelIcon: "fa fa-code-fork mr-1", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, isOcculus: true },
         {
           label: "Reloading (Global)",
           labelIcon: "fa fa-refresh mr-1",

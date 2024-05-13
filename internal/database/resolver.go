@@ -5,13 +5,13 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/request"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	gormLogger "gorm.io/gorm/logger"
 	"strings"
 	"sync"
 	"time"
@@ -26,7 +26,7 @@ import (
 type Resolver struct {
 	connections     *Connections                 // local connections
 	remoteDatabases map[string]map[uint]*gorm.DB // remote databases only used when Spire resolves connections defined by users
-	logger          *logrus.Logger
+	logger          *logger.AppLogger
 	crypt           *encryption.Encrypter
 	cache           *gocache.Cache
 }
@@ -46,7 +46,7 @@ var connectionTypes = []string{
 
 func NewResolver(
 	connections *Connections,
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	crypt *encryption.Encrypter,
 	cache *gocache.Cache,
 ) *Resolver {
@@ -218,9 +218,9 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 		dbName,
 	)
 
-	logMode := logger.Silent
+	logMode := gormLogger.Silent
 	if env.GetBool("MYSQL_QUERY_LOGGING", "false") {
-		logMode = logger.Info
+		logMode = gormLogger.Info
 	}
 
 	//fmt.Printf("[database_resolver] creating new connection for user [%v] with dsn [%v]\n", user.ID, dsn)
@@ -235,18 +235,18 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
 			FullSaveAssociations:                     false,
-			Logger:                                   logger.Default.LogMode(logMode),
+			Logger:                                   gormLogger.Default.LogMode(logMode),
 		},
 	)
 
 	if err != nil {
-		d.logger.Printf("[database_resolver] MySQL conn err [%v]", err)
+		d.logger.Info().Any("connection", conn).Err(err).Msg("Failed to connect to user database connection")
 		return nil
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		d.logger.Printf("[database_resolver] MySQL fetch err [%v]", err)
+		d.logger.Info().Any("connection", conn).Err(err).Msg("Failed to connect to user database connection")
 		return nil
 	}
 
@@ -456,13 +456,13 @@ func (d *Resolver) connectionKeepAlive() {
 					// ping connection
 					db, err := connection.DB()
 					if err != nil {
-						d.logger.Printf("[database_resolver] MySQL fetch err [%v]", err)
+						d.logger.Info().Any("connection", connectionId).Err(err).Msg("Failed to fetch database connection from MySQL")
 						continue
 					}
 
 					// if we have a failed connection attempt
 					if err := db.Ping(); err != nil {
-						d.logger.Printf("[database_resolver] MySQL ping err [%v]", err)
+						d.logger.Info().Any("connection", connectionId).Err(err).Msg("Failed to ping database connection")
 						// if we have a failed connection attempt
 						if _, ok := failedConnectionAttempts[connectionId]; ok {
 							// increment
@@ -478,7 +478,7 @@ func (d *Resolver) connectionKeepAlive() {
 									}
 								}
 
-								d.logger.Printf("[database_resolver] destroying connection %v after 3 failed attempts to ping\n", connectionId)
+								d.logger.Info().Any("connection", connectionId).Msg("Destroying connection after 3 failed attempts to ping")
 							}
 						} else {
 							// init failed connection attempt

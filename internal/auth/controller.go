@@ -10,7 +10,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"time"
@@ -18,7 +17,6 @@ import (
 
 type Controller struct {
 	db     *database.Resolver
-	logger *logrus.Logger
 	gocial *gocialite.Dispatcher
 	cache  *gocache.Cache
 	user   *user.User
@@ -26,13 +24,11 @@ type Controller struct {
 
 func NewController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	user *user.User,
 	cache *gocache.Cache,
 ) *Controller {
 	return &Controller{
 		db:     db,
-		logger: logger,
 		cache:  cache,
 		gocial: gocialite.NewDispatcher(),
 		user:   user,
@@ -117,7 +113,7 @@ func (a *Controller) githubCallbackHandler(c echo.Context) error {
 		// new github
 		newUser, err := a.user.CreateUser(u)
 		if err != nil {
-			a.logger.Error(err)
+			return err
 		}
 
 		if newUser.ID > 0 {

@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"net/http"
@@ -17,18 +16,15 @@ import (
 
 type GuildRelationController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	auditLog *auditlog.UserEvent
 }
 
 func NewGuildRelationController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	auditLog *auditlog.UserEvent,
 ) *GuildRelationController {
 	return &GuildRelationController{
 		db:       db,
-		logger:   logger,
 		auditLog: auditLog,
 	}
 }
@@ -287,7 +283,7 @@ func (e *GuildRelationController) deleteGuildRelation(c echo.Context) error {
 	// primary key param
 	guild1, err := strconv.Atoi(c.Param("guild1"))
 	if err != nil {
-		e.logger.Error(err)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 	params = append(params, guild1)
 	keys = append(keys, "guild1 = ?")

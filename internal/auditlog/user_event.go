@@ -8,25 +8,21 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"os"
 )
 
 type UserEvent struct {
-	db     *database.Resolver
-	cache  *cache.Cache
-	logger *logrus.Logger
+	db    *database.Resolver
+	cache *cache.Cache
 }
 
 func NewUserEvent(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	cache *cache.Cache,
 ) *UserEvent {
 	return &UserEvent{
-		cache:  cache,
-		db:     db,
-		logger: logger,
+		cache: cache,
+		db:    db,
 	}
 }
 

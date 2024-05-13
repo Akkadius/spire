@@ -3,14 +3,12 @@ package questapi
 import (
 	"github.com/Akkadius/spire/internal/github"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"sort"
 	"strings"
 	"time"
 )
 
 type ParseService struct {
-	logger     *logrus.Logger
 	cache      *gocache.Cache
 	downloader *github.SourceDownloader
 	files      map[string]string
@@ -18,11 +16,10 @@ type ParseService struct {
 }
 
 func NewParseService(
-	logger *logrus.Logger,
 	cache *gocache.Cache,
 	downloader *github.SourceDownloader,
 ) *ParseService {
-	return &ParseService{logger: logger, cache: cache, downloader: downloader}
+	return &ParseService{cache: cache, downloader: downloader}
 }
 
 type Response struct {

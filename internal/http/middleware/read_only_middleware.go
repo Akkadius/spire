@@ -5,19 +5,19 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/request"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
 
 type ReadOnlyMiddleware struct {
 	db     *database.Resolver
-	logger *logrus.Logger
+	logger *logger.AppLogger
 }
 
-func NewReadOnlyMiddleware(db *database.Resolver, logger *logrus.Logger) *ReadOnlyMiddleware {
+func NewReadOnlyMiddleware(db *database.Resolver, logger *logger.AppLogger) *ReadOnlyMiddleware {
 	return &ReadOnlyMiddleware{
 		db:     db,
 		logger: logger,
@@ -76,7 +76,9 @@ func (r ReadOnlyMiddleware) Handle() echo.MiddlewareFunc {
 				}
 
 				if userDb == eqemuDb {
-					r.logger.Debugf("Database instance is equal, read only mode")
+					r.logger.Debug().
+						Any("user", user).
+						Msg("User attempted to write to database in read only mode")
 
 					return c.JSON(
 						http.StatusForbidden,

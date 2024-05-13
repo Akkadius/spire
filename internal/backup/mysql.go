@@ -4,19 +4,17 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/sirupsen/logrus"
 	"os/exec"
 	"path/filepath"
 	"strings"
 )
 
 type Mysql struct {
-	logger      *logrus.Logger
 	pathmanager *pathmgmt.PathManagement
 }
 
-func NewMysql(logger *logrus.Logger, pathmanager *pathmgmt.PathManagement) *Mysql {
-	return &Mysql{logger: logger, pathmanager: pathmanager}
+func NewMysql(pathmanager *pathmgmt.PathManagement) *Mysql {
+	return &Mysql{pathmanager: pathmanager}
 }
 
 type BackupRequest struct {
@@ -75,20 +73,20 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 	cmd.Stderr = cmd.Stdout
 	err := cmd.Start()
 	if err != nil {
-		m.logger.Error(err)
+		fmt.Printf("failed to start command: %v", err)
 	}
 
 	output := ""
 	scanner := bufio.NewScanner(stdout)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		m.logger.Printf("[Backup] %v\n", scanner.Text())
+		fmt.Printf("[Backup] %v\n", scanner.Text())
 		output += fmt.Sprintf("%v\n", scanner.Text())
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		m.logger.Error(err)
+		fmt.Printf("failed to run command: %v", err)
 	}
 
 	finalPath := ""

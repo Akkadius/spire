@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
+	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/spire"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 )
@@ -17,13 +17,13 @@ type App struct {
 	context       context.Context
 	mysql         *gorm.DB
 	dbConnections *database.Connections
-	logger        *logrus.Logger
 	cache         *gocache.Cache
 	commands      []*cobra.Command
 	db            *database.Resolver
 	router        *routes.Router
 	desktop       *desktop.WebBoot
 	onboarding    *spire.Init
+	watcher       *eqemuserver.QuestHotReloadWatcher
 }
 
 func (a App) Cache() *gocache.Cache {
@@ -45,7 +45,6 @@ func (a App) Commands() []*cobra.Command {
 // Create new App
 func NewApplication(
 	mysql *gorm.DB,
-	logger *logrus.Logger,
 	cache *gocache.Cache,
 	commands []*cobra.Command,
 	db *database.Resolver,
@@ -57,7 +56,6 @@ func NewApplication(
 	return App{
 		context:       context.Background(),
 		mysql:         mysql,
-		logger:        logger,
 		cache:         cache,
 		commands:      commands,
 		db:            db,

@@ -3,13 +3,11 @@ package questapi
 import (
 	"errors"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"strings"
 )
 
 type ExampleTestCommand struct {
-	logger  *logrus.Logger
 	command *cobra.Command
 	sourcer *ExamplesGithubSourcer
 }
@@ -19,11 +17,9 @@ func (c *ExampleTestCommand) Command() *cobra.Command {
 }
 
 func NewExampleTestCommand(
-	logger *logrus.Logger,
 	sourcer *ExamplesGithubSourcer,
 ) *ExampleTestCommand {
 	i := &ExampleTestCommand{
-		logger:  logger,
 		sourcer: sourcer,
 		command: &cobra.Command{
 			Use:   "quest:example-test",

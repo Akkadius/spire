@@ -8,12 +8,12 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
-	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
@@ -28,31 +28,31 @@ import (
 
 type Controller struct {
 	db             *database.Resolver
-	logger         *logrus.Logger
 	eqemuserverapi *Client
 	pathmgmt       *pathmgmt.PathManagement
 	settings       *spire.Settings
 	serverconfig   *eqemuserverconfig.Config
 	updater        *Updater
+	launcher       *Launcher
 }
 
 func NewController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	api *Client,
 	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
 	settings *spire.Settings,
 	updater *Updater,
+	launcher *Launcher,
 ) *Controller {
 	return &Controller{
 		db:             db,
-		logger:         logger,
 		eqemuserverapi: api,
 		serverconfig:   serverconfig,
 		pathmgmt:       pathmgmt,
 		updater:        updater,
 		settings:       settings,
+		launcher:       launcher,
 	}
 }
 
@@ -83,6 +83,10 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "eqemuserver/log/:file", a.deleteFileLog, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/log-search/:search", a.logSearch, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/pre-flight/:process", a.preflight, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/start", a.serverStart, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop", a.serverStop, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/restart", a.serverRestart, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
 	}
 }
 
@@ -124,7 +128,6 @@ type ServerStatsResponse struct {
 
 func (a *Controller) getServerStats(c echo.Context) error {
 	var r ServerStatsResponse
-
 	processes, _ := process.Processes()
 	for _, p := range processes {
 		cmdline, err := p.Cmdline()
@@ -132,7 +135,7 @@ func (a *Controller) getServerStats(c echo.Context) error {
 			return err
 		}
 
-		if strings.Contains(cmdline, "server-launcher") {
+		if strings.Contains(cmdline, "eqemu-server:launcher") {
 			r.LauncherOnline = true
 		}
 		if strings.Contains(cmdline, "world") {
@@ -344,7 +347,7 @@ func (a *Controller) build(c echo.Context) error {
 	cmd.Dir = r.SourceDirectory
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
+		return err
 	}
 
 	cmd.Stderr = cmd.Stdout
@@ -594,17 +597,25 @@ type DashboardStatsResponse struct {
 }
 
 func (a *Controller) getDashboardStats(c echo.Context) error {
-	tables := []string{"account", "character_data", "guilds", "items", "npc_types"}
 	counts := make(map[string]int64)
-	for _, table := range tables {
-		var count int64
-		a.db.GetEqemuDb().Raw(fmt.Sprintf("select count(*) as count from %v", table)).Scan(&count)
-		counts[table] = count
-	}
 
 	uptime, err := a.eqemuserverapi.GetWorldUptime()
 	if err != nil {
 		uptime = "Server offline"
+	}
+
+	tableModels := []models.Modelable{
+		models.Item{},
+		models.Account{},
+		models.CharacterDatum{},
+		models.Guild{},
+		models.NpcType{},
+	}
+
+	for _, model := range tableModels {
+		var count int64
+		a.db.QueryContext(model, c).Count(&count)
+		counts[model.TableName()] = count
 	}
 
 	r := DashboardStatsResponse{
@@ -957,7 +968,7 @@ func (a *Controller) preflight(c echo.Context) error {
 	cmd.Dir = a.pathmgmt.GetEQEmuServerPath()
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		a.logger.Fatalf("could not get stdout pipe: %v", err)
+		return err
 	}
 
 	cmd.Stderr = cmd.Stdout
@@ -1032,14 +1043,7 @@ func (a *Controller) toggleServerLock(c echo.Context) error {
 		)
 	}
 
-	err = a.eqemuserverapi.SetLockStatus(locked)
-	if err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Failed to set lock status [%v]", err.Error())},
-		)
-	}
-
+	_ = a.eqemuserverapi.SetLockStatus(locked)
 	lockedMessage := "unlocked"
 	if locked {
 		lockedMessage = "locked"
@@ -1060,5 +1064,85 @@ func (a *Controller) getServerLockedStatus(c echo.Context) error {
 		echo.Map{
 			"locked": a.getLockStatus(),
 		},
+	)
+}
+
+func (a *Controller) serverStart(c echo.Context) error {
+	err := a.launcher.StartLauncherProcess()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to start server [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server started successfully"},
+	)
+}
+
+type StopOptions struct {
+	Timer int `json:"timer,omitempty"` // seconds
+}
+
+func (a *Controller) serverStop(c echo.Context) error {
+	var stop StopOptions
+	err := c.Bind(&stop)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
+	}
+
+	a.launcher.SetStopTimer(stop.Timer)
+
+	err = a.launcher.Stop()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to stop server [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server stopped successfully"},
+	)
+}
+
+func (a *Controller) serverRestart(c echo.Context) error {
+	var stop StopOptions
+	err := c.Bind(&stop)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
+	}
+
+	a.launcher.SetStopTimer(stop.Timer)
+
+	err = a.launcher.Restart()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to restart server [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server restarted successfully"},
+	)
+}
+
+func (a *Controller) serverStopCancel(c echo.Context) error {
+	err := a.launcher.StopCancel()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to cancel server stop [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"message": "Server stop cancelled successfully"},
 	)
 }

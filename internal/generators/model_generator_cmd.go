@@ -1,14 +1,14 @@
 package generators
 
 import (
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 )
 
 type ModelGeneratorCommand struct {
 	db      *gorm.DB
-	logger  *logrus.Logger
+	logger  *logger.AppLogger
 	command *cobra.Command
 }
 
@@ -16,7 +16,7 @@ func (c *ModelGeneratorCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewModelGeneratorCommand(db *gorm.DB, logger *logrus.Logger) *ModelGeneratorCommand {
+func NewModelGeneratorCommand(db *gorm.DB, logger *logger.AppLogger) *ModelGeneratorCommand {
 	i := &ModelGeneratorCommand{
 		db:     db,
 		logger: logger,

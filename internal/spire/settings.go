@@ -3,7 +3,6 @@ package spire
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -20,17 +19,14 @@ const (
 
 type Settings struct {
 	connections *database.Connections
-	logger      *logrus.Logger
 	settings    []models.Setting
 }
 
 func NewSettings(
 	connections *database.Connections,
-	logger *logrus.Logger,
 ) *Settings {
 	return &Settings{
 		connections: connections,
-		logger:      logger,
 	}
 }
 

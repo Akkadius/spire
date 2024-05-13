@@ -9,8 +9,8 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,16 +19,13 @@ import (
 )
 
 type SpireAssets struct {
-	logger      *logrus.Logger
 	pathmanager *pathmgmt.PathManagement
 }
 
 func NewSpireAssets(
-	logger *logrus.Logger,
 	pathmanager *pathmgmt.PathManagement,
 ) *SpireAssets {
 	return &SpireAssets{
-		logger:      logger,
 		pathmanager: pathmanager,
 	}
 }
@@ -61,7 +58,7 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 			// relink
 			err := os.Symlink(cachedir, symlinkTarget)
 			if err != nil {
-				a.logger.Fatal(err)
+				log.Fatal(err)
 			}
 		}
 	}
@@ -86,13 +83,13 @@ func (a SpireAssets) downloadAssets(cachedir string) {
 		fmt.Sprintf("https://github.com/%v/releases/latest/download/build.zip", assetRepo),
 	)
 	if err != nil {
-		a.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// unzip the file
 	err = unzip.New(dumpZip, cachedir).Extract()
 	if err != nil {
-		a.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// remove the zip file
@@ -102,7 +99,7 @@ func (a SpireAssets) downloadAssets(cachedir string) {
 func (a SpireAssets) getCacheDir() string {
 	userDir, err := os.UserCacheDir()
 	if err != nil {
-		a.logger.Error(err)
+		fmt.Printf("could not get user cache dir: %v\n", err)
 	}
 	if len(userDir) > 0 {
 		return userDir
@@ -130,7 +127,7 @@ func (a SpireAssets) CheckForAssets() {
 		// file doesn't exist, create it
 		_, err := os.Create(tmpFile)
 		if err != nil {
-			a.logger.Fatal(err)
+			log.Fatal(err)
 		}
 
 		_ = os.Chtimes(tmpFile, time.Now().Add(-time.Hour*1), time.Now().Add(-time.Hour*1))
@@ -139,7 +136,7 @@ func (a SpireAssets) CheckForAssets() {
 	// check if file modified over an hour ago
 	fileInfo, err := os.Stat(tmpFile)
 	if err != nil {
-		a.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	currentTime := time.Now()
@@ -157,7 +154,7 @@ func (a SpireAssets) CheckForAssets() {
 	// get latest release version
 	resp, err := http.Get(fmt.Sprintf("https://api.github.com/repos/%v/releases/latest", assetRepo))
 	if err != nil {
-		a.logger.Info("could not get latest release version for [%v] %v", assetRepo, err)
+		fmt.Printf("could not get latest release version for [%v] %v", assetRepo, err)
 	}
 
 	defer resp.Body.Close()
@@ -167,14 +164,14 @@ func (a SpireAssets) CheckForAssets() {
 		// read response body
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			a.logger.Fatalf("could not read response body: %v", err)
+			log.Fatalf("could not read response body: %v", err)
 		}
 
 		// bind body to struct
 		var release GitHubRelease
 		err = json.Unmarshal(body, &release)
 		if err != nil {
-			a.logger.Fatalf("could not unmarshal response body: %v", err)
+			log.Fatalf("could not unmarshal response body: %v", err)
 		}
 
 		type PackageJson struct {
@@ -187,20 +184,20 @@ func (a SpireAssets) CheckForAssets() {
 		// read file package.json contents into PackageJson struct
 		packageJson, err := os.ReadFile(file)
 		if err != nil {
-			a.logger.Fatalf("could not read PackageJson file: %v", err)
+			log.Fatalf("could not read PackageJson file: %v", err)
 		}
 
 		// bind package.json to struct
 		var packageJsonStruct PackageJson
 		err = json.Unmarshal(packageJson, &packageJsonStruct)
 		if err != nil {
-			a.logger.Fatalf("could not unmarshal package.json: %v", err)
+			log.Fatalf("could not unmarshal package.json: %v", err)
 		}
 
 		// check if current version is the same as the latest release version
 		remoteRelease := strings.ReplaceAll(release.TagName, "v", "")
 		if len(remoteRelease) > 0 && packageJsonStruct.Version != remoteRelease {
-			a.logger.Infof(
+			fmt.Printf(
 				"New version available, downloading [eq-asset-preview] release [%v]\n",
 				release.TagName,
 			)

@@ -6,8 +6,8 @@ import (
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"log"
 	"sort"
 	"strings"
 )
@@ -15,16 +15,14 @@ import (
 type RoutesListCommand struct {
 	router  *routes.Router
 	command *cobra.Command
-	logger  *logrus.Logger
 }
 
 func (c *RoutesListCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewRoutesListCommand(router *routes.Router, logger *logrus.Logger) *RoutesListCommand {
+func NewRoutesListCommand(router *routes.Router) *RoutesListCommand {
 	i := &RoutesListCommand{
-		logger: logger,
 		command: &cobra.Command{
 			Use:   "routes:list",
 			Short: "Lists application routes",
@@ -45,7 +43,7 @@ func (c *RoutesListCommand) Handle(_ *cobra.Command, _ []string) {
 	e := echo.New()
 	http.BootstrapMiddleware(e, c.router)
 	if err := http.BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
-		c.logger.Fatal(err)
+		log.Fatal(err)
 	}
 
 	type Route struct {

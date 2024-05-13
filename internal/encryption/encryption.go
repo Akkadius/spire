@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"golang.org/x/crypto/argon2"
 	"io"
 	"os"
@@ -25,7 +25,7 @@ type PasswordConfig struct {
 }
 
 type Encrypter struct {
-	logger         *logrus.Logger
+	logger         *logger.AppLogger
 	serverconfig   *eqemuserverconfig.Config
 	encryptionKey  string
 	passwordConfig *PasswordConfig
@@ -40,7 +40,7 @@ func (e *Encrypter) SetEncryptionKey(encryptionKey string) {
 }
 
 func NewEncrypter(
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	serverconfig *eqemuserverconfig.Config,
 ) *Encrypter {
 	e := &Encrypter{
@@ -58,7 +58,7 @@ func NewEncrypter(
 	e.encryptionKey = e.loadEncryptionKey()
 
 	if len(e.encryptionKey) == 0 {
-		e.logger.Fatal("Encryption key is invalid")
+		e.logger.Fatal().Msg("Encryption key is not defined")
 	}
 
 	return e
@@ -70,17 +70,17 @@ func (e *Encrypter) Encrypt(text string, keyString string) string {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		e.logger.Error(err)
+		e.logger.Error().Err(err).Msg("Failed to create new cipher")
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		e.logger.Error(err)
+		e.logger.Error().Err(err).Msg("Failed to create new GCM")
 	}
 
 	nonce := make([]byte, aesGCM.NonceSize())
 	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
-		e.logger.Error(err)
+		e.logger.Error().Err(err).Msg("Failed to read random data")
 	}
 
 	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
@@ -95,26 +95,26 @@ func (e *Encrypter) Decrypt(encryptedString string, keyString string) string {
 	//Create a new Cipher Block from the key
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		e.logger.Error(err)
+		e.logger.Error().Err(err).Msg("Failed to create new cipher")
 	}
 
 	//Create a new GCM
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		e.logger.Error(err)
+		e.logger.Error().Err(err).Msg("Failed to create new GCM")
 	}
 
 	//Get the nonce size
 	nonceSize := aesGCM.NonceSize()
 
 	if len(enc) == 0 {
-		e.logger.Error("Encrypted data is empty")
+		e.logger.Error().Msg("Encrypted data is empty")
 		return ""
 	}
 
 	// validate the nonce size
 	if len(enc) < nonceSize {
-		e.logger.Error("Encrypted data is too short")
+		e.logger.Error().Msg("Encrypted data is too short")
 		return ""
 	}
 
@@ -124,7 +124,7 @@ func (e *Encrypter) Decrypt(encryptedString string, keyString string) string {
 	//Decrypt the data
 	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		e.logger.Error(err)
+		e.logger.Error().Err(err).Msg("Failed to decrypt data")
 	}
 
 	return fmt.Sprintf("%s", plaintext)
@@ -139,11 +139,11 @@ func (e *Encrypter) loadEncryptionKey() string {
 			if len(os.Getenv("JWT_SECRET_KEY")) == 0 {
 				_ = os.Setenv("JWT_SECRET_KEY", c.Spire.EncryptionKey)
 			}
-			e.logger.Debug("[encryption] Using eqemu server config encryption key")
+			e.logger.Debug().Msg("Using eqemu server config encryption key")
 			return c.Spire.EncryptionKey
 		}
 	} else if env.IsEnvLoaded() && len(env.Get("APP_KEY", "")) != 0 {
-		e.logger.Debug("[encryption] Using [.env] encryption key")
+		e.logger.Debug().Msg("Using [.env] encryption key")
 		return env.Get("APP_KEY", "")
 	}
 
@@ -155,11 +155,11 @@ func (e *Encrypter) initializeEncryption() {
 		c := e.serverconfig.Get()
 		if len(c.Spire.EncryptionKey) == 0 {
 			c.Spire.EncryptionKey = e.generateAesKey()
-			e.logger.Infoln("[encryption] Initialized encryption key in EQEmu server config [spire:encryption_key]")
+			e.logger.Info().Any("encryption_key", c.Spire.EncryptionKey).Msg("Initialized new encryption key in EQEmu server config [spire:encryption_key]")
 			_ = e.serverconfig.Save(c)
 		}
 	} else if env.IsEnvLoaded() && len(env.Get("APP_KEY", "")) == 0 {
-		e.logger.Fatal("[encryption] Application key is not defined, it must be set in [.env]")
+		e.logger.Fatal().Msg("APP_KEY in [.env] is not set!")
 	}
 }
 

@@ -3,13 +3,10 @@ package telnet
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
-	"github.com/k0kubun/pp/v3"
-	"github.com/sirupsen/logrus"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/ziutek/telnet"
 	"io"
 	"net"
-	"path/filepath"
-	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -18,13 +15,13 @@ import (
 type Client struct {
 	debugging bool
 	t         *telnet.Conn
-	logger    *logrus.Logger
+	logger    *logger.AppLogger
 	mu        sync.Mutex
 }
 
-func NewClient(logger *logrus.Logger) *Client {
+func NewClient(logger *logger.AppLogger) *Client {
 	return &Client{
-		debugging: env.GetInt("DEBUG", "0") >= 3,
+		debugging: env.GetInt("TELNET_DEBUG", "0") >= 3,
 		logger:    logger,
 	}
 }
@@ -137,6 +134,10 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 		return "", err
 	}
 
+	if c.debugging {
+		c.logger.Debug().Any("command", cmd.Command).Msg("Sending command")
+	}
+
 	sendln(c.t, cmd.Command)
 
 	defer func() {
@@ -153,7 +154,7 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 		data, err = c.t.ReadUntil(linebreak)
 		c.debug("Read operation took %v", time.Since(start))
 		if err != nil {
-			c.logger.Warnf("[telnet] read failed: %s", err)
+			c.logger.Warn().Err(err).Msg("Failed to read from telnet")
 			c.Close()
 			return "", err
 		}
@@ -162,7 +163,14 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 
 		if strings.Contains(output, linebreak) {
 			output = strings.Replace(output, linebreak, "", 1)
-			c.debug("[Output] %v", output)
+			if c.debugging {
+				c.logger.DebugVvv().
+					Any("response", output).
+					Any("command", cmd.Command).
+					Any("enforce_json", cmd.EnforceJson).
+					Any("took", time.Since(start).String()).
+					Msg("Telnet response")
+			}
 
 			// if we are enforcing json, make sure the output is json
 			if cmd.EnforceJson {
@@ -181,7 +189,7 @@ func (c *Client) Close() {
 	if c.t != nil {
 		err := c.t.Close()
 		if err != nil {
-			c.logger.Error(err)
+			c.logger.Error().Err(err).Msg("Failed to close telnet connection")
 		}
 		c.t = nil
 	}
@@ -189,14 +197,6 @@ func (c *Client) Close() {
 
 func (c *Client) debug(msg string, a ...interface{}) {
 	if c.debugging {
-		_, file, _, ok := runtime.Caller(1)
-		if ok {
-			file = filepath.Base(file)
-			if len(a) > 0 {
-				pp.Printf(fmt.Sprintf("[%v] ", file) + fmt.Sprintf(msg, a...) + "\n")
-				return
-			}
-			pp.Printf(fmt.Sprintf("[%v] ", file) + fmt.Sprintf(msg) + "\n")
-		}
+		c.logger.Debug().Msgf(msg, a...)
 	}
 }

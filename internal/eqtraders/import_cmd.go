@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/volatiletech/null/v8"
 	"gorm.io/gorm"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -15,7 +15,6 @@ import (
 
 type ImportCommand struct {
 	db      *gorm.DB
-	logger  *logrus.Logger
 	command *cobra.Command
 }
 
@@ -25,11 +24,9 @@ func (c *ImportCommand) Command() *cobra.Command {
 
 func NewImportCommand(
 	db *gorm.DB,
-	logger *logrus.Logger,
 ) *ImportCommand {
 	i := &ImportCommand{
-		db:     db,
-		logger: logger,
+		db: db,
 		command: &cobra.Command{
 			Use:   "eq-traders:import [expansion_number]",
 			Short: "Imports data from eqtraders.com using data scraped via eq-traders:scrape",
@@ -155,7 +152,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		existingRecipes = append(existingRecipes, r)
 
 		if r.ID == 0 {
-			c.logger.Fatalf("Error inserting recipe id: %v name: %v into database", r.ID, r.Name)
+			log.Fatalf("Error inserting recipe id: %v name: %v into database", r.ID, r.Name)
 		}
 
 		existing := "re-import"

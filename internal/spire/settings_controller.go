@@ -6,26 +6,22 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type SettingsController struct {
 	db       *database.Resolver
-	logger   *logrus.Logger
 	settings *Settings
 	crypt    *encryption.Encrypter
 }
 
 func NewSettingController(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 	settings *Settings,
 ) *SettingsController {
 	return &SettingsController{
 		db:       db,
-		logger:   logger,
 		crypt:    crypt,
 		settings: settings,
 	}

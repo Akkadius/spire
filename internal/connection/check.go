@@ -7,21 +7,18 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/sirupsen/logrus"
 )
 
 type Check struct {
-	db     *database.Resolver
-	logger *logrus.Logger
-	crypt  *encryption.Encrypter
+	db    *database.Resolver
+	crypt *encryption.Encrypter
 }
 
 func NewCheck(
 	db *database.Resolver,
-	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
 ) *Check {
-	return &Check{db: db, logger: logger, crypt: crypt}
+	return &Check{db: db, crypt: crypt}
 }
 
 func (c *Check) GetEncKey(userId uint) string {

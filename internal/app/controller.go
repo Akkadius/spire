@@ -12,7 +12,6 @@ import (
 	"github.com/Akkadius/spire/internal/user"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"runtime"
@@ -22,7 +21,6 @@ import (
 // Controller is the controller for the app
 type Controller struct {
 	cache     *gocache.Cache
-	logger    *logrus.Logger
 	spireinit *spire.Init
 	spireuser *user.User
 	settings  *spire.Settings
@@ -32,7 +30,6 @@ type Controller struct {
 // NewController returns a new app controller
 func NewController(
 	cache *gocache.Cache,
-	logger *logrus.Logger,
 	spireinit *spire.Init,
 	spireuser *user.User,
 	settings *spire.Settings,
@@ -40,7 +37,6 @@ func NewController(
 ) *Controller {
 	return &Controller{
 		cache:     cache,
-		logger:    logger,
 		spireinit: spireinit,
 		spireuser: spireuser,
 		settings:  settings,
@@ -164,7 +160,7 @@ func (d *Controller) update(c echo.Context) error {
 	data, _ := d.cache.Get("packageJson")
 	pJson, ok := data.([]byte)
 	if ok {
-		if updater.NewService(pJson).CheckForUpdates(false) {
+		if updater.NewUpdater(pJson).CheckForUpdates(false) {
 			go func() {
 				fmt.Println("Automatically shutting down in 1 second...")
 				time.Sleep(1 * time.Second)

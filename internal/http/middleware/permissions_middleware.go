@@ -5,11 +5,11 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/request"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -18,13 +18,13 @@ type PermissionsMiddleware struct {
 	db          *database.Resolver
 	cache       *gocache.Cache
 	permissions *permissions.Service
-	logger      *logrus.Logger
+	logger      *logger.AppLogger
 	debug       int
 }
 
 func NewPermissionsMiddleware(
 	db *database.Resolver,
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	cache *gocache.Cache,
 	permissions *permissions.Service,
 ) *PermissionsMiddleware {
@@ -68,14 +68,14 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 							resource = strings.TrimSpace(params[3])
 						}
 
-						if r.debug >= 3 {
-							r.logger.Debugf(
-								"[permissions] middleware user [%v] connectionId [%v] pass [%v] resource [%v]\n",
-								user.ID,
-								connectionId,
-								pass,
-								resource,
-							)
+						if r.debug > 0 {
+							r.logger.DebugVvv().
+								Any("user", user.ID).
+								Any("connectionId", connectionId).
+								Any("pass", pass).
+								Any("resource", resource).
+								Any("url", c.Request().URL.Path).
+								Msg("permissions middleware")
 						}
 
 						// did not pass ACL

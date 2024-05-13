@@ -1,18 +1,17 @@
 package cmd
 
 import (
+	"errors"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/http"
-	"github.com/sirupsen/logrus"
-
-	"errors"
+	"github.com/Akkadius/spire/internal/logger"
 
 	"github.com/spf13/cobra"
 )
 
 type HttpServeCommand struct {
 	port    uint
-	logger  *logrus.Logger
+	logger  *logger.AppLogger
 	command *cobra.Command
 	server  *http.Server
 }
@@ -21,7 +20,7 @@ func (c *HttpServeCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewHttpServeCommand(logger *logrus.Logger, server *http.Server) *HttpServeCommand {
+func NewHttpServeCommand(logger *logger.AppLogger, server *http.Server) *HttpServeCommand {
 	i := &HttpServeCommand{
 		logger: logger,
 		command: &cobra.Command{
@@ -41,7 +40,7 @@ func NewHttpServeCommand(logger *logrus.Logger, server *http.Server) *HttpServeC
 // Handle implementation of the Command interface
 func (c *HttpServeCommand) Handle(_ *cobra.Command, _ []string) {
 	if err := c.server.Serve(c.port); err != nil {
-		c.logger.WithError(err).Fatal(err.Error())
+		c.logger.Fatal().Err(err).Msg("failed to start http server")
 	}
 }
 

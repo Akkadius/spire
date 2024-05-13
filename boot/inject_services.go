@@ -14,7 +14,6 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
-	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
@@ -48,12 +47,11 @@ var serviceSet = wire.NewSet(
 	user.NewUser,
 	spire.NewSettings,
 	spire.NewInit,
-	occulus.NewProxy,
-	occulus.NewProcessManagement,
 	telnet.NewClient,
 	eqemuserver.NewClient,
 	backup.NewMysql,
 	websocket.NewHandler,
 	eqemuserver.NewUpdater,
-	eqemuserver.NewProcessManager,
+	eqemuserver.NewLauncher,
+	eqemuserver.NewQuestHotReloadWatcher,
 )

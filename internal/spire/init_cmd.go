@@ -1,14 +1,14 @@
 package spire
 
 import (
+	"fmt"
 	"github.com/shirou/gopsutil/v3/mem"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"log"
 	"runtime"
 )
 
 type InitCommand struct {
-	logger    *logrus.Logger
 	command   *cobra.Command
 	spireinit *Init
 }
@@ -24,11 +24,9 @@ var compileLocation string
 
 // NewInitCommand creates a new spire:init command
 func NewInitCommand(
-	logger *logrus.Logger,
 	spireinit *Init,
 ) *InitCommand {
 	i := &InitCommand{
-		logger:    logger,
 		spireinit: spireinit,
 		command: &cobra.Command{
 			Use:   "spire:init [username] [password]",
@@ -61,7 +59,7 @@ func (c *InitCommand) Handle(_ *cobra.Command, args []string) {
 	// get system memory available
 	memory, err := mem.VirtualMemory()
 	if err != nil {
-		c.logger.Fatal(err)
+		log.Fatalf("Failed to get system memory: %v", err)
 	}
 
 	// get system memory available in GB
@@ -87,6 +85,6 @@ func (c *InitCommand) Handle(_ *cobra.Command, args []string) {
 		},
 	)
 	if err != nil {
-		c.logger.Info(err)
+		fmt.Println(err)
 	}
 }

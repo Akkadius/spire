@@ -8,10 +8,10 @@ import (
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/github"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/unzip"
-	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 	"os"
@@ -23,7 +23,7 @@ import (
 
 type Updater struct {
 	db           *database.Resolver
-	logger       *logrus.Logger
+	logger       *logger.AppLogger
 	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
 	pathmgmt     *pathmgmt.PathManagement
@@ -31,7 +31,7 @@ type Updater struct {
 
 func NewUpdater(
 	db *database.Resolver,
-	logger *logrus.Logger,
+	logger *logger.AppLogger,
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
@@ -199,7 +199,7 @@ func (u *Updater) GetLatestReleaseVersion() (string, error) {
 	// get latest release version
 	resp, err := http.Get("https://api.github.com/repos/eqemu/server/releases/latest")
 	if err != nil {
-		u.logger.Fatalf("could not get latest release version: %v", err)
+		u.logger.Fatal().Err(err).Msg("could not get latest release version")
 	}
 
 	defer resp.Body.Close()
@@ -207,19 +207,19 @@ func (u *Updater) GetLatestReleaseVersion() (string, error) {
 	// read response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		u.logger.Fatalf("could not read response body: %v", err)
+		u.logger.Fatal().Err(err).Msg("could not read response body")
 	}
 
 	err = github.HandleRateLimitBodyResponseFormatter(body, resp.Header)
 	if err != nil {
-		u.logger.Fatalf("Rate limited: %v", err)
+		u.logger.Fatal().Err(err).Msg("could not handle rate limit")
 	}
 
 	// bind body to struct
 	var release Release
 	err = json.Unmarshal(body, &release)
 	if err != nil {
-		u.logger.Fatalf("could not unmarshal response body: %v", err)
+		u.logger.Fatal().Err(err).Msg("could not unmarshal response body")
 	}
 
 	return strings.ReplaceAll(release.TagName, "v", ""), nil

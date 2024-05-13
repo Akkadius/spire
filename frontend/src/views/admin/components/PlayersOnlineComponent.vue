@@ -66,7 +66,7 @@
               v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)"
               :key="client.name"
             >
-              <td class="w-10" style="text-align:center">
+              <td style="text-align:center">
                 <div class="avatar-list avatar-list-stacked">
                   <img class="avatar-img rounded-circle" style="width:25px" :src="getClassImage(client.class)">
                   <img class="avatar-img rounded-circle" style="width:25px" :src="getRaceImage(client.race)">
@@ -121,7 +121,6 @@ import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants
 import eqClientVersionConstants    from "@/app/constants/eq-client-version-constants";
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import {ROUTE}                     from "@/routes";
-import {OcculusClient}             from "@/app/api/eqemu-admin-client-occulus";
 import {SpireApi}                  from "@/app/api/spire-api";
 
 export default {
@@ -276,8 +275,7 @@ export default {
 
     try {
       await this.buildPlayersOnlineList()
-    }
-    catch (e) {
+    } catch (e) {
     }
 
     this.loaded = true

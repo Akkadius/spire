@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
 
 type Controller struct {
 	db     *database.Resolver
-	logger *logrus.Logger
+	logger *logger.AppLogger
 }
 
-func NewController(db *database.Resolver, logger *logrus.Logger) *Controller {
+func NewController(db *database.Resolver, logger *logger.AppLogger) *Controller {
 	return &Controller{
 		db:     db,
 		logger: logger,
@@ -48,7 +48,7 @@ func (q *Controller) freeIdRanges(c echo.Context) error {
 	// database instance
 	db, err := q.db.Get(q.getModelFromString(table), c).DB()
 	if err != nil {
-		q.logger.Warn(err)
+		q.logger.Warn().Err(err).Msg("Failed to get db")
 	}
 
 	// query
@@ -60,25 +60,25 @@ func (q *Controller) freeIdRanges(c echo.Context) error {
 
 	rows, err := db.Query(query)
 	if err != nil {
-		q.logger.Warn(err)
+		q.logger.Warn().Err(err).Msg("Failed to query")
 	}
 
 	defer rows.Close()
 
 	if err != nil {
-		q.logger.Warn(err)
+		q.logger.Warn().Err(err).Msg("Failed to query")
 	}
 
 	maxId := 0
 
 	// scan ids
-	ids := []string{}
+	var ids []string
 	idMap := map[string]bool{}
 	for rows.Next() {
 		var Id string
 		err := rows.Scan(&Id)
 		if err != nil {
-			q.logger.Warn(err)
+			q.logger.Warn().Err(err).Msg("Failed to scan")
 		}
 
 		ids = append(ids, Id)
@@ -94,17 +94,17 @@ func (q *Controller) freeIdRanges(c echo.Context) error {
 	if len(ids) > 0 {
 		lowestId, err := strconv.ParseInt(ids[0], 10, 64)
 		if err != nil {
-			q.logger.Warn(err)
+			q.logger.Warn().Err(err).Msg("Failed to parse")
 		}
 
 		highestId, err := strconv.ParseInt(ids[len(ids)-1], 10, 64)
 		if err != nil {
-			q.logger.Warn(err)
+			q.logger.Warn().Err(err).Msg("Failed to parse")
 		}
 
 		startId := int64(0)
 		endId := int64(0)
-		ranges := []StartEndRange{}
+		var ranges []StartEndRange
 		for i := lowestId; i <= highestId; i++ {
 
 			// if id doesn't exist
@@ -165,7 +165,7 @@ func (q *Controller) freeIdsReserved(c echo.Context) error {
 
 	db, err := q.db.Get(q.getModelFromString(table), c).DB()
 	if err != nil {
-		q.logger.Warn(err)
+		q.logger.Warn().Err(err).Msg("Failed to get db")
 	}
 
 	IdColumn := c.Param("id")
@@ -203,12 +203,12 @@ func (q *Controller) getModelFromString(s string) models.Modelable {
 func (q *Controller) expansionStats(c echo.Context) error {
 	db, err := q.db.Get(q.getModelFromString("zone"), c).DB()
 	if err != nil {
-		q.logger.Warn(err)
+		q.logger.Warn().Err(err).Msg("Failed to get db")
 	}
 
 	// gather content tables
 	query := fmt.Sprintf(`SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE column_name LIKE 'min_expansion'`)
-	tableNames := []string{}
+	var tableNames []string
 	for _, m := range GenericQuery(db, query) {
 		tableNames = append(tableNames, m["TABLE_NAME"])
 	}

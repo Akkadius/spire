@@ -1,15 +1,15 @@
 package spa
 
 import (
+	"github.com/Akkadius/spire/internal/logger"
 	"strings"
 
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/gobuffalo/packr"
-	"github.com/sirupsen/logrus"
 )
 
 type Spa struct {
-	logger *logrus.Logger
+	logger *logger.AppLogger
 	spa    *Packer
 }
 
@@ -24,7 +24,7 @@ const (
 	SpireSpaIndex      = "index.html"
 )
 
-func NewSpa(logger *logrus.Logger) *Spa {
+func NewSpa(logger *logger.AppLogger) *Spa {
 	// This is merely a no-op and simply informs the packr CLI utility what it needs to bundle
 	// since it parses the code separately on its own to know where to bundle
 	_ = packr.NewBox(SpireLocalBasePath)

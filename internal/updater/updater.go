@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
 	"github.com/mattn/go-isatty"
-	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"os"
@@ -20,34 +20,19 @@ import (
 	"time"
 )
 
-// Service is a service that checks for updates to the app
-type Service struct {
+// Updater is a service that checks for updates to the app
+type Updater struct {
 	// this is the package.json embedded in the binary which contains the app version
 	packageJson []byte
-	logger      *logrus.Logger
+	logger      *logger.AppLogger
 }
 
-// NewService creates a new updater service
-func NewService(packageJson []byte) *Service {
-	return &Service{
+// NewUpdater creates a new updater service
+func NewUpdater(packageJson []byte) *Updater {
+	return &Updater{
 		packageJson: packageJson,
-		logger:      createLogger(),
+		logger:      logger.ProvideAppLogger(),
 	}
-}
-
-func createLogger() *logrus.Logger {
-	baseLogger := logrus.New()
-	baseLogger.SetFormatter(&logrus.TextFormatter{
-		FullTimestamp:          false,
-		TimestampFormat:        "2006-01-02 15:04:05",
-		ForceColors:            true,
-		DisableLevelTruncation: true,
-	})
-
-	// base level
-	baseLogger.SetLevel(logrus.InfoLevel)
-
-	return baseLogger
 }
 
 // EnvResponse is the response from the env endpoint
@@ -67,7 +52,7 @@ type PackageJson struct {
 }
 
 // getAppVersion gets the app version from the package.json embedded in the binary
-func (s Service) getAppVersion() (error, EnvResponse) {
+func (s *Updater) getAppVersion() (error, EnvResponse) {
 	var pkg PackageJson
 	err := json.Unmarshal(s.packageJson, &pkg)
 	if err != nil {
@@ -81,7 +66,7 @@ func (s Service) getAppVersion() (error, EnvResponse) {
 }
 
 // CheckForUpdates checks for updates to the app
-func (s Service) CheckForUpdates(interactive bool) bool {
+func (s *Updater) CheckForUpdates(interactive bool) bool {
 
 	// get executable name and path
 	executableName := filepath.Base(os.Args[0])
@@ -105,19 +90,19 @@ func (s Service) CheckForUpdates(interactive bool) bool {
 
 	// if being ran from go run main.go
 	if executableName == "main.exe" || executableName == "main" {
-		fmt.Println("[Update] Running as go run main.go, ignoring...")
+		s.logger.Info().Msg("Running as go run main.go, ignoring...")
 		return false
 	}
 
 	// internet connection check
 	if !isconnected() {
-		fmt.Printf("[Update] Not connected to the internet\n")
+		s.logger.Info().Msgf("Not connected to the internet")
 		return false
 	}
 
-	fmt.Printf("[Update] Checking for updates...\n")
-	fmt.Printf("[Update] Running as binary [%v]\n", executableName)
-	debug(fmt.Sprintf("[Update] Running as executablePath [%v]\n", executablePath))
+	s.logger.Info().Msg("Checking for updates")
+	s.logger.Info().Any("executableName", executableName).Msg("Running as binary")
+	s.logger.Debug().Msgf("Running as executablePath [%v]", executablePath)
 
 	// get releases
 	client := github.NewClient(&http.Client{Timeout: 5 * time.Second})
@@ -138,7 +123,7 @@ func (s Service) CheckForUpdates(interactive bool) bool {
 
 	// already up to date
 	if releaseVersion == localVersion {
-		fmt.Printf("[Update] Spire is already up to date @ [%v]\n", localVersion)
+		s.logger.Info().Any("version", localVersion).Msgf("Spire is already up to date")
 		return false
 	}
 
@@ -151,7 +136,7 @@ func (s Service) CheckForUpdates(interactive bool) bool {
 		}
 	}
 
-	fmt.Printf("Local version [%s] latest [%v]\n", localVersion, releaseVersion)
+	fmt.Printf("Local version [%s] latest [%v]", localVersion, releaseVersion)
 
 	for _, asset := range release.Assets {
 		assetName := *asset.Name
@@ -162,10 +147,10 @@ func (s Service) CheckForUpdates(interactive bool) bool {
 		}
 		targetFileName := fmt.Sprintf("spire-%s-%s", runtime.GOOS, runtime.GOARCH)
 
-		debug(fmt.Sprintf("[Update] Looping assets assetName [%v] targetFileNameZipped [%v]\n", assetName, targetFileNameZipped))
+		s.logger.Debug().Msgf("Looping assets assetName [%v] targetFileNameZipped [%v]", assetName, targetFileNameZipped)
 
 		if assetName == targetFileNameZipped {
-			fmt.Printf("Found matching release [%s]\n", assetName)
+			fmt.Printf("Found matching release [%s]", assetName)
 
 			// download
 			file := path.Base(downloadUrl)
@@ -249,23 +234,17 @@ func (s Service) CheckForUpdates(interactive bool) bool {
 			// if terminal, wait for user input
 			if isatty.IsTerminal(os.Stdout.Fd()) && interactive {
 				fmt.Println("")
-				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
+				s.logger.Info().Msgf("Spire updated to version [%s] you must relaunch Spire manually", releaseVersion)
 				fmt.Println("")
 				fmt.Print("Press [Enter] to exit spire...")
 				fmt.Println("")
 				bufio.NewReader(os.Stdin).ReadBytes('\n')
 				return true
 			} else {
-				fmt.Printf("[Update] Spire updated to version [%s] you must relaunch Spire manually\n", releaseVersion)
+				s.logger.Info().Msgf("Spire updated to version [%s] you must relaunch Spire manually", releaseVersion)
 				return true
 			}
 		}
 	}
 	return false
-}
-
-func debug(msg string) {
-	if len(os.Getenv("DEBUG")) > 0 {
-		fmt.Printf("[Debug] " + msg)
-	}
 }

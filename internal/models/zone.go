@@ -5,11 +5,20 @@ import (
 )
 
 type Zone struct {
-	ShortName                 null.String `json:"short_name" gorm:"Column:short_name"`
 	ID                        int         `json:"id" gorm:"Column:id"`
-	FileName                  null.String `json:"file_name" gorm:"Column:file_name"`
+	Zoneidnumber              int         `json:"zoneidnumber" gorm:"Column:zoneidnumber"`
+	Version                   uint8       `json:"version" gorm:"Column:version"`
+	ShortName                 null.String `json:"short_name" gorm:"Column:short_name"`
 	LongName                  string      `json:"long_name" gorm:"Column:long_name"`
+	MinStatus                 uint8       `json:"min_status" gorm:"Column:min_status"`
 	MapFileName               null.String `json:"map_file_name" gorm:"Column:map_file_name"`
+	Note                      null.String `json:"note" gorm:"Column:note"`
+	MinExpansion              int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion              int8        `json:"max_expansion" gorm:"Column:max_expansion"`
+	ContentFlags              null.String `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled      null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	Expansion                 int8        `json:"expansion" gorm:"Column:expansion"`
+	FileName                  null.String `json:"file_name" gorm:"Column:file_name"`
 	SafeX                     float32     `json:"safe_x" gorm:"Column:safe_x"`
 	SafeY                     float32     `json:"safe_y" gorm:"Column:safe_y"`
 	SafeZ                     float32     `json:"safe_z" gorm:"Column:safe_z"`
@@ -17,13 +26,9 @@ type Zone struct {
 	GraveyardId               float32     `json:"graveyard_id" gorm:"Column:graveyard_id"`
 	MinLevel                  uint8       `json:"min_level" gorm:"Column:min_level"`
 	MaxLevel                  uint8       `json:"max_level" gorm:"Column:max_level"`
-	MinStatus                 uint8       `json:"min_status" gorm:"Column:min_status"`
-	Zoneidnumber              int         `json:"zoneidnumber" gorm:"Column:zoneidnumber"`
-	Version                   uint8       `json:"version" gorm:"Column:version"`
 	Timezone                  int         `json:"timezone" gorm:"Column:timezone"`
 	Maxclients                int         `json:"maxclients" gorm:"Column:maxclients"`
 	Ruleset                   uint        `json:"ruleset" gorm:"Column:ruleset"`
-	Note                      null.String `json:"note" gorm:"Column:note"`
 	Underworld                float32     `json:"underworld" gorm:"Column:underworld"`
 	Minclip                   float32     `json:"minclip" gorm:"Column:minclip"`
 	Maxclip                   float32     `json:"maxclip" gorm:"Column:maxclip"`
@@ -67,7 +72,6 @@ type Zone struct {
 	Insttype                  uint8       `json:"insttype" gorm:"Column:insttype"`
 	Shutdowndelay             uint64      `json:"shutdowndelay" gorm:"Column:shutdowndelay"`
 	Peqzone                   int8        `json:"peqzone" gorm:"Column:peqzone"`
-	Expansion                 int8        `json:"expansion" gorm:"Column:expansion"`
 	BypassExpansionCheck      int8        `json:"bypass_expansion_check" gorm:"Column:bypass_expansion_check"`
 	Suspendbuffs              uint8       `json:"suspendbuffs" gorm:"Column:suspendbuffs"`
 	RainChance1               int         `json:"rain_chance_1" gorm:"Column:rain_chance1"`
@@ -94,10 +98,6 @@ type Zone struct {
 	FastRegenEndurance        int         `json:"fast_regen_endurance" gorm:"Column:fast_regen_endurance"`
 	NpcMaxAggroDist           int         `json:"npc_max_aggro_dist" gorm:"Column:npc_max_aggro_dist"`
 	MaxMovementUpdateRange    uint        `json:"max_movement_update_range" gorm:"Column:max_movement_update_range"`
-	MinExpansion              int8        `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion              int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags              null.String `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled      null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	UnderworldTeleportIndex   int         `json:"underworld_teleport_index" gorm:"Column:underworld_teleport_index"`
 	LavaDamage                null.Int    `json:"lava_damage" gorm:"Column:lava_damage"`
 	MinLavaDamage             int         `json:"min_lava_damage" gorm:"Column:min_lava_damage"`

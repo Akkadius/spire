@@ -2,13 +2,11 @@ package spire
 
 import (
 	"github.com/Akkadius/spire/internal/database"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 type MigrateCommand struct {
 	connections *database.Connections
-	logger      *logrus.Logger
 	command     *cobra.Command
 }
 
@@ -20,11 +18,9 @@ var dropTables bool
 
 func NewMigrateCommand(
 	connections *database.Connections,
-	logger *logrus.Logger,
 ) *MigrateCommand {
 	i := &MigrateCommand{
 		connections: connections,
-		logger:      logger,
 		command: &cobra.Command{
 			Use:   "spire:migrate",
 			Short: "Runs database migrations for spire local database",

@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
@@ -18,20 +17,17 @@ import (
 )
 
 type Controller struct {
-	logger   *logrus.Logger
 	exporter *Exporter
 	importer *Importer
 	db       *database.Resolver
 }
 
 func NewController(
-	logger *logrus.Logger,
 	exporter *Exporter,
 	importer *Importer,
 	db *database.Resolver,
 ) *Controller {
 	return &Controller{
-		logger:   logger,
 		exporter: exporter,
 		importer: importer,
 		db:       db,

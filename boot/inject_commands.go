@@ -17,7 +17,6 @@ import (
 // commandSet is a Wire provider set that returns a slice of commands
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
-	cmd.NewAdminPingOcculus,
 	user.NewCreateCommand,
 	generators.NewModelGeneratorCommand,
 	generators.NewControllerGeneratorCommand,
@@ -31,10 +30,10 @@ var commandSet = wire.NewSet(
 	cmd.NewTestFilesystemCommand,
 	spire.NewInitCommand,
 	user.NewChangePasswordCommand,
-	spire.NewOcculusUpdateCommand,
-	spire.NewServerLauncherCommand,
 	spire.NewCrashAnalyticsCommand,
 	eqemuserver.NewUpdateCommand,
+	eqemuserver.NewLauncherCmd,
+	eqemuserver.NewLauncherShimCmd,
 	eqtraders.NewScrapeCommand,
 	eqtraders.NewImportCommand,
 	eqemuchangelog.NewChangelogCommand,
@@ -44,7 +43,6 @@ var commandSet = wire.NewSet(
 // ProvideCommands is a Wire provider function that returns a slice of commands
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
-	adminPingOcculus *cmd.AdminPingOcculus,
 	userCreateCommand *user.CreateCommand,
 	generateModelsCommand *generators.ModelGeneratorCommand,
 	generateControllersCommand *generators.ControllerGeneratorCmd,
@@ -59,15 +57,14 @@ func ProvideCommands(
 	testFilesystemCmd *cmd.TestFilesystemCommand,
 	spireInstallCmd *spire.InitCommand,
 	userChangePasswordCmd *user.ChangePasswordCommand,
-	spireOcculusUpdateCmd *spire.OcculusUpdateCommand,
-	spireServerLauncherCmd *spire.ServerLauncherCommand,
 	spireCrashAnalyticsCommand *spire.CrashAnalyticsFingerprintBackfillCommand,
-	eQEmuServerUpdateCommand *eqemuserver.UpdateCommand,
+	eqEmuServerUpdateCommand *eqemuserver.UpdateCommand,
+	eqEmuServerLauncherCommand *eqemuserver.LauncherCmd,
+	eqEmuServerLauncherShimCommand *eqemuserver.LauncherShimCmd,
 	scrapeEqtradersCommand *eqtraders.ScrapeCommand,
 	importEqtradersCommand *eqtraders.ImportCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
-		adminPingOcculus.Command(),
 		helloWorldCommand.Command(),
 		userCreateCommand.Command(),
 		generateModelsCommand.Command(),
@@ -83,11 +80,11 @@ func ProvideCommands(
 		testFilesystemCmd.Command(),
 		spireInstallCmd.Command(),
 		userChangePasswordCmd.Command(),
-		spireOcculusUpdateCmd.Command(),
-		spireServerLauncherCmd.Command(),
 		spireCrashAnalyticsCommand.Command(),
-		eQEmuServerUpdateCommand.Command(),
+		eqEmuServerUpdateCommand.Command(),
 		scrapeEqtradersCommand.Command(),
 		importEqtradersCommand.Command(),
+		eqEmuServerLauncherCommand.Command(),
+		eqEmuServerLauncherShimCommand.Command(),
 	}
 }

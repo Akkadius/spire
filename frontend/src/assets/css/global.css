@@ -137,7 +137,7 @@
 }
 
 .pulsate {
-    border: 1px solid darkorange;
+    border: 1px solid darkorange !important;
     animation: border-pulsate .5s infinite;
 }
 

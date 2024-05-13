@@ -2,22 +2,22 @@ package eqemuserverconfig
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // Config is the struct type
 type Config struct {
-	logger   *logrus.Logger
+	logger   *logger.AppLogger
 	pathmgmt *pathmgmt.PathManagement
 	config   EQEmuConfigJson
 }
 
 // NewConfig creates a new Config struct
-func NewConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *Config {
+func NewConfig(logger *logger.AppLogger, pathmgmt *pathmgmt.PathManagement) *Config {
 	return &Config{
 		logger:   logger,
 		pathmgmt: pathmgmt,
@@ -149,42 +149,43 @@ type EQEmuConfigJson struct {
 	Spire struct {
 		EncryptionKey string `json:"encryption_key,omitempty"`
 		HttpPort      int    `json:"http_port,omitempty"`
+		LauncherStart bool   `json:"launcher_start"` // starts server launcher
 	} `json:"spire,omitempty"`
 }
 
+var cachedConfig *EQEmuConfigJson
+var lastModifiedTime time.Time
+
 // Get returns the eqemu config json
+// If the file has been modified since the last read, it will re-read the file
+// We utilize a cache to prevent reading the file on every call
 func (e *Config) Get() EQEmuConfigJson {
-	cfg := e.pathmgmt.GetEQEmuServerConfigFilePath()
-	e.debug("path [%v]", cfg)
+	configFile := e.pathmgmt.GetEQEmuServerConfigFilePath()
+	if len(configFile) > 0 {
+		stat, _ := os.Stat(configFile)
+		if stat.ModTime().After(lastModifiedTime) || lastModifiedTime.IsZero() {
+			e.logger.Debug().Any("path", configFile).Msg("Reading eqemu config file")
+			body, err := os.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
+			if err != nil {
+				e.logger.Fatal().Err(err).Any("path", configFile).Msg("unable to read eqemu config file")
+			}
 
-	if len(cfg) > 0 {
-		e.debug("Reading eqemu config file [%v]", cfg)
+			config := EQEmuConfigJson{}
+			err = json.Unmarshal(body, &config)
+			if err != nil {
+				e.logger.Fatal().Err(err).Any("path", configFile).Msg("unable to unmarshal eqemu config file")
+			}
 
-		body, err := os.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
-		if err != nil {
-			e.logger.Fatalf("unable to read file: %v", err)
+			lastModifiedTime = stat.ModTime()
+			cachedConfig = &config
+
+			return config
+		} else if cachedConfig != nil {
+			return *cachedConfig
 		}
-
-		config := EQEmuConfigJson{}
-		err = json.Unmarshal(body, &config)
-		if err != nil {
-			e.logger.Fatalf("unable to unmarshal file [%v] error [%v]", cfg, err)
-		}
-
-		return config
 	}
 
 	return EQEmuConfigJson{}
-}
-
-func (e *Config) debug(msg string, a ...interface{}) {
-	if len(os.Getenv("DEBUG")) >= 3 {
-		if len(a) > 0 {
-			e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
-			return
-		}
-		e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
-	}
 }
 
 // Exists will return true if the eqemu_config.json file exists
