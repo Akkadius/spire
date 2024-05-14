@@ -1,3 +1,7 @@
+## [4.0.5] 5/13/2024
+
+**Installer** Minor fix to using existing MySQL server installs
+
 ## [4.0.4] 5/12/2024
 
 ### Spire Admin Launcher Fixes
@@ -18,7 +22,7 @@ Occulus has been ported natively to Spire. All remaining features have been port
 
 ### Changes
 
-* **Console Logging** Console logging has been improved to be more verbose and informative. The entire logging system has been overhauled to provide more information to the user and be more useful for debugging for development.
+* **Console Logging** has been improved to be more verbose and informative. The entire logging system has been overhauled to provide more information to the user and be more useful for debugging for development.
 * **Banner** Spire now renders the image banner on bootup in the console.
 
 #### Spire Admin

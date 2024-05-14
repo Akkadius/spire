@@ -103,7 +103,7 @@ func (a *Installer) checkInstallConfig() error {
 
 	// prompt: mysql username
 	useExistingMysqlInstallPrompt, _ := (&promptui.Prompt{
-		Label:     "Use an existing MySQL server",
+		Label:     "Use an existing MySQL server (Requires root to be password-less)",
 		Default:   "N",
 		IsConfirm: true,
 		AllowEdit: true,
@@ -165,7 +165,7 @@ func (a *Installer) checkInstallConfig() error {
 		}
 
 		// validate the mysql connection
-		fmt.Printf("Validating MySQL connection...")
+		fmt.Printf("Validating MySQL connection...\n")
 		err = a.validateMysqlConnection(
 			mysqlHost,
 			mysqlPort,
@@ -437,7 +437,7 @@ func (a *Installer) validateMysqlConnection(host string, port string, name strin
 	if err != nil {
 		return fmt.Errorf("could not connect to mysql: %v", err)
 	}
-	if len(res) > 0 {
+	if len(strings.TrimSpace(res)) > 0 {
 		return fmt.Errorf("database already exists: %v", res)
 	}
 

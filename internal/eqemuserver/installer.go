@@ -128,6 +128,7 @@ func (a *Installer) Install() error {
 		for _, t := range []func() error{
 			a.installLinuxOsPackages,
 			a.initLinuxMysql,
+			a.initDb,
 		} {
 			err := t()
 			if err != nil {
@@ -142,6 +143,7 @@ func (a *Installer) Install() error {
 			a.initWindowsCommandPrompt,
 			a.initWindowsPerl,
 			a.initWindowsMysql,
+			a.initDb,
 		} {
 			err := t()
 			if err != nil {
@@ -689,6 +691,8 @@ func (a *Installer) Exec(c ExecConfig) (string, error) {
 		output += scanner.Text() + "\n"
 	}
 
+	output = strings.ReplaceAll(output, "mysql: [Warning] Using a password on the command line interface can be insecure.", "")
+
 	return output, nil
 }
 
@@ -816,6 +820,10 @@ func (a *Installer) sourcePeqDatabase() error {
 	)
 	if err != nil {
 		return err
+	}
+
+	if strings.Contains(tables, "ERROR") {
+		return fmt.Errorf("could not get tables: %v", tables)
 	}
 
 	// get the table count
@@ -1653,7 +1661,7 @@ func (a *Installer) initWindowsMysql() error {
 
 		// check if mysql is alive
 		if strings.Contains(res, "mysqld is alive") {
-			fmt.Printf("MySQL already installed, skipping")
+			fmt.Printf("MySQL already installed, skipping\n")
 			return nil
 		}
 	}
@@ -1694,6 +1702,16 @@ func (a *Installer) initWindowsMysql() error {
 		return err
 	}
 
+	err = a.setWindowsMysqlPath()
+	if err != nil {
+		return err
+	}
+
+	a.DoneBanner("Downloading MariaDB")
+	return nil
+}
+
+func (a *Installer) initDb() error {
 	c := MysqlConfig{
 		DatabaseName:     a.installConfig.MysqlDatabaseName,
 		DatabaseUser:     a.installConfig.MysqlUsername,
@@ -1702,9 +1720,8 @@ func (a *Installer) initWindowsMysql() error {
 
 	// create a new database
 	var sql string
-
 	fmt.Printf("Creating database [%v]\n", c.DatabaseName)
-	err = a.DbExec(DbExecConfig{statement: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName)})
+	err := a.DbExec(DbExecConfig{statement: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName)})
 	if err != nil {
 		return err
 	}
@@ -1724,12 +1741,6 @@ func (a *Installer) initWindowsMysql() error {
 		return err
 	}
 
-	err = a.setWindowsMysqlPath()
-	if err != nil {
-		return err
-	}
-
-	a.DoneBanner("Downloading MariaDB")
 	return nil
 }
 
@@ -1809,10 +1820,19 @@ func (a *Installer) getWindowsProgramFilesPath() string {
 
 // getWindowsMysqlPath returns the path to the mysql installation
 func (a *Installer) getWindowsMysqlPath() string {
+	mysqlPath, err := exec.LookPath("mysql")
+	if err != nil {
+		a.logger.Debug().Err(err).Msg("could not find mysql")
+	}
+
+	if mysqlPath != "" {
+		return filepath.Dir(mysqlPath)
+	}
+
 	// get folders in folder using go
 	entries, err := os.ReadDir(filepath.Join(a.getWindowsProgramFilesPath()))
 	if err != nil {
-		a.logger.Fatal().Err(err).Msg("could not read directory")
+		a.logger.Debug().Err(err).Msg("could not read directory")
 	}
 
 	// first look for mariadb
