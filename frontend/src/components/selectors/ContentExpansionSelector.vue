@@ -1,25 +1,36 @@
 <template>
   <div>
-    <img
-      :alt="getExpansionName(expansionId)"
-      v-for="(expansion, expansionId) in EXPANSIONS_FULL"
-      v-if="!getExpansionIcon(expansionId).includes('base64')"
-      :title="getExpansionName(expansionId) + ' (' + expansionId + ')'"
-      :src="getExpansionIcon(expansionId)"
-      @click="selectExpansion(expansionId)"
-      :style="'width: 56px; opacity: .7; ' + (isExpansionSelected(expansionId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
-      class="mr-2 p-1 mt-1 hover-highlight-inner"
-    >
+    <div v-for="(expansion, expansionId) in EXPANSIONS_FULL" class="d-inline-block">
+      <img
+        :alt="getExpansionName(expansionId)"
+        v-if="!getExpansionIcon(expansionId).includes('base64')"
+        :title="getExpansionName(expansionId) + ' (' + expansionId + ')'"
+        :src="getExpansionIcon(expansionId)"
+        @click="selectExpansion(expansionId)"
+        :style="'width: 60px; ' + (isExpansionSelected(expansionId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px; opacity: .3')"
+        class="mr-2 p-1 mt-1 hover-highlight-inner"
+      >
+      <span
+        v-if="showNames"
+        :style="isExpansionSelected(expansionId) ? 'font-weight: bold; opacity: 1;' : 'font-weight: normal; opacity: .7;'"
+      >
+        {{ expansion.name }}
+      </span>
+    </div>
 
     <div
-      :style="'width: 56px; font-size: 12px; font-weight: bold; padding: 0px !important; opacity: .7; ' + (isExpansionSelected(-1) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
-      class="mr-2 mt-2 hover-highlight-inner d-inline-block text-center"
+      :style="'width: 56px; font-size: 12px; font-weight: bold; padding: 0px !important; opacity: 1; ' + (isExpansionSelected(-1) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
+      class="mr-2 mt-2 hover-highlight-inner text-center"
       @click="selectExpansion(-1)"
     >
       All
     </div>
 
-    ({{ selectedExpansion }}) {{ getExpansionName(selectedExpansion) }}
+    <div style="font-weight: bold; font-size: 14px;" class="mt-3">
+      Selected ({{ selectedExpansion }}) {{ getExpansionName(selectedExpansion) }}
+
+    </div>
+
 
   </div>
 </template>
@@ -38,7 +49,11 @@ export default {
     }
   },
   props: {
-    value: [Number, Array]
+    value: [Number, Array],
+    showNames: {
+      type: Boolean,
+      default: false
+    }
   },
   mounted() {
     this.selectedExpansion = parseInt(this.value)
