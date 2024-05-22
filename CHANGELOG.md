@@ -1,10 +1,10 @@
 ## [4.1.0] 5/22/2024
 
-**Launcher** Add feature to allow users to always download fresh opcodes from server GitHub on server start (Defaults to true). This can be turned off in the server config and the server launcher modal.
-**Launcher** Fix edge-case in Linux where processes get marked as (deleted) in their process name keeping them from being findable in the launcher "stop" routine.
-**Launcher** Now runs any pre-startup routines (shared memory, opcodes) in parallel to speed up server boot time.
-**Installer** Launcher sets config option `web-admin.launcher.updateOpcodesOnStart` to `true` by default
-**Spire** Fix a potential crash issue during offline boots.
+* **Launcher** Add feature to allow users to always download fresh opcodes from server GitHub on server start (Defaults to true). This can be turned off in the server config and the server launcher modal.
+* **Launcher** Fix edge-case in Linux where processes get marked as (deleted) in their process name keeping them from being findable in the launcher "stop" routine.
+* **Launcher** Now runs any pre-startup routines (shared memory, opcodes) in parallel to speed up server boot time.
+* **Installer** Launcher sets config option `web-admin.launcher.updateOpcodesOnStart` to `true` by default
+* **Spire** Fix a potential crash issue during offline boots.
 
 ![image](https://github.com/Akkadius/spire/assets/3319450/eb5ee780-e48f-469e-8040-fd21b7a0e0fe)
 
