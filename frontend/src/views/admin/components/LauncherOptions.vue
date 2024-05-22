@@ -2,13 +2,23 @@
   <div class="card">
     <div class="p-0 card-body">
       <div class="mb-3">
+        <div class="mb-3">
+          <b-form-checkbox
+            v-model="launcher.updateOpcodesOnStart"
+            name="check-button"
+            switch
+            @change="saveLauncherOptions()"
+          >
+            Update Server Patches (Opcodes) on Start <div class="text-muted d-inline-block">(Recommended)</div>
+          </b-form-checkbox>
+        </div>
         <b-form-checkbox
           v-model="launcher.runSharedMemory"
           name="check-button"
           switch
           @change="saveLauncherOptions()"
         >
-          Run Shared Memory
+          Run Shared Memory <div class="text-muted d-inline-block">(Recommended)</div>
         </b-form-checkbox>
       </div>
       <div class="mb-3">
@@ -19,7 +29,7 @@
           class="custom-control custom-switch"
           @change="saveLauncherOptions()"
         >
-          Run Loginserver
+          Run Loginserver <div class="text-muted d-inline-block">(Optional)</div>
         </b-form-checkbox>
       </div>
       <div class="mb-3">
@@ -29,7 +39,7 @@
           switch
           @change="saveLauncherOptions()"
         >
-          Run QueryServ
+          Run QueryServ <div class="text-muted d-inline-block">(Optional)</div>
         </b-form-checkbox>
       </div>
       <div class="mb-3 mt-4">
@@ -115,6 +125,7 @@ export default {
         runSharedMemory: false,
         runLoginserver: false,
         runQueryServ: false,
+        updateOpcodesOnStart: true,
         staticZones: ""
       },
 
@@ -127,6 +138,10 @@ export default {
 
     if (this.launcher.staticZones && this.launcher.staticZones.length > 0) {
       this.staticZones = this.launcher.staticZones.split(",")
+    }
+
+    if (typeof this.launcher.updateOpcodesOnStart === 'undefined') {
+      this.launcher.updateOpcodesOnStart = true
     }
 
     // zone options

@@ -11,7 +11,7 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/fsnotify/fsnotify"
 	"github.com/shirou/gopsutil/v3/process"
-	"io"
+	"golang.org/x/sync/errgroup"
 	"log"
 	"os"
 	"os/exec"
@@ -51,6 +51,9 @@ type Launcher struct {
 	runSharedMemory      bool
 	runLoginserver       bool
 	runQueryServ         bool
+	updateOpcodesOnStart bool
+	patchesDirectory     string
+	opcodesDirectory     string
 	minZoneProcesses     int
 	currentZoneDynamics  int
 	currentZoneStatics   int
@@ -168,14 +171,34 @@ func (l *Launcher) Start() error {
 	l.loadServerConfig()
 	l.logger.Info().Msg("Starting server launcher")
 
+	var g errgroup.Group
+
 	// start shared memory if needed
 	// this needs to be started and completed before the server processes
 	if l.runSharedMemory {
-		l.logger.Info().Msg("Starting shared memory")
-		err := l.startServerProcessSync(sharedMemoryProcessName)
-		if err != nil {
-			return err
-		}
+		g.Go(func() error {
+			l.logger.Info().Msg("Starting shared memory")
+			err := l.startServerProcessSync(sharedMemoryProcessName)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
+
+	if l.updateOpcodesOnStart {
+		g.Go(func() error {
+			l.updatePatchFiles()
+
+			return nil
+		})
+	}
+
+	// run pre-boot operations in parallel
+	if err := g.Wait(); err != nil {
+		l.logger.Info().Err(err).Msg("Error starting server launcher")
+		return err
 	}
 
 	cfg := l.serverconfig.Get()
@@ -545,9 +568,24 @@ func (l *Launcher) loadServerConfig() {
 	l.runQueryServ = cfg.WebAdmin.Launcher.RunQueryServ
 	l.minZoneProcesses = cfg.WebAdmin.Launcher.MinZoneProcesses
 	l.serverLongName = cfg.Server.World.Longname
+	l.updateOpcodesOnStart = cfg.WebAdmin.Launcher.UpdateOpcodesOnStart
 
 	if l.minZoneProcesses < 1 {
 		l.minZoneProcesses = 5
+	}
+
+	if cfg.Server.Directories.Patches != "" {
+		l.patchesDirectory = filepath.Join(
+			l.pathmgmt.GetEQEmuServerPath(),
+			cfg.Server.Directories.Patches,
+		)
+	}
+
+	if cfg.Server.Directories.Opcodes != "" {
+		l.opcodesDirectory = filepath.Join(
+			l.pathmgmt.GetEQEmuServerPath(),
+			cfg.Server.Directories.Opcodes,
+		)
 	}
 
 	if env.IsAppModeWebserver() && cfg.WebAdmin != nil {
@@ -848,6 +886,10 @@ func (l *Launcher) getProcessDetails(p *process.Process) ProcessDetails {
 		baseProcessName = strings.ReplaceAll(baseProcessName, ".exe", "")
 	}
 
+	// remove (deleted) from the process name
+	// not sure why this shows up in this format
+	baseProcessName = strings.ReplaceAll(baseProcessName, " (deleted)", "")
+
 	return ProcessDetails{
 		Pid:             p.Pid,
 		Cmdline:         cmdline,
@@ -857,30 +899,64 @@ func (l *Launcher) getProcessDetails(p *process.Process) ProcessDetails {
 	}
 }
 
-// Copy copies the contents of the file at srcpath to a regular file
-// at dstpath. If the file named by dstpath already exists, it is
-// truncated. The function does not copy the file mode, file
-// permission bits, or file attributes.
-func copyFile(srcpath, dstpath string) (err error) {
-	r, err := os.Open(srcpath)
-	if err != nil {
-		return err
-	}
-	defer r.Close() // ignore error: file was opened read-only.
+func (l *Launcher) updatePatchFiles() {
+	l.logger.Info().Msg("Updating patches (opcodes)")
 
-	w, err := os.Create(dstpath)
-	if err != nil {
-		return err
+	// get the patch files
+	patchFiles := []string{
+		"patch_RoF.conf",
+		"patch_RoF2.conf",
+		"patch_SoD.conf",
+		"patch_SoF.conf",
+		"patch_Titanium.conf",
+		"patch_UF.conf",
 	}
 
-	defer func() {
-		// Report the error, if any, from Close, but do so
-		// only if there isn't already an outgoing error.
-		if c := w.Close(); err == nil {
-			err = c
-		}
-	}()
+	// get the opcode files
+	opcodeFiles := []string{
+		"opcodes.conf",
+		"mail_opcodes.conf",
+	}
 
-	_, err = io.Copy(w, r)
-	return err
+	now := time.Now()
+
+	// download the patch files in errgroup
+	var g errgroup.Group
+	for _, p := range patchFiles {
+		url := fmt.Sprintf("https://raw.githubusercontent.com/EQEmu/Server/master/utils/patches/%s", p)
+		path := filepath.Join(l.patchesDirectory, p)
+		relative := strings.ReplaceAll(path, l.pathmgmt.GetEQEmuServerPath()+string(filepath.Separator), "")
+
+		g.Go(func() error {
+			if err := downloadFile(url, path); err != nil {
+				l.logger.Debug().Msg(fmt.Sprintf("Failed to download %s: %v", url, err))
+				return err
+			}
+			l.logger.Debug().Msg(fmt.Sprintf("Successfully downloaded %s", url))
+			l.logger.Info().Any("file", relative).Msg("Saved opcodes")
+			return nil
+		})
+	}
+
+	for _, o := range opcodeFiles {
+		url := fmt.Sprintf("https://raw.githubusercontent.com/EQEmu/Server/master/utils/patches/%s", o)
+		path := filepath.Join(l.opcodesDirectory, o)
+		relative := strings.ReplaceAll(path, l.pathmgmt.GetEQEmuServerPath()+string(filepath.Separator), "")
+
+		g.Go(func() error {
+			if err := downloadFile(url, path); err != nil {
+				l.logger.Debug().Msg(fmt.Sprintf("Failed to download %s: %v", url, err))
+				return err
+			}
+			l.logger.Debug().Msg(fmt.Sprintf("Successfully downloaded %s", url))
+			l.logger.Info().Any("file", relative).Msg("Saved opcodes")
+			return nil
+		})
+	}
+
+	if err := g.Wait(); err != nil {
+		l.logger.Warn().Err(err).Msg("Failed to download patch files from github")
+	} else {
+		l.logger.Info().Any("took", time.Since(now).String()).Msg("Updated patch files")
+	}
 }

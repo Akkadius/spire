@@ -157,6 +157,11 @@ func (a SpireAssets) CheckForAssets() {
 		fmt.Printf("could not get latest release version for [%v] %v", assetRepo, err)
 	}
 
+	if resp == nil {
+		fmt.Printf("could not get latest release version for [%v] nil response", assetRepo)
+		return
+	}
+
 	defer resp.Body.Close()
 
 	// check if response is 200

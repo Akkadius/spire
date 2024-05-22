@@ -55,25 +55,27 @@ func (a *Controller) save(c echo.Context) error {
 }
 
 type LauncherConfig struct {
-	RunSharedMemory    bool   `json:"runSharedMemory"`
-	RunLoginserver     bool   `json:"runLoginserver"`
-	RunQueryServ       bool   `json:"runQueryServ"`
-	IsRunning          bool   `json:"isRunning"`
-	SpireLauncherStart bool   `json:"spireLauncherStart"`
-	MinZoneProcesses   int    `json:"minZoneProcesses"`
-	StaticZones        string `json:"staticZones"`
+	RunSharedMemory      bool   `json:"runSharedMemory"`
+	RunLoginserver       bool   `json:"runLoginserver"`
+	RunQueryServ         bool   `json:"runQueryServ"`
+	IsRunning            bool   `json:"isRunning"`
+	SpireLauncherStart   bool   `json:"spireLauncherStart"`
+	MinZoneProcesses     int    `json:"minZoneProcesses"`
+	StaticZones          string `json:"staticZones"`
+	UpdateOpcodesOnStart bool   `json:"updateOpcodesOnStart"`
 }
 
 func (a *Controller) getLauncherConfig(c echo.Context) error {
 	cfg := a.serverconfig.Get()
 	l := LauncherConfig{
-		RunSharedMemory:    cfg.WebAdmin.Launcher.RunSharedMemory,
-		RunLoginserver:     cfg.WebAdmin.Launcher.RunLoginserver,
-		RunQueryServ:       cfg.WebAdmin.Launcher.RunQueryServ,
-		IsRunning:          cfg.WebAdmin.Launcher.IsRunning,
-		SpireLauncherStart: cfg.Spire.LauncherStart,
-		MinZoneProcesses:   cfg.WebAdmin.Launcher.MinZoneProcesses,
-		StaticZones:        cfg.WebAdmin.Launcher.StaticZones,
+		RunSharedMemory:      cfg.WebAdmin.Launcher.RunSharedMemory,
+		RunLoginserver:       cfg.WebAdmin.Launcher.RunLoginserver,
+		RunQueryServ:         cfg.WebAdmin.Launcher.RunQueryServ,
+		IsRunning:            cfg.WebAdmin.Launcher.IsRunning,
+		SpireLauncherStart:   cfg.Spire.LauncherStart,
+		MinZoneProcesses:     cfg.WebAdmin.Launcher.MinZoneProcesses,
+		StaticZones:          cfg.WebAdmin.Launcher.StaticZones,
+		UpdateOpcodesOnStart: cfg.WebAdmin.Launcher.UpdateOpcodesOnStart,
 	}
 
 	return c.JSON(http.StatusOK, l)
@@ -93,6 +95,7 @@ func (a *Controller) saveLauncherConfig(c echo.Context) error {
 	cfg.WebAdmin.Launcher.IsRunning = config.IsRunning
 	cfg.WebAdmin.Launcher.MinZoneProcesses = config.MinZoneProcesses
 	cfg.WebAdmin.Launcher.StaticZones = config.StaticZones
+	cfg.WebAdmin.Launcher.UpdateOpcodesOnStart = config.UpdateOpcodesOnStart
 	cfg.Spire.LauncherStart = config.SpireLauncherStart
 
 	// both launchers shouldn't be running at the same time
