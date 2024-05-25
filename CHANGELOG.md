@@ -1,3 +1,7 @@
+## [4.2.1] 5/25/2024
+
+**Launcher** No longer runs shared memory on start if the server is detected to be online. This can cause issues with existing server processes if shared memory is re-ran while the server is online.
+
 ## [4.2.0] 5/24/2024
 
 **Launcher** Add feature that truncates server logs back a configurable amount of days (defaults to 7) on server start. This will keep your server logs from growing out of control and taking up disk space. This can be configured in the server config and the server launcher modal.

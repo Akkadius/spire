@@ -111,7 +111,7 @@ func (l *Launcher) Process() {
 		timeToRunTruncation := l.lastRanLogTruncationTime.IsZero() || time.Now().Sub(l.lastRanLogTruncationTime) > time.Hour
 		if l.deleteLogFilesOlderThanDays > 0 && timeToRunTruncation {
 			l.lastRanLogTruncationTime = time.Now()
-			l.logger.Info().Any("days", l.deleteLogFilesOlderThanDays).Msg("Truncating logs older than confiugred days")
+			l.logger.Info().Any("days", l.deleteLogFilesOlderThanDays).Msg("Truncating logs older than configured days")
 			l.truncateLogs()
 		}
 
@@ -181,20 +181,30 @@ func (l *Launcher) Start() error {
 	l.loadServerConfig()
 	l.logger.Info().Msg("Starting server launcher")
 
+	serverOnline := false
+	uptime, err := l.serverApi.GetWorldUptime()
+	if err == nil && len(uptime) > 0 {
+		serverOnline = true
+	}
+
 	var g errgroup.Group
 
 	// start shared memory if needed
 	// this needs to be started and completed before the server processes
 	if l.runSharedMemory {
-		g.Go(func() error {
-			l.logger.Info().Msg("Starting shared memory")
-			err := l.startServerProcessSync(sharedMemoryProcessName)
-			if err != nil {
-				return err
-			}
+		if !serverOnline {
+			g.Go(func() error {
+				l.logger.Info().Msg("Starting shared memory")
+				err := l.startServerProcessSync(sharedMemoryProcessName)
+				if err != nil {
+					return err
+				}
 
-			return nil
-		})
+				return nil
+			})
+		} else {
+			l.logger.Info().Msg("Server already online, skipping running shared memory")
+		}
 	}
 
 	if l.updateOpcodesOnStart {
