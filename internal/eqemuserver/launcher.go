@@ -46,17 +46,20 @@ type Launcher struct {
 	watcher      *rfsnotify.RWatcher
 
 	// properties
-	configLastModified   time.Time
-	isRunning            bool // this is set by the server config
-	runSharedMemory      bool
-	runLoginserver       bool
-	runQueryServ         bool
-	updateOpcodesOnStart bool
-	patchesDirectory     string
-	opcodesDirectory     string
-	minZoneProcesses     int
-	currentZoneDynamics  int
-	currentZoneStatics   int
+	configLastModified          time.Time
+	isRunning                   bool // this is set by the server config
+	runSharedMemory             bool
+	runLoginserver              bool
+	runQueryServ                bool
+	updateOpcodesOnStart        bool
+	deleteLogFilesOlderThanDays int
+	patchesDirectory            string
+	opcodesDirectory            string
+	minZoneProcesses            int
+	currentZoneDynamics         int
+	currentZoneStatics          int
+	lastRanLogTruncationTime    time.Time
+
 	staticZonesToBoot    []string
 	currentOnlineStatics []string
 	currentProcessCounts map[string]int
@@ -103,6 +106,13 @@ func (l *Launcher) Process() {
 				Any("error", err.Error()).
 				Any("isRunning", l.isRunning).
 				Msg("Error getting server config file stat")
+		}
+
+		timeToRunTruncation := l.lastRanLogTruncationTime.IsZero() || time.Now().Sub(l.lastRanLogTruncationTime) > time.Hour
+		if l.deleteLogFilesOlderThanDays > 0 && timeToRunTruncation {
+			l.lastRanLogTruncationTime = time.Now()
+			l.logger.Info().Any("days", l.deleteLogFilesOlderThanDays).Msg("Truncating logs older than confiugred days")
+			l.truncateLogs()
 		}
 
 		l.logger.DebugVvv().
@@ -569,6 +579,7 @@ func (l *Launcher) loadServerConfig() {
 	l.minZoneProcesses = cfg.WebAdmin.Launcher.MinZoneProcesses
 	l.serverLongName = cfg.Server.World.Longname
 	l.updateOpcodesOnStart = cfg.WebAdmin.Launcher.UpdateOpcodesOnStart
+	l.deleteLogFilesOlderThanDays = cfg.WebAdmin.Launcher.DeleteLogFilesOlderThanDays
 
 	if l.minZoneProcesses < 1 {
 		l.minZoneProcesses = 5
@@ -588,12 +599,19 @@ func (l *Launcher) loadServerConfig() {
 		)
 	}
 
+	if cfg.WebAdmin.Launcher.DeleteLogFilesOlderThanDays == 0 {
+		cfg.WebAdmin.Launcher.DeleteLogFilesOlderThanDays = 7
+		l.deleteLogFilesOlderThanDays = 7
+		// save
+		_ = l.serverconfig.Save(cfg)
+	}
+
 	if env.IsAppModeWebserver() && cfg.WebAdmin != nil {
 		if cfg.WebAdmin.Discord != nil {
 			l.watchCrashLogs = len(cfg.WebAdmin.Discord.CrashLogWebhook) > 0
 			if l.watchCrashLogs {
 				l.discordWebhook = cfg.WebAdmin.Discord.CrashLogWebhook
-				l.StartCrashLogWatcher()
+				l.startCrashLogWatcher()
 			}
 		}
 	}
@@ -620,6 +638,7 @@ func (l *Launcher) loadServerConfig() {
 	l.staticZonesToBoot = staticZonesToBoot
 }
 
+// SetStopTimer sets the stop timer
 func (l *Launcher) SetStopTimer(timer int) {
 	stopTimerMutex.Lock()
 	l.stopTimer = timer
@@ -639,6 +658,7 @@ func (l *Launcher) StopCancel() error {
 	return nil
 }
 
+// serverProcessLauncherWatchdog is a watchdog that will monitor the server process launcher
 func (l *Launcher) serverProcessLauncherWatchdog() {
 	go func() {
 		for {
@@ -696,6 +716,7 @@ func (l *Launcher) serverProcessLauncherWatchdog() {
 	}()
 }
 
+// checkIfLauncherIsRunning checks if the launcher is already running
 func (l *Launcher) checkIfLauncherIsRunning() error {
 	// check if the launcher is already running
 	processes, _ := process.Processes()
@@ -727,7 +748,8 @@ func (l *Launcher) checkIfLauncherIsRunning() error {
 	return nil
 }
 
-func (l *Launcher) StartCrashLogWatcher() {
+// startCrashLogWatcher starts the crash log watcher
+func (l *Launcher) startCrashLogWatcher() {
 	if !l.watchCrashLogs {
 		return
 	}
@@ -837,6 +859,7 @@ type ProcessDetails struct {
 	BaseProcessName string
 }
 
+// getProcessDetails returns the process details
 func (l *Launcher) getProcessDetails(p *process.Process) ProcessDetails {
 	cmdline, err := p.Cmdline()
 	if err != nil {
@@ -899,6 +922,7 @@ func (l *Launcher) getProcessDetails(p *process.Process) ProcessDetails {
 	}
 }
 
+// updatePatchFiles will download the patch files from github
 func (l *Launcher) updatePatchFiles() {
 	l.logger.Info().Msg("Updating patches (opcodes)")
 
@@ -959,4 +983,36 @@ func (l *Launcher) updatePatchFiles() {
 	} else {
 		l.logger.Info().Any("took", time.Since(now).String()).Msg("Updated patch files")
 	}
+}
+
+// truncateLogs will truncate log files older than the specified days
+func (l *Launcher) truncateLogs() {
+	logsDir := l.pathmgmt.GetLogsDirPath()
+	_ = filepath.Walk(logsDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			l.logger.Debug().Any("error", err.Error()).Any("path", path).Msg("Error walking logs")
+			return nil
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		if !strings.HasSuffix(path, ".log") {
+			return nil
+		}
+
+		if time.Since(info.ModTime()).Hours() > float64(l.deleteLogFilesOlderThanDays*24) {
+			l.logger.Info().Any("path", path).Msg("Truncating log file")
+			err := os.Truncate(path, 0)
+			if err != nil {
+				l.logger.Debug().Any("error", err.Error()).
+					Any("path", path).
+					Any("days", l.deleteLogFilesOlderThanDays).
+					Msg("Error truncating log file")
+			}
+		}
+
+		return nil
+	})
 }

@@ -108,6 +108,23 @@
         />
       </div>
 
+      <div class="mt-3">
+        <div>
+          Days to keep log files (7 days default)
+        </div>
+
+        <div>
+          <p class="text-muted">
+            Files older than this will be deleted periodically. Set to -1 to disable.
+          </p>
+        </div>
+        <b-form-input
+          type="number"
+          v-model.number="launcher.deleteLogFilesOlderThanDays"
+          @change="saveLauncherOptions()"
+        />
+      </div>
+
     </div>
   </div>
 </template>
@@ -142,6 +159,10 @@ export default {
 
     if (typeof this.launcher.updateOpcodesOnStart === 'undefined') {
       this.launcher.updateOpcodesOnStart = true
+    }
+
+    if (typeof this.launcher.deleteLogFilesOlderThanDays !== 'undefined' && this.launcher.deleteLogFilesOlderThanDays === 0) {
+      this.launcher.deleteLogFilesOlderThanDays = 7
     }
 
     // zone options

@@ -2036,6 +2036,7 @@ func (a *Installer) setPostInstallConfigValues() error {
 			config.WebAdmin.Launcher = &eqemuserverconfig.WebAdminLauncherConfig{}
 		}
 
+		config.WebAdmin.Launcher.DeleteLogFilesOlderThanDays = 7
 		config.WebAdmin.Launcher.UpdateOpcodesOnStart = true
 		config.WebAdmin.Launcher.MinZoneProcesses = 10
 		config.WebAdmin.Launcher.RunSharedMemory = true

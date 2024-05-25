@@ -55,27 +55,29 @@ func (a *Controller) save(c echo.Context) error {
 }
 
 type LauncherConfig struct {
-	RunSharedMemory      bool   `json:"runSharedMemory"`
-	RunLoginserver       bool   `json:"runLoginserver"`
-	RunQueryServ         bool   `json:"runQueryServ"`
-	IsRunning            bool   `json:"isRunning"`
-	SpireLauncherStart   bool   `json:"spireLauncherStart"`
-	MinZoneProcesses     int    `json:"minZoneProcesses"`
-	StaticZones          string `json:"staticZones"`
-	UpdateOpcodesOnStart bool   `json:"updateOpcodesOnStart"`
+	RunSharedMemory             bool   `json:"runSharedMemory"`
+	RunLoginserver              bool   `json:"runLoginserver"`
+	RunQueryServ                bool   `json:"runQueryServ"`
+	IsRunning                   bool   `json:"isRunning"`
+	SpireLauncherStart          bool   `json:"spireLauncherStart"`
+	MinZoneProcesses            int    `json:"minZoneProcesses"`
+	StaticZones                 string `json:"staticZones"`
+	UpdateOpcodesOnStart        bool   `json:"updateOpcodesOnStart"`
+	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
 }
 
 func (a *Controller) getLauncherConfig(c echo.Context) error {
 	cfg := a.serverconfig.Get()
 	l := LauncherConfig{
-		RunSharedMemory:      cfg.WebAdmin.Launcher.RunSharedMemory,
-		RunLoginserver:       cfg.WebAdmin.Launcher.RunLoginserver,
-		RunQueryServ:         cfg.WebAdmin.Launcher.RunQueryServ,
-		IsRunning:            cfg.WebAdmin.Launcher.IsRunning,
-		SpireLauncherStart:   cfg.Spire.LauncherStart,
-		MinZoneProcesses:     cfg.WebAdmin.Launcher.MinZoneProcesses,
-		StaticZones:          cfg.WebAdmin.Launcher.StaticZones,
-		UpdateOpcodesOnStart: cfg.WebAdmin.Launcher.UpdateOpcodesOnStart,
+		RunSharedMemory:             cfg.WebAdmin.Launcher.RunSharedMemory,
+		RunLoginserver:              cfg.WebAdmin.Launcher.RunLoginserver,
+		RunQueryServ:                cfg.WebAdmin.Launcher.RunQueryServ,
+		IsRunning:                   cfg.WebAdmin.Launcher.IsRunning,
+		SpireLauncherStart:          cfg.Spire.LauncherStart,
+		MinZoneProcesses:            cfg.WebAdmin.Launcher.MinZoneProcesses,
+		StaticZones:                 cfg.WebAdmin.Launcher.StaticZones,
+		UpdateOpcodesOnStart:        cfg.WebAdmin.Launcher.UpdateOpcodesOnStart,
+		DeleteLogFilesOlderThanDays: cfg.WebAdmin.Launcher.DeleteLogFilesOlderThanDays,
 	}
 
 	return c.JSON(http.StatusOK, l)
@@ -96,6 +98,7 @@ func (a *Controller) saveLauncherConfig(c echo.Context) error {
 	cfg.WebAdmin.Launcher.MinZoneProcesses = config.MinZoneProcesses
 	cfg.WebAdmin.Launcher.StaticZones = config.StaticZones
 	cfg.WebAdmin.Launcher.UpdateOpcodesOnStart = config.UpdateOpcodesOnStart
+	cfg.WebAdmin.Launcher.DeleteLogFilesOlderThanDays = config.DeleteLogFilesOlderThanDays
 	cfg.Spire.LauncherStart = config.SpireLauncherStart
 
 	// both launchers shouldn't be running at the same time

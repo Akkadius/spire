@@ -34,13 +34,14 @@ type DatabaseConfig struct {
 }
 
 type WebAdminLauncherConfig struct {
-	RunSharedMemory      bool   `json:"runSharedMemory"`
-	RunLoginserver       bool   `json:"runLoginserver"`
-	RunQueryServ         bool   `json:"runQueryServ"`
-	IsRunning            bool   `json:"isRunning"`
-	MinZoneProcesses     int    `json:"minZoneProcesses,omitempty"`
-	StaticZones          string `json:"staticZones,omitempty"`
-	UpdateOpcodesOnStart bool   `json:"updateOpcodesOnStart"`
+	RunSharedMemory             bool   `json:"runSharedMemory"`
+	RunLoginserver              bool   `json:"runLoginserver"`
+	RunQueryServ                bool   `json:"runQueryServ"`
+	IsRunning                   bool   `json:"isRunning"`
+	MinZoneProcesses            int    `json:"minZoneProcesses,omitempty"`
+	StaticZones                 string `json:"staticZones,omitempty"`
+	UpdateOpcodesOnStart        bool   `json:"updateOpcodesOnStart"`
+	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
 }
 
 // EQEmuConfigJson is the struct that represents the eqemu_config.json file

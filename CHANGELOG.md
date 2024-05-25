@@ -1,3 +1,11 @@
+## [4.2.0] 5/24/2024
+
+**Launcher** Add feature that truncates server logs back a configurable amount of days (defaults to 7) on server start. This will keep your server logs from growing out of control and taking up disk space. This can be configured in the server config and the server launcher modal.
+
+![image](https://github.com/Akkadius/spire/assets/3319450/e6887073-c268-4fd4-a9ac-6b3d51a22e39)
+
+![image](https://github.com/Akkadius/spire/assets/3319450/0b037f27-e493-401d-9dca-3fe4d07fae9d)
+
 ## [4.1.0] 5/22/2024
 
 * **Launcher** Add feature to allow users to always download fresh opcodes from server GitHub on server start (Defaults to true). This can be turned off in the server config and the server launcher modal.
