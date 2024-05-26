@@ -85,7 +85,7 @@ var classic = Expansion{
 		{
 			Name:    "Character:StatCap",
 			Value:   "255",
-			Comment: "Stat caps at 255 on classic, I believe?",
+			Comment: "Classic cap is 255",
 		},
 		{
 			Name:    "Character:UseOldBindWound",
@@ -95,17 +95,17 @@ var classic = Expansion{
 		{
 			Name:    "Character:UseOldClassExpPenalties",
 			Value:   "true",
-			Comment: "",
+			Comment: "Experience penalties were removed in Secrets of Faydwer",
 		},
 		{
 			Name:    "Character:UseOldConSystem",
 			Value:   "true",
-			Comment: "",
+			Comment: "Con system changed in Secrets of Faydwer",
 		},
 		{
 			Name:    "Character:UseOldRaceExpPenalties",
 			Value:   "true",
-			Comment: "",
+			Comment: "Experience penalties were removed in Secrets of Faydwer",
 		},
 		{
 			Name:    "Character:UseRaceClassExpBonuses",

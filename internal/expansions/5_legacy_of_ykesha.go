@@ -37,5 +37,10 @@ var legacyOfYkesha = Expansion{
 			Value:   "true",
 			Comment: "Shared bank enabled in Legacy of Ykesha",
 		},
+		{
+			Name:    "Character:StatCap",
+			Value:   "350",
+			Comment: "After the increase to 305 in the \"Planes of Power\" expansion, the stat cap was further increased to 350 with the release of the \"Legacy of Ykesha\" expansion on February 25, 2003",
+		},
 	},
 }

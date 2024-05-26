@@ -45,6 +45,28 @@ var expansions = []Expansion{
 		ExpansionName:   "The Serpent's Spine",
 		ShortName:       "TSS",
 		MaxLevel:        75,
+		Rules: []Rule{
+			{
+				Name:    "Character:MaxLevel",
+				Value:   "75",
+				Comment: "Level 75 cap until Secrets of Faydwer",
+			},
+			{
+				Name:    "Character:MaxExpLevel",
+				Value:   "75",
+				Comment: "Level 75 cap until Secrets of Faydwer",
+			},
+			{
+				Name:    "Character:RestRegenEndurance",
+				Value:   "true",
+				Comment: "Rest Regen Endurance was added in The Serpent's Spine",
+			},
+			{
+				Name:    "Character:RestRegenEnabled",
+				Value:   "true",
+				Comment: "Rest Regen was added in The Serpent's Spine",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 13,
@@ -57,6 +79,33 @@ var expansions = []Expansion{
 		ExpansionName:   "Secrets of Faydwer",
 		ShortName:       "SoF",
 		MaxLevel:        80,
+		Rules: []Rule{
+			{
+				Name:    "Character:MaxLevel",
+				Value:   "80",
+				Comment: "Level 80 cap until Seeds of Destruction",
+			},
+			{
+				Name:    "Character:MaxExpLevel",
+				Value:   "80",
+				Comment: "Level 80 cap until Seeds of Destruction",
+			},
+			{
+				Name:    "Character:UseOldConSystem",
+				Value:   "false",
+				Comment: "Con system changed in Secrets of Faydwer",
+			},
+			{
+				Name:    "Character:UseOldClassExpPenalties",
+				Value:   "false",
+				Comment: "Experience penalties were removed in Secrets of Faydwer",
+			},
+			{
+				Name:    "Character:UseOldRaceExpPenalties",
+				Value:   "false",
+				Comment: "Experience penalties were removed in Secrets of Faydwer",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 15,
@@ -87,18 +136,39 @@ var expansions = []Expansion{
 		ExpansionName:   "Rain of Fear",
 		ShortName:       "RoF",
 		MaxLevel:        100,
+		Rules: []Rule{
+			{
+				Name:    "Character:StatCap",
+				Value:   "500",
+				Comment: "After the increase to 400 in the \"Lost Dungeons of Norrath\" expansion, the stat cap remained at 400 for quite some time. The next significant increase occurred much later, with the \"Rain of Fear\" expansion on November 28, 2012, which raised the stat cap to 500. ",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 20,
 		ExpansionName:   "Call of the Forsaken",
 		ShortName:       "CoTF",
 		MaxLevel:        100,
+		Rules: []Rule{
+			{
+				Name:    "Character:StatCap",
+				Value:   "600",
+				Comment: "After the increase to 500 in the \"Rain of Fear\" expansion, the stat cap was further increased to 600 with the release of the \"Call of the Forsaken\" expansion on October 8, 2013.",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 21,
 		ExpansionName:   "The Darkened Sea",
 		ShortName:       "TDS",
 		MaxLevel:        105,
+		Rules: []Rule{
+			{
+				Name:    "Character:StatCap",
+				Value:   "700",
+				Comment: "After the increase to 600 in the \"Call of the Forsaken\" expansion, the stat cap was increased to 700 with the release of the \"The Darkened Sea\" expansion on October 28, 2014.",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 22,
@@ -111,6 +181,13 @@ var expansions = []Expansion{
 		ExpansionName:   "Empires of Kunark",
 		ShortName:       "EoK",
 		MaxLevel:        105,
+		Rules: []Rule{
+			{
+				Name:    "Character:StatCap",
+				Value:   "800",
+				Comment: "After the increase to 700 in \"The Darkened Sea\" expansion, the stat cap was further increased to 800 with the release of the \"Empires of Kunark\" expansion on November 16, 2016.",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 24,
@@ -123,6 +200,13 @@ var expansions = []Expansion{
 		ExpansionName:   "The Burning Lands",
 		ShortName:       "TBL",
 		MaxLevel:        110,
+		Rules: []Rule{
+			{
+				Name:    "Character:StatCap",
+				Value:   "1100",
+				Comment: "After the increase to 800 in the \"Empires of Kunark\" expansion, the stat cap remained at that level for quite some time. The next significant increase occurred with the \"The Burning Lands\" expansion on December 11, 2018, which raised the stat cap to 1100",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 26,

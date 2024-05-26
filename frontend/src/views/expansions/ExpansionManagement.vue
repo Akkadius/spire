@@ -314,4 +314,5 @@ export default {
   text-align: center !important;
   padding: 2px !important;
 }
+
 </style>

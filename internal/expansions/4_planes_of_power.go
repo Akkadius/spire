@@ -32,5 +32,10 @@ var planesOfPower = Expansion{
 			Value:   "65",
 			Comment: "Level 65 cap until Omens of War",
 		},
+		{
+			Name:    "Character:StatCap",
+			Value:   "305",
+			Comment: "The stat cap in EverQuest increased from 255 to 305 with the release of the \"Planes of Power\" expansion on October 29, 2002",
+		},
 	},
 }

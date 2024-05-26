@@ -28,5 +28,10 @@ var dragonsOfNorrath = Expansion{
 			Value:   "511",
 			Comment: "Dragons of Norrath Client-Based Expansion Setting",
 		},
+		{
+			Name:    "Mail:EnableMailSystem",
+			Value:   "true",
+			Comment: "Mail System not added until Dragons of Norrath",
+		},
 	},
 }
