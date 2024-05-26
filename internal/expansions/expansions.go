@@ -11,6 +11,7 @@ type Expansion struct {
 
 type ContentFlag struct {
 	Name    string `json:"name"`
+	Enabled bool   `json:"enabled"`
 	Comment string `json:"comment"`
 }
 
@@ -26,42 +27,12 @@ var expansions = []Expansion{
 	velious,
 	luclin,
 	planesOfPower,
-	{
-		ExpansionNumber: 5,
-		ExpansionName:   "Legacy of Ykesha",
-		ShortName:       "LoY",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 6,
-		ExpansionName:   "Lost Dungeons of Norrath",
-		ShortName:       "LDoN",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 7,
-		ExpansionName:   "Gates of Discord",
-		ShortName:       "GoD",
-		MaxLevel:        65,
-	},
-	{
-		ExpansionNumber: 8,
-		ExpansionName:   "Omens of War",
-		ShortName:       "OoW",
-		MaxLevel:        70,
-	},
-	{
-		ExpansionNumber: 9,
-		ExpansionName:   "Dragons of Norrath",
-		ShortName:       "DoN",
-		MaxLevel:        70,
-	},
-	{
-		ExpansionNumber: 10,
-		ExpansionName:   "Depths of Darkhollow",
-		ShortName:       "DoDH",
-		MaxLevel:        70,
-	},
+	legacyOfYkesha,
+	lostDungeonsOfNorrath,
+	gatesOfDiscord,
+	omensOfWar,
+	dragonsOfNorrath,
+	depthsOfDarkhollow,
 	{
 		ExpansionNumber: 11,
 		ExpansionName:   "Prophecy of Ro",
