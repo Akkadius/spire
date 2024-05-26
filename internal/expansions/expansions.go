@@ -23,24 +23,9 @@ type Rule struct {
 var expansions = []Expansion{
 	classic,
 	kunark,
-	{
-		ExpansionNumber: 2,
-		ExpansionName:   "Scars of Velious",
-		ShortName:       "SoV",
-		MaxLevel:        60,
-	},
-	{
-		ExpansionNumber: 3,
-		ExpansionName:   "Shadows of Luclin",
-		ShortName:       "SoL",
-		MaxLevel:        60,
-	},
-	{
-		ExpansionNumber: 4,
-		ExpansionName:   "Planes of Power",
-		ShortName:       "PoP",
-		MaxLevel:        65,
-	},
+	velious,
+	luclin,
+	planesOfPower,
 	{
 		ExpansionNumber: 5,
 		ExpansionName:   "Legacy of Ykesha",

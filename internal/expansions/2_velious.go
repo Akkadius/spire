@@ -1,26 +1,26 @@
 package expansions
 
-var kunark = Expansion{
-	ExpansionNumber: 1,
-	ExpansionName:   "Ruins of Kunark",
-	ShortName:       "RoK",
+var velious = Expansion{
+	ExpansionNumber: 2,
+	ExpansionName:   "Scars of Velious",
+	ShortName:       "SoV",
 	MaxLevel:        60,
 	ContentFlags:    []ContentFlag{},
 	Rules: []Rule{
 		{
 			Name:    "Expansion:CurrentExpansion",
-			Value:   "1",
+			Value:   "2",
 			Comment: "Current Expansion",
 		},
 		{
 			Name:    "World:ExpansionSettings",
-			Value:   "1",
-			Comment: "Kunark Client-Based Expansion Setting",
+			Value:   "2",
+			Comment: "Velious Client-Based Expansion Setting",
 		},
 		{
 			Name:    "World:CharacterSelectExpansionSettings",
-			Value:   "1",
-			Comment: "Kunark Client-Based Expansion Setting",
+			Value:   "2",
+			Comment: "Velious Client-Based Expansion Setting",
 		},
 		{
 			Name:    "Character:MaxExpLevel",
