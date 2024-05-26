@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type SkillCapController struct {
+type BotStartingItemController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewSkillCapController(
+func NewBotStartingItemController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *SkillCapController {
-	return &SkillCapController{
+) *BotStartingItemController {
+	return &BotStartingItemController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *SkillCapController) Routes() []*routes.Route {
+func (e *BotStartingItemController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "skill_cap/:id", e.getSkillCap, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps", e.listSkillCaps, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps/count", e.getSkillCapsCount, nil),
-		routes.RegisterRoute(http.MethodPut, "skill_cap", e.createSkillCap, nil),
-		routes.RegisterRoute(http.MethodDelete, "skill_cap/:id", e.deleteSkillCap, nil),
-		routes.RegisterRoute(http.MethodPatch, "skill_cap/:id", e.updateSkillCap, nil),
-		routes.RegisterRoute(http.MethodPost, "skill_caps/bulk", e.getSkillCapsBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_starting_item/:id", e.getBotStartingItem, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_starting_items", e.listBotStartingItems, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_starting_items/count", e.getBotStartingItemsCount, nil),
+		routes.RegisterRoute(http.MethodPut, "bot_starting_item", e.createBotStartingItem, nil),
+		routes.RegisterRoute(http.MethodDelete, "bot_starting_item/:id", e.deleteBotStartingItem, nil),
+		routes.RegisterRoute(http.MethodPatch, "bot_starting_item/:id", e.updateBotStartingItem, nil),
+		routes.RegisterRoute(http.MethodPost, "bot_starting_items/bulk", e.getBotStartingItemsBulk, nil),
 	}
 }
 
-// listSkillCaps godoc
-// @Id listSkillCaps
-// @Summary Lists SkillCaps
+// listBotStartingItems godoc
+// @Id listBotStartingItems
+// @Summary Lists BotStartingItems
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags BotStartingItem
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *SkillCapController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.BotStartingItem
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps [get]
-func (e *SkillCapController) listSkillCaps(c echo.Context) error {
-	var results []models.SkillCap
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results).Error
+// @Router /bot_starting_items [get]
+func (e *BotStartingItemController) listBotStartingItems(c echo.Context) error {
+	var results []models.BotStartingItem
+	err := e.db.QueryContext(models.BotStartingItem{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,21 +69,21 @@ func (e *SkillCapController) listSkillCaps(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCap godoc
-// @Id getSkillCap
-// @Summary Gets SkillCap
+// getBotStartingItem godoc
+// @Id getBotStartingItem
+// @Summary Gets BotStartingItem
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags BotStartingItem
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.BotStartingItem
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_cap/{id} [get]
-func (e *SkillCapController) getSkillCap(c echo.Context) error {
+// @Router /bot_starting_item/{id} [get]
+func (e *BotStartingItemController) getBotStartingItem(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
@@ -96,8 +96,8 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.BotStartingItem
+	query := e.db.QueryContext(models.BotStartingItem{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -116,21 +116,21 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateSkillCap godoc
-// @Id updateSkillCap
-// @Summary Updates SkillCap
+// updateBotStartingItem godoc
+// @Id updateBotStartingItem
+// @Summary Updates BotStartingItem
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags BotStartingItem
 // @Param id path int true "Id"
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Success 200 {array} models.SkillCap
+// @Param bot_starting_item body models.BotStartingItem true "BotStartingItem"
+// @Success 200 {array} models.BotStartingItem
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /skill_cap/{id} [patch]
-func (e *SkillCapController) updateSkillCap(c echo.Context) error {
-	request := new(models.SkillCap)
+// @Router /bot_starting_item/{id} [patch]
+func (e *BotStartingItemController) updateBotStartingItem(c echo.Context) error {
+	request := new(models.BotStartingItem)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -150,8 +150,8 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.BotStartingItem
+	query := e.db.QueryContext(models.BotStartingItem{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -183,41 +183,41 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [SkillCap] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [BotStartingItem] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createSkillCap godoc
-// @Id createSkillCap
-// @Summary Creates SkillCap
+// createBotStartingItem godoc
+// @Id createBotStartingItem
+// @Summary Creates BotStartingItem
 // @Accept json
 // @Produce json
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Param bot_starting_item body models.BotStartingItem true "BotStartingItem"
+// @Tags BotStartingItem
+// @Success 200 {array} models.BotStartingItem
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /skill_cap [put]
-func (e *SkillCapController) createSkillCap(c echo.Context) error {
-	skillCap := new(models.SkillCap)
-	if err := c.Bind(skillCap); err != nil {
+// @Router /bot_starting_item [put]
+func (e *BotStartingItemController) createBotStartingItem(c echo.Context) error {
+	botStartingItem := new(models.BotStartingItem)
+	if err := c.Bind(botStartingItem); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.SkillCap{}, c).Model(&models.SkillCap{})
+	db := e.db.Get(models.BotStartingItem{}, c).Model(&models.BotStartingItem{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&skillCap).Error
+	err := db.Create(&botStartingItem).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -228,33 +228,33 @@ func (e *SkillCapController) createSkillCap(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.SkillCap{}, skillCap)
+		diff := database.ResultDifference(models.BotStartingItem{}, botStartingItem)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [SkillCap] [%v] data [%v]", skillCap.ID, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [BotStartingItem] [%v] data [%v]", botStartingItem.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, skillCap)
+	return c.JSON(http.StatusOK, botStartingItem)
 }
 
-// deleteSkillCap godoc
-// @Id deleteSkillCap
-// @Summary Deletes SkillCap
+// deleteBotStartingItem godoc
+// @Id deleteBotStartingItem
+// @Summary Deletes BotStartingItem
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags BotStartingItem
 // @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /skill_cap/{id} [delete]
-func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
+// @Router /bot_starting_item/{id} [delete]
+func (e *BotStartingItemController) deleteBotStartingItem(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
@@ -267,8 +267,8 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.BotStartingItem
+	query := e.db.QueryContext(models.BotStartingItem{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -293,25 +293,25 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [SkillCap] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [BotStartingItem] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getSkillCapsBulk godoc
-// @Id getSkillCapsBulk
-// @Summary Gets SkillCaps in bulk
+// getBotStartingItemsBulk godoc
+// @Id getBotStartingItemsBulk
+// @Summary Gets BotStartingItems in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Tags BotStartingItem
+// @Success 200 {array} models.BotStartingItem
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/bulk [post]
-func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
-	var results []models.SkillCap
+// @Router /bot_starting_items/bulk [post]
+func (e *BotStartingItemController) getBotStartingItemsBulk(c echo.Context) error {
+	var results []models.BotStartingItem
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -328,7 +328,7 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.BotStartingItem{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -336,12 +336,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCapsCount godoc
-// @Id getSkillCapsCount
-// @Summary Counts SkillCaps
+// getBotStartingItemsCount godoc
+// @Id getBotStartingItemsCount
+// @Summary Counts BotStartingItems
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags BotStartingItem
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -351,12 +351,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.BotStartingItem
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/count [get]
-func (e *SkillCapController) getSkillCapsCount(c echo.Context) error {
+// @Router /bot_starting_items/count [get]
+func (e *BotStartingItemController) getBotStartingItemsCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.SkillCap{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.BotStartingItem{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

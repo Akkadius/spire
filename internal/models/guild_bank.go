@@ -10,7 +10,7 @@ type GuildBank struct {
 	Area        uint8       `json:"area" gorm:"Column:area"`
 	Slot        uint        `json:"slot" gorm:"Column:slot"`
 	Itemid      uint        `json:"itemid" gorm:"Column:itemid"`
-	Qty         uint        `json:"qty" gorm:"Column:qty"`
+	Qty         int         `json:"qty" gorm:"Column:qty"`
 	Donator     null.String `json:"donator" gorm:"Column:donator"`
 	Permissions uint8       `json:"permissions" gorm:"Column:permissions"`
 	Whofor      null.String `json:"whofor" gorm:"Column:whofor"`

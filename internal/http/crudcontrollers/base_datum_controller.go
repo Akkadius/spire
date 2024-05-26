@@ -95,7 +95,7 @@ func (e *BaseDatumController) getBaseDatum(c echo.Context) error {
 	params = append(params, level)
 	keys = append(keys, "level = ?")
 
-	// key param [class] position [2] type [int]
+	// key param [class] position [2] type [tinyint]
 	if len(c.QueryParam("class")) > 0 {
 		classParam, err := strconv.Atoi(c.QueryParam("class"))
 		if err != nil {
@@ -160,7 +160,7 @@ func (e *BaseDatumController) updateBaseDatum(c echo.Context) error {
 	params = append(params, level)
 	keys = append(keys, "level = ?")
 
-	// key param [class] position [2] type [int]
+	// key param [class] position [2] type [tinyint]
 	if len(c.QueryParam("class")) > 0 {
 		classParam, err := strconv.Atoi(c.QueryParam("class"))
 		if err != nil {
@@ -288,7 +288,7 @@ func (e *BaseDatumController) deleteBaseDatum(c echo.Context) error {
 	params = append(params, level)
 	keys = append(keys, "level = ?")
 
-	// key param [class] position [2] type [int]
+	// key param [class] position [2] type [tinyint]
 	if len(c.QueryParam("class")) > 0 {
 		classParam, err := strconv.Atoi(c.QueryParam("class"))
 		if err != nil {

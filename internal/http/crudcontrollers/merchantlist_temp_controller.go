@@ -95,7 +95,7 @@ func (e *MerchantlistTempController) getMerchantlistTemp(c echo.Context) error {
 	params = append(params, npcid)
 	keys = append(keys, "npcid = ?")
 
-	// key param [slot] position [2] type [tinyint]
+	// key param [slot] position [2] type [int]
 	if len(c.QueryParam("slot")) > 0 {
 		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
 		if err != nil {
@@ -182,7 +182,7 @@ func (e *MerchantlistTempController) updateMerchantlistTemp(c echo.Context) erro
 	params = append(params, npcid)
 	keys = append(keys, "npcid = ?")
 
-	// key param [slot] position [2] type [tinyint]
+	// key param [slot] position [2] type [int]
 	if len(c.QueryParam("slot")) > 0 {
 		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
 		if err != nil {
@@ -332,7 +332,7 @@ func (e *MerchantlistTempController) deleteMerchantlistTemp(c echo.Context) erro
 	params = append(params, npcid)
 	keys = append(keys, "npcid = ?")
 
-	// key param [slot] position [2] type [tinyint]
+	// key param [slot] position [2] type [int]
 	if len(c.QueryParam("slot")) > 0 {
 		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
 		if err != nil {

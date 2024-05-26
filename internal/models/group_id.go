@@ -1,10 +1,11 @@
 package models
 
 type GroupId struct {
-	Groupid int    `json:"groupid" gorm:"Column:groupid"`
-	Charid  int    `json:"charid" gorm:"Column:charid"`
-	Name    string `json:"name" gorm:"Column:name"`
-	Ismerc  int8   `json:"ismerc" gorm:"Column:ismerc"`
+	GroupId      uint   `json:"group_id" gorm:"Column:group_id"`
+	Name         string `json:"name" gorm:"Column:name"`
+	CharacterId  uint   `json:"character_id" gorm:"Column:character_id"`
+	BotId        uint   `json:"bot_id" gorm:"Column:bot_id"`
+	MercId       uint   `json:"merc_id" gorm:"Column:merc_id"`
 }
 
 func (GroupId) TableName() string {

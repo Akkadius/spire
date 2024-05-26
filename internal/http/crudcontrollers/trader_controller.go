@@ -31,12 +31,12 @@ func NewTraderController(
 
 func (e *TraderController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "trader/:charId", e.getTrader, nil),
+		routes.RegisterRoute(http.MethodGet, "trader/:id", e.getTrader, nil),
 		routes.RegisterRoute(http.MethodGet, "traders", e.listTraders, nil),
 		routes.RegisterRoute(http.MethodGet, "traders/count", e.getTradersCount, nil),
 		routes.RegisterRoute(http.MethodPut, "trader", e.createTrader, nil),
-		routes.RegisterRoute(http.MethodDelete, "trader/:charId", e.deleteTrader, nil),
-		routes.RegisterRoute(http.MethodPatch, "trader/:charId", e.updateTrader, nil),
+		routes.RegisterRoute(http.MethodDelete, "trader/:id", e.deleteTrader, nil),
+		routes.RegisterRoute(http.MethodPatch, "trader/:id", e.updateTrader, nil),
 		routes.RegisterRoute(http.MethodPost, "traders/bulk", e.getTradersBulk, nil),
 	}
 }
@@ -88,23 +88,12 @@ func (e *TraderController) getTrader(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charId, err := strconv.Atoi(c.Param("charId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, charId)
-	keys = append(keys, "char_id = ?")
-
-	// key param [slot_id] position [6] type [tinyint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
 	var result models.Trader
@@ -120,7 +109,7 @@ func (e *TraderController) getTrader(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.CharId == 0 {
+	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
@@ -153,23 +142,12 @@ func (e *TraderController) updateTrader(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charId, err := strconv.Atoi(c.Param("charId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, charId)
-	keys = append(keys, "char_id = ?")
-
-	// key param [slot_id] position [6] type [tinyint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
 	var result models.Trader
@@ -257,7 +235,7 @@ func (e *TraderController) createTrader(c echo.Context) error {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [Trader] [%v] data [%v]", trader.CharId, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [Trader] [%v] data [%v]", trader.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
@@ -270,7 +248,7 @@ func (e *TraderController) createTrader(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Trader
-// @Param id path int true "charId"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
@@ -281,23 +259,12 @@ func (e *TraderController) deleteTrader(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charId, err := strconv.Atoi(c.Param("charId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, charId)
-	keys = append(keys, "char_id = ?")
-
-	// key param [slot_id] position [6] type [tinyint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
 	var result models.Trader
@@ -326,7 +293,7 @@ func (e *TraderController) deleteTrader(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [Trader] [%v] keys [%v]", result.CharId, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [Trader] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 

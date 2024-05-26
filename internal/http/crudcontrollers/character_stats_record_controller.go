@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type SkillCapController struct {
+type CharacterStatsRecordController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewSkillCapController(
+func NewCharacterStatsRecordController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *SkillCapController {
-	return &SkillCapController{
+) *CharacterStatsRecordController {
+	return &CharacterStatsRecordController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *SkillCapController) Routes() []*routes.Route {
+func (e *CharacterStatsRecordController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "skill_cap/:id", e.getSkillCap, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps", e.listSkillCaps, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps/count", e.getSkillCapsCount, nil),
-		routes.RegisterRoute(http.MethodPut, "skill_cap", e.createSkillCap, nil),
-		routes.RegisterRoute(http.MethodDelete, "skill_cap/:id", e.deleteSkillCap, nil),
-		routes.RegisterRoute(http.MethodPatch, "skill_cap/:id", e.updateSkillCap, nil),
-		routes.RegisterRoute(http.MethodPost, "skill_caps/bulk", e.getSkillCapsBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "character_stats_record/:characterId", e.getCharacterStatsRecord, nil),
+		routes.RegisterRoute(http.MethodGet, "character_stats_records", e.listCharacterStatsRecords, nil),
+		routes.RegisterRoute(http.MethodGet, "character_stats_records/count", e.getCharacterStatsRecordsCount, nil),
+		routes.RegisterRoute(http.MethodPut, "character_stats_record", e.createCharacterStatsRecord, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_stats_record/:characterId", e.deleteCharacterStatsRecord, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_stats_record/:characterId", e.updateCharacterStatsRecord, nil),
+		routes.RegisterRoute(http.MethodPost, "character_stats_records/bulk", e.getCharacterStatsRecordsBulk, nil),
 	}
 }
 
-// listSkillCaps godoc
-// @Id listSkillCaps
-// @Summary Lists SkillCaps
+// listCharacterStatsRecords godoc
+// @Id listCharacterStatsRecords
+// @Summary Lists CharacterStatsRecords
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags CharacterStatsRecord
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *SkillCapController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.CharacterStatsRecord
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps [get]
-func (e *SkillCapController) listSkillCaps(c echo.Context) error {
-	var results []models.SkillCap
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results).Error
+// @Router /character_stats_records [get]
+func (e *CharacterStatsRecordController) listCharacterStatsRecords(c echo.Context) error {
+	var results []models.CharacterStatsRecord
+	err := e.db.QueryContext(models.CharacterStatsRecord{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,35 +69,35 @@ func (e *SkillCapController) listSkillCaps(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCap godoc
-// @Id getSkillCap
-// @Summary Gets SkillCap
+// getCharacterStatsRecord godoc
+// @Id getCharacterStatsRecord
+// @Summary Gets CharacterStatsRecord
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags CharacterStatsRecord
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.CharacterStatsRecord
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_cap/{id} [get]
-func (e *SkillCapController) getSkillCap(c echo.Context) error {
+// @Router /character_stats_record/{id} [get]
+func (e *CharacterStatsRecordController) getCharacterStatsRecord(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	id, err := strconv.Atoi(c.Param("id"))
+	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
 	}
-	params = append(params, id)
-	keys = append(keys, "id = ?")
+	params = append(params, characterId)
+	keys = append(keys, "character_id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.CharacterStatsRecord
+	query := e.db.QueryContext(models.CharacterStatsRecord{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -109,28 +109,28 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.ID == 0 {
+	if result.CharacterId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateSkillCap godoc
-// @Id updateSkillCap
-// @Summary Updates SkillCap
+// updateCharacterStatsRecord godoc
+// @Id updateCharacterStatsRecord
+// @Summary Updates CharacterStatsRecord
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags CharacterStatsRecord
 // @Param id path int true "Id"
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Success 200 {array} models.SkillCap
+// @Param character_stats_record body models.CharacterStatsRecord true "CharacterStatsRecord"
+// @Success 200 {array} models.CharacterStatsRecord
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /skill_cap/{id} [patch]
-func (e *SkillCapController) updateSkillCap(c echo.Context) error {
-	request := new(models.SkillCap)
+// @Router /character_stats_record/{id} [patch]
+func (e *CharacterStatsRecordController) updateCharacterStatsRecord(c echo.Context) error {
+	request := new(models.CharacterStatsRecord)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -142,16 +142,16 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	id, err := strconv.Atoi(c.Param("id"))
+	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
 	}
-	params = append(params, id)
-	keys = append(keys, "id = ?")
+	params = append(params, characterId)
+	keys = append(keys, "character_id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.CharacterStatsRecord
+	query := e.db.QueryContext(models.CharacterStatsRecord{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -183,41 +183,41 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [SkillCap] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [CharacterStatsRecord] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createSkillCap godoc
-// @Id createSkillCap
-// @Summary Creates SkillCap
+// createCharacterStatsRecord godoc
+// @Id createCharacterStatsRecord
+// @Summary Creates CharacterStatsRecord
 // @Accept json
 // @Produce json
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Param character_stats_record body models.CharacterStatsRecord true "CharacterStatsRecord"
+// @Tags CharacterStatsRecord
+// @Success 200 {array} models.CharacterStatsRecord
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /skill_cap [put]
-func (e *SkillCapController) createSkillCap(c echo.Context) error {
-	skillCap := new(models.SkillCap)
-	if err := c.Bind(skillCap); err != nil {
+// @Router /character_stats_record [put]
+func (e *CharacterStatsRecordController) createCharacterStatsRecord(c echo.Context) error {
+	characterStatsRecord := new(models.CharacterStatsRecord)
+	if err := c.Bind(characterStatsRecord); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.SkillCap{}, c).Model(&models.SkillCap{})
+	db := e.db.Get(models.CharacterStatsRecord{}, c).Model(&models.CharacterStatsRecord{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&skillCap).Error
+	err := db.Create(&characterStatsRecord).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -228,47 +228,47 @@ func (e *SkillCapController) createSkillCap(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.SkillCap{}, skillCap)
+		diff := database.ResultDifference(models.CharacterStatsRecord{}, characterStatsRecord)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [SkillCap] [%v] data [%v]", skillCap.ID, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [CharacterStatsRecord] [%v] data [%v]", characterStatsRecord.CharacterId, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, skillCap)
+	return c.JSON(http.StatusOK, characterStatsRecord)
 }
 
-// deleteSkillCap godoc
-// @Id deleteSkillCap
-// @Summary Deletes SkillCap
+// deleteCharacterStatsRecord godoc
+// @Id deleteCharacterStatsRecord
+// @Summary Deletes CharacterStatsRecord
 // @Accept json
 // @Produce json
-// @Tags SkillCap
-// @Param id path int true "id"
+// @Tags CharacterStatsRecord
+// @Param id path int true "characterId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /skill_cap/{id} [delete]
-func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
+// @Router /character_stats_record/{id} [delete]
+func (e *CharacterStatsRecordController) deleteCharacterStatsRecord(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	id, err := strconv.Atoi(c.Param("id"))
+	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, id)
-	keys = append(keys, "id = ?")
+	params = append(params, characterId)
+	keys = append(keys, "character_id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.CharacterStatsRecord
+	query := e.db.QueryContext(models.CharacterStatsRecord{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -293,25 +293,25 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [SkillCap] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [CharacterStatsRecord] [%v] keys [%v]", result.CharacterId, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getSkillCapsBulk godoc
-// @Id getSkillCapsBulk
-// @Summary Gets SkillCaps in bulk
+// getCharacterStatsRecordsBulk godoc
+// @Id getCharacterStatsRecordsBulk
+// @Summary Gets CharacterStatsRecords in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Tags CharacterStatsRecord
+// @Success 200 {array} models.CharacterStatsRecord
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/bulk [post]
-func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
-	var results []models.SkillCap
+// @Router /character_stats_records/bulk [post]
+func (e *CharacterStatsRecordController) getCharacterStatsRecordsBulk(c echo.Context) error {
+	var results []models.CharacterStatsRecord
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -328,7 +328,7 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.CharacterStatsRecord{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -336,12 +336,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCapsCount godoc
-// @Id getSkillCapsCount
-// @Summary Counts SkillCaps
+// getCharacterStatsRecordsCount godoc
+// @Id getCharacterStatsRecordsCount
+// @Summary Counts CharacterStatsRecords
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags CharacterStatsRecord
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -351,12 +351,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.CharacterStatsRecord
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/count [get]
-func (e *SkillCapController) getSkillCapsCount(c echo.Context) error {
+// @Router /character_stats_records/count [get]
+func (e *CharacterStatsRecordController) getCharacterStatsRecordsCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.SkillCap{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.CharacterStatsRecord{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

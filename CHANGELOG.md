@@ -1,4 +1,4 @@
-## [4.2.1] 5/25/2024
+## [4.2.2] 5/25/2024
 
 **Launcher** No longer runs shared memory on start if the server is detected to be online. This can cause issues with existing server processes if shared memory is re-ran while the server is online.
 

@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type SkillCapController struct {
+type GuildPermissionController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewSkillCapController(
+func NewGuildPermissionController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *SkillCapController {
-	return &SkillCapController{
+) *GuildPermissionController {
+	return &GuildPermissionController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *SkillCapController) Routes() []*routes.Route {
+func (e *GuildPermissionController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "skill_cap/:id", e.getSkillCap, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps", e.listSkillCaps, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps/count", e.getSkillCapsCount, nil),
-		routes.RegisterRoute(http.MethodPut, "skill_cap", e.createSkillCap, nil),
-		routes.RegisterRoute(http.MethodDelete, "skill_cap/:id", e.deleteSkillCap, nil),
-		routes.RegisterRoute(http.MethodPatch, "skill_cap/:id", e.updateSkillCap, nil),
-		routes.RegisterRoute(http.MethodPost, "skill_caps/bulk", e.getSkillCapsBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "guild_permission/:id", e.getGuildPermission, nil),
+		routes.RegisterRoute(http.MethodGet, "guild_permissions", e.listGuildPermissions, nil),
+		routes.RegisterRoute(http.MethodGet, "guild_permissions/count", e.getGuildPermissionsCount, nil),
+		routes.RegisterRoute(http.MethodPut, "guild_permission", e.createGuildPermission, nil),
+		routes.RegisterRoute(http.MethodDelete, "guild_permission/:id", e.deleteGuildPermission, nil),
+		routes.RegisterRoute(http.MethodPatch, "guild_permission/:id", e.updateGuildPermission, nil),
+		routes.RegisterRoute(http.MethodPost, "guild_permissions/bulk", e.getGuildPermissionsBulk, nil),
 	}
 }
 
-// listSkillCaps godoc
-// @Id listSkillCaps
-// @Summary Lists SkillCaps
+// listGuildPermissions godoc
+// @Id listGuildPermissions
+// @Summary Lists GuildPermissions
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildPermission
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *SkillCapController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.GuildPermission
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps [get]
-func (e *SkillCapController) listSkillCaps(c echo.Context) error {
-	var results []models.SkillCap
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results).Error
+// @Router /guild_permissions [get]
+func (e *GuildPermissionController) listGuildPermissions(c echo.Context) error {
+	var results []models.GuildPermission
+	err := e.db.QueryContext(models.GuildPermission{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,21 +69,21 @@ func (e *SkillCapController) listSkillCaps(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCap godoc
-// @Id getSkillCap
-// @Summary Gets SkillCap
+// getGuildPermission godoc
+// @Id getGuildPermission
+// @Summary Gets GuildPermission
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildPermission
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.GuildPermission
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_cap/{id} [get]
-func (e *SkillCapController) getSkillCap(c echo.Context) error {
+// @Router /guild_permission/{id} [get]
+func (e *GuildPermissionController) getGuildPermission(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
@@ -96,8 +96,8 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.GuildPermission
+	query := e.db.QueryContext(models.GuildPermission{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -116,21 +116,21 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateSkillCap godoc
-// @Id updateSkillCap
-// @Summary Updates SkillCap
+// updateGuildPermission godoc
+// @Id updateGuildPermission
+// @Summary Updates GuildPermission
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildPermission
 // @Param id path int true "Id"
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Success 200 {array} models.SkillCap
+// @Param guild_permission body models.GuildPermission true "GuildPermission"
+// @Success 200 {array} models.GuildPermission
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /skill_cap/{id} [patch]
-func (e *SkillCapController) updateSkillCap(c echo.Context) error {
-	request := new(models.SkillCap)
+// @Router /guild_permission/{id} [patch]
+func (e *GuildPermissionController) updateGuildPermission(c echo.Context) error {
+	request := new(models.GuildPermission)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -150,8 +150,8 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.GuildPermission
+	query := e.db.QueryContext(models.GuildPermission{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -183,41 +183,41 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [SkillCap] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [GuildPermission] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createSkillCap godoc
-// @Id createSkillCap
-// @Summary Creates SkillCap
+// createGuildPermission godoc
+// @Id createGuildPermission
+// @Summary Creates GuildPermission
 // @Accept json
 // @Produce json
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Param guild_permission body models.GuildPermission true "GuildPermission"
+// @Tags GuildPermission
+// @Success 200 {array} models.GuildPermission
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /skill_cap [put]
-func (e *SkillCapController) createSkillCap(c echo.Context) error {
-	skillCap := new(models.SkillCap)
-	if err := c.Bind(skillCap); err != nil {
+// @Router /guild_permission [put]
+func (e *GuildPermissionController) createGuildPermission(c echo.Context) error {
+	guildPermission := new(models.GuildPermission)
+	if err := c.Bind(guildPermission); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.SkillCap{}, c).Model(&models.SkillCap{})
+	db := e.db.Get(models.GuildPermission{}, c).Model(&models.GuildPermission{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&skillCap).Error
+	err := db.Create(&guildPermission).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -228,33 +228,33 @@ func (e *SkillCapController) createSkillCap(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.SkillCap{}, skillCap)
+		diff := database.ResultDifference(models.GuildPermission{}, guildPermission)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [SkillCap] [%v] data [%v]", skillCap.ID, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [GuildPermission] [%v] data [%v]", guildPermission.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, skillCap)
+	return c.JSON(http.StatusOK, guildPermission)
 }
 
-// deleteSkillCap godoc
-// @Id deleteSkillCap
-// @Summary Deletes SkillCap
+// deleteGuildPermission godoc
+// @Id deleteGuildPermission
+// @Summary Deletes GuildPermission
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildPermission
 // @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /skill_cap/{id} [delete]
-func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
+// @Router /guild_permission/{id} [delete]
+func (e *GuildPermissionController) deleteGuildPermission(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
@@ -267,8 +267,8 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.GuildPermission
+	query := e.db.QueryContext(models.GuildPermission{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -293,25 +293,25 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [SkillCap] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [GuildPermission] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getSkillCapsBulk godoc
-// @Id getSkillCapsBulk
-// @Summary Gets SkillCaps in bulk
+// getGuildPermissionsBulk godoc
+// @Id getGuildPermissionsBulk
+// @Summary Gets GuildPermissions in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Tags GuildPermission
+// @Success 200 {array} models.GuildPermission
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/bulk [post]
-func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
-	var results []models.SkillCap
+// @Router /guild_permissions/bulk [post]
+func (e *GuildPermissionController) getGuildPermissionsBulk(c echo.Context) error {
+	var results []models.GuildPermission
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -328,7 +328,7 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.GuildPermission{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -336,12 +336,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCapsCount godoc
-// @Id getSkillCapsCount
-// @Summary Counts SkillCaps
+// getGuildPermissionsCount godoc
+// @Id getGuildPermissionsCount
+// @Summary Counts GuildPermissions
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildPermission
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -351,12 +351,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.GuildPermission
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/count [get]
-func (e *SkillCapController) getSkillCapsCount(c echo.Context) error {
+// @Router /guild_permissions/count [get]
+func (e *GuildPermissionController) getGuildPermissionsCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.SkillCap{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.GuildPermission{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

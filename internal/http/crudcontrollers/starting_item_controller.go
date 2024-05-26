@@ -95,17 +95,6 @@ func (e *StartingItemController) getStartingItem(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [race] position [2] type [int]
-	if len(c.QueryParam("race")) > 0 {
-		raceParam, err := strconv.Atoi(c.QueryParam("race"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [race] err [%s]", err.Error())})
-		}
-
-		params = append(params, raceParam)
-		keys = append(keys, "race = ?")
-	}
-
 	// query builder
 	var result models.StartingItem
 	query := e.db.QueryContext(models.StartingItem{}, c)
@@ -159,17 +148,6 @@ func (e *StartingItemController) updateStartingItem(c echo.Context) error {
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")
-
-	// key param [race] position [2] type [int]
-	if len(c.QueryParam("race")) > 0 {
-		raceParam, err := strconv.Atoi(c.QueryParam("race"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [race] err [%s]", err.Error())})
-		}
-
-		params = append(params, raceParam)
-		keys = append(keys, "race = ?")
-	}
 
 	// query builder
 	var result models.StartingItem
@@ -287,17 +265,6 @@ func (e *StartingItemController) deleteStartingItem(c echo.Context) error {
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")
-
-	// key param [race] position [2] type [int]
-	if len(c.QueryParam("race")) > 0 {
-		raceParam, err := strconv.Atoi(c.QueryParam("race"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [race] err [%s]", err.Error())})
-		}
-
-		params = append(params, raceParam)
-		keys = append(keys, "race = ?")
-	}
 
 	// query builder
 	var result models.StartingItem

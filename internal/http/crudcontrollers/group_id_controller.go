@@ -31,12 +31,12 @@ func NewGroupIdController(
 
 func (e *GroupIdController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "group_id/:groupid", e.getGroupId, nil),
+		routes.RegisterRoute(http.MethodGet, "group_id/:groupId", e.getGroupId, nil),
 		routes.RegisterRoute(http.MethodGet, "group_ids", e.listGroupIds, nil),
 		routes.RegisterRoute(http.MethodGet, "group_ids/count", e.getGroupIdsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "group_id", e.createGroupId, nil),
-		routes.RegisterRoute(http.MethodDelete, "group_id/:groupid", e.deleteGroupId, nil),
-		routes.RegisterRoute(http.MethodPatch, "group_id/:groupid", e.updateGroupId, nil),
+		routes.RegisterRoute(http.MethodDelete, "group_id/:groupId", e.deleteGroupId, nil),
+		routes.RegisterRoute(http.MethodPatch, "group_id/:groupId", e.updateGroupId, nil),
 		routes.RegisterRoute(http.MethodPost, "group_ids/bulk", e.getGroupIdsBulk, nil),
 	}
 }
@@ -88,33 +88,44 @@ func (e *GroupIdController) getGroupId(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	groupid, err := strconv.Atoi(c.Param("groupid"))
+	groupId, err := strconv.Atoi(c.Param("groupId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Groupid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [GroupId]"})
 	}
-	params = append(params, groupid)
-	keys = append(keys, "groupid = ?")
+	params = append(params, groupId)
+	keys = append(keys, "group_id = ?")
 
-	// key param [charid] position [2] type [int]
-	if len(c.QueryParam("charid")) > 0 {
-		charidParam, err := strconv.Atoi(c.QueryParam("charid"))
+	// key param [character_id] position [3] type [int]
+	if len(c.QueryParam("character_id")) > 0 {
+		characterIdParam, err := strconv.Atoi(c.QueryParam("character_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [charid] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [character_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, charidParam)
-		keys = append(keys, "charid = ?")
+		params = append(params, characterIdParam)
+		keys = append(keys, "character_id = ?")
 	}
 
-	// key param [ismerc] position [4] type [tinyint]
-	if len(c.QueryParam("ismerc")) > 0 {
-		ismercParam, err := strconv.Atoi(c.QueryParam("ismerc"))
+	// key param [bot_id] position [4] type [int]
+	if len(c.QueryParam("bot_id")) > 0 {
+		botIdParam, err := strconv.Atoi(c.QueryParam("bot_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [ismerc] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bot_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, ismercParam)
-		keys = append(keys, "ismerc = ?")
+		params = append(params, botIdParam)
+		keys = append(keys, "bot_id = ?")
+	}
+
+	// key param [merc_id] position [5] type [int]
+	if len(c.QueryParam("merc_id")) > 0 {
+		mercIdParam, err := strconv.Atoi(c.QueryParam("merc_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [merc_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, mercIdParam)
+		keys = append(keys, "merc_id = ?")
 	}
 
 	// query builder
@@ -131,7 +142,7 @@ func (e *GroupIdController) getGroupId(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.Groupid == 0 {
+	if result.GroupId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
@@ -164,33 +175,44 @@ func (e *GroupIdController) updateGroupId(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	groupid, err := strconv.Atoi(c.Param("groupid"))
+	groupId, err := strconv.Atoi(c.Param("groupId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Groupid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [GroupId]"})
 	}
-	params = append(params, groupid)
-	keys = append(keys, "groupid = ?")
+	params = append(params, groupId)
+	keys = append(keys, "group_id = ?")
 
-	// key param [charid] position [2] type [int]
-	if len(c.QueryParam("charid")) > 0 {
-		charidParam, err := strconv.Atoi(c.QueryParam("charid"))
+	// key param [character_id] position [3] type [int]
+	if len(c.QueryParam("character_id")) > 0 {
+		characterIdParam, err := strconv.Atoi(c.QueryParam("character_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [charid] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [character_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, charidParam)
-		keys = append(keys, "charid = ?")
+		params = append(params, characterIdParam)
+		keys = append(keys, "character_id = ?")
 	}
 
-	// key param [ismerc] position [4] type [tinyint]
-	if len(c.QueryParam("ismerc")) > 0 {
-		ismercParam, err := strconv.Atoi(c.QueryParam("ismerc"))
+	// key param [bot_id] position [4] type [int]
+	if len(c.QueryParam("bot_id")) > 0 {
+		botIdParam, err := strconv.Atoi(c.QueryParam("bot_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [ismerc] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bot_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, ismercParam)
-		keys = append(keys, "ismerc = ?")
+		params = append(params, botIdParam)
+		keys = append(keys, "bot_id = ?")
+	}
+
+	// key param [merc_id] position [5] type [int]
+	if len(c.QueryParam("merc_id")) > 0 {
+		mercIdParam, err := strconv.Atoi(c.QueryParam("merc_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [merc_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, mercIdParam)
+		keys = append(keys, "merc_id = ?")
 	}
 
 	// query builder
@@ -279,7 +301,7 @@ func (e *GroupIdController) createGroupId(c echo.Context) error {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [GroupId] [%v] data [%v]", groupId.Groupid, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [GroupId] [%v] data [%v]", groupId.GroupId, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
@@ -292,7 +314,7 @@ func (e *GroupIdController) createGroupId(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags GroupId
-// @Param id path int true "groupid"
+// @Param id path int true "groupId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
@@ -303,33 +325,44 @@ func (e *GroupIdController) deleteGroupId(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	groupid, err := strconv.Atoi(c.Param("groupid"))
+	groupId, err := strconv.Atoi(c.Param("groupId"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, groupid)
-	keys = append(keys, "groupid = ?")
+	params = append(params, groupId)
+	keys = append(keys, "group_id = ?")
 
-	// key param [charid] position [2] type [int]
-	if len(c.QueryParam("charid")) > 0 {
-		charidParam, err := strconv.Atoi(c.QueryParam("charid"))
+	// key param [character_id] position [3] type [int]
+	if len(c.QueryParam("character_id")) > 0 {
+		characterIdParam, err := strconv.Atoi(c.QueryParam("character_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [charid] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [character_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, charidParam)
-		keys = append(keys, "charid = ?")
+		params = append(params, characterIdParam)
+		keys = append(keys, "character_id = ?")
 	}
 
-	// key param [ismerc] position [4] type [tinyint]
-	if len(c.QueryParam("ismerc")) > 0 {
-		ismercParam, err := strconv.Atoi(c.QueryParam("ismerc"))
+	// key param [bot_id] position [4] type [int]
+	if len(c.QueryParam("bot_id")) > 0 {
+		botIdParam, err := strconv.Atoi(c.QueryParam("bot_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [ismerc] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bot_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, ismercParam)
-		keys = append(keys, "ismerc = ?")
+		params = append(params, botIdParam)
+		keys = append(keys, "bot_id = ?")
+	}
+
+	// key param [merc_id] position [5] type [int]
+	if len(c.QueryParam("merc_id")) > 0 {
+		mercIdParam, err := strconv.Atoi(c.QueryParam("merc_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [merc_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, mercIdParam)
+		keys = append(keys, "merc_id = ?")
 	}
 
 	// query builder
@@ -359,7 +392,7 @@ func (e *GroupIdController) deleteGroupId(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [GroupId] [%v] keys [%v]", result.Groupid, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [GroupId] [%v] keys [%v]", result.GroupId, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 

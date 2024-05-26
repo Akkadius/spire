@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type SkillCapController struct {
+type Spawn2DisabledController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewSkillCapController(
+func NewSpawn2DisabledController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *SkillCapController {
-	return &SkillCapController{
+) *Spawn2DisabledController {
+	return &Spawn2DisabledController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *SkillCapController) Routes() []*routes.Route {
+func (e *Spawn2DisabledController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "skill_cap/:id", e.getSkillCap, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps", e.listSkillCaps, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps/count", e.getSkillCapsCount, nil),
-		routes.RegisterRoute(http.MethodPut, "skill_cap", e.createSkillCap, nil),
-		routes.RegisterRoute(http.MethodDelete, "skill_cap/:id", e.deleteSkillCap, nil),
-		routes.RegisterRoute(http.MethodPatch, "skill_cap/:id", e.updateSkillCap, nil),
-		routes.RegisterRoute(http.MethodPost, "skill_caps/bulk", e.getSkillCapsBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_2_disabled/:id", e.getSpawn2Disabled, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_2_disableds", e.listSpawn2Disableds, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_2_disableds/count", e.getSpawn2DisabledsCount, nil),
+		routes.RegisterRoute(http.MethodPut, "spawn_2_disabled", e.createSpawn2Disabled, nil),
+		routes.RegisterRoute(http.MethodDelete, "spawn_2_disabled/:id", e.deleteSpawn2Disabled, nil),
+		routes.RegisterRoute(http.MethodPatch, "spawn_2_disabled/:id", e.updateSpawn2Disabled, nil),
+		routes.RegisterRoute(http.MethodPost, "spawn_2_disableds/bulk", e.getSpawn2DisabledsBulk, nil),
 	}
 }
 
-// listSkillCaps godoc
-// @Id listSkillCaps
-// @Summary Lists SkillCaps
+// listSpawn2Disableds godoc
+// @Id listSpawn2Disableds
+// @Summary Lists Spawn2Disableds
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags Spawn2Disabled
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *SkillCapController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.Spawn2Disabled
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps [get]
-func (e *SkillCapController) listSkillCaps(c echo.Context) error {
-	var results []models.SkillCap
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results).Error
+// @Router /spawn_2_disableds [get]
+func (e *Spawn2DisabledController) listSpawn2Disableds(c echo.Context) error {
+	var results []models.Spawn2Disabled
+	err := e.db.QueryContext(models.Spawn2Disabled{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,21 +69,21 @@ func (e *SkillCapController) listSkillCaps(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCap godoc
-// @Id getSkillCap
-// @Summary Gets SkillCap
+// getSpawn2Disabled godoc
+// @Id getSpawn2Disabled
+// @Summary Gets Spawn2Disabled
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags Spawn2Disabled
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.Spawn2Disabled
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_cap/{id} [get]
-func (e *SkillCapController) getSkillCap(c echo.Context) error {
+// @Router /spawn_2_disabled/{id} [get]
+func (e *Spawn2DisabledController) getSpawn2Disabled(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
@@ -96,8 +96,8 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.Spawn2Disabled
+	query := e.db.QueryContext(models.Spawn2Disabled{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -116,21 +116,21 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateSkillCap godoc
-// @Id updateSkillCap
-// @Summary Updates SkillCap
+// updateSpawn2Disabled godoc
+// @Id updateSpawn2Disabled
+// @Summary Updates Spawn2Disabled
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags Spawn2Disabled
 // @Param id path int true "Id"
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Success 200 {array} models.SkillCap
+// @Param spawn_2_disabled body models.Spawn2Disabled true "Spawn2Disabled"
+// @Success 200 {array} models.Spawn2Disabled
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /skill_cap/{id} [patch]
-func (e *SkillCapController) updateSkillCap(c echo.Context) error {
-	request := new(models.SkillCap)
+// @Router /spawn_2_disabled/{id} [patch]
+func (e *Spawn2DisabledController) updateSpawn2Disabled(c echo.Context) error {
+	request := new(models.Spawn2Disabled)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -150,8 +150,8 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.Spawn2Disabled
+	query := e.db.QueryContext(models.Spawn2Disabled{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -183,41 +183,41 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [SkillCap] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [Spawn2Disabled] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createSkillCap godoc
-// @Id createSkillCap
-// @Summary Creates SkillCap
+// createSpawn2Disabled godoc
+// @Id createSpawn2Disabled
+// @Summary Creates Spawn2Disabled
 // @Accept json
 // @Produce json
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Param spawn_2_disabled body models.Spawn2Disabled true "Spawn2Disabled"
+// @Tags Spawn2Disabled
+// @Success 200 {array} models.Spawn2Disabled
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /skill_cap [put]
-func (e *SkillCapController) createSkillCap(c echo.Context) error {
-	skillCap := new(models.SkillCap)
-	if err := c.Bind(skillCap); err != nil {
+// @Router /spawn_2_disabled [put]
+func (e *Spawn2DisabledController) createSpawn2Disabled(c echo.Context) error {
+	spawn2Disabled := new(models.Spawn2Disabled)
+	if err := c.Bind(spawn2Disabled); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.SkillCap{}, c).Model(&models.SkillCap{})
+	db := e.db.Get(models.Spawn2Disabled{}, c).Model(&models.Spawn2Disabled{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&skillCap).Error
+	err := db.Create(&spawn2Disabled).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -228,33 +228,33 @@ func (e *SkillCapController) createSkillCap(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.SkillCap{}, skillCap)
+		diff := database.ResultDifference(models.Spawn2Disabled{}, spawn2Disabled)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [SkillCap] [%v] data [%v]", skillCap.ID, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [Spawn2Disabled] [%v] data [%v]", spawn2Disabled.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, skillCap)
+	return c.JSON(http.StatusOK, spawn2Disabled)
 }
 
-// deleteSkillCap godoc
-// @Id deleteSkillCap
-// @Summary Deletes SkillCap
+// deleteSpawn2Disabled godoc
+// @Id deleteSpawn2Disabled
+// @Summary Deletes Spawn2Disabled
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags Spawn2Disabled
 // @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /skill_cap/{id} [delete]
-func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
+// @Router /spawn_2_disabled/{id} [delete]
+func (e *Spawn2DisabledController) deleteSpawn2Disabled(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
@@ -267,8 +267,8 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.Spawn2Disabled
+	query := e.db.QueryContext(models.Spawn2Disabled{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -293,25 +293,25 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [SkillCap] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [Spawn2Disabled] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getSkillCapsBulk godoc
-// @Id getSkillCapsBulk
-// @Summary Gets SkillCaps in bulk
+// getSpawn2DisabledsBulk godoc
+// @Id getSpawn2DisabledsBulk
+// @Summary Gets Spawn2Disableds in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Tags Spawn2Disabled
+// @Success 200 {array} models.Spawn2Disabled
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/bulk [post]
-func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
-	var results []models.SkillCap
+// @Router /spawn_2_disableds/bulk [post]
+func (e *Spawn2DisabledController) getSpawn2DisabledsBulk(c echo.Context) error {
+	var results []models.Spawn2Disabled
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -328,7 +328,7 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.Spawn2Disabled{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -336,12 +336,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCapsCount godoc
-// @Id getSkillCapsCount
-// @Summary Counts SkillCaps
+// getSpawn2DisabledsCount godoc
+// @Id getSpawn2DisabledsCount
+// @Summary Counts Spawn2Disableds
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags Spawn2Disabled
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -351,12 +351,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.Spawn2Disabled
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/count [get]
-func (e *SkillCapController) getSkillCapsCount(c echo.Context) error {
+// @Router /spawn_2_disableds/count [get]
+func (e *Spawn2DisabledController) getSpawn2DisabledsCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.SkillCap{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.Spawn2Disabled{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

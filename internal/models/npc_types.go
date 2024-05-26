@@ -24,6 +24,7 @@ type NpcType struct {
 	ManaRegenRate          int64              `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
 	LoottableId            uint               `json:"loottable_id" gorm:"Column:loottable_id"`
 	MerchantId             uint               `json:"merchant_id" gorm:"Column:merchant_id"`
+	Greed                  uint8              `json:"greed" gorm:"Column:greed"`
 	AltCurrencyId          uint               `json:"alt_currency_id" gorm:"Column:alt_currency_id"`
 	NpcSpellsId            uint               `json:"npc_spells_id" gorm:"Column:npc_spells_id"`
 	NpcSpellsEffectsId     uint               `json:"npc_spells_effects_id" gorm:"Column:npc_spells_effects_id"`

@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type SkillCapController struct {
+type GuildTributeController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewSkillCapController(
+func NewGuildTributeController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *SkillCapController {
-	return &SkillCapController{
+) *GuildTributeController {
+	return &GuildTributeController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *SkillCapController) Routes() []*routes.Route {
+func (e *GuildTributeController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "skill_cap/:id", e.getSkillCap, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps", e.listSkillCaps, nil),
-		routes.RegisterRoute(http.MethodGet, "skill_caps/count", e.getSkillCapsCount, nil),
-		routes.RegisterRoute(http.MethodPut, "skill_cap", e.createSkillCap, nil),
-		routes.RegisterRoute(http.MethodDelete, "skill_cap/:id", e.deleteSkillCap, nil),
-		routes.RegisterRoute(http.MethodPatch, "skill_cap/:id", e.updateSkillCap, nil),
-		routes.RegisterRoute(http.MethodPost, "skill_caps/bulk", e.getSkillCapsBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "guild_tribute/:guildId", e.getGuildTribute, nil),
+		routes.RegisterRoute(http.MethodGet, "guild_tributes", e.listGuildTributes, nil),
+		routes.RegisterRoute(http.MethodGet, "guild_tributes/count", e.getGuildTributesCount, nil),
+		routes.RegisterRoute(http.MethodPut, "guild_tribute", e.createGuildTribute, nil),
+		routes.RegisterRoute(http.MethodDelete, "guild_tribute/:guildId", e.deleteGuildTribute, nil),
+		routes.RegisterRoute(http.MethodPatch, "guild_tribute/:guildId", e.updateGuildTribute, nil),
+		routes.RegisterRoute(http.MethodPost, "guild_tributes/bulk", e.getGuildTributesBulk, nil),
 	}
 }
 
-// listSkillCaps godoc
-// @Id listSkillCaps
-// @Summary Lists SkillCaps
+// listGuildTributes godoc
+// @Id listGuildTributes
+// @Summary Lists GuildTributes
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildTribute
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *SkillCapController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.GuildTribute
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps [get]
-func (e *SkillCapController) listSkillCaps(c echo.Context) error {
-	var results []models.SkillCap
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results).Error
+// @Router /guild_tributes [get]
+func (e *GuildTributeController) listGuildTributes(c echo.Context) error {
+	var results []models.GuildTribute
+	err := e.db.QueryContext(models.GuildTribute{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,35 +69,35 @@ func (e *SkillCapController) listSkillCaps(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCap godoc
-// @Id getSkillCap
-// @Summary Gets SkillCap
+// getGuildTribute godoc
+// @Id getGuildTribute
+// @Summary Gets GuildTribute
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildTribute
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.GuildTribute
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_cap/{id} [get]
-func (e *SkillCapController) getSkillCap(c echo.Context) error {
+// @Router /guild_tribute/{id} [get]
+func (e *GuildTributeController) getGuildTribute(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	id, err := strconv.Atoi(c.Param("id"))
+	guildId, err := strconv.Atoi(c.Param("guildId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [GuildId]"})
 	}
-	params = append(params, id)
-	keys = append(keys, "id = ?")
+	params = append(params, guildId)
+	keys = append(keys, "guild_id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.GuildTribute
+	query := e.db.QueryContext(models.GuildTribute{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -109,28 +109,28 @@ func (e *SkillCapController) getSkillCap(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.ID == 0 {
+	if result.GuildId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateSkillCap godoc
-// @Id updateSkillCap
-// @Summary Updates SkillCap
+// updateGuildTribute godoc
+// @Id updateGuildTribute
+// @Summary Updates GuildTribute
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildTribute
 // @Param id path int true "Id"
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Success 200 {array} models.SkillCap
+// @Param guild_tribute body models.GuildTribute true "GuildTribute"
+// @Success 200 {array} models.GuildTribute
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /skill_cap/{id} [patch]
-func (e *SkillCapController) updateSkillCap(c echo.Context) error {
-	request := new(models.SkillCap)
+// @Router /guild_tribute/{id} [patch]
+func (e *GuildTributeController) updateGuildTribute(c echo.Context) error {
+	request := new(models.GuildTribute)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -142,16 +142,16 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	id, err := strconv.Atoi(c.Param("id"))
+	guildId, err := strconv.Atoi(c.Param("guildId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [GuildId]"})
 	}
-	params = append(params, id)
-	keys = append(keys, "id = ?")
+	params = append(params, guildId)
+	keys = append(keys, "guild_id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.GuildTribute
+	query := e.db.QueryContext(models.GuildTribute{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -183,41 +183,41 @@ func (e *SkillCapController) updateSkillCap(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [SkillCap] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [GuildTribute] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createSkillCap godoc
-// @Id createSkillCap
-// @Summary Creates SkillCap
+// createGuildTribute godoc
+// @Id createGuildTribute
+// @Summary Creates GuildTribute
 // @Accept json
 // @Produce json
-// @Param skill_cap body models.SkillCap true "SkillCap"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Param guild_tribute body models.GuildTribute true "GuildTribute"
+// @Tags GuildTribute
+// @Success 200 {array} models.GuildTribute
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /skill_cap [put]
-func (e *SkillCapController) createSkillCap(c echo.Context) error {
-	skillCap := new(models.SkillCap)
-	if err := c.Bind(skillCap); err != nil {
+// @Router /guild_tribute [put]
+func (e *GuildTributeController) createGuildTribute(c echo.Context) error {
+	guildTribute := new(models.GuildTribute)
+	if err := c.Bind(guildTribute); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.SkillCap{}, c).Model(&models.SkillCap{})
+	db := e.db.Get(models.GuildTribute{}, c).Model(&models.GuildTribute{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&skillCap).Error
+	err := db.Create(&guildTribute).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -228,47 +228,47 @@ func (e *SkillCapController) createSkillCap(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.SkillCap{}, skillCap)
+		diff := database.ResultDifference(models.GuildTribute{}, guildTribute)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [SkillCap] [%v] data [%v]", skillCap.ID, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [GuildTribute] [%v] data [%v]", guildTribute.GuildId, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, skillCap)
+	return c.JSON(http.StatusOK, guildTribute)
 }
 
-// deleteSkillCap godoc
-// @Id deleteSkillCap
-// @Summary Deletes SkillCap
+// deleteGuildTribute godoc
+// @Id deleteGuildTribute
+// @Summary Deletes GuildTribute
 // @Accept json
 // @Produce json
-// @Tags SkillCap
-// @Param id path int true "id"
+// @Tags GuildTribute
+// @Param id path int true "guildId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /skill_cap/{id} [delete]
-func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
+// @Router /guild_tribute/{id} [delete]
+func (e *GuildTributeController) deleteGuildTribute(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	id, err := strconv.Atoi(c.Param("id"))
+	guildId, err := strconv.Atoi(c.Param("guildId"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, id)
-	keys = append(keys, "id = ?")
+	params = append(params, guildId)
+	keys = append(keys, "guild_id = ?")
 
 	// query builder
-	var result models.SkillCap
-	query := e.db.QueryContext(models.SkillCap{}, c)
+	var result models.GuildTribute
+	query := e.db.QueryContext(models.GuildTribute{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -293,25 +293,25 @@ func (e *SkillCapController) deleteSkillCap(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [SkillCap] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [GuildTribute] [%v] keys [%v]", result.GuildId, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getSkillCapsBulk godoc
-// @Id getSkillCapsBulk
-// @Summary Gets SkillCaps in bulk
+// getGuildTributesBulk godoc
+// @Id getGuildTributesBulk
+// @Summary Gets GuildTributes in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags SkillCap
-// @Success 200 {array} models.SkillCap
+// @Tags GuildTribute
+// @Success 200 {array} models.GuildTribute
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/bulk [post]
-func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
-	var results []models.SkillCap
+// @Router /guild_tributes/bulk [post]
+func (e *GuildTributeController) getGuildTributesBulk(c echo.Context) error {
+	var results []models.GuildTribute
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -328,7 +328,7 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.SkillCap{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.GuildTribute{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -336,12 +336,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getSkillCapsCount godoc
-// @Id getSkillCapsCount
-// @Summary Counts SkillCaps
+// getGuildTributesCount godoc
+// @Id getGuildTributesCount
+// @Summary Counts GuildTributes
 // @Accept json
 // @Produce json
-// @Tags SkillCap
+// @Tags GuildTribute
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -351,12 +351,12 @@ func (e *SkillCapController) getSkillCapsBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.SkillCap
+// @Success 200 {array} models.GuildTribute
 // @Failure 500 {string} string "Bad query request"
-// @Router /skill_caps/count [get]
-func (e *SkillCapController) getSkillCapsCount(c echo.Context) error {
+// @Router /guild_tributes/count [get]
+func (e *GuildTributeController) getGuildTributesCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.SkillCap{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.GuildTribute{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

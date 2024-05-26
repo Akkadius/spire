@@ -106,26 +106,26 @@ func (e *NpcScaleGlobalBaseController) getNpcScaleGlobalBase(c echo.Context) err
 		keys = append(keys, "level = ?")
 	}
 
-	// key param [zone_id] position [3] type [int]
-	if len(c.QueryParam("zone_id")) > 0 {
-		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+	// key param [zone_id_list] position [3] type [text]
+	if len(c.QueryParam("zone_id_list")) > 0 {
+		zoneIdListParam, err := strconv.Atoi(c.QueryParam("zone_id_list"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id_list] err [%s]", err.Error())})
 		}
 
-		params = append(params, zoneIdParam)
-		keys = append(keys, "zone_id = ?")
+		params = append(params, zoneIdListParam)
+		keys = append(keys, "zone_id_list = ?")
 	}
 
-	// key param [instance_version] position [4] type [int]
-	if len(c.QueryParam("instance_version")) > 0 {
-		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+	// key param [instance_version_list] position [4] type [text]
+	if len(c.QueryParam("instance_version_list")) > 0 {
+		instanceVersionListParam, err := strconv.Atoi(c.QueryParam("instance_version_list"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version_list] err [%s]", err.Error())})
 		}
 
-		params = append(params, instanceVersionParam)
-		keys = append(keys, "instance_version = ?")
+		params = append(params, instanceVersionListParam)
+		keys = append(keys, "instance_version_list = ?")
 	}
 
 	// query builder
@@ -193,26 +193,26 @@ func (e *NpcScaleGlobalBaseController) updateNpcScaleGlobalBase(c echo.Context) 
 		keys = append(keys, "level = ?")
 	}
 
-	// key param [zone_id] position [3] type [int]
-	if len(c.QueryParam("zone_id")) > 0 {
-		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+	// key param [zone_id_list] position [3] type [text]
+	if len(c.QueryParam("zone_id_list")) > 0 {
+		zoneIdListParam, err := strconv.Atoi(c.QueryParam("zone_id_list"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id_list] err [%s]", err.Error())})
 		}
 
-		params = append(params, zoneIdParam)
-		keys = append(keys, "zone_id = ?")
+		params = append(params, zoneIdListParam)
+		keys = append(keys, "zone_id_list = ?")
 	}
 
-	// key param [instance_version] position [4] type [int]
-	if len(c.QueryParam("instance_version")) > 0 {
-		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+	// key param [instance_version_list] position [4] type [text]
+	if len(c.QueryParam("instance_version_list")) > 0 {
+		instanceVersionListParam, err := strconv.Atoi(c.QueryParam("instance_version_list"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version_list] err [%s]", err.Error())})
 		}
 
-		params = append(params, instanceVersionParam)
-		keys = append(keys, "instance_version = ?")
+		params = append(params, instanceVersionListParam)
+		keys = append(keys, "instance_version_list = ?")
 	}
 
 	// query builder
@@ -343,26 +343,26 @@ func (e *NpcScaleGlobalBaseController) deleteNpcScaleGlobalBase(c echo.Context) 
 		keys = append(keys, "level = ?")
 	}
 
-	// key param [zone_id] position [3] type [int]
-	if len(c.QueryParam("zone_id")) > 0 {
-		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+	// key param [zone_id_list] position [3] type [text]
+	if len(c.QueryParam("zone_id_list")) > 0 {
+		zoneIdListParam, err := strconv.Atoi(c.QueryParam("zone_id_list"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id_list] err [%s]", err.Error())})
 		}
 
-		params = append(params, zoneIdParam)
-		keys = append(keys, "zone_id = ?")
+		params = append(params, zoneIdListParam)
+		keys = append(keys, "zone_id_list = ?")
 	}
 
-	// key param [instance_version] position [4] type [int]
-	if len(c.QueryParam("instance_version")) > 0 {
-		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+	// key param [instance_version_list] position [4] type [text]
+	if len(c.QueryParam("instance_version_list")) > 0 {
+		instanceVersionListParam, err := strconv.Atoi(c.QueryParam("instance_version_list"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version_list] err [%s]", err.Error())})
 		}
 
-		params = append(params, instanceVersionParam)
-		keys = append(keys, "instance_version = ?")
+		params = append(params, instanceVersionListParam)
+		keys = append(keys, "instance_version_list = ?")
 	}
 
 	// query builder
