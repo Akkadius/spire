@@ -14,12 +14,12 @@ var velious = Expansion{
 		},
 		{
 			Name:    "World:ExpansionSettings",
-			Value:   "2",
+			Value:   "3",
 			Comment: "Velious Client-Based Expansion Setting",
 		},
 		{
 			Name:    "World:CharacterSelectExpansionSettings",
-			Value:   "2",
+			Value:   "3",
 			Comment: "Velious Client-Based Expansion Setting",
 		},
 		{

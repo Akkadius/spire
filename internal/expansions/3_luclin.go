@@ -14,12 +14,12 @@ var luclin = Expansion{
 		},
 		{
 			Name:    "World:ExpansionSettings",
-			Value:   "3",
+			Value:   "7",
 			Comment: "Luclin Client-Based Expansion Setting",
 		},
 		{
 			Name:    "World:CharacterSelectExpansionSettings",
-			Value:   "3",
+			Value:   "7",
 			Comment: "Luclin Client-Based Expansion Setting",
 		},
 		{
