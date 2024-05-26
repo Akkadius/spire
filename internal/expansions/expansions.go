@@ -39,6 +39,13 @@ var expansions = []Expansion{
 		ExpansionName:   "Prophecy of Ro",
 		ShortName:       "PoR",
 		MaxLevel:        70,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "11",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 12,
@@ -66,6 +73,11 @@ var expansions = []Expansion{
 				Value:   "true",
 				Comment: "Rest Regen was added in The Serpent's Spine",
 			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "12",
+				Comment: "Current Expansion",
+			},
 		},
 	},
 	{
@@ -73,6 +85,13 @@ var expansions = []Expansion{
 		ExpansionName:   "The Buried Sea",
 		ShortName:       "TBS",
 		MaxLevel:        75,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "13",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 14,
@@ -105,6 +124,11 @@ var expansions = []Expansion{
 				Value:   "false",
 				Comment: "Experience penalties were removed in Secrets of Faydwer",
 			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "14",
+				Comment: "Current Expansion",
+			},
 		},
 	},
 	{
@@ -112,24 +136,57 @@ var expansions = []Expansion{
 		ExpansionName:   "Seeds of Destruction",
 		ShortName:       "SoD",
 		MaxLevel:        85,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "15",
+				Comment: "Current Expansion",
+			},
+			{
+				Name:    "Character:LeaveNakedCorpses",
+				Value:   "true",
+				Comment: "Gear is no longer left on your corpse when you die in Seeds of Destruction",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 16,
 		ExpansionName:   "Underfoot",
 		ShortName:       "UF",
 		MaxLevel:        85,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "16",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 17,
 		ExpansionName:   "House of Thule",
 		ShortName:       "HoT",
 		MaxLevel:        90,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "17",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 18,
 		ExpansionName:   "Veil of Alaris",
 		ShortName:       "VoA",
 		MaxLevel:        95,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "18",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 19,
@@ -141,6 +198,11 @@ var expansions = []Expansion{
 				Name:    "Character:StatCap",
 				Value:   "500",
 				Comment: "After the increase to 400 in the \"Lost Dungeons of Norrath\" expansion, the stat cap remained at 400 for quite some time. The next significant increase occurred much later, with the \"Rain of Fear\" expansion on November 28, 2012, which raised the stat cap to 500. ",
+			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "19",
+				Comment: "Current Expansion",
 			},
 		},
 	},
@@ -155,6 +217,11 @@ var expansions = []Expansion{
 				Value:   "600",
 				Comment: "After the increase to 500 in the \"Rain of Fear\" expansion, the stat cap was further increased to 600 with the release of the \"Call of the Forsaken\" expansion on October 8, 2013.",
 			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "20",
+				Comment: "Current Expansion",
+			},
 		},
 	},
 	{
@@ -168,6 +235,11 @@ var expansions = []Expansion{
 				Value:   "700",
 				Comment: "After the increase to 600 in the \"Call of the Forsaken\" expansion, the stat cap was increased to 700 with the release of the \"The Darkened Sea\" expansion on October 28, 2014.",
 			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "21",
+				Comment: "Current Expansion",
+			},
 		},
 	},
 	{
@@ -175,6 +247,13 @@ var expansions = []Expansion{
 		ExpansionName:   "The Broken Mirror",
 		ShortName:       "TBM",
 		MaxLevel:        105,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "22",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 23,
@@ -187,6 +266,11 @@ var expansions = []Expansion{
 				Value:   "800",
 				Comment: "After the increase to 700 in \"The Darkened Sea\" expansion, the stat cap was further increased to 800 with the release of the \"Empires of Kunark\" expansion on November 16, 2016.",
 			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "23",
+				Comment: "Current Expansion",
+			},
 		},
 	},
 	{
@@ -194,6 +278,13 @@ var expansions = []Expansion{
 		ExpansionName:   "Ring of Scale",
 		ShortName:       "RoS",
 		MaxLevel:        110,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "24",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 25,
@@ -206,6 +297,11 @@ var expansions = []Expansion{
 				Value:   "1100",
 				Comment: "After the increase to 800 in the \"Empires of Kunark\" expansion, the stat cap remained at that level for quite some time. The next significant increase occurred with the \"The Burning Lands\" expansion on December 11, 2018, which raised the stat cap to 1100",
 			},
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "25",
+				Comment: "Current Expansion",
+			},
 		},
 	},
 	{
@@ -213,23 +309,51 @@ var expansions = []Expansion{
 		ExpansionName:   "Torment of Velious",
 		ShortName:       "ToV",
 		MaxLevel:        115,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "26",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 27,
 		ExpansionName:   "Claws of Veeshan",
 		ShortName:       "CoV",
 		MaxLevel:        115,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "27",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 28,
 		ExpansionName:   "Terror of Luclin",
 		ShortName:       "ToL",
 		MaxLevel:        120,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "28",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 	{
 		ExpansionNumber: 29,
 		ExpansionName:   "Night of Shadows",
 		ShortName:       "NoS",
 		MaxLevel:        120,
+		Rules: []Rule{
+			{
+				Name:    "Expansion:CurrentExpansion",
+				Value:   "29",
+				Comment: "Current Expansion",
+			},
+		},
 	},
 }

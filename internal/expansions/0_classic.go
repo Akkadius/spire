@@ -25,12 +25,12 @@ var classic = Expansion{
 		{
 			Name:    "Character:LeaveCorpses",
 			Value:   "true",
-			Comment: "Gear left on Corpses until post-Omens of War",
+			Comment: "Leave corpses behind",
 		},
 		{
 			Name:    "Character:LeaveNakedCorpses",
 			Value:   "false",
-			Comment: "Gear left on Corpses until post-Omens of War",
+			Comment: "Gear left on Corpses until Seeds of Destruction",
 		},
 		{
 			Name:    "Spells:PreNerfBardAEDoT",
