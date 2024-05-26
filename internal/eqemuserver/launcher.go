@@ -1014,7 +1014,7 @@ func (l *Launcher) truncateLogs() {
 
 		if time.Since(info.ModTime()).Hours() > float64(l.deleteLogFilesOlderThanDays*24) {
 			l.logger.Info().Any("path", path).Msg("Truncating log file")
-			err := os.Truncate(path, 0)
+			err := os.Remove(path)
 			if err != nil {
 				l.logger.Debug().Any("error", err.Error()).
 					Any("path", path).
