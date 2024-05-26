@@ -252,7 +252,7 @@ const router = new Router({
           meta: {title: "Expansions"},
         },
         {
-          path: '/expansions-management',
+          path: ROUTE.EXPANSIONS_MANAGEMENT,
           component: () => import('./views/expansions/ExpansionManagement.vue'),
           meta: {title: "Server Expansion Management"},
         },

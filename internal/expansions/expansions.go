@@ -5,6 +5,7 @@ type Expansion struct {
 	ExpansionName   string        `json:"expansion_name"`
 	ShortName       string        `json:"short_name"`
 	MaxLevel        int           `json:"max_level"`
+	Description     string        `json:"description"`
 	ContentFlags    []ContentFlag `json:"content_flags"`
 	Rules           []Rule        `json:"rules"`
 }

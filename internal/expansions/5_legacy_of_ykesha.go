@@ -35,7 +35,7 @@ var legacyOfYkesha = Expansion{
 		{
 			Name:    "Character:SharedBankPlat",
 			Value:   "true",
-			Comment: "Shared bank is now enabled",
+			Comment: "Shared bank enabled in Legacy of Ykesha",
 		},
 	},
 }

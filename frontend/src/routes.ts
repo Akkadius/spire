@@ -25,6 +25,7 @@ export const ROUTE = {
   COFFEE: "/coffee",
   DATABASE_CONNECTIONS: "/connections",
   EMITTER_VIEWER: "/emitter-viewer",
+  EXPANSIONS_MANAGEMENT: "/expansions-management",
   ITEM_EDIT: "/item/%s",
   ITEM_ICON_VIEWER: "/item-icon-viewer",
   ITEM_VIEWER: "/item-viewer",

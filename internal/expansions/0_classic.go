@@ -70,17 +70,17 @@ var classic = Expansion{
 		{
 			Name:    "Character:RestRegenEnabled",
 			Value:   "false",
-			Comment: "OoC regen Not added until TSS",
+			Comment: "OoC regen Not added until The Serpent's Spine",
 		},
 		{
 			Name:    "Character:RestRegenEndurance",
 			Value:   "false",
-			Comment: "OoC regen Not added until TSS",
+			Comment: "OoC regen Not added until The Serpent's Spine",
 		},
 		{
 			Name:    "Character:SharedBankPlat",
 			Value:   "false",
-			Comment: "No shared bank until LoY",
+			Comment: "No shared bank until Legacy of Ykesha",
 		},
 		{
 			Name:    "Character:StatCap",
@@ -120,22 +120,22 @@ var classic = Expansion{
 		{
 			Name:    "Mail:EnableMailSystem",
 			Value:   "false",
-			Comment: "Mail System not added until DoN",
+			Comment: "Mail System not added until Dragons of Norrath",
 		},
 		{
 			Name:    "TaskSystem:EnableTaskSystem",
 			Value:   "false",
-			Comment: "Task System Not added until OoW",
+			Comment: "Task System Not added until Omens of War",
 		},
 		{
 			Name:    "World:EnableReturnHomeButton",
 			Value:   "false",
-			Comment: "Return Home Button Not added until DoN",
+			Comment: "Return Home Button Not added until Dragons of Norrath",
 		},
 		{
 			Name:    "World:EnableTutorialButton",
 			Value:   "false",
-			Comment: "Tutorial Not added until DoN",
+			Comment: "Tutorial Not added until Dragons of Norrath",
 		},
 		{
 			Name:    "Combat:ClassicNPCBackstab",

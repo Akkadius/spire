@@ -48,6 +48,11 @@ export default {
       EXPANSIONS_FULL: EXPANSIONS_FULL,
     }
   },
+  watch: {
+    value: function (newVal) {
+      this.selectedExpansion = newVal
+    }
+  },
   props: {
     value: [Number, Array],
     showNames: {
