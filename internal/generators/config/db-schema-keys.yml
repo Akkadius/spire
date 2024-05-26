@@ -2017,14 +2017,14 @@ shared_tasks:
     column_type: bigint(20)
     column_default: ""
 skill_caps:
-  - column: skillID
+  - column: skill_id
     data_type: tinyint
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
-  - column: class
+  - column: class_id
     data_type: tinyint
     column_key: PRI
     ordinal_position: "2"
