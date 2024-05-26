@@ -22,5 +22,10 @@ var gatesOfDiscord = Expansion{
 			Value:   "127",
 			Comment: "Gates of Discord Client-Based Expansion Setting",
 		},
+		{
+			Name:    "Chat:EnableVoiceMacros",
+			Value:   "true",
+			Comment: "Enable Voice Macros - Introduced in Gates of Discord",
+		},
 	},
 }

@@ -25,17 +25,17 @@ var classic = Expansion{
 		{
 			Name:    "Character:LeaveCorpses",
 			Value:   "true",
-			Comment: "Gear left on Corpses until post-OoW",
+			Comment: "Gear left on Corpses until post-Omens of War",
 		},
 		{
 			Name:    "Character:LeaveNakedCorpses",
 			Value:   "false",
-			Comment: "Gear left on Corpses until post-OoW",
+			Comment: "Gear left on Corpses until post-Omens of War",
 		},
 		{
 			Name:    "Spells:PreNerfBardAEDoT",
 			Value:   "true",
-			Comment: "Bard AE Nerf Not added until OoW",
+			Comment: "Bard AE Nerf Not added until Omens of War",
 		},
 		{
 			Name:    "Chat:ServerWideOOC",
@@ -55,7 +55,7 @@ var classic = Expansion{
 		{
 			Name:    "Character:EnableXTargetting",
 			Value:   "false",
-			Comment: "X Targeting is not classic",
+			Comment: "Was introduced in the Call of the Forsaken expansion",
 		},
 		{
 			Name:    "Character:MaxExpLevel",
@@ -115,7 +115,7 @@ var classic = Expansion{
 		{
 			Name:    "Chat:EnableVoiceMacros",
 			Value:   "false",
-			Comment: "not added until later",
+			Comment: "Introduced in Gates of Discord",
 		},
 		{
 			Name:    "Mail:EnableMailSystem",
@@ -125,7 +125,7 @@ var classic = Expansion{
 		{
 			Name:    "TaskSystem:EnableTaskSystem",
 			Value:   "false",
-			Comment: "Task System Not added until Omens of War",
+			Comment: "Task system was introduced in Omens of War",
 		},
 		{
 			Name:    "World:EnableReturnHomeButton",

@@ -30,8 +30,20 @@
           <table class="eq-table eq-highlight-rows bordered log-settings minified-inputs mt-3">
             <thead class="eq-table-floating-header">
             <tr>
+              <th style="width: 50px">
+                <div class="d-inline-block mt-2 mr-1">
+                  <eq-checkbox
+                    :fade-when-not-true="true"
+                    class="d-inline-block"
+                    :true-value="true"
+                    :false-value="0"
+                    v-model="rulesQueueToggle"
+                    @change="toggleQueuedRules()"
+                  />
+                </div>
+              </th>
               <th style="width: 200px">Rule</th>
-              <th style="width: 100px">Value</th>
+              <th style="width: 150px">Value</th>
               <th>Comment</th>
             </tr>
 
@@ -40,9 +52,24 @@
             <tr
               v-for="r in selectedExpansionData.rules"
               :key="r.name"
+              :style="formatRuleRow(r)"
             >
+              <div class="d-inline-block mt-2" style="margin-left: 16px">
+                <eq-checkbox
+                  :fade-when-not-true="true"
+                  class="d-inline-block"
+                  :true-value="true"
+                  :false-value="0"
+                  v-model="queuedRules[r.name]"
+                />
+              </div>
               <td class="font-weight-bold">{{ r.name }}</td>
-              <td>{{ r.value }}</td>
+              <td>
+                <div class="d-inline-block" v-if="currentRules[r.name] && currentRules[r.name] !== r.value">
+                  {{currentRules[r.name]}} ->
+                </div>
+                {{ r.value }}
+              </td>
               <td>{{ r.comment }}</td>
             </tr>
             </tbody>
@@ -88,6 +115,9 @@ export default {
       loadedExpansion: -100,
       selectedExpansion: -100, // can be updated through selection
       selectedExpansionData: {},
+      currentRules: {},
+      queuedRules: {},
+      rulesQueueToggle: false,
 
       rules: [],
       expansionData: [],
@@ -110,6 +140,8 @@ export default {
   },
   methods: {
     async init() {
+      this.queuedRules = {}
+
       // load rules if not loaded
       if (this.rules && this.rules.length === 0) {
         await this.loadRules()
@@ -177,9 +209,17 @@ export default {
       })
 
       if (rules && rules.length > 0) {
+        // set queuedRules to true only when the rule is different from the current rule
+        let rulesQueueToggle = false
+        for (let rule of rules) {
+          this.queuedRules[rule.name] = rule.value !== this.currentRules[rule.name]
+          if (this.queuedRules[rule.name]) {
+            rulesQueueToggle = true
+          }
+        }
+        this.rulesQueueToggle = rulesQueueToggle
         this.selectedExpansionData.rules = rules
       }
-
     },
 
     async loadRules() {
@@ -187,6 +227,12 @@ export default {
       if (r.status === 200) {
         this.rules = r.data
       }
+
+      let currentRules = {}
+      for (let rule of this.rules) {
+        currentRules[rule.rule_name] = rule.rule_value
+      }
+      this.currentRules = currentRules
     },
 
     // state
@@ -207,6 +253,18 @@ export default {
     loadQueryState() {
       if (this.$route.query.expansion && this.$route.query.expansion.length > 0) {
         this.selectedExpansion = parseInt(this.$route.query.expansion)
+      }
+    },
+
+    formatRuleRow(rule) {
+      return {
+        'background-color': rule.value !== this.currentRules[rule.name] ? 'rgba(0, 255, 0, 0.1)' : ''
+      }
+    },
+
+    toggleQueuedRules() {
+      for (let rule in this.queuedRules) {
+        this.queuedRules[rule] = this.rulesQueueToggle
       }
     },
 

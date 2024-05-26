@@ -30,7 +30,7 @@ var omensOfWar = Expansion{
 		{
 			Name:    "TaskSystem:EnableTaskSystem",
 			Value:   "true",
-			Comment: "Task System",
+			Comment: "Task system was introduced in Omens of War",
 		},
 		{
 			Name:    "Character:MaxExpLevel",
