@@ -37,5 +37,10 @@ var planesOfPower = Expansion{
 			Value:   "305",
 			Comment: "The stat cap in EverQuest increased from 255 to 305 with the release of the \"Planes of Power\" expansion on October 29, 2002",
 		},
+		{
+			Name:    "Character:UseOldBindWound",
+			Value:   "false",
+			Comment: "Planes of Power introduced a new bind wound system that was more effective than the old system",
+		},
 	},
 }

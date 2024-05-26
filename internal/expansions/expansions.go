@@ -222,6 +222,11 @@ var expansions = []Expansion{
 				Value:   "20",
 				Comment: "Current Expansion",
 			},
+			{
+				Name:    "Character:EnableXTargetting",
+				Value:   "true",
+				Comment: "XTargeting was added in Call of the Forsaken",
+			},
 		},
 	},
 	{
