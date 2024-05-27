@@ -369,6 +369,11 @@ export default {
         }
       }
 
+      if (this.selectedExpansion === this.loadedExpansion) {
+        this.error = "Expansion is already set to [" + this.selectedExpansionData.expansion_name + "]"
+        return
+      }
+
       if (setRules.length === 0) {
         this.error = "No rules selected to apply"
         return
