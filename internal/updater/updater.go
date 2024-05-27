@@ -136,7 +136,10 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 		}
 	}
 
-	fmt.Printf("Local version [%s] latest [%v]", localVersion, releaseVersion)
+	s.logger.Info().
+		Any("local", localVersion).
+		Any("latest", releaseVersion).
+		Msg("Comparing local version to latest version")
 
 	for _, asset := range release.Assets {
 		assetName := *asset.Name
@@ -150,7 +153,7 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 		s.logger.Debug().Msgf("Looping assets assetName [%v] targetFileNameZipped [%v]", assetName, targetFileNameZipped)
 
 		if assetName == targetFileNameZipped {
-			fmt.Printf("Found matching release [%s]", assetName)
+			s.logger.Info().Any("assetName", assetName).Msg("Found matching release")
 
 			// download
 			file := path.Base(downloadUrl)
