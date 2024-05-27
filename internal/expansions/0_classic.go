@@ -73,11 +73,6 @@ var classic = Expansion{
 			Comment: "OoC regen Not added until The Serpent's Spine",
 		},
 		{
-			Name:    "Character:RestRegenEndurance",
-			Value:   "false",
-			Comment: "OoC regen Not added until The Serpent's Spine",
-		},
-		{
 			Name:    "Character:SharedBankPlat",
 			Value:   "false",
 			Comment: "No shared bank until Legacy of Ykesha",

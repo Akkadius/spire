@@ -15,8 +15,12 @@
             :value="selectedExpansion"
           />
         </div>
-        <div class="col-10" style="border-left: 1px solid gray">
-          <div v-if="selectedExpansion >= 0" :key="selectedExpansion">
+        <div class="col-10" style="border-left: 1px solid gray; max-height: 90vh; overflow-y: scroll">
+          <div
+            v-if="selectedExpansion >= 0"
+            :key="selectedExpansion"
+            style=""
+          >
             <div>
               <div class="font-weight-bold d-inline-block mr-1">Expansion</div>
               {{ selectedExpansionData.expansion_name }} ({{ selectedExpansionData.expansion_number }})
@@ -27,10 +31,36 @@
             </div>
           </div>
 
-          <table class="eq-table eq-highlight-rows bordered log-settings minified-inputs mt-3">
+          <div>
+            Not all rules need to be applied. You can selectively apply rules by toggling them.
+            What is checked is the defaults for the selected expansion.
+          </div>
+
+          <button
+            class="eq-button d-inline-block"
+            @click="setExpansion()"
+          >
+            Set Expansion
+          </button>
+
+          <div style="width:100%">
+            <info-error-banner
+              style="width: 100%"
+              :slim="true"
+              :notification="notification"
+              :error="error"
+              @dismiss-error="error = ''"
+              @dismiss-notification="notification = ''"
+              class="mt-3"
+            />
+          </div>
+
+          <table
+            class="eq-table eq-highlight-rows bordered expansion-rules minified-inputs mt-3"
+          >
             <thead class="eq-table-floating-header">
             <tr>
-              <th style="width: 50px">
+              <th style="width: 50px;">
                 <div class="d-inline-block mt-2 mr-1">
                   <eq-checkbox
                     :fade-when-not-true="true"
@@ -54,19 +84,21 @@
               :key="r.name"
               :style="formatRuleRow(r)"
             >
-              <div class="d-inline-block mt-2" style="margin-left: 16px">
-                <eq-checkbox
-                  :fade-when-not-true="true"
-                  class="d-inline-block"
-                  :true-value="true"
-                  :false-value="0"
-                  v-model="queuedRules[r.name]"
-                />
-              </div>
+              <td>
+                <div class="d-inline-block" style="margin-left: 1px; margin-top: 2px">
+                  <eq-checkbox
+                    :fade-when-not-true="true"
+                    class="d-inline-block"
+                    :true-value="true"
+                    :false-value="0"
+                    v-model="queuedRules[r.name]"
+                  />
+                </div>
+              </td>
               <td class="font-weight-bold">{{ r.name }}</td>
               <td>
                 <div class="d-inline-block" v-if="currentRules[r.name] && currentRules[r.name] !== r.value">
-                  {{currentRules[r.name]}} ->
+                  {{ currentRules[r.name] }} ->
                 </div>
                 {{ r.value }}
               </td>
@@ -95,10 +127,13 @@ import {RuleValueApi}             from "@/app/api/api/rule-value-api";
 import {ROUTE}                    from "@/routes";
 import EqDebug                    from "@/components/eq-ui/EQDebug.vue";
 import EqCheckbox                 from "@/components/eq-ui/EQCheckbox.vue";
+import InfoErrorBanner            from "@/components/InfoErrorBanner.vue";
+import util                       from "util";
 
 export default {
   name: "Expansion",
   components: {
+    InfoErrorBanner,
     EqCheckbox,
     EqDebug,
     ExpansionBitmaskCalculator,
@@ -118,6 +153,9 @@ export default {
       currentRules: {},
       queuedRules: {},
       rulesQueueToggle: false,
+
+      notification: "",
+      error: "",
 
       rules: [],
       expansionData: [],
@@ -139,8 +177,16 @@ export default {
     document.removeEventListener('keydown', this.arrowKeyHandler);
   },
   methods: {
-    async init() {
+    async init(forceReload = false) {
       this.queuedRules = {}
+      this.notification = ""
+      this.error = ""
+
+      if (forceReload) {
+        this.rules                 = []
+        this.expansionData         = []
+        this.selectedExpansionData = {}
+      }
 
       // load rules if not loaded
       if (this.rules && this.rules.length === 0) {
@@ -217,7 +263,7 @@ export default {
             rulesQueueToggle = true
           }
         }
-        this.rulesQueueToggle = rulesQueueToggle
+        this.rulesQueueToggle            = rulesQueueToggle
         this.selectedExpansionData.rules = rules
       }
     },
@@ -286,7 +332,7 @@ export default {
 
           const max = Object.keys(this.expansions).length
           // cap by max expansion
-          console.log("expansion length", )
+          console.log("expansion length",)
 
           if (this.selectedExpansion >= max) {
             this.selectedExpansion = max - 1
@@ -300,10 +346,60 @@ export default {
         case "ArrowRight":
           console.log("Right arrow pressed");
           break;
+        case "Enter":
+          this.setExpansion()
+          break;
         default:
           // Do nothing for other keys
           break;
       }
+    },
+
+    async setExpansion() {
+      let setRules = []
+      let setRulesString = []
+      for (let rule in this.queuedRules) {
+        if (this.queuedRules[rule]) {
+          console.log("Setting rule", rule, this.selectedExpansionData.rules.filter(r => r.name === rule)[0].value)
+          setRules.push({
+            name: rule,
+            value: this.selectedExpansionData.rules.filter(r => r.name === rule)[0].value
+          })
+          setRulesString.push(rule + " => " + this.selectedExpansionData.rules.filter(r => r.name === rule)[0].value)
+        }
+      }
+
+      if (setRules.length === 0) {
+        this.error = "No rules selected to apply"
+        return
+      }
+
+      const confirmMessage = util.format(
+        "Are you sure you want to change to this expansion? \n\nExpansion: %s (%s) \n\nRules to be applied: \n%s",
+        this.selectedExpansionData.expansion_name,
+        this.selectedExpansionData.expansion_number,
+        setRulesString.join("\n")
+      )
+
+      if (confirm(confirmMessage)) {
+        try {
+          const r = await SpireApi.v1().post("/expansion", {
+            expansion: this.selectedExpansion,
+            rules: setRules
+          })
+          if (r.status === 200) {
+            await this.init(true)
+            this.notification = "Expansion set to [" + this.selectedExpansionData.expansion_name + "]. Rules, content flags applied and reloaded in-game if the server is online."
+
+          }
+        } catch (e) {
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = e.response.data.error
+          }
+        }
+      }
+
+      console.log("Setting rules", setRules)
     }
   }
 }
@@ -313,6 +409,11 @@ export default {
 .expansion-data-table th, .expansion-data-table td {
   text-align: center !important;
   padding: 2px !important;
+}
+
+.expansion-rules TBODY TR TD {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 </style>

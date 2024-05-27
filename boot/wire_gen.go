@@ -112,7 +112,7 @@ func InitializeApplication() (App, error) {
 	handler := websocket.NewHandler(pathManagement)
 	websocketController := websocket.NewController(pathManagement, handler)
 	systemController := system.NewController()
-	expansionsController := expansions.NewController()
+	expansionsController := expansions.NewController(resolver, eqemuserverClient)
 	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController, expansionsController)
 	userEvent := auditlog.NewUserEvent(resolver, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(resolver, userEvent)

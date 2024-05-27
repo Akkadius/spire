@@ -56,6 +56,11 @@ export default {
       type: String,
       required: false
     },
+    dismissTime: {
+      type: Number,
+      required: false,
+      default: 5000
+    },
     slim: {
       type: Boolean,
       required: false
@@ -72,7 +77,7 @@ export default {
   },
   mounted() {
     if (this.notification && this.notification.length > 0) {
-      this.sendNotification(this.notification, 5000)
+      this.sendNotification(this.notification)
     }
     if (this.error && this.error.length > 0) {
       this.localError = this.error
@@ -116,10 +121,12 @@ export default {
         clearTimeout(this.notificationTimer);
       }
 
-      // dismiss in interval
-      this.notificationTimer = setTimeout(() => {
-        this.dismissNotification()
-      }, 5000)
+      if (this.dismissTime > 0) {
+        this.notificationTimer = setTimeout(() => {
+          this.dismissNotification()
+        }, this.dismissTime)
+      }
+
     },
   }
 }

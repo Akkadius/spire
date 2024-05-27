@@ -64,11 +64,6 @@ var expansions = []Expansion{
 				Comment: "Level 75 cap until Secrets of Faydwer",
 			},
 			{
-				Name:    "Character:RestRegenEndurance",
-				Value:   "true",
-				Comment: "Rest Regen Endurance was added in The Serpent's Spine",
-			},
-			{
 				Name:    "Character:RestRegenEnabled",
 				Value:   "true",
 				Comment: "Rest Regen was added in The Serpent's Spine",
