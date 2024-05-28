@@ -1,6 +1,7 @@
 package eqemuserver
 
 import (
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/spf13/cobra"
 )
@@ -39,6 +40,8 @@ func (c *LauncherCmd) Handle(_ *cobra.Command, args []string) {
 		_ = c.command.Help()
 		return
 	}
+
+	env.SetAppModeCli()
 
 	if len(args) > 1 {
 		c.logger.Fatal().Msg("too many arguments")

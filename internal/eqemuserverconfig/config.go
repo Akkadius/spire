@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
@@ -157,6 +158,7 @@ type EQEmuConfigJson struct {
 
 var cachedConfig *EQEmuConfigJson
 var lastModifiedTime time.Time
+var lock = &sync.Mutex{}
 
 // Get returns the eqemu config json
 // If the file has been modified since the last read, it will re-read the file
@@ -179,7 +181,9 @@ func (e *Config) Get() EQEmuConfigJson {
 			}
 
 			lastModifiedTime = stat.ModTime()
+			lock.Lock()
 			cachedConfig = &config
+			lock.Unlock()
 
 			return config
 		} else if cachedConfig != nil {

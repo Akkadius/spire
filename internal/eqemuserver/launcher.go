@@ -88,10 +88,6 @@ func NewLauncher(
 		stopTimer:            0,
 	}
 
-	if env.IsAppModeWebserver() {
-		l.serverProcessLauncherWatchdog()
-	}
-
 	return l
 }
 
@@ -134,6 +130,10 @@ func (l *Launcher) Process() {
 				Any("minZoneProcesses", l.minZoneProcesses).
 				Any("staticZones", l.staticZonesToBoot).
 				Msg("Detected server config change")
+		}
+
+		if l.watchCrashLogs && l.watcher == nil {
+			l.startCrashLogWatcher()
 		}
 
 		if l.isRunning {
@@ -621,7 +621,6 @@ func (l *Launcher) loadServerConfig() {
 			l.watchCrashLogs = len(cfg.WebAdmin.Discord.CrashLogWebhook) > 0
 			if l.watchCrashLogs {
 				l.discordWebhook = cfg.WebAdmin.Discord.CrashLogWebhook
-				l.startCrashLogWatcher()
 			}
 		}
 	}
@@ -668,9 +667,10 @@ func (l *Launcher) StopCancel() error {
 	return nil
 }
 
-// serverProcessLauncherWatchdog is a watchdog that will monitor the server process launcher
-func (l *Launcher) serverProcessLauncherWatchdog() {
+// ServerProcessLauncherWatchdog is a watchdog that will monitor the server process launcher
+func (l *Launcher) ServerProcessLauncherWatchdog() {
 	go func() {
+		l.logger.Info().Msg("Starting server process launcher watchdog")
 		for {
 			stat, err := os.Stat(l.pathmgmt.GetEQEmuServerConfigFilePath())
 			if err != nil {

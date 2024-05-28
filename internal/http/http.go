@@ -27,20 +27,23 @@ import (
 )
 
 type Server struct {
-	logger  *logger.AppLogger
-	router  *routes.Router
-	watcher *eqemuserver.QuestHotReloadWatcher
+	logger   *logger.AppLogger
+	router   *routes.Router
+	watcher  *eqemuserver.QuestHotReloadWatcher
+	launcher *eqemuserver.Launcher
 }
 
 func NewServer(
 	logger *logger.AppLogger,
 	router *routes.Router,
 	watcher *eqemuserver.QuestHotReloadWatcher,
+	launcher *eqemuserver.Launcher,
 ) *Server {
 	return &Server{
-		logger:  logger,
-		router:  router,
-		watcher: watcher,
+		logger:   logger,
+		router:   router,
+		watcher:  watcher,
+		launcher: launcher,
 	}
 }
 
@@ -148,6 +151,10 @@ func (c *Server) Serve(port uint) error {
 	e.HidePort = true
 
 	imgcat.Render(banner.GetLogo())
+
+	go func() {
+		c.launcher.ServerProcessLauncherWatchdog()
+	}()
 
 	c.logger.Info().Any("port", port).Msgf("Starting Spire HTTP server")
 

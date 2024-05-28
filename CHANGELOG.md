@@ -1,3 +1,8 @@
+## [4.2.4] 5/28/2024
+
+**Launcher** Fix issue where if launcher was started by the webserver watchdog, the launcher was not properly starting. This would present itself on cold boots of Spire when the configuration is set to start the launcher on boot.
+**Server Config** Add locking around server config mechanisms to make it more concurrently safe.
+
 ## [4.2.3] 5/25/2024
 
 **Launcher** No longer runs shared memory on start if the server is detected to be online. This can cause issues with existing server processes if shared memory is re-ran while the server is online.

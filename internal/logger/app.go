@@ -36,14 +36,16 @@ func newDebugLogger() *zerolog.Logger {
 	output.FormatMessage = func(i interface{}) string {
 		callerMeta := getCallerMeta()
 		filename := filepath.Base(os.Args[0])
+		appMode := os.Getenv("APP_MODE")
 		return fmt.Sprintf(
-			"   %s%s%s%s %s(%s)%s",
+			"   %s%s%s%s %s(%s) (%s)%s",
 			console.HighIntensityBlack,
 			callerMeta,
 			i,
 			console.Reset,
 			console.FadedGray,
 			filename,
+			appMode,
 			console.Reset,
 		)
 	}
@@ -68,14 +70,16 @@ func newInfoLogger() *zerolog.Logger {
 	}
 	output.FormatMessage = func(i interface{}) string {
 		callerMeta := getCallerMeta()
+		appMode := os.Getenv("APP_MODE")
 
 		return fmt.Sprintf(
-			"%sSpire › %s%s%s%s%s",
+			"%sSpire › %s%s%s%s (%s)%s",
 			console.BoldWhite,
 			callerMeta,
 			console.Reset,
 			console.White,
 			i,
+			appMode,
 			console.Reset,
 		)
 	}
