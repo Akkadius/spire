@@ -3,10 +3,12 @@ package eqemuserver
 import (
 	"bufio"
 	"context"
+	"crypto/md5"
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -14,6 +16,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	"github.com/shirou/gopsutil/v3/process"
+	"github.com/volatiletech/null/v8"
 	"io"
 	"net/http"
 	"os"
@@ -86,7 +89,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/start", a.serverStart, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop", a.serverStop, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/restart", a.serverRestart, nil),
-		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-websocket-auth", a.getWebsocketAuth, nil),
 	}
 }
 
@@ -1145,4 +1148,41 @@ func (a *Controller) serverStopCancel(c echo.Context) error {
 		http.StatusOK,
 		echo.Map{"message": "Server stop cancelled successfully"},
 	)
+}
+
+type WebsocketAuthResponse struct {
+	AccountName string `json:"account_name"`
+	Password    string `json:"password"`
+}
+
+func (a *Controller) getWebsocketAuth(c echo.Context) error {
+	user := request.GetUser(c)
+	if user.ID == 0 {
+		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "Unauthorized"})
+	}
+	accountName := fmt.Sprintf("eqemu-admin-ws-user-%s", user.UserName)
+	hash := md5.Sum([]byte(user.Password))
+	password := fmt.Sprintf("%x", hash)
+
+	var account models.Account
+	a.db.QueryContext(models.Account{}, c).
+		Where("name = ?", accountName).
+		First(&account)
+
+	if account.ID == 0 {
+		a.db.QueryContext(models.Account{}, c).Save(&models.Account{
+			Name:     accountName,
+			Password: password,
+			LsId:     null.String{String: "eqemu", Valid: true},
+			Status:   255,
+		})
+	} else if account.ID != 0 && account.Password != password {
+		account.Password = password
+		a.db.QueryContext(models.Account{}, c).Save(&account)
+	}
+
+	return c.JSON(http.StatusOK, WebsocketAuthResponse{
+		AccountName: accountName,
+		Password:    password,
+	})
 }

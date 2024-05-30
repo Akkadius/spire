@@ -1,4 +1,5 @@
 import * as util from 'util'
+import {SpireApi} from "@/app/api/spire-api";
 
 export class EqemuWebsocketClient {
   private uuid: string = ''
@@ -16,24 +17,24 @@ export class EqemuWebsocketClient {
     LOGGING: 1
   }
 
-  getWebsocketUrl() {
-    // let url  = new URL(OcculusClient.getBaseUrl());
-    // @ts-ignore
-    url.port = this.port
-
-    // return url
-    return ""
-  }
-
   /**
    * @param port
    */
   public async initClient(port: number) {
     this.ws = new Promise(async (resolve, reject) => {
-      // const auth = await OcculusClient.getWebsocketAuthorization()
+      const r = await SpireApi.v1().get("eqemuserver/get-websocket-auth")
+
+      // @ts-ignore
+      let auth = null
+      if (r.status === 200) {
+        auth = r.data
+      }
+
       this.port = port
-      // this.ws   = new WebSocket('ws://' + this.getWebsocketUrl().host)
+      this.ws   = new WebSocket('ws://' + location.hostname + ':' + port)
       this.uuid = this.generateUUID()
+
+      console.log(auth)
 
       this.ws.onerror = (event: any) => {
         this.log(util.format('Error %s', JSON.stringify(event)))
@@ -47,8 +48,10 @@ export class EqemuWebsocketClient {
 
       try {
         this.ws.onopen = (event: any) => {
+          console.log("open")
           this.log(util.format('Opened %s', JSON.stringify(event)))
-          // this.send('login', [auth.account_name, auth.password])
+          // @ts-ignore
+          this.send('login', [auth.account_name, auth.password])
           this.ws.onmessage = (event: any) => {
             const response = JSON.parse(event.data)
             const loggedIn =

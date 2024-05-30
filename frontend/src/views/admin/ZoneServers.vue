@@ -141,14 +141,15 @@
               </p>
             </div>
 
-<!--            <div class="col-auto">-->
-<!--              <router-link-->
-<!--                style="font-size:12px"-->
-<!--                :to="'zoneservers/' +zone.client_port + '/logs'"-->
-<!--              >-->
-<!--                <i class="fa fa-eye"></i> Logs-->
-<!--              </router-link>-->
-<!--            </div>-->
+            <div class="col-auto">
+              <router-link
+                style="font-size:12px"
+                class="btn btn-sm btn-primary"
+                :to="'zoneservers/' +zone.client_port + '/logs'"
+              >
+                <i class="fa fa-eye"></i> Logs
+              </router-link>
+            </div>
 
             <div class="col-auto">
               <button

@@ -18,6 +18,7 @@
       @change="change()"
     >
     <label :for="id" class="eq-checkbox-label"></label>
+    <span v-if="labelRight" class="ml-3">{{labelRight}}</span>
   </div>
 </template>
 
@@ -55,6 +56,11 @@ export default {
       default: false,
     },
     label: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    labelRight: {
       type: String,
       required: false,
       default: "",
@@ -105,7 +111,3 @@ export default {
 
 }
 </script>
-
-<style scoped>
-
-</style>

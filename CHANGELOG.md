@@ -1,3 +1,11 @@
+## [4.3.0] 5/30/2024
+
+**Spire Admin** Add real-time websocket streaming back into the zoneservers page in Spire admin. This adds net new functionality to be able to copy to clipboard, pause streams, and search the logs in real-time.
+
+![image](https://github.com/Akkadius/spire/assets/3319450/ea4293cf-cb7f-47c5-8858-6e246af86c22)
+
+![image](https://github.com/Akkadius/spire/assets/3319450/6177c73c-8faf-40aa-9a8e-1144319031b8)
+
 ## [4.2.4] 5/28/2024
 
 **Launcher** Fix issue where if launcher was started by the webserver watchdog, the launcher was not properly starting. This would present itself on cold boots of Spire when the configuration is set to start the launcher on boot.

@@ -19,6 +19,7 @@ export const ROUTE = {
   ADMIN_BACKUPS: "/admin/backups",
   ADMIN_CLIENT_FILE_DOWNLOADS: "/admin/client-file-downloads",
   ADMIN_TOOL_PLAYER_EVENT_LOGS: "/admin/player-event-logs/explorer",
+  ADMIN_ZONESERVERS_LOGS: "/admin/zoneservers/:port/logs",
   ADMIN_TOOLS: "/admin/tools",
   DATABASE_CONNECTION_AUDIT_LOG: "/connection/%s/audit-log",
   CLIENT_FILES: "/client-files",
