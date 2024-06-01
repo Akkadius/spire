@@ -1,3 +1,8 @@
+## [4.4.0] 6/1/2024
+
+**Zone Log Streaming** Fix minor issue where unauthenticated users could not stream zone logs.
+**Zone Log Streaming** Add "Clear all categories" button to zone log streaming page.
+
 ## [4.3.0] 5/30/2024
 
 **Spire Admin** Add real-time websocket streaming back into the zoneservers page in Spire admin. This adds net new functionality to be able to copy to clipboard, pause streams, and search the logs in real-time.

@@ -13,7 +13,17 @@
           class="pt-0 pb-0 mt-0 pl-3 pr-3"
         >
           <div class="row">
-            <div class="col-12 p-0">
+            <div class="col-2 p-0" style="margin-top: 4px">
+              <button
+                type="submit"
+                title="Clear all categories"
+                class="btn btn-sm btn-white ml-auto"
+                @click="clearCategories()"
+              >
+                <i class="fa fa-eraser pr-1"></i>
+              </button>
+            </div>
+            <div class="col-10 p-0">
               <input
                 type="text"
                 class="form-control"
@@ -31,21 +41,21 @@
           class="p-0"
         >
           <div style="height: 76vh; overflow-y: scroll; overflow-x: hidden">
-          <label
-            class="custom-control custom-checkbox pl-0"
-            v-for="(category, index) in filteredLogCategories"
-            :key="index"
-          >
-            <eq-checkbox
-              :label-right="category.log_category_description + ' (' + category.log_category_id + ')'"
-              :fade-when-not-true="true"
-              :true-value="1"
-              :false-value="0"
-              v-model="category.log_to_console"
-              @change="updateCategoryLevel(category)"
-            />
+            <label
+              class="custom-control custom-checkbox pl-0"
+              v-for="(category, index) in filteredLogCategories"
+              :key="index"
+            >
+              <eq-checkbox
+                :label-right="category.log_category_description + ' (' + category.log_category_id + ')'"
+                :fade-when-not-true="true"
+                :true-value="1"
+                :false-value="0"
+                v-model="category.log_to_console"
+                @change="updateCategoryLevel(category)"
+              />
 
-          </label>
+            </label>
           </div>
         </eq-window-simple>
       </div>
@@ -54,28 +64,32 @@
           class="pt-0 pb-0 mt-0"
         >
           <div class="row">
-            <div class="col-2 p-0 mt-1 text-center">
-              <button type="submit" class="btn btn-sm btn-white ml-auto" @click="clearLogs()">
+            <div class="col-1 p-0 mt-1 text-center">
+              <button
+                type="submit"
+                title="Clear all logs"
+                class="btn btn-sm btn-white ml-auto"
+                @click="clearLogs()"
+              >
                 <i class="fa fa-history pr-1"></i>
-                Clear
               </button>
               <button
                 type="submit"
                 class="btn btn-sm btn-warning ml-1"
                 @click="isPaused = true"
                 v-if="!isPaused"
+                title="Pause"
               >
                 <i class="fa fa-pause pr-1"></i>
-                Pause
               </button>
               <button
                 type="submit"
                 class="btn btn-sm btn-primary ml-1"
                 @click="isPaused = false"
+                title="Resume"
                 v-if="isPaused"
               >
                 <i class="fa fa-play pr-1"></i>
-                Play
               </button>
               <b-button
                 class="btn-white btn-sm ml-1"
@@ -83,11 +97,10 @@
                 @click="copyFileContentsToClipboard()"
               >
                 <i class="fa fa-copy"></i>
-                Copy
               </b-button>
             </div>
 
-            <div class="col-10">
+            <div class="col-11">
               <input
                 type="text"
                 class="form-control"
@@ -203,7 +216,7 @@ export default {
         this.logCategories = categories
 
         if (this.categoryFilter && this.categoryFilter !== "") {
-          const filter = this.categoryFilter
+          const filter               = this.categoryFilter
           this.filteredLogCategories = categories.filter((category) => {
             return category.log_category_description.toLowerCase().includes(filter)
           })
@@ -239,10 +252,19 @@ export default {
     }
   },
   methods: {
+    clearCategories() {
+      for (let category of this.logCategories) {
+        if (category.log_category_description.toLowerCase().includes("info")) {
+          continue;
+        }
+        category.log_to_console = 0
+        this.updateCategoryLevel(category)
+      }
+    },
     init() {
       if (this.logCategories.length > 0) {
         if (this.categoryFilter && this.categoryFilter !== "") {
-          const filter = this.categoryFilter
+          const filter               = this.categoryFilter
           this.filteredLogCategories = this.logCategories.filter((category) => {
             return category.log_category_description.toLowerCase().includes(filter)
           })

@@ -1157,10 +1157,12 @@ type WebsocketAuthResponse struct {
 
 func (a *Controller) getWebsocketAuth(c echo.Context) error {
 	user := request.GetUser(c)
-	if user.ID == 0 {
-		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "Unauthorized"})
+	username := "admin"
+	if user.ID > 0 {
+		username = user.UserName
 	}
-	accountName := fmt.Sprintf("eqemu-admin-ws-user-%s", user.UserName)
+
+	accountName := fmt.Sprintf("eqemu-admin-ws-user-%s", username)
 	hash := md5.Sum([]byte(user.Password))
 	password := fmt.Sprintf("%x", hash)
 
