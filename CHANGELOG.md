@@ -1,3 +1,7 @@
+## [4.5.0] 6/1/2024
+
+**Spire Auto Updates** Add ability to disable auto updates on bootup via **eqemu_config.json** option **spire.disable_auto_updates** if set.
+
 ## [4.4.0] 6/1/2024
 
 **Zone Log Streaming** Fix minor issue where unauthenticated users could not stream zone logs.

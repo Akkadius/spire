@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/logger"
+	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
 	"github.com/mattn/go-isatty"
@@ -23,15 +25,22 @@ import (
 // Updater is a service that checks for updates to the app
 type Updater struct {
 	// this is the package.json embedded in the binary which contains the app version
-	packageJson []byte
-	logger      *logger.AppLogger
+	packageJson  []byte
+	logger       *logger.AppLogger
+	serverconfig *eqemuserverconfig.Config
 }
 
 // NewUpdater creates a new updater service
 func NewUpdater(packageJson []byte) *Updater {
+	appLogger := logger.ProvideAppLogger()
+	pathmgr := pathmgmt.NewPathManagement(appLogger)
 	return &Updater{
 		packageJson: packageJson,
-		logger:      logger.ProvideAppLogger(),
+		logger:      appLogger,
+		serverconfig: eqemuserverconfig.NewConfig(
+			appLogger,
+			pathmgr,
+		),
 	}
 }
 
@@ -67,6 +76,11 @@ func (s *Updater) getAppVersion() (error, EnvResponse) {
 
 // CheckForUpdates checks for updates to the app
 func (s *Updater) CheckForUpdates(interactive bool) bool {
+	config, exists := s.serverconfig.GetIfExists()
+	if exists && config.Spire.DisableAutoUpdates {
+		s.logger.Info().Any("spire.disable_auto_updates", config.Spire.DisableAutoUpdates).Msg("Auto updates are disabled via config")
+		return false
+	}
 
 	// get executable name and path
 	executableName := filepath.Base(os.Args[0])
