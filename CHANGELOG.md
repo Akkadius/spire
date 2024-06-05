@@ -1,6 +1,7 @@
-## [4.5.1] 6/5/2024
+## [4.5.2] 6/5/2024
 
 **Installer** Fix issue where slow machines would not source database files fast enough leading to a 5-minute execution timeout and a half-sourced database.
+**Quest Hot Reload Watcher** Fix potential concurrency issue when loading server config.
 
 ## [4.5.0] 6/1/2024
 
