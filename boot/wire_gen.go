@@ -40,6 +40,7 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/Akkadius/spire/internal/user"
 	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/gertd/go-pluralize"
@@ -333,7 +334,8 @@ func InitializeApplication() (App, error) {
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(resolver, appLogger, cache, service)
 	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(resolver, cache, settings, init)
-	spireAssets := assets.NewSpireAssets(pathManagement)
+	unzipper := unzip.NewUnzipper(appLogger)
+	spireAssets := assets.NewSpireAssets(pathManagement, appLogger, unzipper)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, contextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
 	questHotReloadWatcher := eqemuserver.NewQuestHotReloadWatcher(appLogger, config, pathManagement, eqemuserverClient, resolver)
 	server := http.NewServer(appLogger, router, questHotReloadWatcher, launcher)

@@ -1,3 +1,7 @@
+## [4.5.1] 6/5/2024
+
+**Installer** Fix issue where slow machines would not source database files fast enough leading to a 5-minute execution timeout and a half-sourced database.
+
 ## [4.5.0] 6/1/2024
 
 **Spire Auto Updates** Add ability to disable auto updates on bootup via **eqemu_config.json** option **spire.disable_auto_updates** if set.

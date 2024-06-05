@@ -64,9 +64,9 @@ func (c *Connections) SpireMigrate(drop bool) error {
 
 		// only emit creation message when the table doesn't actually exist
 		if !migrator.HasTable(table) {
-			c.logger.Info().Msgf("[Database] Creating table [%v]", table.TableName())
+			c.logger.Info().Any("table", table.TableName()).Msg("Creating table")
 		} else {
-			c.logger.DebugVvv().Msgf("[Database] Already has table [%v]", table.TableName())
+			c.logger.DebugVvv().Any("table", table.TableName()).Msg("Already has table")
 		}
 
 		// always run migration incase there are schema changes

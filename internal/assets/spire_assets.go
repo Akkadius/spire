@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/env"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/labstack/echo/v4"
@@ -20,13 +21,19 @@ import (
 
 type SpireAssets struct {
 	pathmanager *pathmgmt.PathManagement
+	logger      *logger.AppLogger
+	unzipper    *unzip.Unzipper
 }
 
 func NewSpireAssets(
 	pathmanager *pathmgmt.PathManagement,
+	logger *logger.AppLogger,
+	unzipper *unzip.Unzipper,
 ) *SpireAssets {
 	return &SpireAssets{
 		pathmanager: pathmanager,
+		logger:      logger,
+		unzipper:    unzipper,
 	}
 }
 
@@ -72,7 +79,7 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 }
 
 func (a SpireAssets) downloadAssets(cachedir string) {
-	fmt.Printf("Downloading [eq-asset-preview] latest release\n")
+	a.logger.Info().Any("repo", assetRepo).Msg("Downloading latest release")
 
 	// zip file path
 	dumpZip := filepath.Join(os.TempDir(), "/build.zip")
@@ -86,8 +93,7 @@ func (a SpireAssets) downloadAssets(cachedir string) {
 		log.Fatal(err)
 	}
 
-	// unzip the file
-	err = unzip.New(dumpZip, cachedir).Extract()
+	err = a.unzipper.Extract(dumpZip, cachedir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -154,11 +160,11 @@ func (a SpireAssets) CheckForAssets() {
 	// get latest release version
 	resp, err := http.Get(fmt.Sprintf("https://api.github.com/repos/%v/releases/latest", assetRepo))
 	if err != nil {
-		fmt.Printf("could not get latest release version for [%v] %v", assetRepo, err)
+		a.logger.Info().Err(err).Any("repo", assetRepo).Msg("Could not get latest release version")
 	}
 
 	if resp == nil {
-		fmt.Printf("could not get latest release version for [%v] nil response", assetRepo)
+		a.logger.Info().Any("repo", assetRepo).Msg("Could not get latest release version")
 		return
 	}
 
@@ -202,10 +208,11 @@ func (a SpireAssets) CheckForAssets() {
 		// check if current version is the same as the latest release version
 		remoteRelease := strings.ReplaceAll(release.TagName, "v", "")
 		if len(remoteRelease) > 0 && packageJsonStruct.Version != remoteRelease {
-			fmt.Printf(
-				"New version available, downloading [eq-asset-preview] release [%v]\n",
-				release.TagName,
-			)
+			a.logger.Info().
+				Any("repo", assetRepo).
+				Any("version", release.TagName).
+				Msg("New version available, downloading")
+
 			a.downloadAssets(cachedir)
 		}
 
