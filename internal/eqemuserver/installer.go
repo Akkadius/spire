@@ -42,9 +42,12 @@ type Installer struct {
 	stepTime      time.Time
 	totalTime     time.Time
 	installConfig *InstallConfig
+	unzipper      *unzip.Unzipper
 }
 
 func NewInstaller() *Installer {
+	os.Setenv("APP_NAME", "Server Installer")
+
 	// TODO: Clean this up
 	appLogger := logger.ProvideAppLogger()
 	pathmanager := pathmgmt.NewPathManagement(appLogger)
@@ -54,6 +57,7 @@ func NewInstaller() *Installer {
 		config:        eqemuserverconfig.NewConfig(appLogger, pathmanager),
 		installConfig: &InstallConfig{},
 		loginConfig:   eqemuloginserver.NewConfig(appLogger, pathmanager),
+		unzipper:      unzip.NewUnzipper(appLogger),
 	}
 
 	return i
@@ -450,7 +454,7 @@ func (a *Installer) cloneEQEmuMaps() error {
 	// unzip the file
 	mapsPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "maps")
 	fmt.Printf("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, mapsPath).Extract()
+	err = a.unzipper.Extract(dumpZip, mapsPath)
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}
@@ -468,7 +472,7 @@ func (a *Installer) cloneEQEmuMaps() error {
 func (a *Installer) clonePeqQuests() error {
 	a.Banner("Initializing Server Quests")
 
-	fmt.Printf("Cloning Quests from github.com/ProjectEQ/projecteqquests.git\n")
+	a.logger.Info().Any("repo", "https://github.com/ProjectEQ/projecteqquests.git").Msg("Cloning from repository")
 
 	// clone the repository
 	repoPath := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "quests")
@@ -483,7 +487,7 @@ func (a *Installer) clonePeqQuests() error {
 
 	// if the repository already exists, update it instead
 	if errors.Is(err, git.ErrRepositoryAlreadyExists) {
-		fmt.Printf("Quest repo already exists, skipping clone and updating instead\n")
+		a.logger.Info().Any("repo", repoPath).Msg("Repo already exists, updating instead")
 
 		// open the repository
 		r, err := git.PlainOpen(repoPath)
@@ -503,7 +507,7 @@ func (a *Installer) clonePeqQuests() error {
 			return fmt.Errorf("could not pull: %v", err)
 		}
 
-		fmt.Printf("Quests updated successfully!\n")
+		a.logger.Info().Any("repo", repoPath).Msg("Repo updated successfully")
 	}
 
 	a.DoneBanner("Initializing Server Quests")
@@ -545,22 +549,22 @@ func (a *Installer) initLinuxMysql() error {
 	// create a new database
 	var sql string
 
-	fmt.Printf("Creating database [%v]\n", c.DatabaseName)
+	a.logger.Info().Any("database", c.DatabaseName).Msg("Creating database")
 	err = a.DbExec(DbExecConfig{statement: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName)})
 	if err != nil {
 		return err
 	}
 
 	// create a new user
-	fmt.Printf("Creating user [%v]\n", c.DatabaseUser)
+	a.logger.Info().Any("user", c.DatabaseUser).Msg("Creating user")
 
 	// grant privileges to the new user
-	fmt.Printf("Granting privileges to user [%v]\n", c.DatabaseUser)
+	a.logger.Info().Any("user", c.DatabaseUser).Msg("Granting privileges")
 	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v'; ", c.DatabaseUser, c.DatabasePassword)
 	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost'", c.DatabaseName, c.DatabaseUser)
 
 	// flush privileges
-	fmt.Println("Flushing privileges")
+	a.logger.Info().Msg("Flushing privileges")
 	err = a.DbExec(DbExecConfig{statement: fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), hidestring: c.DatabasePassword})
 	if err != nil {
 		return err
@@ -621,7 +625,7 @@ type ExecConfig struct {
 
 func (a *Installer) Exec(c ExecConfig) (string, error) {
 	// create a new context with a timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 	defer cancel()
 
 	// create the command
@@ -651,7 +655,7 @@ func (a *Installer) Exec(c ExecConfig) (string, error) {
 	}
 
 	if !c.silent {
-		fmt.Printf("Running command [%v%v]\n", c.command, argsPrint)
+		a.logger.Info().Any("command", fmt.Sprintf("%v%v", c.command, argsPrint)).Msg("Running command")
 	}
 
 	cmd.Stderr = cmd.Stdout
@@ -662,7 +666,7 @@ func (a *Installer) Exec(c ExecConfig) (string, error) {
 
 	// if we are detaching, release the process
 	if c.detach {
-		fmt.Printf("Detaching process [%v%v]\n", c.command, argsPrint)
+		a.logger.Info().Any("command", fmt.Sprintf("%v%v", c.command, argsPrint)).Msg("Detaching process")
 		err = cmd.Process.Release()
 		if err != nil {
 			return "", err
@@ -677,7 +681,10 @@ func (a *Installer) Exec(c ExecConfig) (string, error) {
 	for scanner.Scan() {
 		if len(c.dieonoutput) > 0 {
 			if strings.Contains(scanner.Text(), c.dieonoutput) {
-				fmt.Printf("Found [%v] in output, exiting process\n", c.dieonoutput)
+				a.logger.Info().
+					Any("dieonoutput", c.dieonoutput).
+					Any("output", scanner.Text()).
+					Msg("Found dieonoutput in output")
 				_ = cmd.Process.Kill()
 				break
 			}
@@ -699,7 +706,7 @@ func (a *Installer) Exec(c ExecConfig) (string, error) {
 func (a *Installer) cloneEQEmuSource() error {
 	a.Banner("Initializing Server Source")
 
-	fmt.Printf("Cloning from https://github.com/EQEmu/Server.git\n")
+	a.logger.Info().Any("repo", "https://github.com/EQEmu/Server.git").Msg("Cloning from repository")
 
 	// clone the repository
 	repoPath := a.installConfig.CodePath
@@ -716,7 +723,7 @@ func (a *Installer) cloneEQEmuSource() error {
 
 	// if the repository already exists, update it instead
 	if errors.Is(err, git.ErrRepositoryAlreadyExists) {
-		fmt.Printf("repo already exists, skipping clone and updating instead\n")
+		a.logger.Info().Any("repo", repoPath).Msg("Repo already exists, updating instead")
 
 		// open the repository
 		r, err := git.PlainOpen(repoPath)
@@ -736,7 +743,7 @@ func (a *Installer) cloneEQEmuSource() error {
 			return fmt.Errorf("could not pull: %v", err)
 		}
 
-		fmt.Printf("repo updated successfully!\n")
+		a.logger.Info().Any("repo", repoPath).Msg("Repo updated successfully")
 	}
 
 	a.DoneBanner("Initializing Server Source")
@@ -748,7 +755,7 @@ func (a *Installer) initializeServerConfig() error {
 
 	// check if eqemu_config.json exists
 	if _, err := os.Stat(a.pathmanager.GetEQEmuServerConfigFilePath()); err == nil {
-		fmt.Printf("eqemu_config.json already exists, skipping\n")
+		a.logger.Info().Any("config", a.pathmanager.GetEQEmuServerConfigFilePath()).Msg("Config already exists")
 		return nil
 	}
 
@@ -791,7 +798,7 @@ func (a *Installer) initializeServerConfig() error {
 		return err
 	}
 
-	fmt.Printf("Saved config to [%v]\n", a.pathmanager.GetEQEmuServerConfigFilePath())
+	a.logger.Info().Any("config", a.pathmanager.GetEQEmuServerConfigFilePath()).Msg("Saved config")
 
 	a.DoneBanner("Initializing Server Config")
 	return nil
@@ -830,19 +837,18 @@ func (a *Installer) sourcePeqDatabase() error {
 	// subtract 1 because it is the output header
 	tableCount := len(strings.Split(tables, "\n")) - 1
 
-	fmt.Printf(
-		"Database [%v] has [%v] tables\n",
-		a.installConfig.MysqlDatabaseName,
-		tableCount,
-	)
+	a.logger.Info().
+		Str("database", a.installConfig.MysqlDatabaseName).
+		Int("tables", tableCount).
+		Msg("Database tables")
 
 	if len(strings.Split(tables, "\n")) > 200 {
 		// database already exists, skip
-		fmt.Printf(
-			"Database [%v] already exists with [%v] tables, skipping source\n",
-			a.installConfig.MysqlDatabaseName,
-			tableCount,
-		)
+		a.logger.Info().
+			Any("database", a.installConfig.MysqlDatabaseName).
+			Int("tables", tableCount).
+			Msg("Database already exists")
+
 		return nil
 	}
 
@@ -850,7 +856,7 @@ func (a *Installer) sourcePeqDatabase() error {
 	dumpZip := filepath.Join(os.TempDir(), "/dump/peq.zip")
 
 	// Create the temp folder
-	fmt.Printf("Creating directory [%v]\n", filepath.Dir(dumpZip))
+	a.logger.Info().Any("dumpZip", filepath.Dir(dumpZip)).Msg("Creating directory")
 	err = os.MkdirAll(filepath.Dir(dumpZip), os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("could not create directory: %v", err)
@@ -865,17 +871,21 @@ func (a *Installer) sourcePeqDatabase() error {
 		return err
 	}
 
-	fmt.Printf("Downloaded zip to [%v]\n", dumpZip)
-	err = unzip.New(dumpZip, filepath.Join(os.TempDir(), "/dump")).Extract()
+	a.logger.Info().Any("dumpZip", dumpZip).Msg("Downloaded database dump")
+	err = a.unzipper.Extract(dumpZip, filepath.Join(os.TempDir(), "/dump"))
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}
 
-	fmt.Printf("Extracted zip to [%v]\n", filepath.Join(os.TempDir(), "/dump/peq-dump"))
+	a.logger.Info().
+		Any("extractPath", filepath.Join(os.TempDir(), "/dump/peq-dump")).
+		Msg("Sourcing database dump")
 
 	extractPath := filepath.Join(os.TempDir(), "/dump/peq-dump")
 
-	fmt.Printf("Sourcing database dump from [%v]\n", extractPath)
+	a.logger.Info().
+		Any("extractPath", extractPath).
+		Msg("Sourcing database dump")
 
 	_, err = a.Exec(
 		ExecConfig{
@@ -895,7 +905,7 @@ func (a *Installer) sourcePeqDatabase() error {
 		return err
 	}
 
-	fmt.Printf("Sourced database dump from [%v]\n", extractPath)
+	a.logger.Info().Any("extractPath", extractPath).Msg("Sourced database dump")
 
 	_, err = a.Exec(
 		ExecConfig{
@@ -915,7 +925,7 @@ func (a *Installer) sourcePeqDatabase() error {
 	}
 
 	// cleanup the temp folder
-	fmt.Printf("|-- Cleaning up temp folder [%v]\n", filepath.Join(os.TempDir(), "/dump"))
+	a.logger.Info().Any("tempPath", filepath.Join(os.TempDir(), "/dump")).Msg("Cleaning up temp folder")
 	err = os.RemoveAll(filepath.Join(os.TempDir(), "/dump"))
 	if err != nil {
 		return fmt.Errorf("could not remove directory: %v", err)
@@ -941,21 +951,21 @@ func (a *Installer) installBinaries() error {
 
 	// extract the zip
 	extractTo := a.pathmanager.GetEQEmuServerBinPath()
-	fmt.Printf("Extracting zip to [%v]\n", extractTo)
+	a.logger.Info().Any("tempPath", tempPath).Any("extractTo", extractTo).Msg("Extracting zip")
 	err = unzip.New(tempPath, extractTo).Extract()
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}
 
 	// cleanup the temp folder
-	fmt.Printf("|-- Cleaning up temp folder [%v]\n", tempPath)
+	a.logger.Info().Any("tempPath", tempPath).Msg("Cleaning up temp folder")
 	err = os.RemoveAll(tempPath)
 	if err != nil {
 		return fmt.Errorf("could not remove directory: %v", err)
 	}
 
 	// make the binaries executable
-	fmt.Printf("Making binaries executable\n")
+	a.logger.Info().Msg("Making binaries executable")
 
 	// loop through files in the bin folder
 	err = filepath.Walk(extractTo, func(path string, info os.FileInfo, err error) error {
@@ -968,7 +978,7 @@ func (a *Installer) installBinaries() error {
 			return nil
 		}
 
-		fmt.Printf("|-- Making [%v] executable\n", path)
+		a.logger.Info().Any("path", path).Msg("Making file executable")
 
 		// make the file executable
 		err = os.Chmod(path, 0755)
@@ -1012,7 +1022,7 @@ func (a *Installer) symlinkPatchFiles() error {
 
 		// check if the symlink exists
 		if _, err := os.Stat(symlinkPath); !os.IsNotExist(err) {
-			fmt.Printf("Symlink [%v] already exists, skipping\n", symlinkPath)
+			a.logger.Info().Any("symlinkPath", symlinkPath).Msg("Symlink already exists, skipping")
 
 			// remove the symlink
 			err = os.Remove(symlinkPath)
@@ -1024,7 +1034,7 @@ func (a *Installer) symlinkPatchFiles() error {
 		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "utils", "patches", patchFile)
 
 		// create the symlink
-		fmt.Printf("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
+		a.logger.Info().Any("symlinkPath", symlinkPath).Any("sourcePatchPath", sourcePatchPath).Msg("Creating symlink")
 		err := os.Symlink(sourcePatchPath, symlinkPath)
 		if err != nil {
 			return fmt.Errorf("could not create symlink: %v", err)
@@ -1058,7 +1068,7 @@ func (a *Installer) symlinkOpcodeFiles() error {
 		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "utils", "patches", opcodeFile)
 
 		// create the symlink
-		fmt.Printf("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
+		a.logger.Info().Any("symlinkPath", symlinkPath).Any("sourcePatchPath", sourcePatchPath).Msg("Creating symlink")
 		err := os.Symlink(sourcePatchPath, symlinkPath)
 		if err != nil {
 			return fmt.Errorf("could not create symlink: %v", err)
@@ -1092,7 +1102,8 @@ func (a *Installer) symlinkLoginOpcodeFiles() error {
 		sourcePatchPath := filepath.Join(a.installConfig.CodePath, "loginserver", "login_util", opcodeFile)
 
 		// create the symlink
-		fmt.Printf("Creating symlink [%v] -> [%v]\n", symlinkPath, sourcePatchPath)
+		a.logger.Info().Any("symlinkPath", symlinkPath).Any("sourcePatchPath", sourcePatchPath).Msg("Creating symlink")
+
 		err := os.Symlink(sourcePatchPath, symlinkPath)
 		if err != nil {
 			return fmt.Errorf("could not create symlink: %v", err)
@@ -1119,14 +1130,20 @@ func (a *Installer) symlinkPluginsAndModules() error {
 	_ = os.Remove(targetPerlPlugins)
 
 	// create the symlink
-	fmt.Printf("Creating symlink [%v] -> [%v]\n", targetLuaModules, sourceLuaModules)
+	a.logger.Info().
+		Any("targetLuaModules", targetLuaModules).
+		Any("sourceLuaModules", sourceLuaModules).
+		Msg("Creating symlink")
 	err := os.Symlink(sourceLuaModules, targetLuaModules)
 	if err != nil {
 		return fmt.Errorf("could not create symlink: %v", err)
 	}
 
 	// create the symlink
-	fmt.Printf("Creating symlink [%v] -> [%v]\n", targetPerlPlugins, sourcePerlPlugins)
+	a.logger.Info().
+		Any("targetPerlPlugins", targetPerlPlugins).
+		Any("sourcePerlPlugins", sourcePerlPlugins).
+		Msg("Creating symlink")
 	err = os.Symlink(sourcePerlPlugins, targetPerlPlugins)
 	if err != nil {
 		return fmt.Errorf("could not create symlink: %v", err)
@@ -1171,7 +1188,7 @@ func (a *Installer) checkIfMapsAreUpToDate() error {
 		return fmt.Errorf("could not unmarshal response body: %v", err)
 	}
 
-	fmt.Printf("Downloading eqemu-maps release\n")
+	a.logger.Info().Any("version", release.TagName).Msg("Downloading eqemu-maps release")
 
 	type PackageJson struct {
 		Version string `json:"version"`
@@ -1202,12 +1219,12 @@ func (a *Installer) checkIfMapsAreUpToDate() error {
 	remoteVersion := strings.ReplaceAll(release.TagName, "v", "")
 
 	if len(remoteVersion) == 0 {
-		fmt.Printf("Could not retrieve latest [eqemu-maps] version, possibly rate limited, skipping\n")
+		a.logger.Info().Any("version", remoteVersion).Msg("Could not retrieve latest [eqemu-maps] version, possibly rate limited, skipping")
 		return nil
 	}
 
 	if len(remoteVersion) > 0 && packageJsonStruct.Version == remoteVersion {
-		fmt.Printf("Maps are up to date on version v%v\n", packageJsonStruct.Version)
+		a.logger.Info().Any("version", packageJsonStruct.Version).Msg("Maps are up to date")
 		return nil
 	}
 
@@ -1238,7 +1255,7 @@ func (a *Installer) createLinuxServerScripts() error {
 		// get the f name
 		file := filepath.Join(a.pathmanager.GetEQEmuServerPath(), s)
 
-		fmt.Printf("Creating script [%v]\n", file)
+		a.logger.Info().Any("file", file).Msg("Creating script")
 
 		// create file
 		f, err := os.Create(file)
@@ -1256,7 +1273,7 @@ func (a *Installer) createLinuxServerScripts() error {
 		// close file
 		_ = f.Close()
 
-		fmt.Printf("|-- Making file [%v] executable\n", file)
+		a.logger.Info().Any("file", file).Msg("Making file executable")
 
 		// make file executable
 		err = os.Chmod(file, 0755)
@@ -1301,12 +1318,15 @@ func (a *Installer) installSpireBinary() error {
 	// check if spire is already installed
 	spirePath, err := exec.LookPath(filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
 	if err != nil {
-		fmt.Printf("could not find spire binary: %v", err)
+		a.logger.Error().
+			Err(err).
+			Any("spirePath", spirePath).
+			Msg("Could not find spire binary")
 	}
 
 	if _, err := os.Stat(spirePath); !os.IsNotExist(err) {
 		// spire is already installed
-		fmt.Printf("Spire is already installed at [%v]\n", spirePath)
+		a.logger.Info().Any("spirePath", spirePath).Msg("Spire is already installed")
 		a.DoneBanner("Installing Spire")
 		return nil
 	}
@@ -1320,7 +1340,7 @@ func (a *Installer) installSpireBinary() error {
 			"spire",
 		)
 		if err != nil {
-			fmt.Printf("could not get latest release: %v", err)
+			a.logger.Error().Err(err).Msg("Could not get latest release")
 			return nil
 		}
 
@@ -1335,7 +1355,7 @@ func (a *Installer) installSpireBinary() error {
 			targetFileName := fmt.Sprintf("spire-%s-%s", runtime.GOOS, runtime.GOARCH)
 
 			if assetName == targetFileNameZipped {
-				fmt.Printf("Found matching release [%s]\n", assetName)
+				a.logger.Info().Any("assetName", assetName).Any("downloadUrl", downloadUrl).Msg("Downloading spire")
 
 				// download
 				file := path.Base(downloadUrl)
@@ -1348,9 +1368,8 @@ func (a *Installer) installSpireBinary() error {
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
 				unzipPathTemp := filepath.Join(fmt.Sprintf("%s/spire-download", os.TempDir()))
-				uz := unzip.New(tempFileZipped, unzipPathTemp)
-				fmt.Printf("|-- Unzipping file [%v] to [%v]\n", tempFileZipped, a.pathmanager.GetEQEmuServerPath())
-				err = uz.Extract()
+				a.logger.Info().Any("tempFileZipped", tempFileZipped).Any("unzipPathTemp", unzipPathTemp).Msg("Unzipping file")
+				err = a.unzipper.Extract(tempFileZipped, unzipPathTemp)
 				if err != nil {
 					return fmt.Errorf("could not unzip spire: %v", err)
 				}
@@ -1370,7 +1389,7 @@ func (a *Installer) installSpireBinary() error {
 				// destination
 				dst := newSpirePath
 
-				fmt.Printf("|-- Renaming file [%v] to [%v]\n", src, dst)
+				a.logger.Info().Any("src", src).Any("dst", dst).Msg("Renaming file")
 
 				// copy file from src to dst
 				err = a.Copy(src, dst)
@@ -1378,7 +1397,7 @@ func (a *Installer) installSpireBinary() error {
 					return err
 				}
 
-				fmt.Printf("|-- Making file [%v] executable\n", dst)
+				a.logger.Info().Any("dst", dst).Msg("Making file executable")
 
 				// make executable
 				err = os.Chmod(dst, 0755)
@@ -1491,7 +1510,7 @@ func (a *Installer) startSpire() error {
 	for _, p := range processes {
 		cmdline, err := p.Cmdline()
 		if err != nil {
-			fmt.Printf("could not get cmdline for process: %v\n", err)
+			a.logger.Debug().Err(err).Msg("Could not get cmdline for process")
 			continue
 		}
 
@@ -1506,7 +1525,7 @@ func (a *Installer) startSpire() error {
 		}
 	}
 
-	fmt.Printf("starting spire [%v]", filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
+	fmt.Printf("starting spire [%v]\n", filepath.Join(a.pathmanager.GetEQEmuServerPath(), "spire"))
 
 	// start spire in a loop
 	if runtime.GOOS == "linux" {
@@ -1669,7 +1688,7 @@ func (a *Installer) initWindowsMysql() error {
 	// download mariadb
 	// download the latest binaries
 	tempPath := filepath.Join(os.TempDir(), "mariadb.msi")
-	fmt.Printf("Downloading binaries to [%v]\n", tempPath)
+	a.logger.Info().Any("tempPath", tempPath).Msg("Downloading binaries")
 	err := download.WithProgress(
 		tempPath,
 		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/mariadb-10.11.4-winx64.msi",
@@ -1720,22 +1739,22 @@ func (a *Installer) initDb() error {
 
 	// create a new database
 	var sql string
-	fmt.Printf("Creating database [%v]\n", c.DatabaseName)
+	a.logger.Info().Any("databaseName", c.DatabaseName).Msg("Creating database")
 	err := a.DbExec(DbExecConfig{statement: fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v", c.DatabaseName)})
 	if err != nil {
 		return err
 	}
 
 	// create a new user
-	fmt.Printf("Creating user [%v]\n", c.DatabaseUser)
+	a.logger.Info().Any("databaseUser", c.DatabaseUser).Msg("Creating user")
 
 	// grant privileges to the new user
-	fmt.Printf("Granting privileges to user [%v]\n", c.DatabaseUser)
+	a.logger.Info().Any("databaseUser", c.DatabaseUser).Msg("Granting privileges")
 	sql += fmt.Sprintf("CREATE USER IF NOT EXISTS '%v'@'localhost' IDENTIFIED BY '%v'; ", c.DatabaseUser, c.DatabasePassword)
 	sql += fmt.Sprintf("GRANT ALL PRIVILEGES ON %v.* TO '%v'@'localhost'", c.DatabaseName, c.DatabaseUser)
 
 	// flush privileges
-	fmt.Println("Flushing privileges")
+	a.logger.Info().Msg("Flushing privileges")
 	err = a.DbExec(DbExecConfig{statement: fmt.Sprintf("FLUSH PRIVILEGES; %v; FLUSH PRIVILEGES;", sql), hidestring: c.DatabasePassword})
 	if err != nil {
 		return err
@@ -1749,14 +1768,14 @@ func (a *Installer) initWindowsPerl() error {
 
 	// check if a.getWindowsPerlPath() exists
 	if _, err := os.Stat(a.getWindowsPerlPath()); err == nil {
-		fmt.Printf("Perl already installed, skipping\n")
+		a.logger.Info().Any("perlPath", a.getWindowsPerlPath()).Msg("Perl already installed, skipping")
 		return nil
 	}
 
 	// download mariadb
 	// download the latest binaries
 	tempPath := filepath.Join(os.TempDir(), "perl.msi")
-	fmt.Printf("Downloading binaries to [%v]\n", tempPath)
+	a.logger.Info().Any("tempPath", tempPath).Msg("Downloading binaries")
 	err := download.WithProgress(
 		tempPath,
 		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/strawberry-perl-5.24.4.1-64bit.msi",
@@ -1797,7 +1816,7 @@ func (a *Installer) initWindowsWget() error {
 	a.Banner("Downloading Windows wget")
 
 	downloadPath := filepath.Join(a.pathmanager.GetEQEmuServerBinPath(), "wget.exe")
-	fmt.Printf("Downloading binaries to [%v]\n", downloadPath)
+	a.logger.Info().Any("downloadPath", downloadPath).Msg("Downloading binaries")
 	err := download.WithProgress(
 		downloadPath,
 		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/wget.exe",
@@ -1902,7 +1921,7 @@ func (a *Installer) createWindowsServerScripts() error {
 		// get the f name
 		file := filepath.Join(a.pathmanager.GetEQEmuServerPath(), s)
 
-		fmt.Printf("Creating script [%v]\n", file)
+		a.logger.Info().Any("file", file).Msg("Creating script")
 
 		// create file
 		f, err := os.Create(file)
@@ -1920,7 +1939,7 @@ func (a *Installer) createWindowsServerScripts() error {
 		// close file
 		_ = f.Close()
 
-		fmt.Printf("|-- Making file [%v] executable\n", file)
+		a.logger.Info().Any("file", file).Msg("Making file executable")
 
 		// make file executable
 		err = os.Chmod(file, 0755)
@@ -1952,7 +1971,7 @@ func (a *Installer) initWindowsCommandPrompt() error {
 func (a *Installer) setWindowsMysqlPath() error {
 	// check if path already contains mysql
 	if !strings.Contains(os.Getenv("Path"), a.getWindowsMysqlPath()) {
-		fmt.Printf("Updating PATH to include [%v]\n", a.getWindowsMysqlPath())
+		a.logger.Info().Any("path", os.Getenv("Path")).Any("mysqlPath", a.getWindowsMysqlPath()).Msg("Updating PATH")
 		err := os.Setenv("Path", fmt.Sprintf("%v;%v", os.Getenv("Path"), a.getWindowsMysqlPath()))
 		if err != nil {
 			return err
@@ -1984,7 +2003,7 @@ func (a *Installer) setWindowsMysqlPath() error {
 func (a *Installer) setWindowsPerlPath() error {
 	// update current notion of path temporarily since we don't have the updated path in the current cmd shell
 	if !strings.Contains(os.Getenv("Path"), a.getWindowsPerlPath()) {
-		fmt.Printf("Updating PATH to include [%v]\n", a.getWindowsPerlPath())
+		a.logger.Info().Any("path", os.Getenv("Path")).Any("perlPath", a.getWindowsPerlPath()).Msg("Updating PATH")
 		err := os.Setenv("Path", fmt.Sprintf("%v;%v", os.Getenv("Path"), a.getWindowsPerlPath()))
 		if err != nil {
 			return err
@@ -2058,7 +2077,7 @@ func (a *Installer) initLoginServer() error {
 
 	// download the default login config
 	url := "https://raw.githubusercontent.com/EQEmu/Server/master/loginserver/login_util/login.json"
-	fmt.Printf("Downloading default login config from [%v]\n", url)
+	a.logger.Info().Any("url", url).Msg("Downloading default login config")
 	err := download.WithProgress(a.pathmanager.GetEqemuLoginServerConfigPath(), url)
 	if err != nil {
 		return fmt.Errorf("could not download login config: %v", err)
@@ -2087,13 +2106,13 @@ func (a *Installer) initLoginServer() error {
 
 	// create the login server database tables
 	url = "https://raw.githubusercontent.com/EQEmu/Server/master/loginserver/login_util/login_schema.sql"
-	fmt.Printf("Downloading login schema from [%v]\n", url)
+	a.logger.Info().Any("url", url).Msg("Downloading login schema")
 	err = download.WithProgress(filepath.Join(os.TempDir(), "login_schema.sql"), url)
 	if err != nil {
 		return fmt.Errorf("could not download login config: %v", err)
 	}
 
-	fmt.Printf("Creating login server database tables\n")
+	a.logger.Info().Msg("Creating login server database tables")
 
 	_, err = a.Exec(
 		ExecConfig{
@@ -2307,7 +2326,7 @@ func (a *Installer) compileBinaries() error {
 			return nil
 		}
 
-		fmt.Printf("Symlinking [%v] to [%v] in server bin directory\n", fileName, filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", fileName))
+		a.logger.Info().Any("fileName", fileName).Any("destination", filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", fileName)).Msg("Symlinking")
 
 		source := filepath.Join(binPath, fileName)
 		destination := filepath.Join(a.pathmanager.GetEQEmuServerPath(), "bin", fileName)
@@ -2358,7 +2377,7 @@ func (a *Installer) installVcRuntime() error {
 
 	// download the latest binaries
 	tempPath := filepath.Join(os.TempDir(), "vc_runtime.exe")
-	fmt.Printf("Downloading binaries to [%v]\n", tempPath)
+	a.logger.Info().Any("tempPath", tempPath).Msg("Downloading binaries")
 	err := download.WithProgress(
 		tempPath,
 		"https://github.com/Akkadius/eqemu-install-v2/releases/download/static/VC_redist.x64.exe",

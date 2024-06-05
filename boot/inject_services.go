@@ -19,6 +19,7 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/telnet"
+	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/Akkadius/spire/internal/user"
 	"github.com/Akkadius/spire/internal/websocket"
 	pluralize "github.com/gertd/go-pluralize"
@@ -54,4 +55,5 @@ var serviceSet = wire.NewSet(
 	eqemuserver.NewUpdater,
 	eqemuserver.NewLauncher,
 	eqemuserver.NewQuestHotReloadWatcher,
+	unzip.NewUnzipper,
 )

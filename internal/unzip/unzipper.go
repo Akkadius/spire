@@ -3,33 +3,32 @@ package unzip
 import (
 	"archive/zip"
 	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-type Unzip struct {
-	Src  string
-	Dest string
+type Unzipper struct {
+	logger *logger.AppLogger
 }
 
-func New(src string, dest string) Unzip {
-	return Unzip{
-		Src:  src,
-		Dest: dest,
+func NewUnzipper(logger *logger.AppLogger) *Unzipper {
+	return &Unzipper{
+		logger: logger,
 	}
 }
 
-func (uz Unzip) Extract() error {
-	fmt.Println("[Zip] Extracting [" + uz.Src + "]")
+func (uz *Unzipper) Extract(src string, dest string) error {
+	uz.logger.Info().Str("src", src).Str("dest", dest).Msg("Extracting zip file")
 
-	r, err := zip.OpenReader(uz.Src)
+	r, err := zip.OpenReader(src)
 	if err != nil {
 		return err
 	}
 
-	err = os.MkdirAll(uz.Dest, os.ModePerm)
+	err = os.MkdirAll(dest, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -41,8 +40,8 @@ func (uz Unzip) Extract() error {
 			return err
 		}
 
-		path := filepath.Join(uz.Dest, f.Name)
-		if !strings.HasPrefix(path, filepath.Clean(uz.Dest)+string(os.PathSeparator)) {
+		path := filepath.Join(dest, f.Name)
+		if !strings.HasPrefix(path, filepath.Clean(dest)+string(os.PathSeparator)) {
 			return fmt.Errorf("%s: Illegal file path", path)
 		}
 
@@ -85,9 +84,8 @@ func (uz Unzip) Extract() error {
 		if err != nil {
 			return err
 		}
-		//if uz.debug {
-		//	fmt.Println("Extracting file: " + f.Name)
-		//}
+
+		uz.logger.Debug().Str("file", f.Name).Msg("Extracting file")
 	}
 
 	err = r.Close()
@@ -95,7 +93,7 @@ func (uz Unzip) Extract() error {
 		return err
 	}
 
-	fmt.Printf("[Zip] Extracted (%v) files in [%v] to [%v]!\n", len(r.File), uz.Src, uz.Dest)
+	uz.logger.Info().Any("files count", len(r.File)).Str("src", src).Str("dest", dest).Msg("Extracted zip file")
 
 	return nil
 }

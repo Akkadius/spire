@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/rs/zerolog"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -68,17 +70,24 @@ func newDebugLogger() *zerolog.Logger {
 	return &logger
 }
 
+var appName string
+
 func newInfoLogger() *zerolog.Logger {
+	if len(os.Getenv("APP_NAME")) > 0 {
+		appName = os.Getenv("APP_NAME")
+		appName = cases.Title(language.English, cases.NoLower).String(appName)
+	}
+
 	output := zerolog.ConsoleWriter{Out: os.Stderr}
 	output.FormatLevel = func(i interface{}) string {
 		return ""
 	}
 	output.FormatMessage = func(i interface{}) string {
 		callerMeta := getCallerMeta()
-
 		return fmt.Sprintf(
-			"%sSpire › %s%s%s%s%s",
+			"%s%s › %s%s%s%s%s",
 			console.BoldWhite,
+			appName,
 			callerMeta,
 			console.Reset,
 			console.White,
