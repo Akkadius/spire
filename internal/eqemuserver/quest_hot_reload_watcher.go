@@ -113,6 +113,15 @@ var mutex = &sync.Mutex{}
 func (l *QuestHotReloadWatcher) loadServerConfig() {
 	cfg := l.serverconfig.Get()
 	mutex.Lock()
+	if cfg.WebAdmin == nil {
+		cfg.WebAdmin = &eqemuserverconfig.WebAdminConfig{
+			Quests: eqemuserverconfig.WebAdminQuestsConfig{
+				HotReload: true,
+			},
+		}
+		l.serverconfig.Save(cfg)
+	}
+
 	l.isRunning = cfg.WebAdmin.Quests.HotReload
 	mutex.Unlock()
 }

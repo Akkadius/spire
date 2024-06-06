@@ -45,6 +45,25 @@ type WebAdminLauncherConfig struct {
 	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
 }
 
+type WebAdminQuestsConfig struct {
+	HotReload bool `json:"hotReload"`
+}
+
+type WebAdminConfig struct { // Occulus
+	Discord *struct {
+		CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
+	} `json:"discord,omitempty"`
+	Application struct {
+		Key   string `json:"key,omitempty"`
+		Admin struct {
+			Password string `json:"password,omitempty"`
+		} `json:"admin,omitempty"`
+	} `json:"application,omitempty"`
+	Launcher       *WebAdminLauncherConfig `json:"launcher,omitempty"`
+	Quests         WebAdminQuestsConfig    `json:"quests"`
+	ServerCodePath string                  `json:"serverCodePath,omitempty"`
+}
+
 // EQEmuConfigJson is the struct that represents the eqemu_config.json file
 type EQEmuConfigJson struct {
 	Server struct {
@@ -133,23 +152,8 @@ type EQEmuConfigJson struct {
 			Opcodes string `json:"opcodes"`
 		} `json:"directories"`
 	} `json:"server"`
-	WebAdmin *struct { // Occulus
-		Discord *struct {
-			CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
-		} `json:"discord,omitempty"`
-		Application struct {
-			Key   string `json:"key,omitempty"`
-			Admin struct {
-				Password string `json:"password,omitempty"`
-			} `json:"admin,omitempty"`
-		} `json:"application,omitempty"`
-		Launcher *WebAdminLauncherConfig `json:"launcher,omitempty"`
-		Quests   struct {
-			HotReload bool `json:"hotReload"`
-		} `json:"quests"`
-		ServerCodePath string `json:"serverCodePath,omitempty"`
-	} `json:"web-admin,omitempty"`
-	Spire struct {
+	WebAdmin *WebAdminConfig `json:"web-admin,omitempty"`
+	Spire    struct {
 		EncryptionKey      string `json:"encryption_key,omitempty"`
 		HttpPort           int    `json:"http_port,omitempty"`
 		LauncherStart      bool   `json:"launcher_start"`                 // starts server launcher

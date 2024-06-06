@@ -1,3 +1,7 @@
+## [4.5.3] 6/5/2024
+
+**Launcher** Fix issue of initializing configuration when a user doesn't already have them in their config.
+
 ## [4.5.2] 6/5/2024
 
 **Installer** Fix issue where slow machines would not source database files fast enough leading to a 5-minute execution timeout and a half-sourced database.
