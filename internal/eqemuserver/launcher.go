@@ -583,20 +583,6 @@ func (l *Launcher) startServerProcessSync(name string, args ...string) error {
 func (l *Launcher) loadServerConfig() {
 	cfg := l.serverconfig.Get()
 	l.isRunning = cfg.Spire.LauncherStart
-
-	// set defaults
-	if cfg.WebAdmin.Launcher == nil {
-		cfg.WebAdmin.Launcher = &eqemuserverconfig.WebAdminLauncherConfig{
-			RunSharedMemory:             true,
-			RunLoginserver:              false,
-			RunQueryServ:                false,
-			MinZoneProcesses:            10,
-			UpdateOpcodesOnStart:        true,
-			DeleteLogFilesOlderThanDays: 7,
-		}
-		l.serverconfig.Save(cfg)
-	}
-
 	l.runSharedMemory = cfg.WebAdmin.Launcher.RunSharedMemory
 	l.runLoginserver = cfg.WebAdmin.Launcher.RunLoginserver
 	l.runQueryServ = cfg.WebAdmin.Launcher.RunQueryServ

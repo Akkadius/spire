@@ -189,6 +189,8 @@ func (e *Config) Get() EQEmuConfigJson {
 				e.logger.Fatal().Err(err).Any("path", configFile).Msg("unable to unmarshal eqemu config file")
 			}
 
+			e.setConfigDefaults(&config)
+
 			lastModifiedTime = stat.ModTime()
 			lock.Lock()
 			cachedConfig = &config
@@ -264,5 +266,48 @@ func (e *Config) Save(c EQEmuConfigJson) error {
 		return err
 	}
 
+	cachedConfig = &c
+
 	return nil
+}
+
+// setConfigDefaults will set the default values for the config
+// especially for pointer values
+func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
+	save := false
+	if c.WebAdmin == nil {
+		c.WebAdmin = &WebAdminConfig{
+			Discord: nil,
+			Quests: WebAdminQuestsConfig{
+				HotReload: true,
+			},
+		}
+		save = true
+	}
+	if c.WebAdmin != nil && c.WebAdmin.Discord != nil {
+		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
+			c.WebAdmin.Discord = nil
+			save = true
+		}
+		if c.WebAdmin.Launcher != nil {
+			if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
+				c.WebAdmin.Launcher.MinZoneProcesses = 10
+				save = true
+			}
+		}
+		if c.WebAdmin.Launcher == nil {
+			c.WebAdmin.Launcher = &WebAdminLauncherConfig{
+				RunSharedMemory:             true,
+				RunLoginserver:              false,
+				RunQueryServ:                false,
+				MinZoneProcesses:            10,
+				UpdateOpcodesOnStart:        true,
+				DeleteLogFilesOlderThanDays: 7,
+			}
+			save = true
+		}
+	}
+	if save {
+		e.Save(*c)
+	}
 }

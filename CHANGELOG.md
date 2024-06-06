@@ -1,4 +1,4 @@
-## [4.5.3] 6/5/2024
+## [4.5.4] 6/5/2024
 
 **Launcher** Fix issue of initializing configuration when a user doesn't already have them in their config.
 

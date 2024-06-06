@@ -14,7 +14,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -106,24 +105,11 @@ func (l *QuestHotReloadWatcher) Process() {
 	}
 }
 
-var mutex = &sync.Mutex{}
-
 // loadServerConfig loads the server config
 // this is called on startup and when the server config changes
 func (l *QuestHotReloadWatcher) loadServerConfig() {
 	cfg := l.serverconfig.Get()
-	mutex.Lock()
-	if cfg.WebAdmin == nil {
-		cfg.WebAdmin = &eqemuserverconfig.WebAdminConfig{
-			Quests: eqemuserverconfig.WebAdminQuestsConfig{
-				HotReload: true,
-			},
-		}
-		l.serverconfig.Save(cfg)
-	}
-
 	l.isRunning = cfg.WebAdmin.Quests.HotReload
-	mutex.Unlock()
 }
 
 func (l *QuestHotReloadWatcher) Stop() {
