@@ -208,6 +208,7 @@ func (e *Config) Get() EQEmuConfigJson {
 // GetIfExists returns the eqemu config json if the file exists
 // This function shouldn't really exist and the original getter should have bubbled errors up
 // Clean all of this up another time
+// TODO - Consolidate this with Get() and properly bubble up errors
 func (e *Config) GetIfExists() (EQEmuConfigJson, bool) {
 	configFile := e.pathmgmt.GetEQEmuServerConfigFilePath()
 	stat, err := os.Stat(configFile)
