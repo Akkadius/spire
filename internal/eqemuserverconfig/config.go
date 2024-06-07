@@ -223,6 +223,8 @@ func (e *Config) GetIfExists() (EQEmuConfigJson, bool) {
 			config := EQEmuConfigJson{}
 			_ = json.Unmarshal(body, &config)
 
+			e.setConfigDefaults(&config)
+
 			lastModifiedTime = stat.ModTime()
 			lock.Lock()
 			cachedConfig = &config
@@ -276,26 +278,17 @@ func (e *Config) Save(c EQEmuConfigJson) error {
 func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
 	save := false
 	if c.WebAdmin == nil {
+		e.logger.Debug().Msg("Setting default web-admin config")
 		c.WebAdmin = &WebAdminConfig{
-			Discord: nil,
 			Quests: WebAdminQuestsConfig{
 				HotReload: true,
 			},
 		}
 		save = true
 	}
-	if c.WebAdmin != nil && c.WebAdmin.Discord != nil {
-		if len(c.WebAdmin.Discord.CrashLogWebhook) == 0 {
-			c.WebAdmin.Discord = nil
-			save = true
-		}
-		if c.WebAdmin.Launcher != nil {
-			if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
-				c.WebAdmin.Launcher.MinZoneProcesses = 10
-				save = true
-			}
-		}
+	if c.WebAdmin != nil {
 		if c.WebAdmin.Launcher == nil {
+			e.logger.Debug().Msg("Setting default web-admin launcher config")
 			c.WebAdmin.Launcher = &WebAdminLauncherConfig{
 				RunSharedMemory:             true,
 				RunLoginserver:              false,
@@ -305,6 +298,13 @@ func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
 				DeleteLogFilesOlderThanDays: 7,
 			}
 			save = true
+		}
+		if c.WebAdmin.Launcher != nil {
+			if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
+				e.logger.Debug().Msg("Setting default web-admin launcher min zone processes")
+				c.WebAdmin.Launcher.MinZoneProcesses = 10
+				save = true
+			}
 		}
 	}
 	if save {
