@@ -393,10 +393,15 @@ func (l *Launcher) Supervisor() error {
 				}
 
 				if s == zoneProcessName {
+					// cmdline path can contain spaces which will break the split
+					cmdline := proc.Cmdline
+					cmdline = strings.ReplaceAll(cmdline, proc.Cwd, "")
+					cmdline = strings.TrimSpace(cmdline)
+
 					// get arg
 					// check if it's in the static zones
 					// if it is, add it to the current online statics
-					arg := strings.Split(proc.Cmdline, " ")
+					arg := strings.Split(cmdline, " ")
 					if len(arg) > 1 {
 						for _, z := range l.staticZonesToBoot {
 							if z == arg[1] {
@@ -474,13 +479,11 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	zoneAssignedDynamics := 0
-	zoneIdleDynamics := 0
 	for _, z := range list.Data {
+		if z.ZoneID == 0 {
+			continue
+		}
 		if !z.IsStaticZone {
-			if z.ZoneID == 0 {
-				zoneIdleDynamics++
-				continue
-			}
 			zoneAssignedDynamics++
 		}
 	}
@@ -546,7 +549,6 @@ func (l *Launcher) Supervisor() error {
 		Any("currentProcessCounts", l.currentProcessCounts).
 		Any("currentZoneDynamics", l.currentZoneDynamics).
 		Any("currentZoneStatics", l.currentZoneStatics).
-		Any("zoneIdleDynamics", zoneIdleDynamics).
 		Any("zoneAssignedDynamics", zoneAssignedDynamics).
 		Any("statics - staticZonesToBoot", l.staticZonesToBoot).
 		Any("statics - staticZonesToBoot (count)", len(l.staticZonesToBoot)).
