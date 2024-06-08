@@ -1,3 +1,7 @@
+## [4.7.0] 6/8/2024
+
+**Spire Admin** Add realtime websocket streaming to display shutdown/restart messages and timer countdowns in the server admin header.
+
 ## [4.6.1] 6/7/2024
 
 **Spire Updates** Overhaul core updating logic to be more resilient to cross-platform file paths.

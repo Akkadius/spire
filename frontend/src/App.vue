@@ -24,6 +24,7 @@ import UserContext              from "@/app/user/UserContext";
 import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.vue";
 import semver                   from "semver";
 import AppUpdateModal           from "@/components/modals/AppUpdateModal.vue";
+import {SpireWebsocket}         from "@/app/api/spire-websocket";
 
 export default {
   name: "App",
@@ -68,12 +69,15 @@ export default {
   },
 
   created() {
+    SpireWebsocket.connect()
     EventBus.$on("SPELL_LEGACY_ICONS_ENABLED", this.loadSpellIconSettings);
     EventBus.$on("CHECK_SPIRE_UPDATE", this.checkSpireUpdate);
+    SpireWebsocket.addEventListener('message', this.handleWebsocketMessage);
   },
   destroyed() {
     EventBus.$off("SPELL_LEGACY_ICONS_ENABLED", this.loadSpellIconSettings);
     EventBus.$off("CHECK_SPIRE_UPDATE", this.checkSpireUpdate);
+    SpireWebsocket.removeEventListener('message', this.handleWebsocketMessage);
   },
 
   methods: {
@@ -267,8 +271,8 @@ export default {
       fetch(url)
         .then(response => response.json())
         .then(data => {
-          latest       = data.tag_name.replace("v", "")
-          this.release = data
+          latest                     = data.tag_name.replace("v", "")
+          this.release               = data
           const ignoredUpdateVersion = LocalSettings.getIgnoredUpdateVersion()
 
           if (semver.gt(latest, current)) {
@@ -295,7 +299,19 @@ export default {
           this.currentVersion = current
         })
         .catch(err => console.error(err))
-    }
+    },
+    handleWebsocketMessage(e) {
+      if (e && e.data) {
+        const data = JSON.parse(e.data)
+        if (data.type === "notification") {
+          this.$bvToast.toast(data.message, {
+            title: "Notification",
+            solid: true,
+            toaster: 'b-toaster-bottom-right',
+          })
+        }
+      }
+    },
   },
 
 }

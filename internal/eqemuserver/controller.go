@@ -89,6 +89,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/start", a.serverStart, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop", a.serverStop, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/restart", a.serverRestart, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-websocket-auth", a.getWebsocketAuth, nil),
 	}
 }
@@ -1097,6 +1098,7 @@ func (a *Controller) serverStop(c echo.Context) error {
 	}
 
 	a.launcher.SetStopTimer(stop.Timer)
+	a.launcher.SetStopTypeStopping()
 
 	err = a.launcher.Stop()
 	if err != nil {
@@ -1119,6 +1121,7 @@ func (a *Controller) serverRestart(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
 	}
 
+	a.launcher.SetStopTypeRestarting()
 	a.launcher.SetStopTimer(stop.Timer)
 
 	err = a.launcher.Restart()

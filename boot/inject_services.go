@@ -56,4 +56,5 @@ var serviceSet = wire.NewSet(
 	eqemuserver.NewLauncher,
 	eqemuserver.NewQuestHotReloadWatcher,
 	unzip.NewUnzipper,
+	websocket.NewClientManager,
 )

@@ -59,8 +59,8 @@
 
 <script>
 import EqWindow               from "@/components/eq-ui/EQWindow.vue";
-import {debounce}             from "@/app/utility/debounce";
-import {SpireWebsocketClient} from "@/app/api/spire-websocket-client";
+import {debounce}       from "@/app/utility/debounce";
+import {SpireWebsocket} from "@/app/api/spire-websocket";
 
 
 const Convert = require('ansi-to-html');
@@ -98,13 +98,13 @@ export default {
   methods: {
 
     hello() {
-      SpireWebsocketClient.websocket().send(JSON.stringify({
+      SpireWebsocket.connect().send(JSON.stringify({
         "action": "hello"
       }));
     },
 
     exec(command, args = []) {
-      SpireWebsocketClient.websocket().send(JSON.stringify({
+      SpireWebsocket.connect().send(JSON.stringify({
         "action": "exec_server_bin",
         "command": command,
         "args": args
@@ -127,8 +127,7 @@ export default {
     }, 10),
 
     init() {
-      let ws = SpireWebsocketClient.connect()
-      ws.onmessage = (evt) => {
+      SpireWebsocket.connect().onmessage = (evt) => {
         if (this.ansiRegex.test(evt.data)) {
           this.output += convert.toHtml(evt.data) + "\n"
 

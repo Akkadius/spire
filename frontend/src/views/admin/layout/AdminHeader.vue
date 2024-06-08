@@ -21,7 +21,11 @@
             </a>
 
             <span v-if="stats.server_name">{{ stats.server_name }}</span>
+
           </h1>
+
+          <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
+
         </div>
 
         <div class="col-lg-8 col-sm-12 pl-0 pr-0">
@@ -129,6 +133,8 @@ import ServerProcessButtonComponent from "@/views/admin/components/ServerProcess
 import {EventBus}                   from "@/app/event-bus/event-bus";
 import {SpireApi}                   from "@/app/api/spire-api";
 import {VueEllipseProgress}         from "vue-ellipse-progress";
+import {SpireWebsocket}             from "@/app/api/spire-websocket";
+import moment                       from "moment";
 
 export default {
   name: "AdminHeader",
@@ -147,9 +153,12 @@ export default {
       cpuPercent: 0,
       memoryPercent: 0,
 
+      stopMessage: "",
+
       timer: null,
     }
   },
+
   beforeDestroy() {
     clearInterval(this.timer)
 
@@ -157,9 +166,13 @@ export default {
 
     EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
     EventBus.$off('process-change')
+
+    SpireWebsocket.removeEventListener('message', this.handleWebsocketMessage);
   },
   created() {
     EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
+
+    SpireWebsocket.addEventListener('message', this.handleWebsocketMessage);
 
     window.addEventListener('keypress', this.keypressHandler)
 
@@ -263,6 +276,37 @@ export default {
           this.$root.$emit('bv::show::modal', 'stop-server-modal')
           break
       }
+    },
+    handleWebsocketMessage(e) {
+      if (e && e.data) {
+        const data = JSON.parse(e.data)
+        if (data.type === "stopTimer") {
+          const timerData = JSON.parse(data.message)
+          const time      = timerData.time
+          const type      = timerData.type
+          const remaining = this.calculateTimeRemainingWithMoment(time)
+
+          if (remaining === "") {
+            this.stopMessage = ""
+            return
+          }
+          this.stopMessage = `${type.charAt(0).toUpperCase() + type.slice(1)} in ${remaining}`
+        }
+      }
+    },
+    calculateTimeRemainingWithMoment(unixTimestamp) {
+      const now      = moment();
+      const endTime  = moment.unix(unixTimestamp);
+      const duration = moment.duration(endTime.diff(now));
+
+      if (duration.asMilliseconds() < 0) {
+        return "";
+      }
+
+      const minutes = duration.minutes();
+      const seconds = duration.seconds();
+
+      return `${minutes} minutes, ${seconds} seconds remaining`;
     }
   },
 }

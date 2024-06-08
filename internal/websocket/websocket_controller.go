@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/net/websocket"
@@ -14,15 +15,21 @@ import (
 type Controller struct {
 	pathmgmt *pathmgmt.PathManagement
 	handler  *Handler
+	manager  *ClientManager
+	logger   *logger.AppLogger
 }
 
 func NewController(
 	pathmgmt *pathmgmt.PathManagement,
 	handler *Handler,
+	manager *ClientManager,
+	logger *logger.AppLogger,
 ) *Controller {
 	return &Controller{
 		pathmgmt: pathmgmt,
 		handler:  handler,
+		manager:  manager,
+		logger:   logger,
 	}
 }
 
@@ -38,9 +45,7 @@ type SpireWebsocketMessage struct {
 
 func (a *Controller) websocketHandler(c echo.Context) error {
 	user := request.GetUser(c)
-
 	websocket.Handler(func(ws *websocket.Conn) {
-
 		// if no user authorized, kill connection
 		if user.ID == 0 {
 			_ = a.handler.HandleUnauthorized(ws)
@@ -49,6 +54,11 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 
 		defer ws.Close()
 		for {
+			// Register client
+			remoteAddress := ws.Request().RemoteAddr
+			uniqueID := fmt.Sprintf("%s", remoteAddress)
+			client := &Client{WS: ws, ID: uniqueID} // Assign a real unique ID
+			a.manager.register <- client
 
 			// Read from client
 			msg := ""
@@ -56,6 +66,7 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 			if err != nil {
 				// close if error
 				if err := ws.Close(); err != nil {
+					a.manager.unregister <- client
 					break
 				}
 			}
@@ -64,12 +75,17 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 			if len(msg) == 0 {
 				// close if error
 				if err := ws.Close(); err != nil {
+					a.manager.unregister <- client
 					break
 				}
 			}
 
 			// Write
 			if len(msg) > 0 {
+				//a.manager.broadcast <- msg
+
+				a.logger.Debug().Any("msg", msg).Msg("Received message")
+
 				var err error
 				var m SpireWebsocketMessage
 				err = json.Unmarshal([]byte(msg), &m)
@@ -89,9 +105,11 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 			// improve this later but this works well enough for now
 			if err != nil {
 				if err := ws.Close(); err != nil {
+					a.manager.unregister <- client
 					break
 				}
 			}
+
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil

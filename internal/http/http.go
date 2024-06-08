@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/imgcat"
 	"github.com/Akkadius/spire/internal/logger"
+	"github.com/Akkadius/spire/internal/websocket"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -27,10 +28,11 @@ import (
 )
 
 type Server struct {
-	logger   *logger.AppLogger
-	router   *routes.Router
-	watcher  *eqemuserver.QuestHotReloadWatcher
-	launcher *eqemuserver.Launcher
+	logger                 *logger.AppLogger
+	router                 *routes.Router
+	watcher                *eqemuserver.QuestHotReloadWatcher
+	launcher               *eqemuserver.Launcher
+	websocketClientManager *websocket.ClientManager
 }
 
 func NewServer(
@@ -38,12 +40,14 @@ func NewServer(
 	router *routes.Router,
 	watcher *eqemuserver.QuestHotReloadWatcher,
 	launcher *eqemuserver.Launcher,
+	websocket *websocket.ClientManager,
 ) *Server {
 	return &Server{
-		logger:   logger,
-		router:   router,
-		watcher:  watcher,
-		launcher: launcher,
+		logger:                 logger,
+		router:                 router,
+		watcher:                watcher,
+		launcher:               launcher,
+		websocketClientManager: websocket,
 	}
 }
 
@@ -151,6 +155,8 @@ func (c *Server) Serve(port uint) error {
 	e.HidePort = true
 
 	imgcat.Render(banner.GetLogo())
+
+	go c.websocketClientManager.Start()
 
 	go func() {
 		c.launcher.ServerProcessLauncherWatchdog()

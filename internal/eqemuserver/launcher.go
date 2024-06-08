@@ -1,6 +1,7 @@
 package eqemuserver
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/discord"
 	"github.com/Akkadius/spire/internal/env"
@@ -9,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/rfsnotify"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/websocket"
 	"github.com/fsnotify/fsnotify"
 	"github.com/shirou/gopsutil/v3/process"
 	"golang.org/x/sync/errgroup"
@@ -44,6 +46,7 @@ type Launcher struct {
 	pathmgmt     *pathmgmt.PathManagement
 	serverApi    *Client
 	watcher      *rfsnotify.RWatcher
+	websocketMgr *websocket.ClientManager
 
 	// properties
 	configLastModified          time.Time
@@ -64,6 +67,7 @@ type Launcher struct {
 	currentOnlineStatics []string
 	currentProcessCounts map[string]int
 	stopTimer            int // timer in seconds to stop the server
+	stopType             string
 
 	// meta properties
 	watchCrashLogs bool
@@ -77,6 +81,7 @@ func NewLauncher(
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
 	serverApi *Client,
+	websocketMgr *websocket.ClientManager,
 ) *Launcher {
 	l := &Launcher{
 		logger:               logger,
@@ -86,6 +91,7 @@ func NewLauncher(
 		currentProcessCounts: make(map[string]int),
 		serverApi:            serverApi,
 		stopTimer:            0,
+		websocketMgr:         websocketMgr,
 	}
 
 	return l
@@ -253,12 +259,14 @@ func (l *Launcher) Stop() error {
 		// message every minute
 		timeToStop := time.Now().Add(time.Duration(l.stopTimer) * time.Second)
 
-		_ = l.serverApi.MessageWorld(
+		l.MessageWorld(
 			fmt.Sprintf(
 				"[SERVER MESSAGE] The world will be coming down in [%v] minute(s), please log out before this time...",
 				timeToStop.Sub(time.Now()).Round(time.Minute).Minutes(),
 			),
 		)
+
+		stopTimer := l.stopTimer
 
 		for {
 			if l.stopTimer == 0 {
@@ -268,19 +276,28 @@ func (l *Launcher) Stop() error {
 
 			if time.Now().After(timeToStop) {
 				l.logger.Info().Msg("Stopping server after timed restart")
+				l.MessageWorld("[SERVER MESSAGE] Server is shutting down now")
+				l.emitStopTimer(time.Time{})
 				break
 			}
 
-			if time.Now().Second() == 0 {
-				l.logger.Info().Msgf("Server will stop in %v minute(s)", timeToStop.Sub(time.Now()).Minutes())
+			if l.stopTimer != stopTimer {
+				l.logger.Info().Msg("Stop - Timer changed")
+				return nil
+			}
 
-				_ = l.serverApi.MessageWorld(
+			// message top of every minute
+			diff := timeToStop.Sub(time.Now())
+			if int(diff.Round(time.Second).Seconds())%60 == 0 {
+				l.MessageWorld(
 					fmt.Sprintf(
 						"[SERVER MESSAGE] The world will be coming down in [%v] minute(s), please log out before this time...",
 						timeToStop.Sub(time.Now()).Round(time.Minute).Minutes(),
 					),
 				)
 			}
+
+			l.emitStopTimer(timeToStop)
 
 			time.Sleep(1 * time.Second)
 		}
@@ -656,15 +673,23 @@ func (l *Launcher) SetStopTimer(timer int) {
 	stopTimerMutex.Unlock()
 }
 
+func (l *Launcher) SetStopTypeStopping() {
+	l.stopType = "stopping"
+}
+
+func (l *Launcher) SetStopTypeRestarting() {
+	l.stopType = "restarting"
+}
+
 // StopCancel stops the server cancel
 func (l *Launcher) StopCancel() error {
 	stopTimerMutex.Lock()
 	l.stopTimer = 0
 	stopTimerMutex.Unlock()
 
-	l.logger.Info().Msg("Timed stop cancelled")
+	l.emitStopTimer(time.Time{})
 
-	_ = l.serverApi.MessageWorld("[SERVER MESSAGE] Server shutdown cancelled")
+	l.MessageWorld("[SERVER MESSAGE] Server shutdown cancelled")
 
 	return nil
 }
@@ -1027,4 +1052,32 @@ func (l *Launcher) truncateLogs() {
 
 		return nil
 	})
+}
+
+// MessageWorld sends a message to the world
+func (l *Launcher) MessageWorld(message string) {
+	l.logger.Info().Any("message", message).Msg("Sent message to world")
+	l.websocketMgr.Broadcast("notification", message)
+	_ = l.serverApi.MessageWorld(message)
+}
+
+// emitStopTimer emits the stop timer to the websocket
+func (l *Launcher) emitStopTimer(stopTime time.Time) {
+	type StopTimer struct {
+		Time int64  `json:"time"`
+		Type string `json:"type"`
+	}
+
+	data := StopTimer{
+		Time: stopTime.Unix(),
+		Type: l.stopType,
+	}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		l.logger.Debug().Any("error", err.Error()).Msg("Error marshalling stop timer data")
+		return
+	}
+
+	l.websocketMgr.Broadcast("stopTimer", string(jsonData))
 }

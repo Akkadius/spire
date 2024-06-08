@@ -75,6 +75,18 @@
             />
 
           </ul>
+
+          <h6 class="navbar-heading" v-if="isInAdmin()">
+            Content Tools
+          </h6>
+
+          <ul class="navbar-nav mb-md-3" v-if="isInAdmin()">
+            <li class="nav-item" >
+              <router-link class="nav-link" :to="ROUTE.HOME" exact>
+                <i class="ra ra-relic-blade mr-1"></i> Editing Tools Home
+              </router-link>
+            </li>
+          </ul>
         </div>
 
         <div v-if="!isInAdmin()">
