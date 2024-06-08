@@ -3,6 +3,7 @@ package download
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/banner"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/schollz/progressbar/v3"
 	"io"
 	"net/http"
@@ -30,6 +31,8 @@ func WithProgress(destinationPath, downloadUrl string) error {
 }
 
 func download(destinationPath, downloadUrl string, attempt int) error {
+	fmt.Printf(console.FadedGray)
+	defer fmt.Printf(console.Reset)
 	banner.Loading()
 
 	var attemptStr string
@@ -37,8 +40,8 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 		attemptStr = fmt.Sprintf("| Attempt (%v of %v)", attempt, maxRetries)
 	}
 
-	fmt.Printf("[Download]  URL | %v %v\n", downloadUrl, attemptStr)
-	fmt.Printf("[Download] File | %v\n", destinationPath)
+	fmt.Printf(" › Download ›   URL | %v %v\n", downloadUrl, attemptStr)
+	fmt.Printf(" › Download ›  File | %v\n", destinationPath)
 
 	//tempDestinationPath := destinationPath + ".tmp"
 	req, err := http.NewRequest("GET", downloadUrl, nil)
@@ -65,7 +68,7 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 
 	bar := progressbar.NewOptions64(
 		resp.ContentLength,
-		progressbar.OptionSetDescription("[Download]"),
+		progressbar.OptionSetDescription(" › Download › "),
 		progressbar.OptionSetWriter(os.Stderr),
 		progressbar.OptionShowBytes(true),
 		progressbar.OptionSetWidth(50),
@@ -110,6 +113,7 @@ func download(destinationPath, downloadUrl string, attempt int) error {
 	}
 
 	fmt.Printf("\n\n")
+	fmt.Printf(console.Reset)
 
 	return nil
 }

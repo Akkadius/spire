@@ -27,6 +27,7 @@ type Updater struct {
 	serverconfig *eqemuserverconfig.Config
 	settings     *spire.Settings
 	pathmgmt     *pathmgmt.PathManagement
+	unzipper     *unzip.Unzipper
 }
 
 func NewUpdater(
@@ -35,7 +36,7 @@ func NewUpdater(
 	serverconfig *eqemuserverconfig.Config,
 	settings *spire.Settings,
 	pathmgmt *pathmgmt.PathManagement,
-
+	unzipper *unzip.Unzipper,
 ) *Updater {
 	return &Updater{
 		db:           db,
@@ -43,6 +44,7 @@ func NewUpdater(
 		serverconfig: serverconfig,
 		settings:     settings,
 		pathmgmt:     pathmgmt,
+		unzipper:     unzipper,
 	}
 }
 
@@ -116,8 +118,7 @@ func (u *Updater) InstallRelease(release string) error {
 		return err
 	}
 
-	uz := unzip.New(downloadPath, u.pathmgmt.GetEQEmuServerBinPath())
-	err = uz.Extract()
+	err = u.unzipper.Extract(downloadPath, u.pathmgmt.GetEQEmuServerBinPath())
 	if err != nil {
 		return err
 	}

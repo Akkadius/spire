@@ -40,3 +40,5 @@ data/eqtraders/recipes.json
 cpu.prof
 eqemu-server-installer-linux-amd64
 eqemu-server-installer-windows-amd64.exe
+
+*.old

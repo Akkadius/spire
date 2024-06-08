@@ -13,7 +13,6 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
 	"github.com/mattn/go-isatty"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -172,7 +171,10 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 		}
 		targetFileName := fmt.Sprintf("spire-%s-%s", runtime.GOOS, runtime.GOARCH)
 
-		s.logger.Debug().Msgf("Looping assets assetName [%v] targetFileNameZipped [%v]", assetName, targetFileNameZipped)
+		s.logger.Debug().
+			Any("assetName", assetName).
+			Any("targetFileNameZipped", targetFileNameZipped).
+			Msg("Checking asset")
 
 		if assetName == targetFileNameZipped {
 			s.logger.Info().Any("assetName", assetName).Msg("Found matching release")
@@ -182,14 +184,14 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 			downloadPath := filepath.Join(os.TempDir(), file)
 			err := download.WithProgress(downloadPath, downloadUrl)
 			if err != nil {
-				log.Println(err)
+				s.logger.Fatal().Err(err).Msg("Failed to download asset")
 			}
 
 			// unzip
 			tempFileZipped := filepath.Join(os.TempDir(), targetFileNameZipped)
 			err = s.unzipper.Extract(tempFileZipped, os.TempDir())
 			if err != nil {
-				log.Println(err)
+				s.logger.Fatal().Err(err).Msg("Failed to extract zip")
 			}
 
 			// rename running process to .old
@@ -221,15 +223,16 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 
 			// if terminal, wait for user input
 			if isatty.IsTerminal(os.Stdout.Fd()) && interactive {
-				fmt.Println("")
-				s.logger.Info().Msgf("Spire updated to version [%s] you must relaunch Spire manually", releaseVersion)
-				fmt.Println("")
-				fmt.Print("Press [Enter] to exit spire...")
-				fmt.Println("")
+				s.logger.Info().
+					Any("version", releaseVersion).
+					Msgf("Spire successfully updated, you must relaunch Spire manually")
+				s.logger.Info().Msg("Press any key to continue...")
 				bufio.NewReader(os.Stdin).ReadBytes('\n')
 				return true
 			} else {
-				s.logger.Info().Msgf("Spire updated to version [%s] you must relaunch Spire manually", releaseVersion)
+				s.logger.Info().
+					Any("version", releaseVersion).
+					Msgf("Spire successfully updated, you must relaunch Spire manually")
 				return true
 			}
 		}

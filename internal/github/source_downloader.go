@@ -18,6 +18,7 @@ type SourceDownloader struct {
 	sourceUserDir  bool // if set, sources files to user directory
 	sourcedDirPath string
 	readFiles      bool // if set, will open files and return contents
+	unzipper       *unzip.Unzipper
 }
 
 func (g *SourceDownloader) SetReadFiles(readFiles bool) {
@@ -28,8 +29,12 @@ func (g *SourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
 	g.sourceUserDir = sourceUserDir
 }
 
-func NewGithubSourceDownloader(cache *gocache.Cache) *SourceDownloader {
-	return &SourceDownloader{cache: cache, readFiles: true}
+func NewGithubSourceDownloader(cache *gocache.Cache, unzipper *unzip.Unzipper) *SourceDownloader {
+	return &SourceDownloader{
+		cache:     cache,
+		unzipper:  unzipper,
+		readFiles: true,
+	}
 }
 
 type SourceResult struct {
@@ -67,8 +72,7 @@ func (g *SourceDownloader) Source(org string, repo string, branch string, forceR
 			fmt.Println(err)
 		}
 
-		uz := unzip.New(zipFileLocalLoc, repoDir)
-		err = uz.Extract()
+		err = g.unzipper.Extract(zipFileLocalLoc, repoDir)
 		if err != nil {
 			fmt.Println(err)
 		}

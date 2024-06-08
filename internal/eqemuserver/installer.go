@@ -951,8 +951,11 @@ func (a *Installer) installBinaries() error {
 
 	// extract the zip
 	extractTo := a.pathmanager.GetEQEmuServerBinPath()
-	a.logger.Info().Any("tempPath", tempPath).Any("extractTo", extractTo).Msg("Extracting zip")
-	err = unzip.New(tempPath, extractTo).Extract()
+	a.logger.Info().
+		Any("tempPath", tempPath).
+		Any("extractTo", extractTo).
+		Msg("Extracting zip")
+	err = a.unzipper.Extract(tempPath, extractTo)
 	if err != nil {
 		return fmt.Errorf("could not extract zip: %v", err)
 	}

@@ -1,4 +1,4 @@
-## [4.6.0] 6/7/2024
+## [4.6.1] 6/7/2024
 
 **Spire Updates** Overhaul core updating logic to be more resilient to cross-platform file paths.
 

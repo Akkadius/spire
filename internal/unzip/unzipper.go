@@ -93,7 +93,11 @@ func (uz *Unzipper) Extract(src string, dest string) error {
 		return err
 	}
 
-	uz.logger.Info().Any("files count", len(r.File)).Str("src", src).Str("dest", dest).Msg("Extracted zip file")
+	uz.logger.Info().
+		Any("files count", len(r.File)).
+		Str("src", src).
+		Str("dest", dest).
+		Msg("Extracted zip file")
 
 	return nil
 }
