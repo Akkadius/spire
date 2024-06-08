@@ -16,6 +16,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -28,6 +29,7 @@ type Updater struct {
 	packageJson  []byte
 	logger       *logger.AppLogger
 	serverconfig *eqemuserverconfig.Config
+	unzipper     *unzip.Unzipper
 }
 
 // NewUpdater creates a new updater service
@@ -41,6 +43,7 @@ func NewUpdater(packageJson []byte) *Updater {
 			appLogger,
 			pathmgr,
 		),
+		unzipper: unzip.NewUnzipper(appLogger),
 	}
 }
 
@@ -78,7 +81,9 @@ func (s *Updater) getAppVersion() (error, EnvResponse) {
 func (s *Updater) CheckForUpdates(interactive bool) bool {
 	config, exists := s.serverconfig.GetIfExists()
 	if exists && config.Spire.DisableAutoUpdates && interactive {
-		s.logger.Info().Any("spire.disable_auto_updates", config.Spire.DisableAutoUpdates).Msg("Auto updates are disabled via config")
+		s.logger.Info().
+			Any("spire.disable_auto_updates", config.Spire.DisableAutoUpdates).
+			Msg("Auto updates are disabled via config")
 		return false
 	}
 
@@ -90,15 +95,18 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 	}
 	executablePath := filepath.Dir(ex)
 
+	s.logger.Debug().
+		Any("executableName", executableName).
+		Any("executablePath", executablePath).
+		Msg("Checking for updates")
+
 	// check if a .old version exists, delete it if does
-	oldExecutable := fmt.Sprintf("%s\\%s.old", executablePath, executableName)
-	if runtime.GOOS == "linux" {
-		oldExecutable = fmt.Sprintf("%s/%s.old", executablePath, executableName)
-	}
+	oldExecutable := filepath.Join(executablePath, fmt.Sprintf("%s.old", executableName))
 	if _, err := os.Stat(oldExecutable); err == nil {
+		s.logger.Info().Any("oldExecutable", oldExecutable).Msg("Removing old executable")
 		e := os.Remove(oldExecutable)
 		if e != nil {
-			log.Fatal(e)
+			s.logger.Fatal().Err(e).Msg("Failed to remove old executable")
 		}
 	}
 
@@ -116,20 +124,20 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 
 	s.logger.Info().Msg("Checking for updates")
 	s.logger.Info().Any("executableName", executableName).Msg("Running as binary")
-	s.logger.Debug().Msgf("Running as executablePath [%v]", executablePath)
+	s.logger.Debug().Any("executableName", executableName).Msg("Checking for updates")
 
 	// get releases
 	client := github.NewClient(&http.Client{Timeout: 5 * time.Second})
 	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "Akkadius", "spire")
 	if err != nil {
-		log.Println(err)
+		s.logger.Info().Err(err).Msg("Failed to get latest release")
 		return false
 	}
 
 	// get app version
 	err, e := s.getAppVersion()
 	if err != nil {
-		log.Println(err)
+		s.logger.Info().Err(err).Msg("Failed to get app version")
 	}
 
 	localVersion := fmt.Sprintf("v%v", e.Version)
@@ -146,7 +154,7 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 	if _, err := os.Stat(tmpFile); err == nil {
 		e := os.Remove(tmpFile)
 		if e != nil {
-			log.Fatal(e)
+			s.logger.Fatal().Err(e).Msg("Failed to remove asset check file")
 		}
 	}
 
@@ -177,75 +185,38 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 				log.Println(err)
 			}
 
-			// linux
-			// todo: Move these checks to use platform agnostic filepath.Join calls
-			// these will be risky to refactor so will need testing
-			if runtime.GOOS == "linux" {
-
-				// unzip
-				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, os.TempDir())
-				err = uz.Extract()
-				if err != nil {
-					log.Println(err)
-				}
-
-				// rename running process to .old
-				err := os.Rename(
-					fmt.Sprintf("%s/%s", executablePath, executableName),
-					fmt.Sprintf("%s/%s.old", executablePath, executableName),
-				)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				// relink
-				tempFile := fmt.Sprintf("%s/%s", os.TempDir(), targetFileName)
-				newExecutable := fmt.Sprintf("%s/%s", executablePath, executableName)
-				err = moveFile(tempFile, newExecutable)
-				if err != nil {
-					log.Println(err)
-				}
-
-				err = os.Chmod(newExecutable, 0755)
-				if err != nil {
-					log.Println(err)
-				}
+			// unzip
+			tempFileZipped := filepath.Join(os.TempDir(), targetFileNameZipped)
+			err = s.unzipper.Extract(tempFileZipped, os.TempDir())
+			if err != nil {
+				log.Println(err)
 			}
 
-			// windows
-			// todo: Move these checks to use platform agnostic filepath.Join calls
-			// these will be risky to refactor so will need testing
-			if runtime.GOOS == "windows" {
-				// unzip
-				tempFileZipped := fmt.Sprintf("%s\\%s", os.TempDir(), targetFileNameZipped)
-				uz := unzip.New(tempFileZipped, os.TempDir())
-				err = uz.Extract()
-				if err != nil {
-					log.Println(err)
-				}
+			// rename running process to .old
+			err = os.Rename(
+				filepath.Join(executablePath, executableName),
+				filepath.Join(executablePath, fmt.Sprintf("%s.old", executableName)),
+			)
+			if err != nil {
+				s.logger.Fatal().Err(err).Msg("Failed to rename executable")
+			}
 
-				// rename running process to .old
-				err := os.Rename(
-					fmt.Sprintf("%s\\%s", executablePath, executableName),
-					fmt.Sprintf("%s\\%s.old", executablePath, executableName),
-				)
-				if err != nil {
-					log.Fatal(err)
-				}
+			// relink
+			lookTempFile := filepath.Join(os.TempDir(), targetFileName)
+			tempFile, err := exec.LookPath(lookTempFile)
+			if err != nil {
+				s.logger.Fatal().Err(err).Msg("Failed to find executable")
+			}
 
-				// relink
-				tempFile := fmt.Sprintf("%s\\%s.exe", os.TempDir(), targetFileName)
-				newExecutable := fmt.Sprintf("%s\\%s", executablePath, executableName)
-				err = moveFile(tempFile, newExecutable)
-				if err != nil {
-					log.Println(err)
-				}
+			newExecutable := fmt.Sprintf("%s%s%s", executablePath, string(filepath.Separator), executableName)
+			err = moveFile(tempFile, newExecutable)
+			if err != nil {
+				s.logger.Fatal().Err(err).Msg("Failed to move executable")
+			}
 
-				err = os.Chmod(newExecutable, 0755)
-				if err != nil {
-					log.Println(err)
-				}
+			err = os.Chmod(newExecutable, 0755)
+			if err != nil {
+				s.logger.Fatal().Err(err).Msg("Failed to chmod executable")
 			}
 
 			// if terminal, wait for user input

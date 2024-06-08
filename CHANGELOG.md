@@ -1,3 +1,7 @@
+## [4.6.0] 6/7/2024
+
+**Spire Updates** Overhaul core updating logic to be more resilient to cross-platform file paths.
+
 ## [4.5.5] 6/5/2024
 
 **Launcher** Fix issue of initializing configuration when a user doesn't already have them in their config.
