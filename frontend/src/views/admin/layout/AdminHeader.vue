@@ -306,7 +306,7 @@ export default {
       const minutes = duration.minutes();
       const seconds = duration.seconds();
 
-      return `${minutes} minutes, ${seconds} seconds remaining`;
+      return `${minutes} minutes, ${seconds} seconds`;
     }
   },
 }
