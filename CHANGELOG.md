@@ -1,6 +1,7 @@
-## [4.8.0] 6/8/2024
+## [4.8.1] 6/8/2024
 
 **Spire Admin** Fix crash log watcher by moving it out of the launcher and into its own processor.
+**Configuration** Make adjustments to configuration loading to unify and make it more resilient.
 
 ## [4.7.1] 6/8/2024
 

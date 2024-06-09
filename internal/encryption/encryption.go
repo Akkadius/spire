@@ -132,7 +132,7 @@ func (e *Encrypter) Decrypt(encryptedString string, keyString string) string {
 
 func (e *Encrypter) loadEncryptionKey() string {
 	if e.serverconfig.Exists() {
-		c := e.serverconfig.Get()
+		c, _ := e.serverconfig.Get()
 		if len(c.Spire.EncryptionKey) != 0 {
 			// only if we don't have one predefined already, use the encryption key
 			// as the JWT secret key
@@ -152,7 +152,7 @@ func (e *Encrypter) loadEncryptionKey() string {
 
 func (e *Encrypter) initializeEncryption() {
 	if e.serverconfig.Exists() {
-		c := e.serverconfig.Get()
+		c, _ := e.serverconfig.Get()
 		if len(c.Spire.EncryptionKey) == 0 {
 			c.Spire.EncryptionKey = e.generateAesKey()
 			e.logger.Info().Any("encryption_key", c.Spire.EncryptionKey).Msg("Initialized new encryption key in EQEmu server config [spire:encryption_key]")

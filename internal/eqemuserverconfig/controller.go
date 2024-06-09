@@ -28,7 +28,8 @@ func (a *Controller) Routes() []*routes.Route {
 }
 
 func (a *Controller) get(c echo.Context) error {
-	return c.JSON(http.StatusOK, a.serverconfig.Get())
+	cfg, _ := a.serverconfig.Get()
+	return c.JSON(http.StatusOK, cfg)
 }
 
 func (a *Controller) save(c echo.Context) error {
@@ -67,7 +68,7 @@ type LauncherConfig struct {
 }
 
 func (a *Controller) getLauncherConfig(c echo.Context) error {
-	cfg := a.serverconfig.Get()
+	cfg, _ := a.serverconfig.Get()
 	l := LauncherConfig{
 		RunSharedMemory:             cfg.WebAdmin.Launcher.RunSharedMemory,
 		RunLoginserver:              cfg.WebAdmin.Launcher.RunLoginserver,
@@ -90,7 +91,7 @@ func (a *Controller) saveLauncherConfig(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind config")
 	}
 
-	cfg := a.serverconfig.Get()
+	cfg, _ := a.serverconfig.Get()
 	cfg.WebAdmin.Launcher.RunSharedMemory = config.RunSharedMemory
 	cfg.WebAdmin.Launcher.RunLoginserver = config.RunLoginserver
 	cfg.WebAdmin.Launcher.RunQueryServ = config.RunQueryServ

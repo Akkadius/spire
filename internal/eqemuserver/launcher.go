@@ -142,7 +142,7 @@ func (l *Launcher) Process() {
 
 // StartLauncherProcess starts the launcher process
 func (l *Launcher) StartLauncherProcess() error {
-	cfg := l.serverconfig.Get()
+	cfg, _ := l.serverconfig.Get()
 	cfg.WebAdmin.Launcher.IsRunning = false // shut off legacy launcher in-case it's running
 	cfg.Spire.LauncherStart = true
 	err := l.serverconfig.Save(cfg)
@@ -214,7 +214,7 @@ func (l *Launcher) Start() error {
 		return err
 	}
 
-	cfg := l.serverconfig.Get()
+	cfg, _ := l.serverconfig.Get()
 	cfg.Spire.LauncherStart = true
 	err = l.serverconfig.Save(cfg)
 	if err != nil {
@@ -290,7 +290,7 @@ func (l *Launcher) Stop() error {
 		}
 	}
 
-	cfg := l.serverconfig.Get()
+	cfg, _ := l.serverconfig.Get()
 	cfg.WebAdmin.Launcher.IsRunning = false // shut off legacy launcher in-case it's running
 	cfg.Spire.LauncherStart = false
 	err := l.serverconfig.Save(cfg)
@@ -587,7 +587,7 @@ func (l *Launcher) startServerProcessSync(name string, args ...string) error {
 // loadServerConfig loads the server config
 // this is called on startup and when the server config changes
 func (l *Launcher) loadServerConfig() {
-	cfg := l.serverconfig.Get()
+	cfg, _ := l.serverconfig.Get()
 	l.isRunning = cfg.Spire.LauncherStart
 	l.runSharedMemory = cfg.WebAdmin.Launcher.RunSharedMemory
 	l.runLoginserver = cfg.WebAdmin.Launcher.RunLoginserver

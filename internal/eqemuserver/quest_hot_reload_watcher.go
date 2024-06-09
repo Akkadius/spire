@@ -108,7 +108,7 @@ func (l *QuestHotReloadWatcher) Process() {
 // loadServerConfig loads the server config
 // this is called on startup and when the server config changes
 func (l *QuestHotReloadWatcher) loadServerConfig() {
-	cfg := l.serverconfig.Get()
+	cfg, _ := l.serverconfig.Get()
 	l.isRunning = cfg.WebAdmin.Quests.HotReload
 }
 

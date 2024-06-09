@@ -278,7 +278,7 @@ func (a *Installer) sendLegacyAnalyticsEvent(eventName string, eventData string)
 		h.KernelArch,
 	)
 
-	config := a.config.Get()
+	config, _ := a.config.Get()
 
 	q := u.Query()
 	q.Set("api_key", "24a0bde2e5bacd65bcab06a9ac40b62c")
@@ -2048,7 +2048,7 @@ func RandStringRunes(n int) string {
 
 func (a *Installer) setPostInstallConfigValues() error {
 	// load the config
-	config := a.config.Get()
+	config, _ := a.config.Get()
 
 	// set the post install config values
 	if config.WebAdmin != nil {

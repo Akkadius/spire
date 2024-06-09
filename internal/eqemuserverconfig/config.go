@@ -163,81 +163,46 @@ type EQEmuConfigJson struct {
 
 var cachedConfig *EQEmuConfigJson
 var lastModifiedTime time.Time
-var lock = &sync.Mutex{}
+var mutex = &sync.Mutex{}
 
 // Get returns the eqemu config json
 // If the file has been modified since the last read, it will re-read the file
 // We utilize a cache to prevent reading the file on every call
-func (e *Config) Get() EQEmuConfigJson {
+func (e *Config) Get() (EQEmuConfigJson, error) {
 	configFile := e.pathmgmt.GetEQEmuServerConfigFilePath()
-	stat, err := os.Stat(configFile)
-	if err != nil {
-		return EQEmuConfigJson{}
-	}
-
 	if len(configFile) > 0 {
+		stat, err := os.Stat(configFile)
+		if err != nil {
+			return EQEmuConfigJson{}, err
+		}
+
 		if stat.ModTime().After(lastModifiedTime) || lastModifiedTime.IsZero() {
 			e.logger.Debug().Any("path", configFile).Msg("Reading eqemu config file")
 			body, err := os.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
 			if err != nil {
-				e.logger.Fatal().Err(err).Any("path", configFile).Msg("unable to read eqemu config file")
+				return EQEmuConfigJson{}, err
 			}
 
 			config := EQEmuConfigJson{}
 			err = json.Unmarshal(body, &config)
 			if err != nil {
-				e.logger.Fatal().Err(err).Any("path", configFile).Msg("unable to unmarshal eqemu config file")
+				return EQEmuConfigJson{}, err
 			}
 
 			e.setConfigDefaults(&config)
 
 			lastModifiedTime = stat.ModTime()
-			lock.Lock()
+			mutex.Lock()
 			cachedConfig = &config
-			lock.Unlock()
+			mutex.Unlock()
 
-			return config
+			return config, nil
 		} else if cachedConfig != nil {
-			return *cachedConfig
+			return *cachedConfig, nil
 		}
 	}
 
-	return EQEmuConfigJson{}
-}
-
-// GetIfExists returns the eqemu config json if the file exists
-// This function shouldn't really exist and the original getter should have bubbled errors up
-// Clean all of this up another time
-// TODO - Consolidate this with Get() and properly bubble up errors
-func (e *Config) GetIfExists() (EQEmuConfigJson, bool) {
-	configFile := e.pathmgmt.GetEQEmuServerConfigFilePath()
-	stat, err := os.Stat(configFile)
-	if err != nil {
-		return EQEmuConfigJson{}, false
-	}
-
-	if len(configFile) > 0 {
-		if err == nil && stat.ModTime().After(lastModifiedTime) || lastModifiedTime.IsZero() {
-			e.logger.Debug().Any("path", configFile).Msg("Reading eqemu config file")
-			body, _ := os.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
-
-			config := EQEmuConfigJson{}
-			_ = json.Unmarshal(body, &config)
-
-			e.setConfigDefaults(&config)
-
-			lastModifiedTime = stat.ModTime()
-			lock.Lock()
-			cachedConfig = &config
-			lock.Unlock()
-
-			return config, true
-		} else if cachedConfig != nil {
-			return *cachedConfig, true
-		}
-	}
-
-	return EQEmuConfigJson{}, false
+	return EQEmuConfigJson{}, nil
 }
 
 // Exists will return true if the eqemu_config.json file exists

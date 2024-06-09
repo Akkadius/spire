@@ -79,7 +79,7 @@ func getEQEmuLocalMySQLConfig(serverconfig *eqemuserverconfig.Config) (*MySQLCon
 	}
 
 	// load eqemu config if exists
-	config := serverconfig.Get()
+	config, _ := serverconfig.Get()
 	if config.Server.Database != nil && config.Server.Database.Db != "" {
 		port, err := strconv.Atoi(config.Server.Database.Port)
 		if err != nil {
@@ -210,7 +210,7 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 // Local spire database connection
 func provideSpireDatabase(serverconfig *eqemuserverconfig.Config) (*gorm.DB, error) {
 	// if booting from local server folder
-	cfg := serverconfig.Get()
+	cfg, _ := serverconfig.Get()
 	if cfg.Server.Database != nil && cfg.Server.Database.Db != "" {
 		return nil, nil
 	}

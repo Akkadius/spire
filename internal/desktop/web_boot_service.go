@@ -48,8 +48,9 @@ func (c *WebBoot) Boot() {
 	}
 
 	// if we have a port set in the config, use that instead
-	if c.config.Get().Spire.HttpPort != 0 {
-		port = c.config.Get().Spire.HttpPort
+	cfg, _ := c.config.Get()
+	if cfg.Spire.HttpPort != 0 {
+		port = cfg.Spire.HttpPort
 	}
 
 	// if we have a port set in the environment, use that instead

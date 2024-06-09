@@ -87,7 +87,7 @@ func (l *CrashLogWatcher) Process() {
 // loadServerConfig loads the server config
 // this is called on startup and when the server config changes
 func (l *CrashLogWatcher) loadServerConfig() {
-	cfg := l.serverconfig.Get()
+	cfg, _ := l.serverconfig.Get()
 	l.serverLongName = cfg.Server.World.Longname
 
 	// kill the watcher if it exists

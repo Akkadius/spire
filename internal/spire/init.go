@@ -147,7 +147,7 @@ func (o *Init) SourceSpireTables() error {
 // into Spire tables from the emulator server configuration
 func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error {
 	db := o.connections.SpireDbNoLog()
-	cfg := o.serverconfig.Get()
+	cfg, _ := o.serverconfig.Get()
 
 	// connection already exists, let's just update it
 	var c models.ServerDatabaseConnection
@@ -384,7 +384,7 @@ func (o *Init) SyncDbName() {
 	db := o.connections.SpireDbNoLog()
 	var c models.ServerDatabaseConnection
 	db.First(&c)
-	cfg := o.serverconfig.Get()
+	cfg, _ := o.serverconfig.Get()
 	if c.ID > 0 {
 		c.Name = cfg.Server.World.Longname
 		db.Save(&c)

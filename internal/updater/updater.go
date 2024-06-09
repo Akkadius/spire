@@ -78,8 +78,8 @@ func (s *Updater) getAppVersion() (error, EnvResponse) {
 
 // CheckForUpdates checks for updates to the app
 func (s *Updater) CheckForUpdates(interactive bool) bool {
-	config, exists := s.serverconfig.GetIfExists()
-	if exists && config.Spire.DisableAutoUpdates && interactive {
+	config, err := s.serverconfig.Get()
+	if err == nil && config.Spire.DisableAutoUpdates && interactive {
 		s.logger.Info().
 			Any("spire.disable_auto_updates", config.Spire.DisableAutoUpdates).
 			Msg("Auto updates are disabled via config")

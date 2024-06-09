@@ -165,7 +165,8 @@ func (a *Controller) getServerStats(c echo.Context) error {
 		r.PlayersOnline = clientList
 	}
 
-	r.ServerName = a.serverconfig.Get().Server.World.Longname
+	cfg, _ := a.serverconfig.Get()
+	r.ServerName = cfg.Server.World.Longname
 
 	return c.JSON(http.StatusOK, r)
 }
@@ -1011,7 +1012,7 @@ func (a *Controller) preflight(c echo.Context) error {
 // getLockStatus returns the lock status of the server
 // helper method
 func (a *Controller) getLockStatus() bool {
-	cfg := a.serverconfig.Get()
+	cfg, _ := a.serverconfig.Get()
 
 	// first, pull lock status from world API if it is available
 	// fall back to config
@@ -1027,7 +1028,7 @@ func (a *Controller) getLockStatus() bool {
 }
 
 func (a *Controller) toggleServerLock(c echo.Context) error {
-	cfg := a.serverconfig.Get()
+	cfg, _ := a.serverconfig.Get()
 	locked := a.getLockStatus()
 
 	// toggle lock
