@@ -59,7 +59,7 @@ RUN chsh -s /bin/bash go
 
 USER go
 
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/air-verse/air@latest
 RUN go install github.com/gobuffalo/packr/packr@latest
 
 #######################################################################

@@ -79,7 +79,7 @@ USER go
 # air   - Go project hot reload
 # packr - Pack filesystem into go binary
 #############################################
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/air-verse/air@latest
 RUN go install github.com/gobuffalo/packr/packr@v1.30.1
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.5
 RUN go install github.com/google/wire/cmd/wire@latest
