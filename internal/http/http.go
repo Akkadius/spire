@@ -33,6 +33,7 @@ type Server struct {
 	watcher                *eqemuserver.QuestHotReloadWatcher
 	launcher               *eqemuserver.Launcher
 	websocketClientManager *websocket.ClientManager
+	crashLogWatcher        *eqemuserver.CrashLogWatcher
 }
 
 func NewServer(
@@ -41,6 +42,7 @@ func NewServer(
 	watcher *eqemuserver.QuestHotReloadWatcher,
 	launcher *eqemuserver.Launcher,
 	websocket *websocket.ClientManager,
+	crashLogWatcher *eqemuserver.CrashLogWatcher,
 ) *Server {
 	return &Server{
 		logger:                 logger,
@@ -48,6 +50,7 @@ func NewServer(
 		watcher:                watcher,
 		launcher:               launcher,
 		websocketClientManager: websocket,
+		crashLogWatcher:        crashLogWatcher,
 	}
 }
 
@@ -161,6 +164,8 @@ func (c *Server) Serve(port uint) error {
 	go func() {
 		c.launcher.ServerProcessLauncherWatchdog()
 	}()
+
+	go c.crashLogWatcher.Process()
 
 	c.logger.Info().Any("port", port).Msgf("Starting Spire HTTP server")
 

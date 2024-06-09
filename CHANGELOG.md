@@ -1,3 +1,7 @@
+## [4.8.0] 6/8/2024
+
+**Spire Admin** Fix crash log watcher by moving it out of the launcher and into its own processor.
+
 ## [4.7.1] 6/8/2024
 
 **Spire Admin** Add realtime websocket streaming to display shutdown/restart messages and timer countdowns in the server admin header.
