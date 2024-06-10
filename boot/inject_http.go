@@ -11,6 +11,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/expansions"
 	apphttp "github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
@@ -61,6 +62,7 @@ var httpSet = wire.NewSet(
 	websocket.NewController,
 	backup.NewController,
 	system.NewController,
+	expansions.NewController,
 	provideControllers,
 	NewRouter,
 )
@@ -195,6 +197,7 @@ func provideControllers(
 	backupController *backup.Controller,
 	websocketController *websocket.Controller,
 	systemController *system.Controller,
+	expansionsController *expansions.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -218,6 +221,7 @@ func provideControllers(
 			websocketController,
 			systemController,
 			authedAnalyticsController,
+			expansionsController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,

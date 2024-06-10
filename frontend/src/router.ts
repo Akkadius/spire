@@ -252,6 +252,11 @@ const router = new Router({
           meta: {title: "Expansions"},
         },
         {
+          path: ROUTE.EXPANSIONS_MANAGEMENT,
+          component: () => import('./views/expansions/ExpansionManagement.vue'),
+          meta: {title: "Server Expansion Management"},
+        },
+        {
           path: ROUTE.BOT_SPELLS_EDIT,
           component: () => import('./views/bots/BotSpellsEditor.vue'),
           meta: {title: "Bot Spells List Editor"},
