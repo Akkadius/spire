@@ -4,9 +4,11 @@
 
       <div class="row align-items-center">
         <div class="mr-3 pr-5">
-          <h6 class="header-pretitle">
+          <h6 class="header-pretitle d-inline-block mr-3">
             {{ pageName }}
           </h6>
+
+          <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
 
           <h1
             class="header-title"
@@ -31,7 +33,6 @@
 
           </h1>
 
-          <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
 
 
 

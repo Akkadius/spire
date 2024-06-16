@@ -3,7 +3,6 @@ package websocket
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -44,14 +43,7 @@ type SpireWebsocketMessage struct {
 }
 
 func (a *Controller) websocketHandler(c echo.Context) error {
-	user := request.GetUser(c)
 	websocket.Handler(func(ws *websocket.Conn) {
-		// if no user authorized, kill connection
-		if user.ID == 0 {
-			_ = a.handler.HandleUnauthorized(ws)
-			_ = ws.Close()
-		}
-
 		defer ws.Close()
 		for {
 			// Register client

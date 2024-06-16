@@ -109,7 +109,7 @@ func (h *Handler) HandleExecServerBin(ws *websocket.Conn, msg string) error {
 }
 
 func (h *Handler) HandleUnauthorized(ws *websocket.Conn) error {
-	err := websocket.Message.Send(ws, "Unauthorized")
+	err := websocket.Message.Send(ws, "{\"error\": \"Unauthorized\"}")
 	if err != nil {
 		return err
 	}

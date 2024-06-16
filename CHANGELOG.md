@@ -1,3 +1,7 @@
+## [4.8.6] 6/16/2024
+
+**Spire Admin** Fix issue under unauthenticated local installations where websocket connections would get caught in an authorization loop, spamming the console. Unauthenticated Spire installations will now work properly.
+
 ## [4.8.5] 6/15/2024
 
 * **Spire Admin** Add **Server Process Management** to the permissions page.
