@@ -35,7 +35,10 @@
 
         </div>
 
-
+        <div
+          class="d-none d-lg-block mr-3 ml-3"
+          style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
+        />
 
         <div class="col-lg-8 col-sm-12 pl-3 pr-0 ml-0 text-center">
 
@@ -321,6 +324,6 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 450px; /* Set the width to the desired length */
+  max-width: 380px; /* Set the width to the desired length */
 }
 </style>

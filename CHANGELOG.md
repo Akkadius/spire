@@ -1,4 +1,4 @@
-## [4.8.3] 6/15/2024
+## [4.8.4] 6/15/2024
 
 * **Spire Admin** Add **Server Process Management** to the permissions page.
 * **Spire Admin** Adjust the UI for the admin header to be more responsive, reduce clutter by removing less valuable status indicators such as UCS and Launcher which can be found on the dashboard page.
