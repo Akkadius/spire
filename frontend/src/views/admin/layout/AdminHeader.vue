@@ -8,7 +8,10 @@
             {{ pageName }}
           </h6>
 
-          <h1 class="header-title" style="    font-size: 1.1rem;">
+          <h1
+            class="header-title truncate-server-name"
+            :title="stats.server_name"
+            style="font-size: 1.1rem;">
             <server-process-button-component class="d-inline-block mr-3"/>
 
             <a
@@ -32,10 +35,7 @@
 
         </div>
 
-        <div
-          class="d-none d-lg-block mr-3 ml-3"
-          style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-        />
+
 
         <div class="col-lg-8 col-sm-12 pl-3 pr-0 ml-0 text-center">
 
@@ -55,10 +55,10 @@
             />
 
             <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase">Zoneservers</small>
-              <span class="h2 mb-0 ml-3">
-            {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
-          </span>
+                <small class="text-muted text-uppercase">Zoneservers</small>
+                <span class="h2 mb-0 ml-3">
+                {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
+              </span>
             </div>
 
             <div
@@ -69,7 +69,7 @@
             <div class="col-lg-auto col-sm-12 mt-3-mobile">
               <small class="text-muted text-uppercase mr-1">Players Online</small>
               <span class="h2 mb-0 ml-3">
-            {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
+              {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
           </span>
             </div>
 
@@ -317,4 +317,10 @@ export default {
 </script>
 
 <style>
+.truncate-server-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 450px; /* Set the width to the desired length */
+}
 </style>
