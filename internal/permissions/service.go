@@ -65,9 +65,15 @@ func (s *Service) RegisterManualResources() map[string][]string {
 		"Server Manual Backup":     {"eqemuserver/manual-backup"},
 		"Server Pre-Flight Checks": {"eqemuserver/pre-flight"},
 		"Server Reload API":        {"eqemuserver/reload"},
-		"Server Process Stats":     {"eqemuserver/server-stats"},
-		"Server Zone Servers":      {"eqemuserver/zone-list"},
-		"Spire Settings":           {"spire/setting"},
+		"Server Process Management": {
+			"eqemuserver/server/start",
+			"eqemuserver/server/stop",
+			"eqemuserver/server/restart",
+			"eqemuserver/server/stop-cancel",
+		},
+		"Server Process Stats": {"eqemuserver/server-stats"},
+		"Server Zone Servers":  {"eqemuserver/zone-list"},
+		"Spire Settings":       {"spire/setting"},
 	}
 }
 

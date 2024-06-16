@@ -629,3 +629,6 @@ html, body{
     margin-top:5px;
 }
 
+.dropdown-menu {
+    z-index: 10000;
+}

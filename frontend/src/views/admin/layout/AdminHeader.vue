@@ -3,12 +3,14 @@
     <div class="card-body pl-4 pr-4 pt-3 pb-3">
 
       <div class="row align-items-center">
-        <div class="col-lg-4 col-sm-12">
+        <div class="mr-3 pr-5">
           <h6 class="header-pretitle">
             {{ pageName }}
           </h6>
 
           <h1 class="header-title" style="    font-size: 1.1rem;">
+            <server-process-button-component class="d-inline-block mr-3"/>
+
             <a
               href="javascript:"
               @click="toggleServerLock()"
@@ -26,19 +28,58 @@
 
           <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
 
+
+
         </div>
 
-        <div class="col-lg-8 col-sm-12 pl-0 pr-0">
+        <div
+          class="d-none d-lg-block mr-3 ml-3"
+          style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
+        />
 
-          <div class="row align-items-center text-center mt-3-mobile">
+        <div class="col-lg-8 col-sm-12 pl-3 pr-0 ml-0 text-center">
+
+          <div class="row align-items-center">
+
+            <div class="col-lg-auto col-sm-12 mt-3-mobile">
+              <small class="text-muted text-uppercase mr-1">World</small>
+              <span
+                :class="`badge badge-${stats.world_online ? 'success' : 'danger'} ml-3`"
+                style="font-size: 12px"
+              >{{ stats.world_online ? 'Online' : 'Offline' }}</span>
+            </div>
+
+            <div
+              class="d-none d-lg-block mr-3 ml-3"
+              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
+            />
+
+            <div class="col-lg-auto col-sm-12 mt-3-mobile">
+              <small class="text-muted text-uppercase">Zoneservers</small>
+              <span class="h2 mb-0 ml-3">
+            {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
+          </span>
+            </div>
+
+            <div
+              class="d-none d-lg-block mr-3 ml-3"
+              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
+            />
+
+            <div class="col-lg-auto col-sm-12 mt-3-mobile">
+              <small class="text-muted text-uppercase mr-1">Players Online</small>
+              <span class="h2 mb-0 ml-3">
+            {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
+          </span>
+            </div>
+
+            <div
+              class="d-none d-lg-block mr-3 ml-3"
+              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
+            />
 
             <!-- Resource Utilization -->
-            <div class="col-lg-auto col-sm-12 pl-0 pr-0">
-              <!--            <small-->
-              <!--              style="position: absolute; top: 25px; left: 0px;"-->
-              <!--              class="text-muted text-uppercase"-->
-              <!--            >Resources</small>-->
-
+            <div class="col-lg-auto col-sm-12 pl-3 pr-3 mt-3-mobile">
               <vue-ellipse-progress
                 :progress="cpuPercent"
                 animation="default 300 0"
@@ -51,11 +92,11 @@
                 font-size=".8rem"
                 font-color="#95aac9"
               >
-            <span
-              slot="legend-caption"
-              class="text-muted font-weight-bold"
-              style="font-size: 10px"
-            > CPU </span>
+                <span
+                  slot="legend-caption"
+                  class="text-muted font-weight-bold"
+                  style="font-size: 10px"
+                > CPU </span>
               </vue-ellipse-progress>
 
               <vue-ellipse-progress
@@ -71,55 +112,18 @@
                 font-size=".8rem"
                 font-color="#95aac9"
               >
-            <span
-              slot="legend-caption"
-              class="text-muted font-weight-bold"
-              style="font-size: 10px"
-            > MEM</span>
+              <span
+                slot="legend-caption"
+                class="text-muted font-weight-bold"
+                style="font-size: 10px"
+              > MEM</span>
               </vue-ellipse-progress>
             </div>
 
-            <div class="col-lg-auto col-sm-12">
-              <small class="text-muted text-uppercase mr-1">Launcher</small>
-              <span
-                :class="`badge badge-${stats.launcher_online ? 'success' : 'danger'} ml-3`"
-                style="font-size: 12px"
-              >{{ stats.launcher_online ? 'Online' : 'Offline' }}</span>
-            </div>
-
-            <div class="col-lg-auto col-sm-12">
-              <small class="text-muted text-uppercase mr-1">World</small>
-              <span
-                :class="`badge badge-${stats.world_online ? 'success' : 'danger'} ml-3`"
-                style="font-size: 12px"
-              >{{ stats.world_online ? 'Online' : 'Offline' }}</span>
-            </div>
-
-            <div class="col-lg-auto col-sm-12">
-              <small class="text-muted text-uppercase mr-1">UCS</small>
-              <span
-                :class="`badge badge-${stats.ucs_online ? 'success' : 'danger'} ml-3`"
-                style="font-size: 12px"
-              >{{ stats.ucs_online ? 'Online' : 'Offline' }}</span>
-            </div>
-
-            <div class="col-lg-auto col-sm-12">
-              <small class="text-muted text-uppercase">Zoneservers</small>
-              <span class="h2 mb-0 ml-3">
-            {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
-          </span>
-            </div>
-
-            <div class="col-lg-auto col-sm-12">
-              <small class="text-muted text-uppercase mr-1">Players Online</small>
-              <span class="h2 mb-0 ml-3">
-            {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
-          </span>
-            </div>
-
-            <div class="col-lg-1 col-sm-12 text-right-no-mobile">
-              <server-process-button-component/>
-            </div>
+<!--            <div-->
+<!--              class="d-none d-lg-block ml-3 mr-3"-->
+<!--              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"-->
+<!--            />-->
           </div>
 
         </div>

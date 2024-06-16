@@ -1,10 +1,9 @@
 <template>
   <div class="dropdown">
-
     <a
       href="#"
       style="color: white"
-      class="dropdown-toggle btn btn-primary lift"
+      class="dropdown-toggle btn btn-primary lift btn-sm"
       role="button"
       data-toggle="dropdown"
       aria-haspopup="true"
@@ -13,21 +12,21 @@
       <i class="fe fe-power"></i> Power
     </a>
 
-    <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu dropdown-menu-left">
       <a href="#" @click="startServerModal" class="dropdown-item">
-        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (p)</small>
+        <i class="fa fa-keyboard-o" aria-hidden="true"></i> (p)
         Power On
       </a>
       <a href="#" @click="stopServerModal" class="dropdown-item">
-        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (s)</small>
+        <i class="fa fa-keyboard-o" aria-hidden="true"></i> (s)
         Power Off
       </a>
       <a href="#" @click="restartServerModal" class="dropdown-item">
-        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (r)</small>
+        <i class="fa fa-keyboard-o" aria-hidden="true"></i> (r)
         Restart [r]
       </a>
       <a href="#" @click="cancelServerRestartModal" class="dropdown-item">
-        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (c)</small>
+        <i class="fa fa-keyboard-o" aria-hidden="true"></i> (c)
         Cancel Restart [c]
       </a>
     </div>
