@@ -9,23 +9,25 @@
           </h6>
 
           <h1
-            class="header-title truncate-server-name"
+            class="header-title"
             :title="stats.server_name"
             style="font-size: 1.1rem;">
+
             <server-process-button-component class="d-inline-block mr-3"/>
 
             <a
-              href="javascript:"
+              href="javascript:void(0)"
               @click="toggleServerLock()"
+              class="truncate-server-name"
             >
               <i
                 :class="'fe ' + (serverLocked ? 'fe-lock' : 'fe-unlock')  + ' pr-2'"
                 :title="serverLocked ? 'Server is locked' : 'Server is unlocked'"
                 :style="`color: ${serverLocked ? 'red' : 'gray'}`"
               />
-            </a>
 
-            <span v-if="stats.server_name">{{ stats.server_name }}</span>
+              <span v-if="stats.server_name">{{ stats.server_name }}</span>
+            </a>
 
           </h1>
 
@@ -321,9 +323,12 @@ export default {
 
 <style>
 .truncate-server-name {
-  white-space: nowrap;
+  margin-top: 10px;
+  display: inline-flex;
+  -webkit-line-clamp: 8; /* Number of lines to show */
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 380px; /* Set the width to the desired length */
+  max-width: 240px; /* Set the max-width to the desired length */
 }
 </style>
