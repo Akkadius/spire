@@ -3,6 +3,7 @@ package updater
 import (
 	"bufio"
 	"context"
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
@@ -177,19 +178,23 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 			Msg("Checking asset")
 
 		if assetName == targetFileNameZipped {
+			hash := fmt.Sprintf("%x", md5.Sum([]byte(downloadUrl)))
+			tmpdir := filepath.Join(os.TempDir(), "spire-update", hash)
+			_ = os.MkdirAll(tmpdir, os.ModePerm)
+
 			s.logger.Info().Any("assetName", assetName).Msg("Found matching release")
 
 			// download
 			file := path.Base(downloadUrl)
-			downloadPath := filepath.Join(os.TempDir(), file)
+			downloadPath := filepath.Join(tmpdir, file)
 			err := download.WithProgress(downloadPath, downloadUrl)
 			if err != nil {
 				s.logger.Fatal().Err(err).Msg("Failed to download asset")
 			}
 
 			// unzip
-			tempFileZipped := filepath.Join(os.TempDir(), targetFileNameZipped)
-			err = s.unzipper.Extract(tempFileZipped, os.TempDir())
+			tempFileZipped := filepath.Join(tmpdir, targetFileNameZipped)
+			err = s.unzipper.Extract(tempFileZipped, tmpdir)
 			if err != nil {
 				s.logger.Fatal().Err(err).Msg("Failed to extract zip")
 			}
@@ -204,7 +209,7 @@ func (s *Updater) CheckForUpdates(interactive bool) bool {
 			}
 
 			// relink
-			lookTempFile := filepath.Join(os.TempDir(), targetFileName)
+			lookTempFile := filepath.Join(tmpdir, targetFileName)
 			tempFile, err := exec.LookPath(lookTempFile)
 			if err != nil {
 				s.logger.Fatal().Err(err).Msg("Failed to find executable")

@@ -1,3 +1,7 @@
+## [4.8.7] 6/16/2024
+
+**Updating** Potential fixes for certain windows users during automatic updating.
+
 ## [4.8.6] 6/16/2024
 
 **Spire Admin** Fix issue under unauthenticated local installations where websocket connections would get caught in an authorization loop, spamming the console. Unauthenticated Spire installations will now work properly.
