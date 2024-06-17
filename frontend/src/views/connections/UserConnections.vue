@@ -108,7 +108,8 @@
 
                 <b-avatar-group rounded="lg" overlap="0.05" class="d-inline-block mt-1">
                   <div
-                    v-for="user in c.database_connection.user_server_database_connections"
+                    v-for="user in c.database_connection.user_server_database_connections.
+                      filter(u => u.user.deleted_at === null && u.user.id > 0)"
                     :key="user.user.id"
                     @click="manageUser(user.user, c)"
                   >

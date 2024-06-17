@@ -103,6 +103,10 @@ const (
 	AppEnvProduction = "production"
 )
 
+func GetAppEnv() string {
+	return os.Getenv("APP_ENV")
+}
+
 func IsAppEnvDev() bool {
 	return os.Getenv("APP_ENV") == AppEnvDev
 }

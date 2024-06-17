@@ -26,6 +26,10 @@
 
           <hr>
 
+          <div class="alert alert-warning" role="alert">
+            <i class="fa fa-info-circle mr-1"></i> After user creation, you will need to set the users permissions in the <router-link to="/connections">connections</router-link> page. New users have no permissions by default.
+          </div>
+
           <div class="mt-3">
 
             <info-error-banner

@@ -343,7 +343,7 @@ export default {
       // user defined
       const r = await SpireApi.v1().get('/connections')
       if (r.data && r.data.data) {
-        this.connections = r.data.data
+        this.connections = r.data.data.filter(c => c.database_connection.id > 0)
 
         let isDefaultActive = true
         for (const c of r.data.data) {

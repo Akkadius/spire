@@ -652,22 +652,17 @@ func (cc *ConnectionsController) setDiscordWebhook(c echo.Context) error {
 		)
 	}
 
-	if len(webhookUrl.WebhookUrl) > 0 {
-		conn.DiscordWebhookUrl = webhookUrl.WebhookUrl
-		_ = cc.db.GetSpireDb().
-			Model(&conn).
-			Where("created_by = ? and id = ?", ctx.ID, connectionId).
-			Update("discord_webhook_url", webhookUrl.WebhookUrl)
+	conn.DiscordWebhookUrl = webhookUrl.WebhookUrl
+	_ = cc.db.GetSpireDb().
+		Model(&conn).
+		Where("created_by = ? and id = ?", ctx.ID, connectionId).
+		Update("discord_webhook_url", webhookUrl.WebhookUrl)
 
-		return c.JSON(
-			http.StatusOK,
-			"Webhook updated successfully!",
-		)
-	}
+	cc.db.PurgeUserDbCache(ctx.ID)
 
 	return c.JSON(
-		http.StatusInternalServerError,
-		echo.Map{"error": "Failed to update discord webhook"},
+		http.StatusOK,
+		"Webhook updated successfully!",
 	)
 }
 

@@ -1,3 +1,12 @@
+## [4.9.0] 6/16/2024
+
+* **Local Users** Fix issue where a locally created user may not get associated to the default database connection synchronized from the `eqemu_config.json` file. This would cause the user to not be able to log in to Spire Admin.
+* **Local Users** Add information banner that explains to operators to go to the `/connections` page to manage user permissions after user creation.
+* **Database Connections** Fix issue where the database connection would not display if a user had bad injected database connections.
+* **Database Connections** Fix issue where deleted users would display in the database connections page.
+* **Audit Logging** Add audit logging to most eqemu server administrative actions. This means if you have Discord webhooks set up for audit logging, you will now see these actions in your Discord channel.
+* **Discord Webhook** Fix issue where the webhook would not update if it was empty
+
 ## [4.8.8] 6/16/2024
 
 **Updating** Potential fixes for certain windows users during automatic updating.

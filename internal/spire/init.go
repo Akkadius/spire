@@ -54,6 +54,11 @@ func NewInit(
 		spireuser:                 spireuser,
 	}
 
+	i.logger.Debug().
+		Any("env", env.GetAppEnv()).
+		Any("env.IsAppEnvLocal()", env.IsAppEnvLocal()).
+		Msg("Init")
+
 	if env.IsAppEnvLocal() {
 		i.Init()
 	}
@@ -70,6 +75,11 @@ func (o *Init) Init() {
 	o.settings.LoadSettings()
 	o.isInitialized = o.CheckIfAppInitialized()
 
+	o.logger.Debug().
+		Any("o.isInitialized", o.isInitialized).
+		Any("o.settings", o.settings.settings).
+		Msg("Init")
+
 	// if we've set the app up initially but new settings have been added
 	// let's automatically run them
 	// otherwise these settings get populated when a user first sets up their
@@ -81,6 +91,8 @@ func (o *Init) Init() {
 		// get admin user
 		var adminUser models.User
 		o.connections.SpireDbNoLog().Where("is_admin = 1").First(&adminUser)
+
+		o.logger.Debug().Any("adminUser", adminUser).Msg("o.isInitialized")
 
 		o.SyncDbName()
 
@@ -207,6 +219,8 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 				c.LogsDbPassword = o.crypt.Encrypt(cfg.Server.Qsdatabase.Password, o.GetEncKey(user.ID))
 			}
 		}
+
+		o.logger.Debug().Any("c", c).Msg("Connection exists, updating...")
 
 		db.Save(&c)
 

@@ -6,6 +6,7 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http/request"
@@ -37,6 +38,7 @@ type Controller struct {
 	serverconfig   *eqemuserverconfig.Config
 	updater        *Updater
 	launcher       *Launcher
+	userevent      *auditlog.UserEvent
 }
 
 func NewController(
@@ -47,6 +49,7 @@ func NewController(
 	settings *spire.Settings,
 	updater *Updater,
 	launcher *Launcher,
+	userevent *auditlog.UserEvent,
 ) *Controller {
 	return &Controller{
 		db:             db,
@@ -56,6 +59,7 @@ func NewController(
 		updater:        updater,
 		settings:       settings,
 		launcher:       launcher,
+		userevent:      userevent,
 	}
 }
 
@@ -115,6 +119,8 @@ func (a *Controller) reload(c echo.Context) error {
 			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
 		)
 	}
+
+	a.userevent.LogUserEvent(c, auditlog.EventServerHotReload, fmt.Sprintf("Reloaded server with type [%v]", reloadType))
 
 	return c.JSON(http.StatusOK, r)
 }
@@ -308,6 +314,8 @@ func (a *Controller) installRelease(c echo.Context) error {
 			echo.Map{"error": err.Error()},
 		)
 	}
+
+	a.userevent.LogUserEvent(c, auditlog.EventServerUpdateRelease, fmt.Sprintf("Updated server to release [%v]", release))
 
 	return c.JSON(
 		http.StatusOK,
@@ -1054,6 +1062,8 @@ func (a *Controller) toggleServerLock(c echo.Context) error {
 		lockedMessage = "locked"
 	}
 
+	a.userevent.LogUserEvent(c, auditlog.EventServerLock, fmt.Sprintf("Server is now %v", lockedMessage))
+
 	return c.JSON(
 		http.StatusOK,
 		echo.Map{
@@ -1081,6 +1091,8 @@ func (a *Controller) serverStart(c echo.Context) error {
 		)
 	}
 
+	a.userevent.LogUserEvent(c, auditlog.EventServerStart, "Server started")
+
 	return c.JSON(
 		http.StatusOK,
 		echo.Map{"message": "Server started successfully"},
@@ -1100,6 +1112,14 @@ func (a *Controller) serverStop(c echo.Context) error {
 
 	a.launcher.SetStopTimer(stop.Timer)
 	a.launcher.SetStopTypeStopping()
+
+	timeToStop := time.Now().Add(time.Duration(stop.Timer) * time.Second)
+	remainingMinutes := timeToStop.Sub(time.Now()).Round(time.Minute).Minutes()
+	if stop.Timer > 0 {
+		a.userevent.LogUserEvent(c, auditlog.EventServerStop, fmt.Sprintf("Server will stop in [%v] minutes", remainingMinutes))
+	} else {
+		a.userevent.LogUserEvent(c, auditlog.EventServerStop, "Server stopped")
+	}
 
 	err = a.launcher.Stop()
 	if err != nil {
@@ -1125,6 +1145,14 @@ func (a *Controller) serverRestart(c echo.Context) error {
 	a.launcher.SetStopTypeRestarting()
 	a.launcher.SetStopTimer(stop.Timer)
 
+	timeToStop := time.Now().Add(time.Duration(stop.Timer) * time.Second)
+	remainingMinutes := timeToStop.Sub(time.Now()).Round(time.Minute).Minutes()
+	if stop.Timer > 0 {
+		a.userevent.LogUserEvent(c, auditlog.EventServerRestart, fmt.Sprintf("Server will restart in [%v] minutes", remainingMinutes))
+	} else {
+		a.userevent.LogUserEvent(c, auditlog.EventServerRestart, "Server restarted")
+	}
+
 	err = a.launcher.Restart()
 	if err != nil {
 		return c.JSON(
@@ -1147,6 +1175,8 @@ func (a *Controller) serverStopCancel(c echo.Context) error {
 			echo.Map{"error": fmt.Sprintf("Failed to cancel server stop [%v]", err.Error())},
 		)
 	}
+
+	a.userevent.LogUserEvent(c, auditlog.EventServerCancelRestart, "Server stop/restart cancelled")
 
 	return c.JSON(
 		http.StatusOK,

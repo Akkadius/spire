@@ -52,6 +52,8 @@
 
     <div v-if="reloading">
       Spire has been updated, waiting for Spire to restart to reload the page.
+      <br><br>
+      If you are not running Spire under a process manager or akk-stack, you will need to restart it manually.
     </div>
 
     <div>
@@ -69,6 +71,7 @@
       <b-button
         @click="ignoreUpdate"
         variant="outline-secondary"
+        v-if="!reloading"
       >
         <i class="fe fe-x"></i> Skip Update
       </b-button>
@@ -76,6 +79,7 @@
       <b-button
         @click="updateSpire"
         variant="primary"
+        v-if="!reloading"
       >
         <i class="fe fe-download"></i> Update
       </b-button>

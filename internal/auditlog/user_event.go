@@ -26,7 +26,18 @@ func NewUserEvent(
 	}
 }
 
-func (e UserEvent) LogUserEvent(c echo.Context, eventName string, description string) {
+const (
+	EventServerLock          = "SERVER_LOCK"
+	EventServerUpdateRelease = "SERVER_UPDATE_RELEASE"
+	EventServerStart         = "SERVER_START"
+	EventServerStop          = "SERVER_STOP"
+	EventServerRestart       = "SERVER_RESTART"
+	EventServerCancelRestart = "SERVER_CANCEL_RESTART"
+	EventServerHotReload     = "SERVER_HOT_RELOAD"
+	EventServerUpdateConfig  = "SERVER_UPDATE_CONFIG"
+)
+
+func (e *UserEvent) LogUserEvent(c echo.Context, eventName string, description string) {
 	// request user context
 	user := request.GetUser(c)
 

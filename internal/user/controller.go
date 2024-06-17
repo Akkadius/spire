@@ -101,6 +101,11 @@ func (a *Controller) create(c echo.Context) error {
 	uc.UserId = newUser.ID
 	uc.Active = 1
 	uc.ServerDatabaseConnectionId = 1
+	var conn models.ServerDatabaseConnection
+	a.db.GetSpireDb().First(&conn)
+	if conn.ID > 0 {
+		uc.ServerDatabaseConnectionId = conn.ID
+	}
 	uc.CreatedBy = u.ID
 	err = a.db.GetSpireDb().Create(&uc).Error
 	if err != nil {
