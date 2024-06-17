@@ -1,4 +1,4 @@
-## [4.8.7] 6/16/2024
+## [4.8.8] 6/16/2024
 
 **Updating** Potential fixes for certain windows users during automatic updating.
 
