@@ -42,29 +42,27 @@ func SendMessage(webhookUrl, header, contents string) {
 			webhookUrl,
 			header+fmt.Sprintf(" **Chunk** [%v]\n```\n%v\n```", chunkCount, chunk),
 		)
+
+		//fmt.Println(header + fmt.Sprintf(" **Chunk** [%v]\n```\n%v\n```", chunkCount, chunk))
 		chunkCount++
 	}
 }
 
 // chunkSubstr splits a string into chunks of a given size
 func chunkString(s string, chunkSize int) []string {
-	if len(s) == 0 {
-		return nil
-	}
-	if chunkSize >= len(s) {
+	var chunks []string
+	runes := []rune(s)
+
+	if len(runes) == 0 {
 		return []string{s}
 	}
-	var chunks []string = make([]string, 0, (len(s)-1)/chunkSize+1)
-	currentLen := 0
-	currentStart := 0
-	for i := range s {
-		if currentLen == chunkSize {
-			chunks = append(chunks, s[currentStart:i])
-			currentLen = 0
-			currentStart = i
+
+	for i := 0; i < len(runes); i += chunkSize {
+		nn := i + chunkSize
+		if nn > len(runes) {
+			nn = len(runes)
 		}
-		currentLen++
+		chunks = append(chunks, string(runes[i:nn]))
 	}
-	chunks = append(chunks, s[currentStart:])
 	return chunks
 }

@@ -1,3 +1,8 @@
+## [4.9.1] 7/17/2024
+
+* **File Watchers** Add more resiliency to file watchers to prevent crashes
+* **Discord Crash Logs** Fix issue where some messages were getting truncated
+
 ## [4.9.0] 6/16/2024
 
 * **Local Users** Fix issue where a locally created user may not get associated to the default database connection synchronized from the `eqemu_config.json` file. This would cause the user to not be able to log in to Spire Admin.

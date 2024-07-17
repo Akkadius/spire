@@ -31,6 +31,7 @@ type CrashLogWatcher struct {
 	watchCrashLogs bool
 	discordWebhook string
 	serverLongName string
+	closeWatcher   bool
 }
 
 func NewCrashLogWatcher(
@@ -74,6 +75,15 @@ func (l *CrashLogWatcher) Process() {
 				Msg("Detected server config change")
 		}
 
+		if l.closeWatcher {
+			if l.watcher != nil {
+				l.watcher.Close()
+				l.watcher = nil
+			}
+			l.closeWatcher = false
+			l.logger.Debug().Msg("Closing crash log watcher as a result of a queued error")
+		}
+
 		if l.watchCrashLogs && l.watcher == nil {
 			go l.startCrashLogWatcher()
 		}
@@ -112,6 +122,15 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 		return
 	}
 
+	if l.closeWatcher {
+		if l.watcher != nil {
+			l.watcher.Close()
+			l.watcher = nil
+		}
+		l.closeWatcher = false
+		return
+	}
+
 	if l.watcher != nil {
 		return
 	}
@@ -141,11 +160,6 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 			select {
 			case event, ok := <-l.watcher.Events:
 				if !ok {
-					l.logger.Info().Any("event", event).Msg("Watcher error - Closing watcher")
-					if l.watcher != nil {
-						l.watcher.Close()
-					}
-					l.watcher = nil
 					return
 				}
 
@@ -153,7 +167,7 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 				if event.Op == fsnotify.Create {
 					l.logger.Info().
 						Any("event.Name", event.Name).
-						Msg("Detected crash log change")
+						Msg("Detected crash log creation")
 
 					// ship to discord
 					filename := filepath.Base(event.Name)
@@ -178,11 +192,8 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 
 			case err, ok := <-l.watcher.Errors:
 				if !ok {
-					l.logger.Info().Msg("Closing watcher")
-					if l.watcher != nil {
-						l.watcher.Close()
-					}
-					l.watcher = nil
+					l.logger.Info().Err(err).Msg("Closing watcher")
+					l.closeWatcher = true
 					return
 				}
 				log.Println("error:", err)
@@ -199,6 +210,11 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		l.logger.Debug().Any("path", path).Msg("Crash path does not exist")
 		return // path does not exist
+	}
+
+	if l.watcher == nil {
+		l.logger.Debug().Msg("Watcher is nil")
+		return
 	}
 
 	err = l.watcher.AddRecursive(path)

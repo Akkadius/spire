@@ -155,11 +155,6 @@ func (l *QuestHotReloadWatcher) Start() {
 			select {
 			case event, ok := <-l.watcher.Events:
 				if !ok {
-					l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Watcher error, closing watcher")
-					if l.watcher != nil {
-						l.watcher.Close()
-					}
-					l.watcher = nil
 					return
 				}
 
@@ -245,6 +240,11 @@ func (l *QuestHotReloadWatcher) Start() {
 
 		return nil
 	})
+
+	if l.watcher == nil {
+		l.logger.Debug().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Watcher is nil, returning")
+		return
+	}
 
 	// Add a path.
 	err = l.watcher.AddRecursive(l.pathmgmt.GetQuestsDir())
