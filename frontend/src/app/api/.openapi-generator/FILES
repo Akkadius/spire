@@ -39,6 +39,7 @@ api/bot-spell-casting-chance-api.ts
 api/bot-spell-setting-api.ts
 api/bot-spells-entry-api.ts
 api/bot-stance-api.ts
+api/bot-starting-item-api.ts
 api/bot-timer-api.ts
 api/bug-api.ts
 api/bug-report-api.ts
@@ -68,6 +69,8 @@ api/character-language-api.ts
 api/character-leadership-ability-api.ts
 api/character-material-api.ts
 api/character-memmed-spell-api.ts
+api/character-parcel-api.ts
+api/character-parcels-container-api.ts
 api/character-peqzone-flag-api.ts
 api/character-pet-buff-api.ts
 api/character-pet-info-api.ts
@@ -75,6 +78,7 @@ api/character-pet-inventory-api.ts
 api/character-potionbelt-api.ts
 api/character-skill-api.ts
 api/character-spell-api.ts
+api/character-stats-record-api.ts
 api/character-task-api.ts
 api/character-task-timer-api.ts
 api/character-tribute-api.ts
@@ -115,10 +119,12 @@ api/grid-entry-api.ts
 api/ground-spawn-api.ts
 api/group-id-api.ts
 api/guild-api.ts
+api/guild-bank-api.ts
 api/guild-member-api.ts
+api/guild-permission-api.ts
 api/guild-rank-api.ts
 api/guild-relation-api.ts
-api/hacker-api.ts
+api/guild-tribute-api.ts
 api/horse-api.ts
 api/instance-list-api.ts
 api/instance-list-player-api.ts
@@ -127,6 +133,7 @@ api/inventory-snapshot-api.ts
 api/ip-exemption-api.ts
 api/item-api.ts
 api/item-tick-api.ts
+api/keyring-api.ts
 api/ldon-trap-entry-api.ts
 api/ldon-trap-template-api.ts
 api/level-exp-mod-api.ts
@@ -158,6 +165,8 @@ api/npc-type-api.ts
 api/npc-types-tint-api.ts
 api/object-api.ts
 api/object-content-api.ts
+api/parcel-api.ts
+api/parcel-merchant-api.ts
 api/perl-event-export-setting-api.ts
 api/pet-api.ts
 api/petition-api.ts
@@ -185,6 +194,7 @@ api/spawn-condition-api.ts
 api/spawn-condition-value-api.ts
 api/spawn-event-api.ts
 api/spawn2-api.ts
+api/spawn2-disabled-api.ts
 api/spawnentry-api.ts
 api/spawngroup-api.ts
 api/spell-bucket-api.ts
@@ -252,6 +262,7 @@ models/models-bot-spell-casting-chance.ts
 models/models-bot-spell-setting.ts
 models/models-bot-spells-entry.ts
 models/models-bot-stance.ts
+models/models-bot-starting-item.ts
 models/models-bot-timer.ts
 models/models-bug-report.ts
 models/models-bug.ts
@@ -281,6 +292,8 @@ models/models-character-language.ts
 models/models-character-leadership-ability.ts
 models/models-character-material.ts
 models/models-character-memmed-spell.ts
+models/models-character-parcel.ts
+models/models-character-parcels-container.ts
 models/models-character-peqzone-flag.ts
 models/models-character-pet-buff.ts
 models/models-character-pet-info.ts
@@ -288,6 +301,7 @@ models/models-character-pet-inventory.ts
 models/models-character-potionbelt.ts
 models/models-character-skill.ts
 models/models-character-spell.ts
+models/models-character-stats-record.ts
 models/models-character-task-timer.ts
 models/models-character-task.ts
 models/models-character-tribute.ts
@@ -329,10 +343,11 @@ models/models-ground-spawn.ts
 models/models-group-id.ts
 models/models-guild-bank.ts
 models/models-guild-member.ts
+models/models-guild-permission.ts
 models/models-guild-rank.ts
 models/models-guild-relation.ts
+models/models-guild-tribute.ts
 models/models-guild.ts
-models/models-hacker.ts
 models/models-horse.ts
 models/models-instance-list-player.ts
 models/models-instance-list.ts
@@ -372,6 +387,8 @@ models/models-npc-type.ts
 models/models-npc-types-tint.ts
 models/models-object-content.ts
 models/models-object.ts
+models/models-parcel-merchant.ts
+models/models-parcel.ts
 models/models-perl-event-export-setting.ts
 models/models-pet.ts
 models/models-petition.ts
@@ -401,6 +418,7 @@ models/models-skill-cap.ts
 models/models-spawn-condition-value.ts
 models/models-spawn-condition.ts
 models/models-spawn-event.ts
+models/models-spawn2-disabled.ts
 models/models-spawn2.ts
 models/models-spawnentry.ts
 models/models-spawngroup.ts

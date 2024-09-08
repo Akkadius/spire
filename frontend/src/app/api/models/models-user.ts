@@ -9,6 +9,7 @@ export interface ModelsUser {
     full_name?: string;
     id?: number;
     is_admin?: boolean;
+    is_server_developer?: boolean;
     last_name?: string;
     owned_connections?: Array<ModelsServerDatabaseConnection>;
     provider?: string;

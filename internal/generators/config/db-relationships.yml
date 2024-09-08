@@ -11,7 +11,7 @@ auras:
   - 1-1 spell_id->spells_new:id
 bot_spells_entries:
   - 1-1 npc_spells_id->npc_spells:id
-  - 1-1 spellid->spells_new:id
+  - 1-1 spell_id->spells_new:id
 character_data:
   - 1-1 id->guilds:id
   - 1-* id->char_recipe_list:char_id
@@ -169,7 +169,7 @@ spells_new:
 #  - 1-* id->items:focuseffect
 #  - 1-* id->items:bardeffect
   - 1-* id->npc_spells_entries:spellid
-  - 1-* id->bot_spells_entries:spellid
+  - 1-* id->bot_spells_entries:spell_id
 start_zones:
   - 1-1 zone_id->zone:zoneidnumber
 starting_items:

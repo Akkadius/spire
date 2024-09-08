@@ -6,7 +6,6 @@ export interface ModelsSpawn2 {
     cond_value?: number;
     content_flags?: string;
     content_flags_disabled?: string;
-    enabled?: number;
     heading?: number;
     id?: number;
     max_expansion?: number;

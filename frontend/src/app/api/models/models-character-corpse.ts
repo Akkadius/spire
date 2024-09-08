@@ -14,6 +14,7 @@ export interface ModelsCharacterCorpse {
     eye_color_2?: number;
     face?: number;
     gender?: number;
+    gm_exp?: number;
     gold?: number;
     guild_consent_id?: number;
     hair_color?: number;
@@ -25,9 +26,12 @@ export interface ModelsCharacterCorpse {
     is_buried?: number;
     is_locked?: number;
     is_rezzed?: number;
+    killed_by?: number;
     level?: number;
     platinum?: number;
     race?: number;
+    rez_time?: number;
+    rezzable?: number;
     silver?: number;
     size?: number;
     texture?: number;

@@ -3,7 +3,7 @@ package models
 type BotSpellsEntry struct {
 	ID                uint       `json:"id" gorm:"Column:id"`
 	NpcSpellsId       int        `json:"npc_spells_id" gorm:"Column:npc_spells_id"`
-	Spellid           int16      `json:"spellid" gorm:"Column:spellid"`
+	SpellId           uint16     `json:"spell_id" gorm:"Column:spell_id"`
 	Type              uint       `json:"type" gorm:"Column:type"`
 	Minlevel          uint8      `json:"minlevel" gorm:"Column:minlevel"`
 	Maxlevel          uint8      `json:"maxlevel" gorm:"Column:maxlevel"`
@@ -17,7 +17,7 @@ type BotSpellsEntry struct {
 	BucketValue       string     `json:"bucket_value" gorm:"Column:bucket_value"`
 	BucketComparison  uint8      `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
 	NpcSpell          *NpcSpell  `json:"npc_spell,omitempty" gorm:"foreignKey:npc_spells_id;references:id"`
-	SpellsNew         *SpellsNew `json:"spells_new,omitempty" gorm:"foreignKey:spellid;references:id"`
+	SpellsNew         *SpellsNew `json:"spells_new,omitempty" gorm:"foreignKey:spell_id;references:id"`
 }
 
 func (BotSpellsEntry) TableName() string {
@@ -138,9 +138,6 @@ func (BotSpellsEntry) Relationships() []string {
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects.Item",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects.Zone",
-		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems",
-		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems.Item",
-		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems.Zone",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.TributeLevels",
@@ -267,9 +264,6 @@ func (BotSpellsEntry) Relationships() []string {
 		"SpellsNew.Items.Objects",
 		"SpellsNew.Items.Objects.Item",
 		"SpellsNew.Items.Objects.Zone",
-		"SpellsNew.Items.StartingItems",
-		"SpellsNew.Items.StartingItems.Item",
-		"SpellsNew.Items.StartingItems.Zone",
 		"SpellsNew.Items.TradeskillRecipeEntries",
 		"SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
 		"SpellsNew.Items.TributeLevels",

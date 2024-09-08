@@ -42,6 +42,7 @@ export interface ModelsZone {
     gravity?: number;
     hotzone?: number;
     id?: number;
+    idle_when_empty?: number;
     insttype?: number;
     lava_damage?: number;
     long_name?: string;
@@ -72,6 +73,7 @@ export interface ModelsZone {
     safe_x?: number;
     safe_y?: number;
     safe_z?: number;
+    seconds_before_idle?: number;
     short_name?: string;
     shutdowndelay?: number;
     sky?: number;

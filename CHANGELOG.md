@@ -1,3 +1,7 @@
+## [4.9.2] 9/7/2024
+
+* **Bot Spell Entries** Fixes an issue where a column was renamed from `spellid` to `spell_id`, causing the bot spell editor to quit working.
+
 ## [4.9.1] 7/17/2024
 
 * **File Watchers** Add more resiliency to file watchers to prevent crashes

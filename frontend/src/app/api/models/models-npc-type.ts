@@ -59,6 +59,7 @@ export interface ModelsNpcType {
     flymode?: number;
     fr?: number;
     gender?: number;
+    greed?: number;
     handtexture?: number;
     healscale?: number;
     helmtexture?: number;
@@ -69,6 +70,7 @@ export interface ModelsNpcType {
     hp_regen_rate?: number;
     id?: number;
     ignore_despawn?: number;
+    is_parcel_merchant?: number;
     isbot?: number;
     isquest?: number;
     keeps_sold_items?: number;

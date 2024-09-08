@@ -207,6 +207,149 @@ books:
     is_nullable: "NO"
     column_type: int(20)
     column_default: ""
+bot_buffs:
+  - column: buffs_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_command_settings:
+  - column: bot_command
+    data_type: varchar
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: varchar(128)
+    column_default: ''''''
+bot_create_combinations:
+  - column: race
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+bot_data:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_heal_rotation_members:
+  - column: member_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_heal_rotation_targets:
+  - column: target_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_heal_rotations:
+  - column: heal_rotation_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_inspect_messages:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_inventories:
+  - column: inventories_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_owner_options:
+  - column: owner_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+  - column: option_type
+    data_type: smallint
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: smallint(3) unsigned
+    column_default: ""
+bot_pet_buffs:
+  - column: pet_buffs_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_pet_inventories:
+  - column: pet_inventories_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_pets:
+  - column: pets_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_spell_casting_chances:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+bot_spell_settings:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_spells_entries:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_stances:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
 bot_starting_items:
   - column: id
     data_type: int
@@ -215,6 +358,35 @@ bot_starting_items:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: ""
+bot_timers:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: timer_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: spell_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "7"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: item_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "9"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
 bug_reports:
   - column: id
     data_type: int
@@ -231,21 +403,6 @@ bugs:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: ""
-buyer:
-  - column: charid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
-  - column: buyslot
-    data_type: int
-    column_key: PRI
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
 char_create_combinations:
   - column: race
     data_type: int
@@ -1173,14 +1330,6 @@ group_id:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
-guild_bank:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
 guild_members:
   - column: char_id
     data_type: int
@@ -1320,14 +1469,6 @@ ip_exemptions:
     column_type: int(11)
     column_default: ""
 items:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
-items_peq:
   - column: id
     data_type: int
     column_key: PRI
@@ -1697,6 +1838,22 @@ object_contents:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+parcel_merchants:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+parcels:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 perl_event_export_settings:
   - column: event_id
     data_type: int
@@ -2028,14 +2185,6 @@ spawngroup:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
-spell_buckets:
-  - column: spellid
-    data_type: bigint
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: bigint(11) unsigned
-    column_default: ""
 spell_globals:
   - column: spellid
     data_type: int
@@ -2239,7 +2388,7 @@ zone:
   - column: id
     data_type: int
     column_key: PRI
-    ordinal_position: "1"
+    ordinal_position: "2"
     is_nullable: "NO"
     column_type: int(10)
     column_default: ""

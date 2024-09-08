@@ -17,6 +17,9 @@ database:
     - new_table
 #    - perl_event_export_settings
     - group_leader
+    - spell_buckets
+    - guild_bank
+    - buyer
   table_connections:
     eqemu_content:
       - aa_ability

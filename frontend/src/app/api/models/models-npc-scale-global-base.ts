@@ -16,7 +16,6 @@ export interface ModelsNpcScaleGlobalBase {
     hp?: number;
     hp_regen_per_second?: number;
     hp_regen_rate?: number;
-    instance_version?: number;
     instance_version_list?: string;
     intelligence?: number;
     level?: number;
@@ -32,6 +31,5 @@ export interface ModelsNpcScaleGlobalBase {
     strength?: number;
     type?: number;
     wisdom?: number;
-    zone_id?: number;
     zone_id_list?: string;
 }

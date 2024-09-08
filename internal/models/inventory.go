@@ -21,6 +21,7 @@ type Inventory struct {
 	Ornamenticon        uint        `json:"ornamenticon" gorm:"Column:ornamenticon"`
 	Ornamentidfile      uint        `json:"ornamentidfile" gorm:"Column:ornamentidfile"`
 	OrnamentHeroModel   int         `json:"ornament_hero_model" gorm:"Column:ornament_hero_model"`
+	Guid                null.Uint64 `json:"guid" gorm:"Column:guid"`
 	Item                *Item       `json:"item,omitempty" gorm:"foreignKey:itemid;references:id"`
 }
 

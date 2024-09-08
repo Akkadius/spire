@@ -13,6 +13,10 @@ export interface ModelsServerDatabaseConnection {
     db_username?: string;
     deleted_at?: string;
     id?: number;
+    logs_db_host?: string;
+    logs_db_name?: string;
+    logs_db_port?: string;
+    logs_db_username?: string;
     name?: string;
     updated_at?: string;
     user_server_database_connections?: Array<ModelsUserServerDatabaseConnection>;

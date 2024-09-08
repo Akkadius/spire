@@ -39,6 +39,7 @@ type BotDatum struct {
 	Int                    int32   `json:"int" gorm:"Column:int"`
 	Agi                    int32   `json:"agi" gorm:"Column:agi"`
 	Wis                    int32   `json:"wis" gorm:"Column:wis"`
+	ExtraHaste             int32   `json:"extra_haste" gorm:"Column:extra_haste"`
 	Fire                   int16   `json:"fire" gorm:"Column:fire"`
 	Cold                   int16   `json:"cold" gorm:"Column:cold"`
 	Magic                  int16   `json:"magic" gorm:"Column:magic"`

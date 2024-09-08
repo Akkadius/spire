@@ -1,6 +1,7 @@
 export interface ModelsGroupId {
-    charid?: number;
-    groupid?: number;
-    ismerc?: number;
+    bot_id?: number;
+    character_id?: number;
+    group_id?: number;
+    merc_id?: number;
     name?: string;
 }

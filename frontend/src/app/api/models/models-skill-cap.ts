@@ -1,7 +1,8 @@
 export interface ModelsSkillCap {
     cap?: number;
-    _class?: number;
     class_?: number;
+    class_id?: number;
+    id?: number;
     level?: number;
     skill_id?: number;
 }

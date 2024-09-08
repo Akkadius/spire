@@ -1,4 +1,5 @@
 export interface ModelsAaAbility {
+    auto_grant_enabled?: number;
     category?: number;
     charges?: number;
     classes?: number;

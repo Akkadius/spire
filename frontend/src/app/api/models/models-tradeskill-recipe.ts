@@ -3,6 +3,7 @@ export interface ModelsTradeskillRecipe {
     content_flags_disabled?: string;
     enabled?: number;
     id?: number;
+    learned_by_item_id?: number;
     max_expansion?: number;
     min_expansion?: number;
     must_learn?: number;

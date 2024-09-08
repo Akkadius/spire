@@ -7,6 +7,7 @@ export interface ModelsTaskActivity {
     goalmethod?: number;
     item_id_list?: string;
     item_list?: string;
+    list_group?: number;
     max_x?: number;
     max_y?: number;
     max_z?: number;
