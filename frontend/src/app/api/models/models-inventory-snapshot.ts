@@ -9,6 +9,7 @@ export interface ModelsInventorySnapshot {
     charid?: number;
     color?: number;
     custom_data?: string;
+    guid?: number;
     instnodrop?: number;
     itemid?: number;
     ornament_hero_model?: number;

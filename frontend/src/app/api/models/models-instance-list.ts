@@ -6,6 +6,7 @@ export interface ModelsInstanceList {
     instance_list_players?: Array<ModelsInstanceListPlayer>;
     is_global?: number;
     never_expires?: number;
+    notes?: string;
     start_time?: number;
     version?: number;
     zone?: number;

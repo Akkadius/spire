@@ -9,6 +9,7 @@ export interface ModelsTask {
     duration?: number;
     duration_code?: number;
     dz_template_id?: number;
+    enabled?: number;
     exp_reward?: number;
     faction_amount?: number;
     faction_reward?: number;

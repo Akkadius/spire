@@ -95,6 +95,39 @@ func (e *BotTimerController) getBotTimer(c echo.Context) error {
 	params = append(params, botId)
 	keys = append(keys, "bot_id = ?")
 
+	// key param [timer_id] position [2] type [int]
+	if len(c.QueryParam("timer_id")) > 0 {
+		timerIdParam, err := strconv.Atoi(c.QueryParam("timer_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [timer_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, timerIdParam)
+		keys = append(keys, "timer_id = ?")
+	}
+
+	// key param [spell_id] position [7] type [int]
+	if len(c.QueryParam("spell_id")) > 0 {
+		spellIdParam, err := strconv.Atoi(c.QueryParam("spell_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [spell_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, spellIdParam)
+		keys = append(keys, "spell_id = ?")
+	}
+
+	// key param [item_id] position [9] type [int]
+	if len(c.QueryParam("item_id")) > 0 {
+		itemIdParam, err := strconv.Atoi(c.QueryParam("item_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [item_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, itemIdParam)
+		keys = append(keys, "item_id = ?")
+	}
+
 	// query builder
 	var result models.BotTimer
 	query := e.db.QueryContext(models.BotTimer{}, c)
@@ -148,6 +181,39 @@ func (e *BotTimerController) updateBotTimer(c echo.Context) error {
 	}
 	params = append(params, botId)
 	keys = append(keys, "bot_id = ?")
+
+	// key param [timer_id] position [2] type [int]
+	if len(c.QueryParam("timer_id")) > 0 {
+		timerIdParam, err := strconv.Atoi(c.QueryParam("timer_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [timer_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, timerIdParam)
+		keys = append(keys, "timer_id = ?")
+	}
+
+	// key param [spell_id] position [7] type [int]
+	if len(c.QueryParam("spell_id")) > 0 {
+		spellIdParam, err := strconv.Atoi(c.QueryParam("spell_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [spell_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, spellIdParam)
+		keys = append(keys, "spell_id = ?")
+	}
+
+	// key param [item_id] position [9] type [int]
+	if len(c.QueryParam("item_id")) > 0 {
+		itemIdParam, err := strconv.Atoi(c.QueryParam("item_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [item_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, itemIdParam)
+		keys = append(keys, "item_id = ?")
+	}
 
 	// query builder
 	var result models.BotTimer
@@ -265,6 +331,39 @@ func (e *BotTimerController) deleteBotTimer(c echo.Context) error {
 	}
 	params = append(params, botId)
 	keys = append(keys, "bot_id = ?")
+
+	// key param [timer_id] position [2] type [int]
+	if len(c.QueryParam("timer_id")) > 0 {
+		timerIdParam, err := strconv.Atoi(c.QueryParam("timer_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [timer_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, timerIdParam)
+		keys = append(keys, "timer_id = ?")
+	}
+
+	// key param [spell_id] position [7] type [int]
+	if len(c.QueryParam("spell_id")) > 0 {
+		spellIdParam, err := strconv.Atoi(c.QueryParam("spell_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [spell_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, spellIdParam)
+		keys = append(keys, "spell_id = ?")
+	}
+
+	// key param [item_id] position [9] type [int]
+	if len(c.QueryParam("item_id")) > 0 {
+		itemIdParam, err := strconv.Atoi(c.QueryParam("item_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [item_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, itemIdParam)
+		keys = append(keys, "item_id = ?")
+	}
 
 	// query builder
 	var result models.BotTimer

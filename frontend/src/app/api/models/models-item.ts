@@ -11,7 +11,6 @@ import { ModelsLootdropEntry } from './models-lootdrop-entry';
 import { ModelsMerchantlist } from './models-merchantlist';
 import { ModelsObject } from './models-object';
 import { ModelsObjectContent } from './models-object-content';
-import { ModelsStartingItem } from './models-starting-item';
 import { ModelsTradeskillRecipeEntry } from './models-tradeskill-recipe-entry';
 import { ModelsTributeLevel } from './models-tribute-level';
 export interface ModelsItem {
@@ -251,7 +250,6 @@ export interface ModelsItem {
     spellshield?: number;
     stackable?: number;
     stacksize?: number;
-    starting_items?: Array<ModelsStartingItem>;
     strikethrough?: number;
     stunresist?: number;
     subtype?: number;

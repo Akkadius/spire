@@ -3,6 +3,7 @@ export interface ModelsGroundSpawn {
     comment?: string;
     content_flags?: string;
     content_flags_disabled?: string;
+    fix_z?: number;
     heading?: number;
     id?: number;
     item?: number;

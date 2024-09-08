@@ -249,7 +249,7 @@ type SpellsNew struct {
 	BlockedSpells        []BlockedSpell     `json:"blocked_spells,omitempty" gorm:"foreignKey:spellid;references:id"`
 	Items                []Item             `json:"items,omitempty" gorm:"foreignKey:clickeffect;references:id"`
 	NpcSpellsEntries     []NpcSpellsEntry   `json:"npc_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
-	BotSpellsEntries     []BotSpellsEntry   `json:"bot_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
+	BotSpellsEntries     []BotSpellsEntry   `json:"bot_spells_entries,omitempty" gorm:"foreignKey:spell_id;references:id"`
 }
 
 func (SpellsNew) TableName() string {

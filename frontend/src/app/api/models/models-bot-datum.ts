@@ -20,6 +20,7 @@ export interface ModelsBotDatum {
     drakkin_tattoo?: number;
     enforce_spell_settings?: number;
     expansion_bitmask?: number;
+    extra_haste?: number;
     eye_color_1?: number;
     eye_color_2?: number;
     face?: number;

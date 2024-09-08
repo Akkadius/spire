@@ -15,7 +15,7 @@ export interface ModelsBotSpellsEntry {
     priority?: number;
     recast_delay?: number;
     resist_adjust?: number;
-    spellid?: number;
+    spell_id?: number;
     spells_new?: ModelsSpellsNew;
     type?: number;
 }

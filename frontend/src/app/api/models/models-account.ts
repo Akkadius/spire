@@ -7,6 +7,7 @@ export interface ModelsAccount {
     account_flags?: Array<ModelsAccountFlag>;
     account_ips?: Array<ModelsAccountIp>;
     account_rewards?: Array<ModelsAccountReward>;
+    auto_login_charname?: string;
     ban_reason?: string;
     bug_reports?: Array<ModelsBugReport>;
     charname?: string;

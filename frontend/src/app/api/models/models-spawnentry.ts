@@ -6,7 +6,9 @@ export interface ModelsSpawnentry {
     content_flags?: string;
     content_flags_disabled?: string;
     max_expansion?: number;
+    max_time?: number;
     min_expansion?: number;
+    min_time?: number;
     npc_id?: number;
     npc_type?: ModelsNpcType;
     spawngroup?: ModelsSpawngroup;

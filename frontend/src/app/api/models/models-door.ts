@@ -2,6 +2,7 @@ import { ModelsItem } from './models-item';
 export interface ModelsDoor {
     buffer?: number;
     client_version_mask?: number;
+    close_timer_ms?: number;
     content_flags?: string;
     content_flags_disabled?: string;
     dest_heading?: number;

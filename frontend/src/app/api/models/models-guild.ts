@@ -3,6 +3,7 @@ import { ModelsGuildMember } from './models-guild-member';
 import { ModelsGuildRank } from './models-guild-rank';
 export interface ModelsGuild {
     channel?: string;
+    favor?: number;
     guild_banks?: Array<ModelsGuildBank>;
     guild_members?: Array<ModelsGuildMember>;
     guild_ranks?: Array<ModelsGuildRank>;
