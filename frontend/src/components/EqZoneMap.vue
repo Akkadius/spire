@@ -51,13 +51,21 @@
           </l-marker>
 
           <!-- Draw pathing grid lines -->
+<!--          <l-polyline-->
+<!--            v-if="pathingGridLines"-->
+<!--            :lat-lngs="pathingGridLines"-->
+<!--            color="blue"-->
+<!--            dashArray="5, 10"-->
+<!--            :opacity=".8"-->
+<!--            :weight="2"-->
+<!--          />-->
+
           <l-polyline
-            v-if="pathingGridLines"
-            :lat-lngs="pathingGridLines"
-            color="blue"
-            dashArray="5, 10"
+            v-if="npcToNpcLines"
+            :lat-lngs="npcToNpcLines"
+            color="red"
             :opacity=".8"
-            :weight="2"
+            :weight="3"
           />
 
           <!--          &lt;!&ndash; markers from map &ndash;&gt;-->
@@ -333,6 +341,38 @@ export default {
         this.$forceUpdate()
       }
 
+      if (this.npcToNpcLines.length > 0) {
+        this.npcToNpcLines = []
+        this.$forceUpdate()
+      }
+
+      // console.log(e)
+
+      let polyLines = []
+      for (let n of this.npcToNpcLineData) {
+        const point = this.createPoint(-n.spawn.x, -n.spawn.y)
+        if (point.lat === e.point.lat && point.lng === e.point.lng) {
+          // console.log("push")
+          this.hoveredNpc = elementKey
+          for (let n2 of this.npcToNpcLineData) {
+            // only push if each point is within 600 units of eachother
+            // if (Math.abs(n.spawn.x - n2.spawn.x) < 600 && Math.abs(n.spawn.y - n2.spawn.y) < 600) {
+              polyLines.push(
+                [
+                  e.point,
+                  this.createPoint(-n2.spawn.x, -n2.spawn.y),
+                ]
+              )
+            // }
+          }
+          // console.log(polyLines)
+        }
+      }
+
+      // console.log(polyLines)
+      this.npcToNpcLines = polyLines
+
+
       if (e.grid > 0) {
         // transform grid entries into poly lines
         let polyLines   = []
@@ -370,8 +410,8 @@ export default {
           }
         }
 
-        this.pathingGridLines   = polyLines
-        this.pathingGridMarkers = gridMarkers
+        // this.pathingGridLines   = polyLines
+        // this.pathingGridMarkers = gridMarkers
       }
 
       this.$emit("npc-marker-hover", e.npc);
@@ -684,12 +724,19 @@ export default {
           this.pathingGridData = gridEntries
         }
 
+        let spawns = []
+
         const result = await Spawn.getByZone(this.zone, this.version, true)
         if (result.length > 0) {
           for (let spawn2 of result) {
             if (spawn2.spawnentries) {
               for (let spawnentry of spawn2.spawnentries) {
                 if (spawnentry.npc_type) {
+
+                  spawns.push({
+                    npc: spawnentry.npc_type,
+                    spawn: spawn2,
+                  })
 
                   // if (spawn.pathgrid > 0) {
                   //   console.log(spawn)
@@ -717,6 +764,8 @@ export default {
               }
             }
           }
+
+          this.npcToNpcLineData = spawns
 
           this.npcMarkers = npcMarkers
 
@@ -773,6 +822,8 @@ export default {
       this.translocatePoints    = null
       this.lines                = []
       this.pathingGridLines     = []
+      this.npcToNpcLineData = {}
+      this.npcToNpcLines        = []
       this.pathingGridMarkers   = null
       this.pathingGridData      = []
 
