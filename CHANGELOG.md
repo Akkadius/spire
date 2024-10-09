@@ -1,3 +1,7 @@
+## [4.9.3] 10/8/2024
+
+* **Server Updater** Resolved a minor issue when resolving home directories when doing `eqemu-server:update --compile-server=true --auto=true` 
+
 ## [4.9.2] 9/7/2024
 
 * **Bot Spell Entries** Fixes an issue where a column was renamed from `spellid` to `spell_id`, causing the bot spell editor to quit working.

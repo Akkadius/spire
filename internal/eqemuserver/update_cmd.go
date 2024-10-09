@@ -88,6 +88,12 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 			c.logger.Fatal().Err(err).Msg("Failed to get build info")
 		}
 
+		c.logger.Info().
+			Any("source", info.SourceDirectory).
+			Any("build_tool", info.BuildTool).
+			Any("build_cores", info.BuildCores).
+			Msg("Setting source directory")
+
 		// set build cores if not set
 		if info.BuildCores == "" {
 			// default to 1 core

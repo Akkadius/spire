@@ -148,6 +148,15 @@ func (u *Updater) GetBuildInfo() (BuildInfo, error) {
 		}
 	}
 
+	if strings.HasPrefix(dirname, "~") {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return BuildInfo{}, err
+		}
+		// Replace ~ with the actual home directory path
+		dirname = filepath.Join(home, strings.TrimPrefix(dirname, "~"))
+	}
+
 	foundPath := ""
 	err = filepath.Walk(
 		dirname,
