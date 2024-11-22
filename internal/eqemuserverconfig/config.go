@@ -34,6 +34,11 @@ type DatabaseConfig struct {
 	Password string `json:"password,omitempty"`
 }
 
+type LeafNodeConfig struct {
+	RootSpireUrl  string `json:"root_spire_url"`
+	RootSpirePort int    `json:"root_spire_port"`
+}
+
 type WebAdminLauncherConfig struct {
 	RunSharedMemory             bool   `json:"runSharedMemory"`
 	RunLoginserver              bool   `json:"runLoginserver"`
@@ -43,8 +48,10 @@ type WebAdminLauncherConfig struct {
 	StaticZones                 string `json:"staticZones,omitempty"`
 	UpdateOpcodesOnStart        bool   `json:"updateOpcodesOnStart"`
 	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
+
 	// leaf nodes do not run any process but zones
-	IsLeafZoneserverNode bool `json:"isLeafZoneserverNode"`
+	IsLeafNode     bool            `json:"is_leaf_node"`
+	LeafNodeConfig *LeafNodeConfig `json:"leaf_node_config,omitempty"`
 }
 
 type WebAdminQuestsConfig struct {
