@@ -59,6 +59,11 @@ type Launcher struct {
 	currentZoneStatics          int
 	lastRanLogTruncationTime    time.Time
 
+	// distributed zone server mode
+	isDistributedRoot bool
+	isLeafNode        bool
+
+	// counter properties
 	staticZonesToBoot    []string
 	currentOnlineStatics []string
 	currentProcessCounts map[string]int
@@ -219,6 +224,13 @@ func (l *Launcher) Start() error {
 	err = l.serverconfig.Save(cfg)
 	if err != nil {
 		return err
+	}
+
+	if cfg.WebAdmin.Launcher != nil {
+		if cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
+			l.isLeafNode = true
+			l.logger.Info().Msg("Server detected is a leaf node")
+		}
 	}
 
 	return nil
@@ -440,7 +452,12 @@ func (l *Launcher) Supervisor() error {
 			Msg("Supervisor - Checking process")
 	}
 
-	// boot world if needed
+	if l.isLeafNode {
+		l.processLeafNodeLoop()
+		return nil
+	}
+
+	// boot world process if needed
 	if l.currentProcessCounts[worldProcessName] == 0 {
 		l.logger.Info().Msg("Starting World")
 		err := l.startServerProcess(worldProcessName)
@@ -532,9 +549,12 @@ func (l *Launcher) Supervisor() error {
 
 	// boot dynamics if needed
 	for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (zoneAssignedDynamics + l.minZoneProcesses) {
-		err := l.startServerProcess(zoneProcessName)
-		if err != nil {
-			return err
+		// we don't want to start dynamic zone processes normally when distributed mode is enabled
+		if !l.isDistributedRoot {
+			err := l.startServerProcess(zoneProcessName)
+			if err != nil {
+				return err
+			}
 		}
 
 		bootedTotalDynamics := l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
@@ -1058,4 +1078,8 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 	}
 
 	return combinedData, nil
+}
+
+func (l *Launcher) processLeafNodeLoop() {
+
 }

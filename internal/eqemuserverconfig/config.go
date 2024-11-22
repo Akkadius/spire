@@ -36,7 +36,7 @@ type DatabaseConfig struct {
 
 type LeafNodeConfig struct {
 	RootSpireUrl  string `json:"root_spire_url"`
-	RootSpirePort int    `json:"root_spire_port"`
+	RootSpirePort string `json:"root_spire_port"`
 }
 
 type WebAdminLauncherConfig struct {
@@ -50,8 +50,7 @@ type WebAdminLauncherConfig struct {
 	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
 
 	// leaf nodes do not run any process but zones
-	IsLeafNode     bool            `json:"is_leaf_node"`
-	LeafNodeConfig *LeafNodeConfig `json:"leaf_node_config,omitempty"`
+	LeafNodeConfig *LeafNodeConfig `json:"leaf_node,omitempty"`
 }
 
 type WebAdminQuestsConfig struct {
