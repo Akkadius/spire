@@ -79,7 +79,11 @@ func getEQEmuLocalMySQLConfig(serverconfig *eqemuserverconfig.Config) (*MySQLCon
 	}
 
 	// load eqemu config if exists
-	config, _ := serverconfig.Get()
+	config, err := serverconfig.Get()
+	if err != nil {
+		log.Fatalf("unable to load server config error [%v]", err)
+	}
+
 	if config.Server.Database != nil && config.Server.Database.Db != "" {
 		port, err := strconv.Atoi(config.Server.Database.Port)
 		if err != nil {

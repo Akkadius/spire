@@ -57,6 +57,7 @@ var httpSet = wire.NewSet(
 	staticmaps.NewStaticMapController,
 	eqemuserver.NewController,
 	eqemuserver.NewPublicController,
+	eqemuserver.NewDistributedZsController,
 	eqemuserverconfig.NewController,
 	websocket.NewController,
 	backup.NewController,
@@ -191,6 +192,7 @@ func provideControllers(
 	settingsController *spire.SettingsController,
 	eqemuserverController *eqemuserver.Controller,
 	eqemuserverPublicController *eqemuserver.PublicController,
+	eqemuserverDzsController *eqemuserver.DistributedZsController,
 	serverconfigController *eqemuserverconfig.Controller,
 	backupController *backup.Controller,
 	websocketController *websocket.Controller,
@@ -226,6 +228,7 @@ func provideControllers(
 			assetsController,
 			changelogController,
 			eqemuserverPublicController,
+			eqemuserverDzsController,
 		},
 		v1Analytics: []routes.Controller{
 			analyticsController,
