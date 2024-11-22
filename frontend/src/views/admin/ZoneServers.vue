@@ -48,6 +48,7 @@
         :class="['card', 'mb-3', 'fade-in', 'zone-card', 'zone-background-' + zone.zone_name]"
         v-for="zone in filterZoneList(zoneList)"
         :style="formatZoneRow(zone)"
+        :key="zone.zone_server_address + '_' + zone.zone_id"
       >
         <div
           :class="['card-body', 'btn-default', 'card-slim', 'zone-card-body']"
@@ -221,7 +222,6 @@ export default {
     this.init()
   },
   methods: {
-
     loadGuilds() {
       SpireApi.v1().get("guilds?limit=1000000").then((r) => {
         if (r.status === 200) {
