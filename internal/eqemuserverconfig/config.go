@@ -43,6 +43,8 @@ type WebAdminLauncherConfig struct {
 	StaticZones                 string `json:"staticZones,omitempty"`
 	UpdateOpcodesOnStart        bool   `json:"updateOpcodesOnStart"`
 	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
+	// leaf nodes do not run any process but zones
+	IsLeafZoneserverNode bool `json:"isLeafZoneserverNode"`
 }
 
 type WebAdminQuestsConfig struct {
