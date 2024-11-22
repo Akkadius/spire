@@ -50,7 +50,8 @@ type WebAdminLauncherConfig struct {
 	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
 
 	// leaf nodes do not run any process but zones
-	LeafNodeConfig *LeafNodeConfig `json:"leaf_node,omitempty"`
+	IsDistributedZoneRoot bool            `json:"is_distributed_zone_root"`
+	LeafNodeConfig        *LeafNodeConfig `json:"leaf_node,omitempty"`
 }
 
 type WebAdminQuestsConfig struct {

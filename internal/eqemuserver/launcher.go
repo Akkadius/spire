@@ -179,6 +179,15 @@ func (l *Launcher) Start() error {
 	l.loadServerConfig()
 	l.logger.Info().Msg("Starting server launcher")
 
+	cfg, _ := l.serverconfig.Get()
+
+	if cfg.WebAdmin.Launcher != nil {
+		if cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
+			l.isLeafNode = true
+			l.logger.Info().Msg("Server detected is a leaf node")
+		}
+	}
+
 	serverOnline := false
 	uptime, err := l.serverApi.GetWorldUptime()
 	if err == nil && len(uptime) > 0 {
@@ -219,18 +228,10 @@ func (l *Launcher) Start() error {
 		return err
 	}
 
-	cfg, _ := l.serverconfig.Get()
 	cfg.Spire.LauncherStart = true
 	err = l.serverconfig.Save(cfg)
 	if err != nil {
 		return err
-	}
-
-	if cfg.WebAdmin.Launcher != nil {
-		if cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
-			l.isLeafNode = true
-			l.logger.Info().Msg("Server detected is a leaf node")
-		}
 	}
 
 	return nil
@@ -1081,5 +1082,9 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 }
 
 func (l *Launcher) processLeafNodeLoop() {
+	err := l.StartRpcServer(3005)
+	if err != nil {
+		return
+	}
 
 }
