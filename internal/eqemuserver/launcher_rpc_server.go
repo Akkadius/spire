@@ -9,9 +9,14 @@ import (
 	"unicode"
 )
 
+type LauncherDistributedNode struct {
+	address  string
+	hostname string
+}
+
 func (l *Launcher) StartRpcServer(port int) error {
 	e := echo.New()
-	e.GET("/api/v1/dzs/register", l.rpcRegister)
+	e.POST("/api/v1/dzs/register", l.rpcRegister)
 	e.GET("/api/v1/dzs/test", l.rpcTest)
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
@@ -25,11 +30,20 @@ func (l *Launcher) StartRpcServer(port int) error {
 
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			key := c.Response().Header().Get("RPC_KEY")
+			key := c.Request().Header.Get("RPC_KEY")
 			cfg, _ := l.serverconfig.Get()
 
 			if key != cfg.Server.World.Key {
-				return c.JSON(http.StatusUnauthorized, echo.Map{"error": "Invalid key, unauthorized"})
+				return c.JSON(
+					http.StatusUnauthorized,
+					echo.Map{
+						"error": fmt.Sprintf(
+							"Invalid key, unauthorized. Request key [%v] does not match server key [%v]",
+							key,
+							cfg.Server.World.Key,
+						),
+					},
+				)
 			}
 
 			return next(c)
@@ -53,6 +67,18 @@ func (l *Launcher) rpcTest(c echo.Context) error {
 }
 
 func (l *Launcher) rpcRegister(c echo.Context) error {
+	// bind to RpcClientRegisterRequest
+	var req RpcClientRegisterRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
+	}
+
+	// log the client address
+	l.logger.Info().
+		Any("client_address", req.ClientAddress).
+		Any("hostname", req.Hostname).
+		Msg("Client registered")
+
 	return c.JSON(http.StatusOK, echo.Map{"message": "Registered"})
 }
 

@@ -62,6 +62,7 @@ type Launcher struct {
 	// distributed zone server mode
 	isDistributedRoot bool
 	isLeafNode        bool
+	nodes             []LauncherDistributedNode
 
 	// counter properties
 	staticZonesToBoot    []string
@@ -185,6 +186,36 @@ func (l *Launcher) Start() error {
 		if cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
 			l.isLeafNode = true
 			l.logger.Info().Msg("Server detected is a leaf node")
+			for {
+				err := l.rpcClientRegister()
+				if err != nil {
+					l.logger.Error().Err(err).Msg("Error registering leaf node")
+				} else {
+					l.logger.Info().
+						Any("rootSpireUrl", cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpireUrl).
+						Any("rootSpirePort", cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpirePort).
+						Msg("Leaf node registered with root")
+					break
+				}
+
+				l.logger.Info().Msg("Retrying registration in 5 seconds")
+
+				time.Sleep(5 * time.Second)
+			}
+		}
+		if cfg.WebAdmin.Launcher.IsDistributedZoneRoot {
+			l.isDistributedRoot = true
+			l.logger.Info().Msg("Server detected is a distributed zone root")
+		}
+
+		if l.isLeafNode || l.isDistributedRoot {
+			// goroutine to start the rpc server
+			go func() {
+				err := l.StartRpcServer(3005)
+				if err != nil {
+					return
+				}
+			}()
 		}
 	}
 
@@ -543,7 +574,7 @@ func (l *Launcher) Supervisor() error {
 			l.logger.Info().Msgf("Starting Static Zones (%v) [%+v]", len(staticsToBoot), staticsToBoot)
 		}
 
-		l.logger.Debug().
+		l.logger.DebugVvv().
 			Any("staticsToBoot", staticsToBoot).
 			Msg("Supervisor - Booting static zone(s)")
 	}
@@ -1082,9 +1113,5 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 }
 
 func (l *Launcher) processLeafNodeLoop() {
-	err := l.StartRpcServer(3005)
-	if err != nil {
-		return
-	}
 
 }
