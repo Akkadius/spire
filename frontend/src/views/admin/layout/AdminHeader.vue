@@ -158,6 +158,9 @@ export default {
 
       stats: {},
 
+      lastUpdateTime: 0,
+      updateIntervalSeconds: 1,
+
       serverLocked: false,
 
       cpuPercent: 0,
@@ -195,7 +198,7 @@ export default {
     this.getServerLockedStatus()
 
     this.timer = setInterval(() => {
-      if (!document.hidden) {
+      if (!document.hidden && this.readyToPoll()) {
         this.loadServerStats()
       }
     }, 1000)
@@ -206,6 +209,14 @@ export default {
     }
   },
   methods: {
+
+    readyToPoll() {
+      return Date.now() - this.lastUpdateTime > this.updateIntervalSeconds * 1000
+    },
+
+    getClientListCount() {
+      return this.stats && this.stats.client_list && this.stats.client_list.data ? this.stats.client_list.data.length : 0
+    },
 
     getCpuLoadColor(load) {
       if (load > 80) {
@@ -246,6 +257,18 @@ export default {
           this.stats = r.data
           this.$forceUpdate()
           EventBus.$emit("server-stats", r.data)
+
+          const clientCount = this.getClientListCount()
+
+          if (clientCount > 1000) {
+            this.updateIntervalSeconds = 30
+          } if (clientCount > 500) {
+            this.updateIntervalSeconds = 10
+          } else if (clientCount > 100) {
+            this.updateIntervalSeconds = 5
+          }
+
+          this.lastUpdateTime = Date.now()
         }
       })
 

@@ -11,11 +11,13 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
+	gocache "github.com/patrickmn/go-cache"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/volatiletech/null/v8"
 	"io"
@@ -33,32 +35,38 @@ import (
 type Controller struct {
 	db             *database.Resolver
 	eqemuserverapi *Client
+	logger         *logger.AppLogger
 	pathmgmt       *pathmgmt.PathManagement
 	settings       *spire.Settings
 	serverconfig   *eqemuserverconfig.Config
 	updater        *Updater
 	launcher       *Launcher
+	cache          *gocache.Cache
 	userevent      *auditlog.UserEvent
 }
 
 func NewController(
 	db *database.Resolver,
 	api *Client,
+	logger *logger.AppLogger,
 	serverconfig *eqemuserverconfig.Config,
 	pathmgmt *pathmgmt.PathManagement,
 	settings *spire.Settings,
 	updater *Updater,
 	launcher *Launcher,
+	cache *gocache.Cache,
 	userevent *auditlog.UserEvent,
 ) *Controller {
 	return &Controller{
 		db:             db,
 		eqemuserverapi: api,
+		logger:         logger,
 		serverconfig:   serverconfig,
 		pathmgmt:       pathmgmt,
 		updater:        updater,
 		settings:       settings,
 		launcher:       launcher,
+		cache:          cache,
 		userevent:      userevent,
 	}
 }
@@ -67,6 +75,7 @@ func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/zone-list", a.getZoneList, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/zoneserver-list", a.getZoneServerList, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/server-stats", a.getServerStats, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-lock-status", a.getServerLockedStatus, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/toggle-server-lock", a.toggleServerLock, nil),
@@ -137,6 +146,13 @@ type ServerStatsResponse struct {
 }
 
 func (a *Controller) getServerStats(c echo.Context) error {
+	cacheKey := "server_stats_response"
+	cachedList, found := a.cache.Get(cacheKey)
+	if found {
+		c.Logger().Info("Returning cached server stats")
+		return c.JSON(http.StatusOK, cachedList)
+	}
+
 	var r ServerStatsResponse
 	processes, _ := process.Processes()
 	for _, p := range processes {
@@ -174,16 +190,33 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	cfg, _ := a.serverconfig.Get()
 	r.ServerName = cfg.Server.World.Longname
 
+	// cache when server is under higher load
+	if len(zoneList.Data) > 100 || len(clientList.Data) > 100 {
+		a.cache.Set(cacheKey, r, 10*time.Second)
+	}
+
 	return c.JSON(http.StatusOK, r)
 }
 
 func (a *Controller) getClientList(c echo.Context) error {
+	cacheKey := "server_client_list_response"
+	cachedList, found := a.cache.Get(cacheKey)
+	if found {
+		c.Logger().Info("Returning cached client list")
+		return c.JSON(http.StatusOK, cachedList)
+	}
+
 	types, err := a.eqemuserverapi.GetWorldClientList()
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
 		)
+	}
+
+	// cache when server is under higher load
+	if len(types.Data) > 100 {
+		a.cache.Set(cacheKey, types, 10*time.Second)
 	}
 
 	return c.JSON(http.StatusOK, types)
@@ -1221,4 +1254,27 @@ func (a *Controller) getWebsocketAuth(c echo.Context) error {
 		AccountName: accountName,
 		Password:    password,
 	})
+}
+
+func (a *Controller) getZoneServerList(c echo.Context) error {
+	cachedList, found := a.cache.Get("zoneserver_list")
+	if found {
+		a.logger.Info().Msg("Returning cached zoneserver list")
+		return c.JSON(http.StatusOK, cachedList)
+	}
+
+	list, err := a.launcher.GetZoneserverList()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to get zoneserver list [%v]", err.Error())},
+		)
+	}
+
+	if len(list) > 100 {
+		a.cache.Set("zoneserver_list", list, 5*time.Second)
+	}
+
+	// Return combined data
+	return c.JSON(http.StatusOK, list)
 }

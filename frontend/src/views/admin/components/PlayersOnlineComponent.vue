@@ -1,7 +1,7 @@
 <template>
   <div class="row" :style="loaded ? 'opacity:1' : 'opacity:.3'">
     <div class="col-12">
-      <div class="card mb-3" v-if="clientList.length > 0 && filteredClientList.length > 0">
+      <div class="card mb-3" v-if="clientList && clientList.length > 0 && filteredClientList && filteredClientList.length > 0">
         <div class="card-body pt-0 pb-0 pl-3 pr-3">
           <div class="input-group input-group-flush">
             <div class="input-group-prepend">
@@ -28,7 +28,7 @@
             v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
             class="m-3"
           >
-            Too many online ({{ clientList.length }}) to display, for full list see
+            Too many online ({{ clientList ? clientList.length : 0 }}) to display, for full list see
             <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
               <i class="fe fe-user"></i> Players
               Online
@@ -64,7 +64,7 @@
 
             <tr
               v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)"
-              :key="client.name"
+              :key="client && client.name && client.name.length > 0 ? client.name : index"
             >
               <td style="text-align:center">
                 <div class="avatar-list avatar-list-stacked">
@@ -140,7 +140,10 @@ export default {
 
   data() {
     return {
-      listLimitSize: null,
+      lastUpdateTime: 0,
+      updateIntervalSeconds: 1,
+
+      listLimitSize: 10000,
       loaded: false,
       DB_CLASSES_ICONS: {},
       DB_RACES_ICONS: {},
@@ -158,6 +161,10 @@ export default {
 
   methods: {
 
+    readyToPoll() {
+      return Date.now() - this.lastUpdateTime > this.updateIntervalSeconds * 1000
+    },
+
     filterPlayers() {
       this.filteredClientList = []
 
@@ -169,6 +176,10 @@ export default {
       let clients = [];
       this.clientList.forEach(c => {
         const filter = this.playerSearchFilter.toLowerCase();
+
+        if (!c || !c.name) {
+          return;
+        }
 
         if (
           c.name.toLowerCase().includes(filter) ||
@@ -255,6 +266,17 @@ export default {
 
         this.clientList = clientList
         this.filterPlayers()
+
+        const clientCount = this.clientList.length
+        if (clientCount > 1000) {
+          this.updateIntervalSeconds = 30
+        } if (clientCount > 500) {
+          this.updateIntervalSeconds = 10
+        } else if (clientCount > 100) {
+          this.updateIntervalSeconds = 5
+        }
+
+        this.lastUpdateTime = Date.now()
       }
     }
   },
@@ -285,7 +307,7 @@ export default {
     }
 
     Timer.timer['players-online'] = setInterval(() => {
-      if (!document.hidden) {
+      if (!document.hidden && this.readyToPoll()) {
         this.buildPlayersOnlineList()
       }
     }, 1000)

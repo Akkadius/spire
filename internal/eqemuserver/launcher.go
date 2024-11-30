@@ -955,3 +955,107 @@ func (l *Launcher) emitStopTimer(stopTime time.Time) {
 
 	l.websocketMgr.Broadcast("stopTimer", string(jsonData))
 }
+
+type ZoneServerClient struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Race  int    `json:"race"`
+	Class int    `json:"class"`
+	Guild int    `json:"guild"`
+}
+
+type ZoneServer struct {
+	ZoneID            int                `json:"zone_id"`
+	ZoneName          string             `json:"zone_name"`
+	ZoneLongName      string             `json:"zone_long_name"`
+	ZoneOsPid         int                `json:"zone_os_pid"`
+	IsStaticZone      bool               `json:"is_static_zone"`
+	ClientPort        int                `json:"client_port"`
+	NumberPlayers     int                `json:"number_players"`
+	InstanceID        int                `json:"instance_id,omitempty"`
+	Clients           []ZoneServerClient `json:"clients"`
+	ZoneServerAddress string             `json:"zone_server_address"`
+	// process info
+	Pid     int32   `json:"pid"`
+	Name    string  `json:"name"`
+	CmdLine string  `json:"cmd"`
+	Cpu     float64 `json:"cpu"`
+	Memory  uint64  `json:"memory"`
+	Elapsed int64   `json:"elapsed"` // uptime
+}
+
+func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
+	zones, err := l.serverApi.GetZoneList()
+	if err != nil {
+		return []ZoneServer{}, err
+	}
+
+	// Fetch client list
+	clients, err := l.serverApi.GetWorldClientList()
+	if err != nil {
+		return []ZoneServer{}, err
+	}
+
+	// Create a map of zone ID to clients for quick lookup
+	clientMap := make(map[int][]ZoneServerClient, 0)
+	for _, client := range clients.Data {
+		zoneID := client.Server.ID
+		clientInfo := ZoneServerClient{
+			ID:    client.ID,
+			Name:  client.Name,
+			Race:  client.Race,
+			Class: client.Class,
+			Guild: client.GuildID,
+		}
+		clientMap[zoneID] = append(clientMap[zoneID], clientInfo)
+	}
+
+	processes, _ := process.Processes()
+
+	cfg, _ := l.serverconfig.Get()
+
+	// Combine zone data with associated clients
+	var combinedData []ZoneServer
+	for _, zone := range zones.Data {
+		clients := clientMap[zone.ID]
+		if clients == nil {
+			clients = []ZoneServerClient{}
+		}
+
+		zoneInfo := ZoneServer{
+			ZoneID:            zone.ZoneID,
+			ZoneName:          zone.ZoneName,
+			ZoneLongName:      zone.ZoneLongName,
+			ZoneOsPid:         zone.ZoneOsPid,
+			IsStaticZone:      zone.IsStaticZone,
+			ClientPort:        zone.ClientPort,
+			NumberPlayers:     zone.NumberPlayers,
+			InstanceID:        zone.InstanceID,
+			Clients:           clients,
+			ZoneServerAddress: zone.ClientAddress,
+		}
+
+		combinedData = append(combinedData, zoneInfo)
+	}
+
+	for _, p := range processes {
+		for i, zone := range combinedData {
+			if zone.ZoneServerAddress == cfg.Server.World.Address && int(p.Pid) == zone.ZoneOsPid {
+				name, _ := p.Name()
+				cmdLine, _ := p.Cmdline()
+				cpuPercent, _ := p.CPUPercent()
+				memory, _ := p.MemoryInfo()
+				uptime, _ := p.CreateTime()
+				now := time.Now().Unix()
+				combinedData[i].Pid = p.Pid
+				combinedData[i].Name = name
+				combinedData[i].CmdLine = cmdLine
+				combinedData[i].Cpu = cpuPercent
+				combinedData[i].Memory = memory.RSS
+				combinedData[i].Elapsed = now - (uptime / 1000)
+			}
+		}
+	}
+
+	return combinedData, nil
+}

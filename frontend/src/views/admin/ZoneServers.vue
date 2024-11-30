@@ -45,10 +45,10 @@
 
     <div style="max-height: 80vh; overflow-y: scroll">
       <div
-        :class="['card', 'mb-3', 'fade-in', 'zone-card', 'zone-background-' + zone.zone_name]"
-        v-if="getProcessStats(zone.zone_os_pid)"
+        :class="['card', 'mb-3', 'zone-card', 'zone-background-' + zone.zone_name]"
         v-for="zone in filterZoneList(zoneList)"
         :style="formatZoneRow(zone)"
+        :key="zone.zone_id + '_' + zone.zone_os_pid + '_' + zone.zone_name + '_' + parseFloat(zone.cpu).toFixed(2) + '_' + zone.number_players"
       >
         <div
           :class="['card-body', 'btn-default', 'card-slim', 'zone-card-body']"
@@ -56,7 +56,7 @@
         >
           <div class="row align-items-center">
 
-            <div class="col ml-n1">
+            <div class="col-2 ml-n1">
               <h4 class="mb-1">
 
                 <span
@@ -78,87 +78,57 @@
               </h4>
             </div>
 
-            <div class="col-auto" v-if="zone.zone_name">
-              <p class="mb-1 mt-2">
-              <span class="ml-2">
+            <div class="col-10 text-right">
+              <div class="ml-2 d-inline-block" style="min-width: 200px">
+                <div class="ml-3 d-inline-block">
                   {{ formatZoneName(zone.zone_name) }}
                   ({{ zone.zone_id }})
                   <span v-if="zone.instance_id">Instance: {{ zone.instance_id }}</span>
-                </span>
-              </p>
-            </div>
+                </div>
 
-            <div class="col-auto">
-              <p class="mb-1 mt-2">
-              <span class="ml-2">
-                  {{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}
-              </span>
-              </p>
-            </div>
+                <div class="d-inline-block ml-3">{{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}</div>
+                <i class="fe fe-proc ml-3"></i> PID {{ zone.zone_os_pid }}
+                <i class="fe fe-cloud ml-3"></i> IP {{ zone.zone_server_address }}:{{ zone.client_port }}
+                <i class="fe fe-users ml-3"></i> {{ zone.number_players }}
+              </div>
 
-            <div class="col-auto">
-              <p class="mb-1 mt-2">
-                <i class="fe fe-proc"></i> PID {{ zone.zone_os_pid }}
-              </p>
-            </div>
-
-            <div class="col-auto">
-              <p class="mb-1 mt-2">
-                <i class="fe fe-cloud"></i> Port {{ zone.client_port }}
-              </p>
-            </div>
-
-
-            <div class="col-auto">
-              <p class="mb-1 mt-2">
-                <i class="fe fe-users"></i> {{ zone.number_players }}
-              </p>
-            </div>
-
-            <div class="col-auto">
-              <p
-                class="mb-1 mt-2 fade-in"
-                :style="'color: ' + getCpuUsageColor(zone.zone_os_pid) + ' !important'"
-                v-if="getProcessStats(zone.zone_os_pid)"
+              <div
+                class="text-left d-inline-block ml-3"
+                :style="'color: ' + getCpuUsageColor(zone) + ' !important; min-width: 70px;'"
               >
-                <i class="fe fe-cpu"></i> {{ parseFloat(getProcessStats(zone.zone_os_pid).cpu).toFixed(2) }} %
-              </p>
-            </div>
+                <i class="fe fe-cpu"></i> {{ zone.cpu ? parseFloat(zone.cpu).toFixed(2) : "N/A" }} %
+              </div>
 
-            <div class="col-auto">
-              <p
-                :style="'color: ' + getMemUsageColor(zone.zone_os_pid) + ' !important'"
-                class="mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)"
+              <div
+                :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px'"
+                class="ml-3 d-inline-block text-left"
               >
-                {{ parseFloat(getProcessStats(zone.zone_os_pid).memory / 1024 / 1024).toFixed(2) }}MB
-              </p>
-            </div>
+                <i class="fe fe-hard-drive"></i>
+                {{ zone.memory ? parseFloat(zone.memory / 1024 / 1024).toFixed(2) + "MB" : "N/A" }}
+              </div>
 
-            <div class="col-auto">
-              <p class="mb-1 mt-2" v-if="getProcessStats(zone.zone_os_pid)">
+              <div class="ml-3 d-inline-block text-left" style="min-width: 70px">
                 <i class="fe fe-clock"></i>
-                {{ parseFloat(getProcessStats(zone.zone_os_pid).elapsed / 1000 / 60 / 60).toFixed(2) }}h
-              </p>
-            </div>
+                {{ zone.elapsed > 0 ? parseFloat(zone.elapsed / 60 / 60).toFixed(2) + "h" : "N/A" }}
+              </div>
 
-            <div class="col-auto">
-              <router-link
-                style="font-size:12px"
-                class="btn btn-sm btn-primary"
-                :to="'zoneservers/' +zone.client_port + '/logs'"
-              >
-                <i class="fa fa-eye"></i> Logs
-              </router-link>
-            </div>
+              <div class="d-inline-block btn-group ml-4 text-right" role="group">
+                <router-link
+                  style="font-size:12px"
+                  class="btn btn-sm btn-primary"
+                  :to="'zoneservers/' +zone.client_port + '/logs'"
+                >
+                  <i class="fa fa-eye"></i> Logs
+                </router-link>
 
-            <div class="col-auto">
-              <button
-                class="btn btn-sm btn-danger"
-                @click="killZone(zone.zone_os_pid)"
-                style="font-size:12px"
-              >
-                <i class="fa fa-power-off"></i> Kill Zone
-              </button>
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="killZone(zone.zone_os_pid)"
+                  style="font-size:12px"
+                >
+                  <i class="fa fa-power-off"></i> Kill Zone
+                </button>
+              </div>
             </div>
 
           </div>
@@ -171,8 +141,7 @@
             <div class="col-auto">
               <div class="d-flex flex-wrap">
                 <div
-                  class="fade-in"
-                  v-for="(c, index) in getClientByInternalZoneId(zone.id)"
+                  v-for="(c, index) in filterClients(zone.clients)"
                   :key="c.id"
                 >
 
@@ -196,7 +165,7 @@
                       style="line-height: 24px; margin-left: 5px;"
                     >
                       {{ c.name }}
-                      {{ c.guild ? '<' + c.guild + '>' : ''}}
+                      {{ c.guild ? '<' + c.guild + '>' : '' }}
                     </small>
                   </div>
                 </div>
@@ -206,7 +175,6 @@
         </div>
       </div>
     </div>
-
 
   </div>
 </template>
@@ -227,15 +195,15 @@ export default {
     return {
       search: "",
 
+      lastUpdateTime: 0,
+      updateIntervalSeconds: 1,
+
       zoneList: [],
-      processStats: {},
       loaded: false,
       zoneServerLoop: null,
-      clientPollingLoop: null,
       chartLoaded: false,
       zoneBackgroundImages: {},
 
-      clients: [],
       guilds: {},
 
       // api responses
@@ -256,6 +224,9 @@ export default {
     this.init()
   },
   methods: {
+    readyToPoll() {
+      return Date.now() - this.lastUpdateTime > this.updateIntervalSeconds * 1000
+    },
 
     loadGuilds() {
       SpireApi.v1().get("guilds?limit=1000000").then((r) => {
@@ -289,14 +260,10 @@ export default {
       )
     },
 
-    getClientByInternalZoneId(id) {
-      if (!this.clients) {
+    filterClients(clients) {
+      if (!clients) {
         return []
       }
-
-      let clients = this.clients.filter((c) => {
-        return c.server && c.server.id === id
-      })
 
       let list = []
       for (let c of clients) {
@@ -319,31 +286,9 @@ export default {
           class: c.class,
           guild: guild,
         })
-
-        // let id = 100;
-        // for (let x = 0; x < 22; x++) {
-        //   for (let i = 0; i < 11; i++) {
-        //     list.push({
-        //       id: id,
-        //       name: Math.random().toString(36),
-        //       race: c.race + i,
-        //       class: c.class + i,
-        //       guild: guild,
-        //     })
-        //     id++
-        //   }
-        // }
-
       }
 
       return list
-    },
-
-    async getPlayers() {
-      const r = await SpireApi.v1().get("eqemuserver/client-list")
-      if (r.status === 200) {
-        this.clients = r.data.data
-      }
     },
 
     formatRowIcon(zone) {
@@ -390,8 +335,8 @@ export default {
       }
     },
 
-    getMemUsageColor(pid) {
-      const p = parseFloat(this.getProcessStats(pid).memory / 1024 / 1024)
+    getMemUsageColor(zone) {
+      const p = parseFloat(zone.memory / 1024 / 1024)
       if (p > 600) {
         return 'red';
       } else if (p > 300) {
@@ -401,8 +346,8 @@ export default {
       return '';
     },
 
-    getCpuUsageColor(pid) {
-      const p = parseFloat(this.getProcessStats(pid).cpu)
+    getCpuUsageColor(zone) {
+      const p = parseFloat(zone.cpu)
       if (p > 15) {
         return 'red';
       } else if (p > 5) {
@@ -418,26 +363,11 @@ export default {
 
       if (!this.zoneServerLoop) {
         this.zoneServerLoop = setInterval(() => {
-          if (!document.hidden) {
+          if (!document.hidden && this.readyToPoll()) {
             this.getZoneList()
           }
         }, 1000)
-
-
-        this.getPlayers()
-        this.clientPollingLoop = setInterval(() => {
-          if (!document.hidden) {
-            this.getPlayers()
-          }
-        }, 5000)
-
       }
-    },
-
-    getProcessStats(pid) {
-      return this.processStats.find((e) => {
-        return e.pid === pid
-      })
     },
 
     // state
@@ -467,8 +397,6 @@ export default {
 
     async killZone(pid) {
       if (confirm("Are you sure that you want to kill this process pid (" + pid + ")?")) {
-        // await OcculusClient.killProcessByPid(pid)
-
         this.zoneList = []
 
         try {
@@ -489,14 +417,14 @@ export default {
     },
     async getZoneList() {
       try {
-        const r = await SpireApi.v1().get('eqemuserver/zone-list')
+        const r = await SpireApi.v1().get('eqemuserver/zoneserver-list')
         if (r.status === 200) {
 
           // sort list
           // sort by number of players first
           // then zones with id of 0 always on bottom of list
           // then sort by zone name
-          this.zoneList = r.data.zone_list.data.sort(
+          this.zoneList = r.data.sort(
             (a, b) => {
               if (a.number_players > b.number_players) {
                 return -1
@@ -526,13 +454,15 @@ export default {
             }
           )
 
-          this.processStats = r.data.process_info
-          this.error        = ""
+          if (typeof this.zoneList === "undefined") {
+            this.zoneList = []
+          }
+
+          this.error = ""
         }
       } catch (e) {
         // error notify
         if (e.response && e.response.data && e.response.data.error) {
-          this.zoneList = []
           if (e.response.data.error.includes("Failed to connect to gameserver")) {
             this.error = ""
           } else {
@@ -541,6 +471,15 @@ export default {
         }
       }
 
+      this.lastUpdateTime = Date.now()
+
+      if (this.zoneList.length > 1000) {
+        this.updateIntervalSeconds = 30
+      } if (this.zoneList.length > 500) {
+        this.updateIntervalSeconds = 10
+      } else if (this.zoneList.length > 100) {
+        this.updateIntervalSeconds = 5
+      }
 
       this.loaded = true
     },
@@ -550,7 +489,7 @@ export default {
 
       let zoneList = []
       for (let z of list) {
-        let clients = this.getClientByInternalZoneId(z.id)
+        let clients       = this.filterClients(z.id)
         let matchesClient = false
         for (let c of clients) {
           if (c.name.toLowerCase().includes(search)) {
@@ -574,7 +513,6 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.zoneServerLoop)
-    clearInterval(this.clientPollingLoop)
   }
 }
 </script>

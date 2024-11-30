@@ -14,11 +14,17 @@ export class SpireWebsocket {
     }
 
     const protocol = window.location.protocol === "https:" ? "wss" : "ws"
+    let basePath = SpireApi.getBasePath()
+    if (basePath.startsWith("http://")) {
+      basePath = basePath.replace("http://", "")
+    } else if (basePath.startsWith("https://")) {
+      basePath = basePath.replace("https://", "")
+    }
 
     const uri = util.format(
       "%s:%s/api/v1/websocket?jwt=%s",
       protocol,
-      SpireApi.getBasePath().replaceAll("http://", ""),
+      basePath,
       UserContext.getAccessToken()
     )
 

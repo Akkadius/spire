@@ -1,3 +1,9 @@
+## [4.9.4] 11/30/2024
+
+* **Spire Admin** Improve zone server page performance when large amounts of zoneservers are displayed.
+* **Spire Admin** Improve the performance of players online, admin header components.
+* **Spire Admin** Fix an issue where if Spire is loaded via SSL, wss (secure) was not being chosen as a connection backend.
+
 ## [4.9.3] 10/8/2024
 
 * **Server Updater** Resolved a minor issue when resolving home directories when doing `eqemu-server:update --compile-server=true --auto=true` 
