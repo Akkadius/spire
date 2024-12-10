@@ -309,28 +309,3 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 
 	return perlEvents
 }
-
-func getSpecialEventTypes(eventType string) []string {
-	if eventType == "BotMerc" {
-		return []string{"Bot", "Merc"}
-	} else if eventType == "BotMercNPC" {
-		return []string{"Bot", "Merc", "NPC"}
-	} else if eventType == "MercNPC" {
-		return []string{"Merc", "NPC"}
-	} else if eventType == "Mob" {
-		return []string{"Bot", "Merc", "NPC", "Player"}
-	}
-
-	return []string{eventType}
-}
-
-func isSpecialEventType(eventType string) bool {
-	specialEventTypes := []string{"BotMerc", "BotMercNPC", "MercNPC", "Mob"}
-	for _, specialEventType := range specialEventTypes {
-		if eventType == specialEventType {
-			return true
-		}
-	}
-
-	return false
-}
