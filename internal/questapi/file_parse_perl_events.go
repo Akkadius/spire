@@ -289,7 +289,6 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 											continue
 										}
 
-										fmt.Println("EntityType [%s] EventName [%s]", eventSubtype, event)
 										perlEvents = append(
 											perlEvents, PerlEvent{
 												EntityType:      eventSubtype,
