@@ -733,8 +733,10 @@ export default {
             return
           }
 
-          let text = "[" + option.entity_type + "] " + option.event_identifier;
-          options.push({value: option.entity_type + '-' + option.event_identifier, text: text})
+          if (option.event_identifier != "") {
+            let text = "[" + option.entity_type + "] " + option.event_identifier;
+            options.push({value: option.entity_type + '-' + option.event_identifier, text: text})
+          }
         })
         this.eventOptions   = options
         this.eventSelection = null

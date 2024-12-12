@@ -102,16 +102,24 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 							}
 						}
 
+						var eventTypes = []string{entity}
+
 						if entity == "Encounter" {
 							continue
 						}
 
-						eventEntityMappings = append(
-							eventEntityMappings, PerlEventEntityMapping{
-								Entity: entity,
-								Event:  event,
-							},
-						)
+						if isSpecialEventType(entity) {
+							eventTypes = getSpecialEventTypes(entity)
+						}
+
+						for _, eventType := range eventTypes {
+							eventEntityMappings = append(
+								eventEntityMappings, PerlEventEntityMapping{
+									Entity: eventType,
+									Event:  event,
+								},
+							)
+						}
 					}
 				}
 			}
@@ -218,70 +226,78 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 						// grep: Player(EVENT_LEVEL_UP, this, "", 0);
 						if len(eventTypeSplit) > 0 {
 							eventType := eventTypeSplit[0]
+							var eventTypes = []string{eventType}
 
 							if eventType == "Encounter" {
 								continue
+							}
+
+							if isSpecialEventType(eventType) {
+								eventTypes = getSpecialEventTypes(eventType)
 							}
 
 							eventArgs := eventTypeSplit[1]
 							eventArgsSplit := strings.Split(eventArgs, ",")
 							// grep: EVENT_LEVEL_UP, this, "", 0);
 							// grab EVENT_LEVEL_UP
-							if len(eventArgsSplit) > 0 {
-								event := strings.TrimSpace(eventArgsSplit[0])
+							for _, eventSubtype := range eventTypes {
+								if len(eventArgsSplit) > 0 {
+									event := strings.TrimSpace(eventArgsSplit[0])
 
-								// make sure the event doesn't already exist
-								eventExists := false
-								for _, perlEvent := range perlEvents {
-									if perlEvent.EventName == event && perlEvent.EntityType == eventType {
-										eventExists = true
-										break
-									}
-								}
+									// make sure the event doesn't already exist
 
-								// if event doesn't exist we need to map the EVENT_NAME to a script event_name(e)
-								// since they are not usually 1:1
-								if !eventExists {
-
-									// get the perl script-used event name if exists
-									// @example source: EVENT_TRADE perl usage: EVENT_ITEM
-									finalEvent := event
-									eventIndex := indexOf(event, eventCodes)
-									if eventIndex >= 0 {
-										if len(perlEventCodes) > eventIndex {
-											finalEvent = perlEventCodes[eventIndex]
-										}
-									}
-
-									if finalEvent == "evt.event_id" {
-										continue
-									}
-
-									// remove events that aren't all upper (for perl)
-									if !IsUpper(event) {
-										continue
-									}
-
-									// remove duplicates from results
-									hasEvent := false
-									for _, p := range perlEvents {
-										if p.EventIdentifier == finalEvent && p.EntityType == eventType {
-											hasEvent = true
+									eventExists := false
+									for _, perlEvent := range perlEvents {
+										if perlEvent.EventName == event && perlEvent.EntityType == eventSubtype {
+											eventExists = true
 											break
 										}
 									}
-									if hasEvent {
-										continue
-									}
 
-									perlEvents = append(
-										perlEvents, PerlEvent{
-											EntityType:      eventType,
-											EventName:       event,
-											EventIdentifier: finalEvent,
-											EventVars:       []string{},
-										},
-									)
+									// if event doesn't exist we need to map the EVENT_NAME to a script event_name(e)
+									// since they are not usually 1:1
+									if !eventExists {
+
+										// get the perl script-used event name if exists
+										// @example source: EVENT_TRADE perl usage: EVENT_ITEM
+										finalEvent := event
+										eventIndex := indexOf(event, eventCodes)
+										if eventIndex >= 0 {
+											if len(perlEventCodes) > eventIndex {
+												finalEvent = perlEventCodes[eventIndex]
+											}
+										}
+
+										if finalEvent == "evt.event_id" {
+											continue
+										}
+
+										// remove events that aren't all upper (for perl)
+										if !IsUpper(event) {
+											continue
+										}
+
+										// remove duplicates from results
+										hasEvent := false
+										for _, p := range perlEvents {
+											if p.EventIdentifier == finalEvent && p.EntityType == eventSubtype {
+												hasEvent = true
+												break
+											}
+										}
+										if hasEvent {
+											continue
+										}
+
+										perlEvents = append(
+											perlEvents, PerlEvent{
+												EntityType:      eventSubtype,
+												EventName:       event,
+												EventIdentifier: finalEvent,
+												EventVars:       []string{},
+											},
+										)
+									}
 								}
 							}
 						}

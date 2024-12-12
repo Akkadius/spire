@@ -232,39 +232,47 @@ func (c *ParseService) parseLuaEvents(files map[string]string) []LuaEvent {
 							eventType := eventTypeSplit[0]
 							eventArgs := eventTypeSplit[1]
 							eventArgsSplit := strings.Split(eventArgs, ",")
-							// grep: EVENT_LEVEL_UP, this, "", 0);
-							// grab EVENT_LEVEL_UP
-							if len(eventArgsSplit) > 0 {
-								event := strings.TrimSpace(eventArgsSplit[0])
+							var eventTypes = []string{eventType}
 
-								// make sure the event doesn't already exist
-								eventExists := false
-								for _, luaEvent := range luaEvents {
-									if luaEvent.EventName == event && luaEvent.EntityType == eventType {
-										eventExists = true
-										break
-									}
-								}
+							if isSpecialEventType(eventType) {
+								eventTypes = getSpecialEventTypes(eventType)
+							}
 
-								// if event doesn't exist we need to map the EVENT_NAME to a script event_name(e)
-								// since they are not usually 1:1
-								if !eventExists {
-									identifier := ""
-									for _, mapping := range luaEventMappings {
-										if mapping.Event == event {
-											identifier = mapping.ScriptEventIdentifier
+							for _, finalEventType := range eventTypes {
+								// grep: EVENT_LEVEL_UP, this, "", 0);
+								// grab EVENT_LEVEL_UP
+								if len(eventArgsSplit) > 0 {
+									event := strings.TrimSpace(eventArgsSplit[0])
+
+									// make sure the event doesn't already exist
+									eventExists := false
+									for _, luaEvent := range luaEvents {
+										if luaEvent.EventName == event && luaEvent.EntityType == finalEventType {
+											eventExists = true
+											break
 										}
 									}
 
-									if len(identifier) > 0 {
-										e := LuaEvent{
-											EntityType:      eventType,
-											EventName:       event,
-											EventIdentifier: "event_" + identifier,
-											EventVars:       []string{},
+									// if event doesn't exist we need to map the EVENT_NAME to a script event_name(e)
+									// since they are not usually 1:1
+									if !eventExists {
+										identifier := ""
+										for _, mapping := range luaEventMappings {
+											if mapping.Event == event {
+												identifier = mapping.ScriptEventIdentifier
+											}
 										}
 
-										luaEvents = append(luaEvents, e)
+										if len(identifier) > 0 {
+											e := LuaEvent{
+												EntityType:      finalEventType,
+												EventName:       event,
+												EventIdentifier: "event_" + identifier,
+												EventVars:       []string{},
+											}
+
+											luaEvents = append(luaEvents, e)
+										}
 									}
 								}
 							}
