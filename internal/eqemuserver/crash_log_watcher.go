@@ -57,6 +57,16 @@ func (l *CrashLogWatcher) Process() {
 				Any("error", err.Error()).
 				Any("watchCrashLogs", l.watchCrashLogs).
 				Msg("Error getting server config file stat")
+		} else {
+			if stat.ModTime().After(l.configLastModified) {
+				l.configLastModified = stat.ModTime()
+				l.loadServerConfig()
+				l.logger.Debug().
+					Any("configLastModified", l.configLastModified).
+					Any("statTime", time.Now().Sub(now).String()).
+					Any("watchCrashLogs", l.watchCrashLogs).
+					Msg("Detected server config change")
+			}
 		}
 
 		l.logger.DebugVvv().
@@ -64,16 +74,6 @@ func (l *CrashLogWatcher) Process() {
 			Any("configLastModified", l.configLastModified).
 			Any("watchCrashLogs", l.watchCrashLogs).
 			Msg("Main crash log watcher process loop")
-
-		if stat.ModTime().After(l.configLastModified) {
-			l.configLastModified = stat.ModTime()
-			l.loadServerConfig()
-			l.logger.Debug().
-				Any("configLastModified", l.configLastModified).
-				Any("statTime", time.Now().Sub(now).String()).
-				Any("watchCrashLogs", l.watchCrashLogs).
-				Msg("Detected server config change")
-		}
 
 		if l.closeWatcher {
 			if l.watcher != nil {
