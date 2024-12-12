@@ -682,12 +682,12 @@ func (l *Launcher) ServerProcessLauncherWatchdog() {
 					Any("error", err.Error()).
 					Any("isRunning", l.isRunning).
 					Msg("Error getting server config file stat")
-			}
-
-			if stat.ModTime().After(l.configLastModified) {
-				l.configLastModified = stat.ModTime()
-				l.loadServerConfig()
-				l.logger.Debug().Msg("Watchdog - Detected server config change")
+			} else {
+				if stat.ModTime().After(l.configLastModified) {
+					l.configLastModified = stat.ModTime()
+					l.loadServerConfig()
+					l.logger.Debug().Msg("Watchdog - Detected server config change")
+				}
 			}
 
 			if l.isRunning {
