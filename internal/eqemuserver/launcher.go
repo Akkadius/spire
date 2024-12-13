@@ -1123,7 +1123,7 @@ func (l *Launcher) processDistributed() {
 		// [x] calculate how many zones we need to boot from the root
 		// [x] determine how many zones each node should boot
 		// [x] send the boot command to each node
-		// [ ] monitor the nodes to ensure they are running the correct number of zones
+		// [x] monitor the nodes to ensure they are running the correct number of zones
 		// [ ] enforce max zones per node from config
 
 		// UI
@@ -1200,10 +1200,6 @@ func (l *Launcher) processDistributed() {
 					Msg("Processing node")
 			}
 		}
-
-		// we need to set l.nodes[i].TargetZonesToLaunch to the number of zones we want to launch on each node
-		// we need to divide l.targetDynamics by the number of nodes and set that as the target for each node
-
 	}
 
 	if l.isLeafNode {
