@@ -15,6 +15,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -72,6 +73,9 @@ type Launcher struct {
 	stopType             string
 	bootedTotalDynamics  int
 	targetDynamics       int
+
+	processSleepTime     time.Duration
+	zoneAssignedDynamics int
 }
 
 func NewLauncher(
@@ -91,6 +95,7 @@ func NewLauncher(
 		serverApi:            serverApi,
 		stopTimer:            0,
 		websocketMgr:         websocketMgr,
+		processSleepTime:     1 * time.Second,
 	}
 
 	return l
@@ -144,7 +149,19 @@ func (l *Launcher) Process() {
 			}
 		}
 
-		time.Sleep(processLoopTimer)
+		// variable sleep time based on the number of processes running
+		if l.currentProcessCounts[zoneProcessName] > 0 {
+			cnt := l.currentProcessCounts[zoneProcessName]
+			if cnt > 1000 {
+				l.processSleepTime = 10 * time.Second
+			} else if cnt > 500 {
+				l.processSleepTime = 5 * time.Second
+			} else {
+				l.processSleepTime = 1 * time.Second
+			}
+		}
+
+		time.Sleep(l.processSleepTime)
 	}
 }
 
@@ -222,6 +239,8 @@ func (l *Launcher) Start() error {
 				LauncherDistributedNode{
 					Address:  cfg.Server.World.Address,
 					Hostname: hostname,
+					LastSeen: time.Now(),
+					NodeType: LauncherNodeTypeRoot,
 				},
 			)
 		}
@@ -445,66 +464,10 @@ func (l *Launcher) Supervisor() error {
 	l.currentZoneDynamics = 0
 	l.currentZoneStatics = 0
 
-	processes, _ := process.Processes()
-	for _, p := range processes {
-		proc := l.getProcessDetails(p)
-		for _, s := range l.GetServerProcessNames() {
-			if s == proc.BaseProcessName {
-				l.logger.DebugVv().
-					Any("pid", p.Pid).
-					Any("baseProcessName", proc.BaseProcessName).
-					Any("cmdline", proc.Cmdline).
-					Msg("Supervisor - Found server process")
-
-				if _, ok := l.currentProcessCounts[s]; !ok {
-					l.currentProcessCounts[s] = 0
-				}
-
-				if s == zoneProcessName {
-					// cmdline path can contain spaces which will break the split
-					cmdline := proc.Cmdline
-					cmdline = strings.ReplaceAll(cmdline, proc.Cwd, "")
-					cmdline = strings.TrimSpace(cmdline)
-
-					// get arg
-					// check if it's in the static zones
-					// if it is, add it to the current online statics
-					arg := strings.Split(cmdline, " ")
-					if len(arg) > 1 {
-						for _, z := range l.staticZonesToBoot {
-							if z == arg[1] {
-								// make sure it's not already in the list
-								isInList := false
-								for _, cz := range l.currentOnlineStatics {
-									if cz == z {
-										isInList = true
-										break
-									}
-								}
-								if !isInList {
-									l.currentOnlineStatics = append(l.currentOnlineStatics, z)
-								}
-							}
-						}
-						l.currentZoneStatics++
-					} else {
-						l.currentZoneDynamics++
-					}
-				}
-
-				l.currentProcessCounts[s]++
-			}
-		}
-
-		l.logger.DebugVvv().
-			Any("pid", p.Pid).
-			Any("cwd", proc.Cwd).
-			Any("exe", proc.Exe).
-			Any("cmdline", proc.Cmdline).
-			Msg("Supervisor - Checking process")
-	}
+	l.pollProcessCounts()
 
 	if l.isLeafNode {
+		l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
 		l.processDistributed()
 		return nil
 	}
@@ -551,13 +514,13 @@ func (l *Launcher) Supervisor() error {
 		return nil
 	}
 
-	zoneAssignedDynamics := 0
+	l.zoneAssignedDynamics = 0
 	for _, z := range list.Data {
 		if z.ZoneID == 0 {
 			continue
 		}
 		if !z.IsStaticZone {
-			zoneAssignedDynamics++
+			l.zoneAssignedDynamics++
 		}
 	}
 
@@ -600,11 +563,11 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
-	l.targetDynamics = zoneAssignedDynamics + l.minZoneProcesses
+	l.targetDynamics = l.zoneAssignedDynamics + l.minZoneProcesses
 
 	// boot dynamics if needed
 	if !l.isDistributedRoot {
-		for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (zoneAssignedDynamics + l.minZoneProcesses) {
+		for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (l.zoneAssignedDynamics + l.minZoneProcesses) {
 			// we don't want to start dynamic zone processes normally when distributed mode is enabled
 			err := l.startServerProcess(zoneProcessName)
 			if err != nil {
@@ -612,11 +575,11 @@ func (l *Launcher) Supervisor() error {
 			}
 
 			l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
-			l.targetDynamics = zoneAssignedDynamics + l.minZoneProcesses
+			l.targetDynamics = l.zoneAssignedDynamics + l.minZoneProcesses
 
 			l.logger.Info().
 				Any("bootedTotalDynamics", l.bootedTotalDynamics).
-				Any("zoneAssignedDynamics", zoneAssignedDynamics).
+				Any("zoneAssignedDynamics", l.zoneAssignedDynamics).
 				Any("minZoneProcesses", l.minZoneProcesses).
 				Any("targetDynamics", l.targetDynamics).
 				Msg("Starting Dynamic Zone")
@@ -631,7 +594,7 @@ func (l *Launcher) Supervisor() error {
 		Any("currentProcessCounts", l.currentProcessCounts).
 		Any("currentZoneDynamics", l.currentZoneDynamics).
 		Any("currentZoneStatics", l.currentZoneStatics).
-		Any("zoneAssignedDynamics", zoneAssignedDynamics).
+		Any("zoneAssignedDynamics", l.zoneAssignedDynamics).
 		Any("statics - staticZonesToBoot", l.staticZonesToBoot).
 		Any("statics - staticZonesToBoot (count)", len(l.staticZonesToBoot)).
 		Any("statics - currentOnlineStatics (count)", len(l.currentOnlineStatics)).
@@ -1148,18 +1111,18 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 // processDistributed processes launcher for both root and leaf nodes
 func (l *Launcher) processDistributed() {
 	l.logger.Info().
-		Any("isDistributedRoot", l.isDistributedRoot).
-		Any("isLeafNode", l.isLeafNode).
+		//Any("isDistributedRoot", l.isDistributedRoot).
+		//Any("isLeafNode", l.isLeafNode).
 		Any("bootedTotalDynamics", l.bootedTotalDynamics).
 		Any("targetDynamics", l.targetDynamics).
 		Msg("Processing distributed")
 
 	if l.isDistributedRoot {
 		// launcher
-		// [ ] poll all the nodes to get the zone counts
-		// [ ] calculate how many zones we need to boot from the root
-		// [ ] determine how many zones each node should boot
-		// [ ] send the boot command to each node
+		// [x] poll all the nodes to get the zone counts
+		// [x] calculate how many zones we need to boot from the root
+		// [x] determine how many zones each node should boot
+		// [x] send the boot command to each node
 		// [ ] monitor the nodes to ensure they are running the correct number of zones
 		// [ ] enforce max zones per node from config
 
@@ -1168,9 +1131,144 @@ func (l *Launcher) processDistributed() {
 		// [ ] stop server distributed
 		// [ ] restart server distributed
 		// [ ] show each node and their zone counts
+
+		totalZoneProcesses := 0
+		for i, node := range l.nodes {
+			r, err := l.rpcClientGetZoneCount(node)
+			if err != nil {
+				l.logger.Error().Err(err).Msg("Error getting zone count from node")
+			}
+
+			l.nodes[i].CurrentZoneCount = r.ZoneCount
+			l.nodes[i].TargetZoneCount = r.ZoneCount
+			totalZoneProcesses += r.ZoneCount
+		}
+
+		// we need to make sure l.minZoneProcesses
+
+		fmt.Println("totalZoneProcesses", totalZoneProcesses)
+		fmt.Println("zoneAssignedDynamics", l.zoneAssignedDynamics)
+
+		delta := totalZoneProcesses - l.zoneAssignedDynamics
+
+		fmt.Println("delta", delta)
+		if delta < l.minZoneProcesses {
+			zonesToBoot := l.minZoneProcesses - delta
+
+			l.logger.Info().
+				Any("totalZones", totalZoneProcesses).
+				Any("zoneAssignedDynamics", l.zoneAssignedDynamics).
+				Any("bootedTotalDynamics", l.bootedTotalDynamics).
+				Any("targetDynamics", l.targetDynamics).
+				Any("minZoneProcesses", l.minZoneProcesses).
+				Any("zonesToBoot", zonesToBoot).
+				Msg("Processing distributed")
+
+			// distribute the zones to the nodes
+			// sort the nodes by the number of zones they are running, least to most
+			sort.Slice(l.nodes, func(i, j int) bool {
+				return l.nodes[i].CurrentZoneCount < l.nodes[j].CurrentZoneCount
+			})
+
+			// loop through the nodes and increment the target zone count
+			// we need to make sure we don't exceed the max zones per node
+			for zonesToBoot > 0 {
+				for i, _ := range l.nodes {
+					l.nodes[i].TargetZoneCount++
+					zonesToBoot--
+
+					// if we have no more zones to boot, break
+					if zonesToBoot == 0 {
+						break
+					}
+				}
+			}
+
+			for _, node := range l.nodes {
+				err := l.rpcClientSetTargetZoneCount(node, node.TargetZoneCount)
+				if err != nil {
+					l.logger.Error().
+						Err(err).
+						Any("node", node.Hostname).
+						Any("address", node.Address).
+						Msg("Error launching zones on node")
+				}
+
+				l.logger.Info().
+					Any("node", node.Hostname).
+					Any("CurrentZoneCount", node.CurrentZoneCount).
+					Any("targetZoneCount", node.TargetZoneCount).
+					Msg("Processing node")
+			}
+		}
+
+		// we need to set l.nodes[i].TargetZonesToLaunch to the number of zones we want to launch on each node
+		// we need to divide l.targetDynamics by the number of nodes and set that as the target for each node
+
 	}
 
 	if l.isLeafNode {
 
+	}
+}
+
+func (l *Launcher) pollProcessCounts() {
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+		for _, s := range l.GetServerProcessNames() {
+			if s == proc.BaseProcessName {
+				l.logger.DebugVv().
+					Any("pid", p.Pid).
+					Any("baseProcessName", proc.BaseProcessName).
+					Any("cmdline", proc.Cmdline).
+					Msg("Supervisor - Found server process")
+
+				if _, ok := l.currentProcessCounts[s]; !ok {
+					l.currentProcessCounts[s] = 0
+				}
+
+				if s == zoneProcessName {
+					// cmdline path can contain spaces which will break the split
+					cmdline := proc.Cmdline
+					cmdline = strings.ReplaceAll(cmdline, proc.Cwd, "")
+					cmdline = strings.TrimSpace(cmdline)
+
+					// get arg
+					// check if it's in the static zones
+					// if it is, add it to the current online statics
+					arg := strings.Split(cmdline, " ")
+					if len(arg) > 1 {
+						for _, z := range l.staticZonesToBoot {
+							if z == arg[1] {
+								// make sure it's not already in the list
+								isInList := false
+								for _, cz := range l.currentOnlineStatics {
+									if cz == z {
+										isInList = true
+										break
+									}
+								}
+								if !isInList {
+									l.currentOnlineStatics = append(l.currentOnlineStatics, z)
+								}
+							}
+						}
+						l.currentZoneStatics++
+					} else {
+						l.currentZoneDynamics++
+					}
+				}
+
+				l.currentProcessCounts[s]++
+			}
+		}
+
+		l.logger.DebugVvv().
+			Any("pid", p.Pid).
+			Any("cwd", proc.Cwd).
+			Any("exe", proc.Exe).
+			Any("cmdline", proc.Cmdline).
+			Msg("pollProcessCounts")
 	}
 }

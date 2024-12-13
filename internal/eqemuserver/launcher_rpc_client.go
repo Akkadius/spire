@@ -70,9 +70,80 @@ func (l *Launcher) rpcClientRegister() error {
 	}
 
 	contents := string(bodyBytes)
-	if !strings.Contains(contents, "Registered") {
+	if !strings.Contains(strings.ToLower(contents), "registered") {
 		return fmt.Errorf("failed to register, response: %s", contents)
 	}
 
 	return nil
+}
+
+type RpcZoneCountResponse struct {
+	ZoneCount int `json:"zone_count"`
+}
+
+func (l *Launcher) rpcClientGetZoneCount(node LauncherDistributedNode) (RpcZoneCountResponse, error) {
+	cfg, _ := l.serverconfig.Get()
+	req, err := http.NewRequest(
+		http.MethodGet,
+		fmt.Sprintf("http://%v:3005/api/v1/dzs/zone-count", node.Address),
+		nil,
+	)
+	if err != nil {
+		return RpcZoneCountResponse{}, err
+	}
+
+	// add json content type
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("RPC_KEY", cfg.Server.World.Key)
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return RpcZoneCountResponse{}, err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return RpcZoneCountResponse{}, err
+	}
+
+	var zoneCountResponse RpcZoneCountResponse
+	if err := json.Unmarshal(bodyBytes, &zoneCountResponse); err != nil {
+		return RpcZoneCountResponse{}, err
+	}
+
+	return zoneCountResponse, nil
+}
+
+type RpcLaunchZonesRequest struct {
+	ZoneCount int `json:"zone_count"`
+}
+
+func (l *Launcher) rpcClientSetTargetZoneCount(node LauncherDistributedNode, zoneCount int) error {
+	cfg, _ := l.serverconfig.Get()
+
+	body, _ := json.Marshal(RpcLaunchZonesRequest{
+		ZoneCount: zoneCount,
+	})
+	req, err := http.NewRequest(
+		http.MethodPost,
+		fmt.Sprintf("http://%v:3005/api/v1/dzs/set-zone-count", node.Address),
+		bytes.NewBuffer(body),
+	)
+	if err != nil {
+		return err
+	}
+
+	// add json content type
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("RPC_KEY", cfg.Server.World.Key)
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	return err
 }
