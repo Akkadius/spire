@@ -23,7 +23,8 @@ type LauncherDistributedNode struct {
 	CurrentZoneCount int       // Current number of zones running on this node
 	LastSeen         time.Time // Last time this node was seen
 	NodeType         string    // Type of node, root or leaf
-	TargetZoneCount  int
+	TargetZoneCount  int       // (state) Target number of zones to run on this node
+	MaxZoneCount     int       // (state) Max zone count for leaf nodes - Loaded from eqemu_config
 }
 
 func (l *Launcher) StartRpcServer(port int) error {
@@ -135,7 +136,19 @@ func first(str string) string {
 }
 
 func (l *Launcher) rpcZoneCountDynamic(c echo.Context) error {
-	return c.JSON(http.StatusOK, echo.Map{"zone_count": l.bootedTotalDynamics})
+	cfg, _ := l.serverconfig.Get()
+	maxZoneCount := 0
+	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil {
+		maxZoneCount = cfg.WebAdmin.Launcher.MaxZoneCount
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		RpcZoneCountResponse{
+			ZoneCount:    l.bootedTotalDynamics,
+			MaxZoneCount: maxZoneCount,
+		},
+	)
 }
 
 func (l *Launcher) rpcSetZoneCount(c echo.Context) error {

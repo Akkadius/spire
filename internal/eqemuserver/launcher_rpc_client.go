@@ -78,7 +78,8 @@ func (l *Launcher) rpcClientRegister() error {
 }
 
 type RpcZoneCountResponse struct {
-	ZoneCount int `json:"zone_count"`
+	ZoneCount    int `json:"zone_count"`
+	MaxZoneCount int `json:"max_zone_count"`
 }
 
 func (l *Launcher) rpcClientGetZoneCount(node LauncherDistributedNode) (RpcZoneCountResponse, error) {

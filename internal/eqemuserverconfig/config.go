@@ -52,6 +52,7 @@ type WebAdminLauncherConfig struct {
 	// leaf nodes do not run any process but zones
 	IsDistributedZoneRoot bool            `json:"is_distributed_zone_root"`
 	LeafNodeConfig        *LeafNodeConfig `json:"leaf_node,omitempty"`
+	MaxZoneCount          int             `json:"max_zone_count,omitempty"` // max zone count for leaf nodes
 }
 
 type WebAdminQuestsConfig struct {

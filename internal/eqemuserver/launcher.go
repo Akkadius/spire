@@ -1141,12 +1141,14 @@ func (l *Launcher) processDistributed() {
 
 			l.nodes[i].CurrentZoneCount = r.ZoneCount
 			l.nodes[i].TargetZoneCount = r.ZoneCount
+			l.nodes[i].MaxZoneCount = r.MaxZoneCount
 			totalZoneProcesses += r.ZoneCount
 
 			l.logger.Info().
 				Any("node", node.Hostname).
 				Any("address", node.Address).
 				Any("zoneCount", r.ZoneCount).
+				Any("maxZoneCount", r.MaxZoneCount).
 				Msg("Processing node")
 		}
 
@@ -1171,8 +1173,27 @@ func (l *Launcher) processDistributed() {
 
 			// loop through the nodes and increment the target zone count
 			// we need to make sure we don't exceed the max zones per node
+			iterations := 0
 			for zonesToBoot > 0 {
 				for i, _ := range l.nodes {
+					if iterations > 1000 {
+						l.logger.Error().Msg("Failed to distribute zones, too many iterations")
+						zonesToBoot = 0
+						break
+					}
+
+					// if the node is at max zone count, skip
+					if l.nodes[i].MaxZoneCount > 0 && l.nodes[i].CurrentZoneCount >= l.nodes[i].MaxZoneCount {
+						l.logger.Info().
+							Any("node", l.nodes[i].Hostname).
+							Any("address", l.nodes[i].Address).
+							Any("CurrentZoneCount", l.nodes[i].CurrentZoneCount).
+							Any("MaxZoneCount", l.nodes[i].MaxZoneCount).
+							Msg("Node at max zone count")
+						iterations++
+						continue
+					}
+
 					l.nodes[i].TargetZoneCount++
 					zonesToBoot--
 
@@ -1180,6 +1201,8 @@ func (l *Launcher) processDistributed() {
 					if zonesToBoot == 0 {
 						break
 					}
+
+					iterations++
 				}
 			}
 
@@ -1203,7 +1226,8 @@ func (l *Launcher) processDistributed() {
 	}
 
 	if l.isLeafNode {
-
+		//l.processSleepTime = time.Second * 10
+		l.rpcClientRegister()
 	}
 }
 
