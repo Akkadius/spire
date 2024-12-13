@@ -9,16 +9,19 @@ import (
 	"unicode"
 )
 
+// LauncherDistributedNode represents a node in the distributed launcher fleet
+// this also includes the root node
 type LauncherDistributedNode struct {
-	address  string
-	hostname string
+	Address             string // Address of the client
+	Hostname            string // Hostname of the client
+	CurrentZoneCount    int    // Current number of zones running on this node
+	TargetZonesToLaunch int    // Target number of zones to launch on this node
 }
 
 func (l *Launcher) StartRpcServer(port int) error {
 	e := echo.New()
 	e.POST("/api/v1/dzs/register", l.rpcRegister)
 	e.GET("/api/v1/dzs/test", l.rpcTest)
-
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
 		Format: fmt.Sprintf(
 			"%sSpire › API ›%s [${status}] [${method}] [${uri}] [${latency_human}]\n",
@@ -73,13 +76,26 @@ func (l *Launcher) rpcRegister(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
 	}
 
-	// log the client address
+	l.nodes = append(
+		l.nodes,
+		LauncherDistributedNode{
+			Address:  req.ClientAddress,
+			Hostname: req.Hostname,
+		},
+	)
+
 	l.logger.Info().
+		Any("nodes", l.nodes).
 		Any("client_address", req.ClientAddress).
 		Any("hostname", req.Hostname).
 		Msg("Client registered")
 
-	return c.JSON(http.StatusOK, echo.Map{"message": "Registered"})
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"message": "Registered",
+		},
+	)
 }
 
 func first(str string) string {

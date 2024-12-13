@@ -70,6 +70,8 @@ type Launcher struct {
 	currentProcessCounts map[string]int
 	stopTimer            int // timer in seconds to stop the server
 	stopType             string
+	bootedTotalDynamics  int
+	targetDynamics       int
 }
 
 func NewLauncher(
@@ -178,9 +180,12 @@ func (l *Launcher) Start() error {
 	}
 
 	l.loadServerConfig()
-	l.logger.Info().Msg("Starting server launcher")
 
 	cfg, _ := l.serverconfig.Get()
+
+	l.logger.Info().
+		Any("World name", cfg.Server.World.Longname).
+		Msg("Starting server launcher")
 
 	if cfg.WebAdmin.Launcher != nil {
 		if cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
@@ -198,14 +203,27 @@ func (l *Launcher) Start() error {
 					break
 				}
 
-				l.logger.Info().Msg("Retrying registration in 5 seconds")
+				l.logger.Info().Msg("Retrying registration in 1 second(s)")
 
-				time.Sleep(5 * time.Second)
+				time.Sleep(1 * time.Second)
 			}
 		}
 		if cfg.WebAdmin.Launcher.IsDistributedZoneRoot {
 			l.isDistributedRoot = true
 			l.logger.Info().Msg("Server detected is a distributed zone root")
+		}
+
+		if l.isDistributedRoot {
+			hostname, _ := os.Hostname()
+			cfg, _ := l.serverconfig.Get()
+
+			l.nodes = append(
+				l.nodes,
+				LauncherDistributedNode{
+					Address:  cfg.Server.World.Address,
+					Hostname: hostname,
+				},
+			)
 		}
 
 		if l.isLeafNode || l.isDistributedRoot {
@@ -255,7 +273,9 @@ func (l *Launcher) Start() error {
 
 	// run pre-boot operations in parallel
 	if err := g.Wait(); err != nil {
-		l.logger.Info().Err(err).Msg("Error starting server launcher")
+		l.logger.Info().
+			Err(err).
+			Msg("Error starting server launcher")
 		return err
 	}
 
@@ -485,7 +505,7 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	if l.isLeafNode {
-		l.processLeafNodeLoop()
+		l.processDistributed()
 		return nil
 	}
 
@@ -579,25 +599,31 @@ func (l *Launcher) Supervisor() error {
 			Msg("Supervisor - Booting static zone(s)")
 	}
 
+	l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
+	l.targetDynamics = zoneAssignedDynamics + l.minZoneProcesses
+
 	// boot dynamics if needed
-	for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (zoneAssignedDynamics + l.minZoneProcesses) {
-		// we don't want to start dynamic zone processes normally when distributed mode is enabled
-		if !l.isDistributedRoot {
+	if !l.isDistributedRoot {
+		for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (zoneAssignedDynamics + l.minZoneProcesses) {
+			// we don't want to start dynamic zone processes normally when distributed mode is enabled
 			err := l.startServerProcess(zoneProcessName)
 			if err != nil {
 				return err
 			}
+
+			l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
+			l.targetDynamics = zoneAssignedDynamics + l.minZoneProcesses
+
+			l.logger.Info().
+				Any("bootedTotalDynamics", l.bootedTotalDynamics).
+				Any("zoneAssignedDynamics", zoneAssignedDynamics).
+				Any("minZoneProcesses", l.minZoneProcesses).
+				Any("targetDynamics", l.targetDynamics).
+				Msg("Starting Dynamic Zone")
 		}
-
-		bootedTotalDynamics := l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
-		targetDynamics := zoneAssignedDynamics + l.minZoneProcesses
-
-		l.logger.Info().
-			Any("bootedTotalDynamics", bootedTotalDynamics).
-			Any("zoneAssignedDynamics", zoneAssignedDynamics).
-			Any("minZoneProcesses", l.minZoneProcesses).
-			Any("targetDynamics", targetDynamics).
-			Msg("Starting Dynamic Zone")
+	} else {
+		// distributed root
+		l.processDistributed()
 	}
 
 	l.logger.DebugVv().
@@ -799,7 +825,14 @@ func (l *Launcher) checkIfLauncherIsRunning() error {
 				Msg("Error getting process command line")
 		}
 
-		if strings.Contains(cmdline, "eqemu-server:launcher start") && p.Pid != int32(os.Getpid()) && !strings.Contains(cmdline, "go run") {
+		isRanFromGoRun := strings.Contains(cmdline, "go run")
+		if strings.Contains(cmdline, "eqemu-server:launcher start") && p.Pid != int32(os.Getpid()) && !isRanFromGoRun {
+			isRanFromAirWatcher := strings.Contains(cmdline, "air")
+			isRanFromAir := strings.Contains(cmdline, "/tmp/bin/app")
+			if isRanFromAirWatcher || isRanFromAir {
+				continue
+			}
+
 			l.logger.Debug().
 				Any("os.Getpid()", os.Getpid()).
 				Any("pid", p.Pid).
@@ -1112,6 +1145,32 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 	return combinedData, nil
 }
 
-func (l *Launcher) processLeafNodeLoop() {
+// processDistributed processes launcher for both root and leaf nodes
+func (l *Launcher) processDistributed() {
+	l.logger.Info().
+		Any("isDistributedRoot", l.isDistributedRoot).
+		Any("isLeafNode", l.isLeafNode).
+		Any("bootedTotalDynamics", l.bootedTotalDynamics).
+		Any("targetDynamics", l.targetDynamics).
+		Msg("Processing distributed")
 
+	if l.isDistributedRoot {
+		// launcher
+		// [ ] poll all the nodes to get the zone counts
+		// [ ] calculate how many zones we need to boot from the root
+		// [ ] determine how many zones each node should boot
+		// [ ] send the boot command to each node
+		// [ ] monitor the nodes to ensure they are running the correct number of zones
+		// [ ] enforce max zones per node from config
+
+		// UI
+		// [ ] start server distributed
+		// [ ] stop server distributed
+		// [ ] restart server distributed
+		// [ ] show each node and their zone counts
+	}
+
+	if l.isLeafNode {
+
+	}
 }
