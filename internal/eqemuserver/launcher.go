@@ -1124,7 +1124,7 @@ func (l *Launcher) processDistributed() {
 		// [x] determine how many zones each node should boot
 		// [x] send the boot command to each node
 		// [x] monitor the nodes to ensure they are running the correct number of zones
-		// [ ] enforce max zones per node from config
+		// [x] enforce max zones per node from config
 
 		// UI
 		// [ ] start server distributed
