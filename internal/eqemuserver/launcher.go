@@ -1142,16 +1142,15 @@ func (l *Launcher) processDistributed() {
 			l.nodes[i].CurrentZoneCount = r.ZoneCount
 			l.nodes[i].TargetZoneCount = r.ZoneCount
 			totalZoneProcesses += r.ZoneCount
+
+			l.logger.Info().
+				Any("node", node.Hostname).
+				Any("address", node.Address).
+				Any("zoneCount", r.ZoneCount).
+				Msg("Processing node")
 		}
 
-		// we need to make sure l.minZoneProcesses
-
-		fmt.Println("totalZoneProcesses", totalZoneProcesses)
-		fmt.Println("zoneAssignedDynamics", l.zoneAssignedDynamics)
-
 		delta := totalZoneProcesses - l.zoneAssignedDynamics
-
-		fmt.Println("delta", delta)
 		if delta < l.minZoneProcesses {
 			zonesToBoot := l.minZoneProcesses - delta
 
