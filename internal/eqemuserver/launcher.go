@@ -1183,17 +1183,18 @@ func (l *Launcher) processDistributed() {
 			for zonesToBoot > 0 {
 				for i, _ := range l.nodes {
 
-					if l.nodes[i].AtMaxZoneCount {
-						// if the node is at max zone count, skip
-						iterations++
-						continue
-					}
-
 					// sanity check, should never happen
 					if iterations > 10 {
 						l.logger.Error().Msg("Failed to distribute zones, too many iterations")
 						zonesToBoot = 0
 						break
+					}
+
+					// if the node is at max zone count, skip
+					if l.nodes[i].AtMaxZoneCount {
+						// if the node is at max zone count, skip
+						iterations++
+						continue
 					}
 
 					// if the node is at max zone count, skip
