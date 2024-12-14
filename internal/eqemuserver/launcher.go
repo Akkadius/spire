@@ -2,6 +2,7 @@ package eqemuserver
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/logger"
@@ -1171,12 +1172,25 @@ func (l *Launcher) processDistributed() {
 				return l.nodes[i].CurrentZoneCount < l.nodes[j].CurrentZoneCount
 			})
 
+			// reset
+			for i, _ := range l.nodes {
+				l.nodes[i].AtMaxZoneCount = false
+			}
+
 			// loop through the nodes and increment the target zone count
 			// we need to make sure we don't exceed the max zones per node
 			iterations := 0
 			for zonesToBoot > 0 {
 				for i, _ := range l.nodes {
-					if iterations > 1000 {
+
+					if l.nodes[i].AtMaxZoneCount {
+						// if the node is at max zone count, skip
+						iterations++
+						continue
+					}
+
+					// sanity check, should never happen
+					if iterations > 10 {
 						l.logger.Error().Msg("Failed to distribute zones, too many iterations")
 						zonesToBoot = 0
 						break
@@ -1190,7 +1204,19 @@ func (l *Launcher) processDistributed() {
 							Any("CurrentZoneCount", l.nodes[i].CurrentZoneCount).
 							Any("MaxZoneCount", l.nodes[i].MaxZoneCount).
 							Msg("Node at max zone count")
+
+						l.nodes[i].AtMaxZoneCount = true
+
+						// if we only have one node, we can't boot any more zones if it's at max
+						if len(l.nodes) == 1 {
+							l.logger.Error().Msg("Only one node and it's at max zone count, can't distribute zones")
+							zonesToBoot = 0
+							break
+						}
+
+						// keep track if each node is at max zone count
 						iterations++
+
 						continue
 					}
 
@@ -1204,6 +1230,20 @@ func (l *Launcher) processDistributed() {
 
 					iterations++
 				}
+			}
+
+			// check to see if all nodes are at max zone count
+			allAtMaxZoneCount := true
+			for _, node := range l.nodes {
+				if !node.AtMaxZoneCount {
+					allAtMaxZoneCount = false
+					break
+				}
+			}
+
+			if allAtMaxZoneCount {
+				l.logger.Error().Err(errors.New("all nodes at max zone count")).Msg("Can't distribute zones")
+				return
 			}
 
 			for _, node := range l.nodes {

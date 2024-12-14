@@ -25,6 +25,7 @@ type LauncherDistributedNode struct {
 	NodeType         string    // Type of node, root or leaf
 	TargetZoneCount  int       // (state) Target number of zones to run on this node
 	MaxZoneCount     int       // (state) Max zone count for leaf nodes - Loaded from eqemu_config
+	AtMaxZoneCount   bool      // (state) If the node is at max zone count
 }
 
 func (l *Launcher) StartRpcServer(port int) error {
