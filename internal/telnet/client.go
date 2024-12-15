@@ -1,6 +1,7 @@
 package telnet
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
@@ -56,23 +57,20 @@ func sendln(t *telnet.Conn, s string) error {
 func (c *Client) Connect() error {
 	var err error
 
-	// connection check
+	// If the connection is already alive, return early
 	if c.t != nil {
-		one := make([]byte, 1)
-		_ = c.t.SetReadDeadline(time.Now())
-		if _, err := c.t.Read(one); err == io.EOF {
-			c.Close()
+		if c.isConnectionAlive() {
+			return nil
 		}
-		if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
-			c.Close()
-		}
+		// Connection is dead, close it and attempt to reconnect
+		c.Close()
 	}
 
 	if c.t != nil {
 		return nil
 	}
 
-	d := 300 * time.Millisecond
+	d := 2 * time.Second // Increased timeout for stability
 	c.t, err = telnet.DialTimeout("tcp", "127.0.0.1:9000", d)
 	if err != nil {
 		return err
@@ -199,4 +197,28 @@ func (c *Client) debug(msg string, a ...interface{}) {
 	if c.debugging {
 		c.logger.Debug().Msgf(msg, a...)
 	}
+}
+
+func (c *Client) isConnectionAlive() bool {
+	if c.t == nil {
+		return false
+	}
+
+	// Set a very short deadline for the health check
+	deadline := 100 * time.Millisecond
+	_ = c.t.SetReadDeadline(time.Now().Add(deadline))
+
+	one := make([]byte, 1)
+	if _, err := c.t.Read(one); err != nil {
+		if err == io.EOF {
+			return false
+		}
+		var netErr net.Error
+		if errors.As(err, &netErr) && netErr.Timeout() {
+			return true // Connection is alive but no data to read
+		}
+		return false // Other errors mean the connection is dead
+	}
+
+	return true
 }
