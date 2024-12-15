@@ -1131,7 +1131,7 @@ func (l *Launcher) processDistributed() {
 		// [ ] show each node and their zone counts
 
 		totalZoneProcesses := 0
-		indicesToRemove := []int{}
+		var indicesToRemove []int
 		for i, node := range l.nodes {
 			r, err := l.rpcClientGetZoneCount(node)
 			if err != nil {
