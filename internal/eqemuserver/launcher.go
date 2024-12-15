@@ -162,6 +162,10 @@ func (l *Launcher) Process() {
 			}
 		}
 
+		if l.isLeafNode {
+			l.processSleepTime = time.Second * 10
+		}
+
 		time.Sleep(l.processSleepTime)
 	}
 }
@@ -459,16 +463,9 @@ func (l *Launcher) GetServerProcessNames() []string {
 func (l *Launcher) Supervisor() error {
 	now := time.Now()
 
-	// reset
-	l.currentProcessCounts = make(map[string]int)
-	l.currentOnlineStatics = []string{}
-	l.currentZoneDynamics = 0
-	l.currentZoneStatics = 0
-
 	l.pollProcessCounts()
 
 	if l.isLeafNode {
-		l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
 		l.processDistributed()
 		return nil
 	}
@@ -1137,7 +1134,9 @@ func (l *Launcher) processDistributed() {
 		for i, node := range l.nodes {
 			r, err := l.rpcClientGetZoneCount(node)
 			if err != nil {
-				l.logger.Error().Err(err).Msg("Error getting zone count from node")
+				l.logger.Error().Err(err).Msg("Error getting zone count from node, removing node from list")
+				l.nodes = append(l.nodes[:i], l.nodes[i+1:]...)
+				continue
 			}
 
 			l.nodes[i].CurrentZoneCount = r.ZoneCount
@@ -1150,10 +1149,14 @@ func (l *Launcher) processDistributed() {
 				Any("address", node.Address).
 				Any("zoneCount", r.ZoneCount).
 				Any("maxZoneCount", r.MaxZoneCount).
-				Msg("Processing node")
+				Msg("Processing node, got zone count")
 		}
 
 		delta := totalZoneProcesses - l.zoneAssignedDynamics
+		l.logger.DebugVvv().
+			Any("delta", delta).
+			Any("minZoneProcesses", l.minZoneProcesses).
+			Msg("Processing distributed")
 		if delta < l.minZoneProcesses {
 			zonesToBoot := l.minZoneProcesses - delta
 
@@ -1198,7 +1201,8 @@ func (l *Launcher) processDistributed() {
 					}
 
 					// if the node is at max zone count, skip
-					if l.nodes[i].MaxZoneCount > 0 && l.nodes[i].CurrentZoneCount >= l.nodes[i].MaxZoneCount {
+					atMaxZoneCount := l.nodes[i].CurrentZoneCount >= l.nodes[i].MaxZoneCount || l.nodes[i].TargetZoneCount >= l.nodes[i].MaxZoneCount
+					if l.nodes[i].MaxZoneCount > 0 && atMaxZoneCount {
 						l.logger.Info().
 							Any("node", l.nodes[i].Hostname).
 							Any("address", l.nodes[i].Address).
@@ -1228,8 +1232,6 @@ func (l *Launcher) processDistributed() {
 					if zonesToBoot == 0 {
 						break
 					}
-
-					iterations++
 				}
 			}
 
@@ -1242,11 +1244,13 @@ func (l *Launcher) processDistributed() {
 				}
 			}
 
+			// if all nodes are at max zone count, we can't distribute zones
 			if allAtMaxZoneCount {
 				l.logger.Error().Err(errors.New("all nodes at max zone count")).Msg("Can't distribute zones")
 				return
 			}
 
+			// send the target zone count to each node
 			for _, node := range l.nodes {
 				err := l.rpcClientSetTargetZoneCount(node, node.TargetZoneCount)
 				if err != nil {
@@ -1267,12 +1271,20 @@ func (l *Launcher) processDistributed() {
 	}
 
 	if l.isLeafNode {
-		//l.processSleepTime = time.Second * 10
-		l.rpcClientRegister()
+		err := l.rpcClientRegister()
+		if err != nil {
+			l.logger.Error().Err(err).Msg("Error registering with root node")
+		}
 	}
 }
 
 func (l *Launcher) pollProcessCounts() {
+	// reset
+	l.currentProcessCounts = make(map[string]int)
+	l.currentOnlineStatics = []string{}
+	l.currentZoneDynamics = 0
+	l.currentZoneStatics = 0
+
 	processes, _ := process.Processes()
 	for _, p := range processes {
 		proc := l.getProcessDetails(p)
@@ -1331,4 +1343,6 @@ func (l *Launcher) pollProcessCounts() {
 			Any("cmdline", proc.Cmdline).
 			Msg("pollProcessCounts")
 	}
+
+	l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
 }

@@ -92,8 +92,14 @@ func (l *Launcher) rpcRegisterLeaf(c echo.Context) error {
 	}
 
 	// check if the client is already registered
-	for _, node := range l.nodes {
+	for i, node := range l.nodes {
 		if node.Address == req.ClientAddress {
+
+			// reset
+			l.nodes[i].LastSeen = time.Now()
+			l.nodes[i].Hostname = req.Hostname
+			l.nodes[i].TargetZoneCount = 0
+
 			return c.JSON(
 				http.StatusOK,
 				echo.Map{
@@ -137,6 +143,8 @@ func first(str string) string {
 }
 
 func (l *Launcher) rpcZoneCountDynamic(c echo.Context) error {
+	l.pollProcessCounts()
+
 	cfg, _ := l.serverconfig.Get()
 	maxZoneCount := 0
 	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil {
@@ -153,8 +161,6 @@ func (l *Launcher) rpcZoneCountDynamic(c echo.Context) error {
 }
 
 func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
-	l.pollProcessCounts()
-
 	var req RpcLaunchZonesRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
