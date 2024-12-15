@@ -152,7 +152,7 @@ func (l *Launcher) rpcZoneCountDynamic(c echo.Context) error {
 	cfg, _ := l.serverconfig.Get()
 	maxZoneCount := 0
 	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil {
-		maxZoneCount = cfg.WebAdmin.Launcher.MaxZoneCount
+		maxZoneCount = cfg.WebAdmin.Launcher.DistributedMaxZoneCount
 	}
 
 	return c.JSON(

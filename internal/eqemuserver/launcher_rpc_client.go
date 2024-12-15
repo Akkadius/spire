@@ -10,22 +10,6 @@ import (
 	"time"
 )
 
-// getBaseRpcUrl retrieves the base RPC URL from the configuration.
-func (l *Launcher) getBaseRpcUrl() string {
-	cfg, _ := l.serverconfig.Get()
-	var baseRpcUrl string
-	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil && cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
-		if cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpireUrl != "" {
-			baseRpcUrl = cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpireUrl
-		}
-		if cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpirePort != "" {
-			baseRpcUrl = fmt.Sprintf("%s:%s", baseRpcUrl, cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpirePort)
-		}
-	}
-
-	return baseRpcUrl
-}
-
 // RpcClientRegisterRequest is the request payload for client registration.
 type RpcClientRegisterRequest struct {
 	ClientAddress string `json:"client_address"`
@@ -100,7 +84,14 @@ func (l *Launcher) rpcClientRegister() error {
 	hostname, _ := os.Hostname()
 	cfg, _ := l.serverconfig.Get()
 
-	url := fmt.Sprintf("%s/api/v1/dzs/register", l.getBaseRpcUrl())
+	// this gets the IP address of the root world server, this is our root launcher
+	baseUrl := fmt.Sprintf(
+		"http://%v:%v",
+		cfg.Server.World.TCP.IP,
+		3005,
+	)
+
+	url := fmt.Sprintf("%s/api/v1/dzs/register", baseUrl)
 	payload := RpcClientRegisterRequest{
 		ClientAddress: cfg.Server.World.Address,
 		Hostname:      hostname,

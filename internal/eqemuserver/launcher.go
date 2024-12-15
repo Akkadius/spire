@@ -210,7 +210,7 @@ func (l *Launcher) Start() error {
 		Msg("Starting server launcher")
 
 	if cfg.WebAdmin.Launcher != nil {
-		if cfg.WebAdmin.Launcher.LeafNodeConfig != nil {
+		if cfg.WebAdmin.Launcher.DistributedNodeType == LauncherNodeTypeLeaf {
 			l.isLeafNode = true
 			l.logger.Info().Msg("Server detected is a leaf node")
 			for {
@@ -219,8 +219,6 @@ func (l *Launcher) Start() error {
 					l.logger.Error().Err(err).Msg("Error registering leaf node")
 				} else {
 					l.logger.Info().
-						Any("rootSpireUrl", cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpireUrl).
-						Any("rootSpirePort", cfg.WebAdmin.Launcher.LeafNodeConfig.RootSpirePort).
 						Msg("Leaf node registered with root")
 					break
 				}
@@ -230,7 +228,7 @@ func (l *Launcher) Start() error {
 				time.Sleep(1 * time.Second)
 			}
 		}
-		if cfg.WebAdmin.Launcher.IsDistributedZoneRoot {
+		if cfg.WebAdmin.Launcher.DistributedNodeType == LauncherNodeTypeRoot {
 			l.isDistributedRoot = true
 			l.logger.Info().Msg("Server detected is a distributed zone root")
 		}
