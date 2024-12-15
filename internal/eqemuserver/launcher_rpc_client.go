@@ -26,16 +26,19 @@ func (l *Launcher) getBaseRpcUrl() string {
 	return baseRpcUrl
 }
 
+// RpcClientRegisterRequest is the request payload for client registration.
 type RpcClientRegisterRequest struct {
 	ClientAddress string `json:"client_address"`
 	Hostname      string `json:"hostname"`
 }
 
+// RpcZoneCountResponse is the response payload for zone count requests.
 type RpcZoneCountResponse struct {
 	ZoneCount    int `json:"zone_count"`
 	MaxZoneCount int `json:"max_zone_count"`
 }
 
+// RpcLaunchZonesRequest is the request payload for launching zones.
 type RpcLaunchZonesRequest struct {
 	ZoneCount int `json:"zone_count"`
 }

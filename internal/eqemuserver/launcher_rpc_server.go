@@ -28,6 +28,7 @@ type LauncherDistributedNode struct {
 	AtMaxZoneCount   bool      // (state) If the node is at max zone count
 }
 
+// StartRpcServer starts the HTTP RPC server for the launcher
 func (l *Launcher) StartRpcServer(port int) error {
 	e := echo.New()
 
@@ -80,10 +81,12 @@ func (l *Launcher) StartRpcServer(port int) error {
 	return e.Start(fmt.Sprintf(":%v", port))
 }
 
+// rpcTest is a test route
 func (l *Launcher) rpcTest(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"message": "Hello, World!"})
 }
 
+// rpcRegisterLeaf registers a leaf node with the launcher
 func (l *Launcher) rpcRegisterLeaf(c echo.Context) error {
 	// bind to RpcClientRegisterRequest
 	var req RpcClientRegisterRequest
@@ -142,6 +145,7 @@ func first(str string) string {
 	return string(tmp)
 }
 
+// rpcZoneCountDynamic returns the number of zones currently running
 func (l *Launcher) rpcZoneCountDynamic(c echo.Context) error {
 	l.pollProcessCounts()
 
@@ -160,6 +164,7 @@ func (l *Launcher) rpcZoneCountDynamic(c echo.Context) error {
 	)
 }
 
+// rpcSetZoneCount sets the number of zones to boot
 func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 	var req RpcLaunchZonesRequest
 	if err := c.Bind(&req); err != nil {
