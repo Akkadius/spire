@@ -1122,6 +1122,8 @@ func (l *Launcher) processDistributed() {
 		// [x] monitor the nodes to ensure they are running the correct number of zones
 		// [x] enforce max zones per node from config
 
+		// [ ] Fetch process stats from each node (10s) ?
+
 		// UI
 		// [ ] start server distributed
 		// [ ] stop server distributed
@@ -1129,11 +1131,12 @@ func (l *Launcher) processDistributed() {
 		// [ ] show each node and their zone counts
 
 		totalZoneProcesses := 0
+		indicesToRemove := []int{}
 		for i, node := range l.nodes {
 			r, err := l.rpcClientGetZoneCount(node)
 			if err != nil {
 				l.logger.Error().Err(err).Msg("Error getting zone count from node, removing node from list")
-				l.nodes = append(l.nodes[:i], l.nodes[i+1:]...)
+				indicesToRemove = append(indicesToRemove, i)
 				continue
 			}
 
@@ -1148,6 +1151,16 @@ func (l *Launcher) processDistributed() {
 				Any("zoneCount", r.ZoneCount).
 				Any("maxZoneCount", r.MaxZoneCount).
 				Msg("Processing node, got zone count")
+		}
+
+		// Remove nodes in reverse order to avoid index shifting
+		for i := len(indicesToRemove) - 1; i >= 0; i-- {
+			index := indicesToRemove[i]
+			l.logger.Info().
+				Any("node", l.nodes[index].Hostname).
+				Any("address", l.nodes[index].Address).
+				Msg("Removing node from list")
+			l.nodes = append(l.nodes[:index], l.nodes[index+1:]...)
 		}
 
 		delta := totalZoneProcesses - l.zoneAssignedDynamics
