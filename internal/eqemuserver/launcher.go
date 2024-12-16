@@ -392,15 +392,14 @@ func (l *Launcher) Stop() error {
 		return err
 	}
 
+	// Usually invoked from the web interface
+	// If the launcher is running, we need to send a shutdown action to the root node
+	// This will stop all the servers in the distributed zone server setup
 	if l.isLauncherDistributedModeRoot() {
-		fmt.Println("Sending shutdown action to root node")
-
 		err := l.rpcClientRootNodeServerShutdown()
 		if err != nil {
 			l.logger.Error().Err(err).Msg("Error sending shutdown action to root node")
 		}
-
-		fmt.Println("Post shutdown action sent to root node")
 	}
 
 	// kill all server processes
@@ -1143,12 +1142,12 @@ func (l *Launcher) processDistributed() {
 		// [x] monitor the nodes to ensure they are running the correct number of zones
 		// [x] enforce max zones per node from config
 
-		// [ ] Fetch process stats from each node (10s) ?
+		// [x] Fetch process stats from each node (10s) ?
 
 		// UI
-		// [ ] start server distributed
-		// [ ] stop server distributed
-		// [ ] restart server distributed
+		// [x] start server distributed
+		// [x] stop server distributed
+		// [x] restart server distributed
 		// [ ] show each node and their zone counts
 
 		totalZoneProcesses := 0
