@@ -6,6 +6,7 @@ import (
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strings"
 	"time"
 	"unicode"
 )
@@ -19,6 +20,7 @@ const (
 // this also includes the root node
 type LauncherDistributedNode struct {
 	Address          string    // Address of the client
+	ConnectedAddress string    // Remote address of the client, this is what the socket reports, not what the client reports
 	Hostname         string    // Hostname of the client
 	CurrentZoneCount int       // Current number of zones running on this node
 	LastSeen         time.Time // Last time this node was seen
@@ -33,10 +35,10 @@ func (l *Launcher) StartRpcServer(port int) error {
 	e := echo.New()
 
 	// RPC routes
-	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
-	e.GET("/api/v1/dzs/zone-count", l.rpcZoneCountDynamic)
-	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
 	e.GET("/api/v1/dzs/test", l.rpcTest)
+	e.GET("/api/v1/dzs/zone-count", l.rpcZoneCountDynamic)
+	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
+	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
 		Format: fmt.Sprintf(
@@ -94,6 +96,8 @@ func (l *Launcher) rpcRegisterLeaf(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
 	}
 
+	connectedAddress := strings.Split(c.Request().RemoteAddr, ":")[0]
+
 	// check if the client is already registered
 	for i, node := range l.nodes {
 		if node.Address == req.ClientAddress {
@@ -115,10 +119,11 @@ func (l *Launcher) rpcRegisterLeaf(c echo.Context) error {
 	l.nodes = append(
 		l.nodes,
 		LauncherDistributedNode{
-			Address:  req.ClientAddress,
-			Hostname: req.Hostname,
-			LastSeen: time.Now(),
-			NodeType: LauncherNodeTypeLeaf,
+			Address:          req.ClientAddress,
+			ConnectedAddress: connectedAddress,
+			Hostname:         req.Hostname,
+			LastSeen:         time.Now(),
+			NodeType:         LauncherNodeTypeLeaf,
 		},
 	)
 

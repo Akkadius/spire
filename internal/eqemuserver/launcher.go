@@ -240,10 +240,11 @@ func (l *Launcher) Start() error {
 			l.nodes = append(
 				l.nodes,
 				LauncherDistributedNode{
-					Address:  cfg.Server.World.Address,
-					Hostname: hostname,
-					LastSeen: time.Now(),
-					NodeType: LauncherNodeTypeRoot,
+					Address:          cfg.Server.World.Address,
+					ConnectedAddress: "127.0.0.1",
+					Hostname:         hostname,
+					LastSeen:         time.Now(),
+					NodeType:         LauncherNodeTypeRoot,
 				},
 			)
 		}
