@@ -364,6 +364,7 @@ export default {
     async stopServer() {
       try {
         await SpireApi.v1().post('eqemuserver/server/stop', { timer: this.delayedStop })
+        this.delayedStop = 0;
       } catch (e) {
         if (e.response && e.response.data && e.response.data.error) {
           this.notify("Launcher Error", e.response.data.error);
