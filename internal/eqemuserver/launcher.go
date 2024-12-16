@@ -62,9 +62,10 @@ type Launcher struct {
 	lastRanLogTruncationTime    time.Time
 
 	// distributed zone server mode
-	isDistributedRoot bool
-	isLeafNode        bool
-	nodes             []LauncherDistributedNode
+	isDistributedRoot    bool
+	isLeafNode           bool
+	nodes                []LauncherDistributedNode
+	leafNodeDisconnected bool
 
 	// counter properties
 	staticZonesToBoot    []string
@@ -77,7 +78,6 @@ type Launcher struct {
 
 	processSleepTime     time.Duration
 	zoneAssignedDynamics int
-	leafNodeDisconnected bool
 }
 
 func NewLauncher(
@@ -224,9 +224,6 @@ func (l *Launcher) Start() error {
 				if err != nil {
 					l.logger.Error().Err(err).Msg("Error registering leaf node")
 				} else {
-					l.logger.Info().
-						Msg("Leaf node registered with root")
-					l.leafNodeDisconnected = false
 					break
 				}
 
@@ -394,10 +391,14 @@ func (l *Launcher) Stop() error {
 	}
 
 	if l.isLauncherDistributedModeRoot() {
-		err := l.rpcClientRootNodeServerAction(rpcServerActionShutdown)
+		fmt.Println("Sending shutdown action to root node")
+
+		err := l.rpcClientRootNodeServerShutdown()
 		if err != nil {
-			return err
+			l.logger.Error().Err(err).Msg("Error sending shutdown action to root node")
 		}
+
+		fmt.Println("Post shutdown action sent to root node")
 	}
 
 	// kill all server processes
@@ -422,8 +423,14 @@ func (l *Launcher) Stop() error {
 				}
 			}
 		}
+	}
 
+	// give the processes a second to terminate gracefully before killing
+	time.Sleep(1 * time.Second)
+
+	for _, p := range processes {
 		for _, s := range l.GetServerProcessNames() {
+			proc := l.getProcessDetails(p)
 			if s == proc.BaseProcessName {
 				err := p.Kill()
 				if err != nil {
@@ -433,24 +440,16 @@ func (l *Launcher) Stop() error {
 						Msg("Error killing process")
 				}
 			}
-		}
 
-		l.logger.DebugVvv().
-			Any("pid", p.Pid).
-			Any("exe", proc.Exe).
-			Any("cmdline", proc.Cmdline).
-			Any("baseProcessName", proc.BaseProcessName).
-			Msg("Stop - Checking process")
-
-		// kill any instances of launchers
-		isServerLauncher := strings.Contains(proc.Cmdline, "server-launcher") || strings.Contains(proc.Cmdline, "eqemu-server:launcher")
-
-		if isServerLauncher && p.Pid != int32(os.Getpid()) {
-			if err := p.Terminate(); err != nil {
-				l.logger.Debug().
-					Any("error", err.Error()).
-					Any("pid", p.Pid).
-					Msg("Error killing process")
+			// kill any instances of launchers
+			isServerLauncher := strings.Contains(proc.Cmdline, "server-launcher") || strings.Contains(proc.Cmdline, "eqemu-server:launcher")
+			if isServerLauncher && p.Pid != int32(os.Getpid()) {
+				if err := p.Terminate(); err != nil {
+					l.logger.Debug().
+						Any("error", err.Error()).
+						Any("pid", p.Pid).
+						Msg("Error killing process")
+				}
 			}
 		}
 	}
@@ -1126,7 +1125,6 @@ func (l *Launcher) processDistributed() {
 		//Any("isDistributedRoot", l.isDistributedRoot).
 		//Any("isLeafNode", l.isLeafNode).
 		Any("bootedTotalDynamics", l.bootedTotalDynamics).
-		Any("targetDynamics", l.targetDynamics).
 		Msg("Processing distributed")
 
 	if l.isDistributedRoot {
@@ -1307,7 +1305,6 @@ func (l *Launcher) processDistributed() {
 		err := l.rpcClientRegister()
 		if err != nil {
 			l.logger.Error().Err(err).Msg("Error registering with root node")
-			l.leafNodeDisconnected = true
 		}
 	}
 }

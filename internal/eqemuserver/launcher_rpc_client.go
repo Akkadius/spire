@@ -27,17 +27,6 @@ type RpcLaunchZonesRequest struct {
 	ZoneCount int `json:"zone_count"`
 }
 
-const (
-	rpcServerActionShutdown = "shutdown"
-	rpcServerActionStart    = "start"
-	rpcServerActionRestart  = "restart"
-)
-
-// RpcServerActionRequest is the request payload for server actions.
-type RpcServerActionRequest struct {
-	Action string `json:"action"`
-}
-
 // makeRequest handles generic HTTP requests and response processing.
 func (l *Launcher) makeRequest(method, url string, payload any, result any) error {
 	cfg, _ := l.serverconfig.Get()
@@ -108,7 +97,18 @@ func (l *Launcher) rpcClientRegister() error {
 		Hostname:      hostname,
 	}
 
-	return l.makeRequest(http.MethodPost, url, payload, nil)
+	err := l.makeRequest(http.MethodPost, url, payload, nil)
+	if err != nil {
+		l.leafNodeDisconnected = true
+		return err
+	}
+
+	l.logger.Info().
+		Msg("Leaf node registered with root")
+
+	l.leafNodeDisconnected = false
+
+	return nil
 }
 
 // rpcClientGetZoneCount retrieves the zone count from a node.
@@ -128,25 +128,12 @@ func (l *Launcher) rpcClientSetTargetZoneCount(node LauncherDistributedNode, zon
 	return l.makeRequest(http.MethodPost, url, payload, nil)
 }
 
-// rpcClientRootNodeServerAction sends a request to the root node
-func (l *Launcher) rpcClientRootNodeServerAction(action string) error {
-	return l.makeRequest(
-		http.MethodPost,
-		"http://127.0.0.1:3005/api/v1/dzs/root-node-action",
-		RpcServerActionRequest{Action: action},
-		nil,
-	)
-}
-
-func (l *Launcher) rpcClientServerStart(node LauncherDistributedNode) error {
-	return nil
+// rpcClientRootNodeServerShutdown sends a request to the root node
+func (l *Launcher) rpcClientRootNodeServerShutdown() error {
+	return l.makeRequest(http.MethodPost, "http://127.0.0.1:3005/api/v1/dzs/root-node-shutdown", nil, nil)
 }
 
 func (l *Launcher) rpcClientServerStop(node LauncherDistributedNode) error {
 	url := fmt.Sprintf("http://%v:3005/api/v1/dzs/server-stop", node.Address)
 	return l.makeRequest(http.MethodPost, url, nil, nil)
-}
-
-func (l *Launcher) rpcClientServerRestart(node LauncherDistributedNode) error {
-	return nil
 }

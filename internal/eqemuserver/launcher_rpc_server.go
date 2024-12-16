@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
@@ -41,7 +40,7 @@ func (l *Launcher) StartRpcServer(port int) error {
 	e.GET("/api/v1/dzs/zone-count", l.rpcZoneCountDynamic)
 	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
 	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
-	e.POST("/api/v1/dzs/root-node-action", l.rpcRootNodeAction)
+	e.POST("/api/v1/dzs/root-node-shutdown", l.rpcRootNodeShutdown)
 	e.POST("/api/v1/dzs/server-stop", l.rpcServerStop)
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
@@ -180,6 +179,26 @@ func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
 	}
 
+	// if node was just registered with no zone servers, check to see if we need to start shared memory
+	currentZoneCount := 0
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+		if proc.BaseProcessName == zoneProcessName {
+			currentZoneCount++
+		}
+	}
+
+	if currentZoneCount == 0 {
+		if l.runSharedMemory {
+			l.logger.Info().Msg("Starting shared memory")
+			err := l.startServerProcessSync(sharedMemoryProcessName)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	bootCount := req.ZoneCount - l.bootedTotalDynamics
 
 	var errors []error
@@ -198,60 +217,21 @@ func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"message": "Zones started"})
 }
 
-// rpcRootNodeAction handles the root node actions
-func (l *Launcher) rpcRootNodeAction(c echo.Context) error {
-	var r RpcServerActionRequest
-	if err := c.Bind(&r); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
-	}
-
-	if r.Action == rpcServerActionStart {
-		for _, node := range l.nodes {
-			if node.NodeType == LauncherNodeTypeRoot {
-				continue
-			}
-
-			l.logger.Info().
-				Any("node", node.Hostname).
-				Any("address", node.Address).
-				Msg("Starting node")
-
-			err := l.rpcClientServerStart(node)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, err.Error())
-			}
+// rpcRootNodeShutdown handles the root node shutdown
+func (l *Launcher) rpcRootNodeShutdown(c echo.Context) error {
+	for _, node := range l.nodes {
+		if node.NodeType == LauncherNodeTypeRoot {
+			continue
 		}
-	} else if r.Action == rpcServerActionShutdown {
-		for _, node := range l.nodes {
-			if node.NodeType == LauncherNodeTypeRoot {
-				continue
-			}
 
-			l.logger.Info().
-				Any("node", node.Hostname).
-				Any("address", node.Address).
-				Msg("Stopping node")
+		l.logger.Info().
+			Any("node", node.Hostname).
+			Any("address", node.Address).
+			Msg("Stopping node")
 
-			err := l.rpcClientServerStop(node)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, err.Error())
-			}
-		}
-	} else if r.Action == rpcServerActionRestart {
-		for _, node := range l.nodes {
-			if node.NodeType == LauncherNodeTypeRoot {
-				continue
-			}
-
-			l.logger.Info().
-				Any("node", node.Hostname).
-				Any("address", node.Address).
-				Msg("Restarting node")
-
-			err := l.rpcClientServerRestart(node)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, err.Error())
-			}
+		err := l.rpcClientServerStop(node)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
 	}
 
@@ -278,6 +258,9 @@ func (l *Launcher) rpcServerStop(c echo.Context) error {
 			}
 		}
 	}
+
+	// give the processes a second to terminate gracefully before killing them forcefully
+	time.Sleep(1 * time.Second)
 
 	for _, p := range processes {
 		proc := l.getProcessDetails(p)
