@@ -77,6 +77,7 @@ type Launcher struct {
 
 	processSleepTime     time.Duration
 	zoneAssignedDynamics int
+	leafNodeDisconnected bool
 }
 
 func NewLauncher(
@@ -164,6 +165,11 @@ func (l *Launcher) Process() {
 
 		if l.isLeafNode {
 			l.processSleepTime = time.Second * 10
+
+			// if the leaf node is disconnected, we want to attempt registration more frequently
+			if l.leafNodeDisconnected {
+				l.processSleepTime = time.Second * 1
+			}
 		}
 
 		time.Sleep(l.processSleepTime)
@@ -209,8 +215,8 @@ func (l *Launcher) Start() error {
 		Any("World name", cfg.Server.World.Longname).
 		Msg("Starting server launcher")
 
-	if cfg.WebAdmin.Launcher != nil {
-		if cfg.WebAdmin.Launcher.DistributedNodeType == LauncherNodeTypeLeaf {
+	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil {
+		if l.isLauncherDistributedModeLeaf() {
 			l.isLeafNode = true
 			l.logger.Info().Msg("Server detected is a leaf node")
 			for {
@@ -220,6 +226,7 @@ func (l *Launcher) Start() error {
 				} else {
 					l.logger.Info().
 						Msg("Leaf node registered with root")
+					l.leafNodeDisconnected = false
 					break
 				}
 
@@ -228,7 +235,8 @@ func (l *Launcher) Start() error {
 				time.Sleep(1 * time.Second)
 			}
 		}
-		if cfg.WebAdmin.Launcher.DistributedNodeType == LauncherNodeTypeRoot {
+
+		if l.isLauncherDistributedModeRoot() {
 			l.isDistributedRoot = true
 			l.logger.Info().Msg("Server detected is a distributed zone root")
 		}
@@ -383,6 +391,13 @@ func (l *Launcher) Stop() error {
 	err := l.serverconfig.Save(cfg)
 	if err != nil {
 		return err
+	}
+
+	if l.isLauncherDistributedModeRoot() {
+		err := l.rpcClientRootNodeServerAction(rpcServerActionShutdown)
+		if err != nil {
+			return err
+		}
 	}
 
 	// kill all server processes
@@ -1115,6 +1130,11 @@ func (l *Launcher) processDistributed() {
 		Msg("Processing distributed")
 
 	if l.isDistributedRoot {
+		for len(l.nodes) == 1 {
+			l.logger.Info().Msg("Waiting for leaf nodes to connect before starting zones")
+			time.Sleep(1 * time.Second)
+		}
+
 		// launcher
 		// [x] poll all the nodes to get the zone counts
 		// [x] calculate how many zones we need to boot from the root
@@ -1149,6 +1169,7 @@ func (l *Launcher) processDistributed() {
 			l.logger.Info().
 				Any("node", node.Hostname).
 				Any("address", node.Address).
+				Any("ConnectedAddress", node.ConnectedAddress).
 				Any("zoneCount", r.ZoneCount).
 				Any("maxZoneCount", r.MaxZoneCount).
 				Msg("Processing node, got zone count")
@@ -1286,6 +1307,7 @@ func (l *Launcher) processDistributed() {
 		err := l.rpcClientRegister()
 		if err != nil {
 			l.logger.Error().Err(err).Msg("Error registering with root node")
+			l.leafNodeDisconnected = true
 		}
 	}
 }
@@ -1357,4 +1379,28 @@ func (l *Launcher) pollProcessCounts() {
 	}
 
 	l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
+}
+
+// isLauncherDistributedModeRoot checks if the launcher is in distributed mode and is the root node
+// loads from the server config
+func (l *Launcher) isLauncherDistributedModeRoot() bool {
+	cfg, _ := l.serverconfig.Get()
+
+	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil && cfg.WebAdmin.Launcher.DistributedNodeType == LauncherNodeTypeRoot {
+		return true
+	}
+
+	return false
+}
+
+// isLauncherDistributedModeLeaf checks if the launcher is in distributed mode leaf
+// loads from the server config
+func (l *Launcher) isLauncherDistributedModeLeaf() bool {
+	cfg, _ := l.serverconfig.Get()
+
+	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil && cfg.WebAdmin.Launcher.DistributedNodeType == LauncherNodeTypeLeaf {
+		return true
+	}
+
+	return false
 }

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
+	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
+	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
 	"strings"
 	"time"
@@ -39,10 +41,12 @@ func (l *Launcher) StartRpcServer(port int) error {
 	e.GET("/api/v1/dzs/zone-count", l.rpcZoneCountDynamic)
 	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
 	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
+	e.POST("/api/v1/dzs/root-node-action", l.rpcRootNodeAction)
+	e.POST("/api/v1/dzs/server-stop", l.rpcServerStop)
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
 		Format: fmt.Sprintf(
-			"%sSpire › API ›%s [${status}] [${method}] [${uri}] [${latency_human}]\n",
+			"%sSpire › RPC API ›%s [${status}] [${method}] [${uri}] [${latency_human}]\n",
 			console.BoldWhite,
 			console.Reset,
 		),
@@ -192,4 +196,108 @@ func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"message": "Zones started"})
+}
+
+// rpcRootNodeAction handles the root node actions
+func (l *Launcher) rpcRootNodeAction(c echo.Context) error {
+	var r RpcServerActionRequest
+	if err := c.Bind(&r); err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
+	}
+
+	pp.Println(r)
+
+	if r.Action == rpcServerActionStart {
+		for _, node := range l.nodes {
+			if node.NodeType == LauncherNodeTypeRoot {
+				continue
+			}
+
+			l.logger.Info().
+				Any("node", node.Hostname).
+				Any("address", node.Address).
+				Msg("Starting node")
+
+			err := l.rpcClientServerStart(node)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, err.Error())
+			}
+		}
+	} else if r.Action == rpcServerActionShutdown {
+		for _, node := range l.nodes {
+			if node.NodeType == LauncherNodeTypeRoot {
+				continue
+			}
+
+			l.logger.Info().
+				Any("node", node.Hostname).
+				Any("address", node.Address).
+				Msg("Stopping node")
+
+			err := l.rpcClientServerStop(node)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, err.Error())
+			}
+		}
+	} else if r.Action == rpcServerActionRestart {
+		for _, node := range l.nodes {
+			if node.NodeType == LauncherNodeTypeRoot {
+				continue
+			}
+
+			l.logger.Info().
+				Any("node", node.Hostname).
+				Any("address", node.Address).
+				Msg("Restarting node")
+
+			err := l.rpcClientServerRestart(node)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, err.Error())
+			}
+		}
+	}
+
+	return c.JSON(http.StatusOK, "ok")
+}
+
+// rpcServerStop stops the server leaf node
+func (l *Launcher) rpcServerStop(c echo.Context) error {
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+
+		if proc.BaseProcessName == zoneProcessName {
+			l.logger.Info().
+				Any("pid", p.Pid).
+				Any("BaseProcessName", proc.BaseProcessName).
+				Msg("Stopping zone via termination")
+
+			if err := p.Terminate(); err != nil {
+				l.logger.Debug().
+					Any("error", err.Error()).
+					Any("pid", p.Pid).
+					Msg("Error terminating process")
+			}
+		}
+	}
+
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+		if proc.BaseProcessName == zoneProcessName {
+			l.logger.Info().
+				Any("pid", p.Pid).
+				Any("BaseProcessName", proc.BaseProcessName).
+				Msg("Stopping zone via termination")
+
+			err := p.Kill()
+			if err != nil {
+				l.logger.Debug().
+					Any("error", err.Error()).
+					Any("pid", p.Pid).
+					Msg("Error killing process")
+			}
+		}
+	}
+
+	return nil
 }
