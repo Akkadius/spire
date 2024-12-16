@@ -3,16 +3,41 @@ package eqemuserver
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/telnet"
 	"strings"
 )
 
 type Client struct {
 	telnet *telnet.Client
+	logger *logger.AppLogger
+
+	pool                []*telnet.Client
+	lastUsedClientIndex int
 }
 
-func NewClient(telnet *telnet.Client) *Client {
-	return &Client{telnet: telnet}
+func NewClient(t *telnet.Client, logger *logger.AppLogger) *Client {
+	poolSize := 10
+	var pool []*telnet.Client
+	for i := 0; i < poolSize; i++ {
+		pool = append(pool, telnet.NewClient(logger))
+	}
+
+	return &Client{
+		telnet: t,
+		logger: logger,
+		pool:   pool,
+	}
+}
+
+// GetTelnetClient returns a telnet client from the pool
+func (c *Client) GetTelnetClient() *telnet.Client {
+	c.lastUsedClientIndex++
+	if c.lastUsedClientIndex >= len(c.pool) {
+		c.lastUsedClientIndex = 0
+	}
+
+	return c.pool[c.lastUsedClientIndex]
 }
 
 type WorldZoneList struct {
@@ -42,7 +67,7 @@ type WorldZoneList struct {
 }
 
 func (c *Client) GetZoneList() (WorldZoneList, error) {
-	o, err := c.telnet.Command(
+	o, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "api get_zone_list", EnforceJson: true},
 	)
 	if err != nil {
@@ -68,7 +93,7 @@ type LockStatusResponse struct {
 
 // GetLockStatus returns the lock status of the server
 func (c *Client) GetLockStatus() (bool, error) {
-	o, err := c.telnet.Command(
+	o, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "api lock_status", EnforceJson: true},
 	)
 	if err != nil {
@@ -94,7 +119,7 @@ func (c *Client) SetLockStatus(locked bool) error {
 	if !locked {
 		command = "unlock"
 	}
-	_, err := c.telnet.Command(
+	_, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: command},
 	)
 	if err != nil {
@@ -161,7 +186,7 @@ type WorldClientList struct {
 }
 
 func (c *Client) GetWorldClientList() (WorldClientList, error) {
-	o, err := c.telnet.Command(telnet.CommandConfig{Command: "api get_client_list", EnforceJson: true})
+	o, err := c.GetTelnetClient().Command(telnet.CommandConfig{Command: "api get_client_list", EnforceJson: true})
 	if err != nil {
 		return WorldClientList{}, err
 	}
@@ -183,7 +208,7 @@ type ReloadResponse struct {
 }
 
 func (c *Client) Reload(reloadType string) (ReloadResponse, error) {
-	o, err := c.telnet.Command(
+	o, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: fmt.Sprintf("api reload %v", reloadType), EnforceJson: true},
 	)
 	if err != nil {
@@ -209,7 +234,7 @@ type ReloadTypesResponse struct {
 }
 
 func (c *Client) GetReloadTypes() (ReloadTypesResponse, error) {
-	o, err := c.telnet.Command(
+	o, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "api get_reload_types", EnforceJson: true},
 	)
 	if err != nil {
@@ -225,7 +250,7 @@ func (c *Client) GetReloadTypes() (ReloadTypesResponse, error) {
 }
 
 func (c *Client) GetWorldUptime() (string, error) {
-	o, err := c.telnet.Command(
+	o, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "uptime 0"},
 	)
 	if err != nil {
@@ -236,7 +261,7 @@ func (c *Client) GetWorldUptime() (string, error) {
 }
 
 func (c *Client) MessageWorld(message string) error {
-	_, err := c.telnet.Command(
+	_, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "emote world 15 " + message},
 	)
 	if err != nil {
@@ -247,7 +272,7 @@ func (c *Client) MessageWorld(message string) error {
 }
 
 func (c *Client) ReloadQuestsForZone(zone string) error {
-	_, err := c.telnet.Command(
+	_, err := c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "reloadzonequests " + zone},
 	)
 	if err != nil {
