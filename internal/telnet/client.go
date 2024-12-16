@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Client is a telnet client
 type Client struct {
 	debugging bool
 	t         *telnet.Conn
@@ -17,6 +18,7 @@ type Client struct {
 	mu        sync.Mutex
 }
 
+// NewClient creates a new telnet client
 func NewClient(logger *logger.AppLogger) *Client {
 	return &Client{
 		debugging: env.GetInt("TELNET_DEBUG", "0") >= 3,
@@ -28,6 +30,7 @@ const (
 	linebreak = "\n\r> "
 )
 
+// Connect connects to the telnet server
 func (c *Client) Connect() error {
 	var err error
 
@@ -101,6 +104,7 @@ func (c *Client) expect(d ...string) error {
 	return nil
 }
 
+// sendln sends a string to the telnet connection
 func (c *Client) sendln(s string) error {
 	defer func() {
 		if r := recover(); r != nil {
@@ -199,6 +203,7 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 	}
 }
 
+// Close closes the telnet connection
 func (c *Client) Close() {
 	if c.t != nil {
 		c.debug("Closing telnet connection")
@@ -210,12 +215,14 @@ func (c *Client) Close() {
 	}
 }
 
+// debug logs a debug message
 func (c *Client) debug(msg string, a ...interface{}) {
 	if c.debugging {
 		c.logger.Debug().Msgf(msg, a...)
 	}
 }
 
+// isConnectionAlive checks if the connection is alive
 func (c *Client) isConnectionAlive() bool {
 	if c.t == nil {
 		return false
