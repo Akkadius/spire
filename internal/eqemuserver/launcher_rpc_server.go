@@ -205,8 +205,6 @@ func (l *Launcher) rpcRootNodeAction(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
 	}
 
-	pp.Println(r)
-
 	if r.Action == rpcServerActionStart {
 		for _, node := range l.nodes {
 			if node.NodeType == LauncherNodeTypeRoot {
