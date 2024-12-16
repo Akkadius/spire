@@ -406,6 +406,7 @@ export default {
             this.error        = ""
           }
         } catch (e) {
+
           // error notify
           if (e.response && e.response.data && e.response.data.error) {
             this.error = e.response.data.error
@@ -463,10 +464,11 @@ export default {
       } catch (e) {
         // error notify
         if (e.response && e.response.data && e.response.data.error) {
-          if (e.response.data.error.includes("Failed to connect to gameserver")) {
+          this.error = e.response.data.error
+
+          if (this.error.includes("Failed to")) {
             this.error = ""
-          } else {
-            this.error = e.response.data.error
+            this.zoneList = []
           }
         }
       }
