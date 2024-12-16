@@ -388,6 +388,7 @@ export default {
     async restartServer() {
       try {
         await SpireApi.v1().post('eqemuserver/server/restart', { timer: this.delayedRestart })
+        this.delayedRestart = 0;
       } catch (e) {
         console.log(e)
       }
