@@ -323,6 +323,8 @@ func (l *Launcher) Restart() error {
 		return err
 	}
 
+	time.Sleep(1 * time.Second)
+
 	l.logger.Info().Msg("Restarting server launcher")
 
 	return l.StartLauncherProcess()

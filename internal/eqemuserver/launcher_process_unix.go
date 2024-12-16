@@ -4,7 +4,6 @@
 package eqemuserver
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -53,7 +52,7 @@ func (l *Launcher) startLauncherProcess() error {
 	}
 
 	// copy the binary to os tmp dir
-	tmpBin := filepath.Join(os.TempDir(), filepath.Base(bin)+"-"+l.serverconfig.GetServerName())
+	tmpBin := filepath.Join(os.TempDir(), filepath.Base(bin)+"-launcher")
 	if err := copyFile(bin, tmpBin); err != nil {
 		return err
 	}
