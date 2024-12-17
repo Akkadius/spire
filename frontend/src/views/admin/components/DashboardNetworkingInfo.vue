@@ -126,7 +126,7 @@ export default {
     },
 
     bytesToMbytes: function (bytes) {
-      return parseFloat(bytes / 1024 / 1024).toFixed(2)
+      return parseFloat((bytes * 8) / 1024 / 1024).toFixed(2); // Convert to Mbps
     },
     copyToClip(s) {
       ClipBoard.copyFromText(s)
