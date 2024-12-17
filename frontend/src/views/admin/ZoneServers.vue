@@ -80,7 +80,7 @@
       <span class="font-weight-bold">• Highest Zone CPU</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.cpu))).toFixed(2) : 0 }}%
       <span class="font-weight-bold">• Highest Zone Memory</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.memory / 1024 / 1024))).toFixed(2) : 0 }}MB
       <span class="font-weight-bold">• Highest Zone Uptime</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.elapsed / 60 / 60))).toFixed(2) : 0 }}h
-      
+
     </eq-window>
 
     <eq-window
@@ -112,10 +112,10 @@
             <th style="width: 100px">Zone Type</th>
             <th style="width: 85px">Zone ID</th>
             <th>Instance ID</th>
-            <th><i class="fe fe-cloud"></i> IP</th>
-            <th><i class="fe fe-cpu"></i> CPU</th>
-            <th><i class="fe fe-hard-drive"></i> Memory</th>
-            <th><i class="fe fe-clock"></i> Uptime</th>
+            <th style="text-align: center"><i class="fe fe-cloud"></i> IP</th>
+            <th style="text-align: center"><i class="fe fe-cpu"></i> CPU</th>
+            <th style="text-align: center"><i class="fe fe-hard-drive"></i> Memory</th>
+            <th style="text-align: center"><i class="fe fe-clock"></i> Uptime</th>
           </tr>
           </thead>
           <tbody
@@ -161,7 +161,7 @@
             <td>{{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}</td>
             <td>{{ zone.zone_id }}</td>
             <td>{{ zone.instance_id ? zone.instance_id : 0 }}</td>
-            <td>{{ zone.zone_server_address }}:{{ zone.client_port }}</td>
+            <td style="text-align: center">{{ zone.zone_server_address }}:{{ zone.client_port }}</td>
             <td :style="'min-width: 70px; text-align: center'">
               <span :style="'color: ' + getCpuUsageColor(zone) + ' !important'">
                 {{ zone.cpu ? parseFloat(zone.cpu).toFixed(0) : "N/A" }} %
@@ -172,10 +172,10 @@
                 color="blue"
               />
             </td>
-            <td :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px'">
+            <td :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px; text-align: center'">
               {{ zone.memory ? parseFloat(zone.memory / 1024 / 1024).toFixed(2) + "MB" : "N/A" }}
             </td>
-            <td>
+            <td style="text-align: center">
               {{ zone.elapsed > 0 ? parseFloat(zone.elapsed / 60 / 60).toFixed(2) + "h" : "N/A" }}
             </td>
           </tr>
