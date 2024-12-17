@@ -1,12 +1,5 @@
 <template>
   <div :style="loaded ? 'opacity:1' : 'opacity:.3'">
-    <div v-if="zoneList.length === 0">
-      <div class="card">
-        <div class="card-body">
-          Zoneservers are offline
-        </div>
-      </div>
-    </div>
 
     <div
       class="row justify-content-center"
@@ -71,7 +64,9 @@
 
     <eq-window
       class="text-center"
-      title="Zoneserver Stats">
+      title="Zoneserver Stats"
+      v-if="zoneList.length > 0"
+    >
 
       <span class="font-weight-bold">• Zones</span> {{ zoneList.length }}
       <span class="font-weight-bold">• Statics</span> {{ zoneList.filter(z => z.is_static_zone === true).length }}
@@ -91,17 +86,13 @@
         :is-loading="!loaded"
       />
 
-      <div v-if="filterZoneList(zoneList) === 0" class="font-weight-bold text-center p-3">
-        No events found with specified criteria.
-      </div>
-
       <div
         style="max-height: 65vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
         class="p-0"
       >
 
         <div v-if="filterZoneList(zoneList).length === 0" class="p-3 text-center">
-          No zones found with specified criteria.
+          No zones found with specified criteria or server is offline.
         </div>
 
         <table
