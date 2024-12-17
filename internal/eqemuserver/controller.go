@@ -144,6 +144,7 @@ type ServerStatsResponse struct {
 	QueryServOnline bool            `json:"query_serv_online"`
 	ZoneList        WorldZoneList   `json:"zone_list"`
 	PlayersOnline   WorldClientList `json:"client_list"`
+	Uptime          string          `json:"uptime"`
 }
 
 func (a *Controller) getServerStats(c echo.Context) error {
@@ -187,6 +188,9 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	if len(clientList.Data) > 0 {
 		r.PlayersOnline = clientList
 	}
+
+	uptime, _ := a.eqemuserverapi.GetWorldUptime()
+	r.Uptime = uptime
 
 	cfg, _ := a.serverconfig.Get()
 	r.ServerName = cfg.Server.World.Longname

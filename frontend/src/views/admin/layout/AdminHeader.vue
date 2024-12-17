@@ -3,7 +3,9 @@
     <div class="card-body pl-4 pr-4 pt-3 pb-3">
 
       <div class="row align-items-center">
-        <div class="mr-3 pr-5">
+
+        <!-- Server Name -->
+        <div class="mr-3">
           <h6 class="header-pretitle d-inline-block mr-3">
             {{ pageName }}
           </h6>
@@ -33,25 +35,35 @@
             </a>
 
           </h1>
-
-
         </div>
 
+        <!-- Divider -->
         <div
           class="d-none d-lg-block mr-3 ml-3"
           style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
         />
 
+        <!-- Server Metrics -->
         <div class="col-lg-8 col-sm-12 pl-3 pr-0 ml-0 text-center">
-
           <div class="row align-items-center">
 
-            <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase mr-1">World</small>
-              <span
-                :class="`badge badge-${stats.world_online ? 'success' : 'danger'} ml-3`"
-                style="font-size: 12px"
-              >{{ stats.world_online ? 'Online' : 'Offline' }}</span>
+            <!-- Server Metrics -->
+            <div class="col-lg-2 col-sm-12 mt-3-mobile">
+              <div class="row" v-for="(metric, index) in serverStats" :key="index">
+                <!-- Left Label -->
+                <div class="col-6 p-0 m-0 text-right" style="line-height: 1 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 12px;">
+                    {{ metric.label }}
+                  </span>
+                </div>
+
+                <!-- Right Value -->
+                <div class="col-6 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
+                  <span class="small font-weight-bold" style="font-size: 12px;">
+                    {{ metric.value.toLocaleString() }}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div
@@ -59,145 +71,37 @@
               style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
             />
 
-            <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase">Zoneservers</small>
-              <span class="h2 mb-0 ml-3">
-                {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
-              </span>
-            </div>
-
-            <div
-              class="d-none d-lg-block mr-3 ml-3"
-              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-            />
-
-            <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase mr-1">Players</small>
-              <span class="h2 mb-0 ml-3">
-              {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
-          </span>
-            </div>
-
-            <div
-              class="d-none d-lg-block mr-3 ml-3"
-              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-            />
-
-            <!-- Resource Utilization -->
+            <!-- Resource Metrics -->
             <div class="col-lg-4 col-sm-12 pl-3 pr-3 mt-3-mobile mb-2">
-
-              <!-- CPU -->
-              <div class="row">
-
-                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
+              <!-- Render Metrics Dynamically -->
+              <div class="row" v-for="(metric, index) in metrics" :key="index">
+                <!-- Left Label -->
+                <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
                   <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    CPU - {{ cpuPercent ? cpuPercent : "N/A" }} %
+                    {{ metric.label }}
                   </span>
                 </div>
-                <div class="col-6 p-0 m-0 mt-1">
+
+                <!-- Progress Bar -->
+                <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px">
                   <eq-progress-bar
                     style="opacity: .95"
-                    :percent="parseFloat(cpuPercent)"
+                    :percent="metric.percent"
                     :show-percent="false"
-                    :color="getCpuLoadColor(cpuPercent)"
+                    :color="metric.color"
                   />
                 </div>
-              </div>
 
-              <!-- Memory -->
-              <div class="row">
-                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
+                <!-- Right Value -->
+                <div class="col-3 p-0 m-0 text-left" style="line-height: .8 !important">
                   <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    MEM - {{ memoryPercent ? memoryPercent : "N/A" }} %
+                    {{ metric.value }}
                   </span>
                 </div>
-                <div class="col-6 p-0 m-0 mt-1">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="parseFloat(memoryPercent)"
-                    :show-percent="false"
-                    color="lightgreen"
-                  />
-                </div>
               </div>
-
-              <!-- Disk Read -->
-              <div class="row">
-                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    DISK READ - {{ diskStats.readBytesPerSec.toFixed(2) }} MB/s
-                  </span>
-                </div>
-                <div class="col-6 p-0 m-0 mt-1">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="Math.min(diskStats.readBytesPerSec / 100, 100)"
-                    :show-percent="false"
-                    color="deepskyblue"
-                  />
-                </div>
-              </div>
-
-              <!-- Disk Write -->
-              <div class="row">
-                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    DISK WRITE - {{ diskStats.writeBytesPerSec.toFixed(2) }} MB/s
-                  </span>
-                </div>
-                <div class="col-6 p-0 m-0 mt-1">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="Math.min(diskStats.writeBytesPerSec / 100, 100)"
-                    :show-percent="false"
-                    color="tomato"
-                  />
-                </div>
-              </div>
-
-
-              <!-- Network Download -->
-              <div class="row" v-if="net && net['all'] && bytesToMbytes(net['all'].bytes_recv_ps)">
-                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    NET DL - {{ bytesToMbytes(net['all'].bytes_recv_ps) < 10000 ? bytesToMbytes(net['all'].bytes_recv_ps) : 0 }} Mbps
-                  </span>
-                </div>
-                <div class="col-6 p-0 m-0 mt-1">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="bytesToMbytes(net['all'].bytes_recv_ps) < 10000 ? bytesToMbytes(net['all'].bytes_recv_ps) / 10 : 0"
-                    :show-percent="false"
-                    color="limegreen"
-                  />
-                </div>
-              </div>
-
-              <!-- Network Upload -->
-              <div class="row" v-if="net && net['all'] && bytesToMbytes(net['all'].bytes_sent_ps)">
-                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    NET UL - {{ bytesToMbytes(net['all'].bytes_sent_ps) < 10000 ? bytesToMbytes(net['all'].bytes_sent_ps) : 0 }} Mbps
-                  </span>
-                </div>
-                <div class="col-6 p-0 m-0 mt-1">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="bytesToMbytes(net['all'].bytes_sent_ps) < 10000 ? bytesToMbytes(net['all'].bytes_sent_ps) / 10 : 0"
-                    :show-percent="false"
-                    color="limegreen"
-                  />
-                </div>
-              </div>
-
             </div>
 
-            <!--            <div-->
-            <!--              class="d-none d-lg-block ml-3 mr-3"-->
-            <!--              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"-->
-            <!--            />-->
           </div>
-
         </div>
       </div>
     </div>
@@ -254,6 +158,75 @@ export default {
     }
   },
 
+  computed: {
+
+    serverStats() {
+      return [
+        {
+          label: "World",
+          value: this.stats && this.stats.world_online ? "Online" : "Offline",
+        },
+        {
+          label: "Zoneservers",
+          value: this.stats && this.stats.zone_list && this.stats.zone_list.data ? this.stats.zone_list.data.length : 0,
+        },
+        {
+          label: "Players",
+          value: this.stats && this.stats.client_list && this.stats.client_list.data ? this.stats.client_list.data.length : 0,
+        },
+        {
+          label: "Uptime",
+          value: this.stats && this.stats.uptime ? this.formatUptime(this.stats.uptime) : "N/A",
+        },
+        {
+          label: "Locked",
+          value: this.serverLocked ? "Yes" : "No",
+        },
+      ]
+    },
+
+    metrics() {
+      return [
+        {
+          label: "CPU",
+          value: `${this.cpuPercent || "N/A"} %`,
+          percent: parseFloat(this.cpuPercent || 0),
+          color: this.getCpuLoadColor(this.cpuPercent)
+        },
+        {
+          label: "MEM",
+          value: `${this.memoryPercent || "N/A"} %`,
+          percent: parseFloat(this.memoryPercent || 0),
+          color: "lightgreen"
+        },
+        {
+          label: "DISK READ",
+          value: `${this.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
+          percent: Math.min(this.diskStats.readBytesPerSec / 100, 100),
+          color: "deepskyblue"
+        },
+        {
+          label: "DISK WRITE",
+          value: `${this.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
+          percent: Math.min(this.diskStats.writeBytesPerSec / 100, 100),
+          color: "tomato"
+        },
+        {
+          label: "NET DL",
+          value: `${this.bytesToMbytes(this.net['all'].bytes_recv_ps)} Mbps`,
+          percent: Math.min(this.bytesToMbytes(this.net['all'].bytes_recv_ps) / 10, 100),
+          color: "limegreen"
+        },
+        {
+          label: "NET UL",
+          value: `${this.bytesToMbytes(this.net['all'].bytes_sent_ps)} Mbps`,
+          percent: Math.min(this.bytesToMbytes(this.net['all'].bytes_sent_ps) / 10, 100),
+          color: "limegreen"
+        }
+      ];
+    }
+  },
+
   beforeDestroy() {
     clearInterval(this.timer)
 
@@ -291,6 +264,28 @@ export default {
     }
   },
   methods: {
+
+    formatUptime(t) {
+      // reformat
+      t = t.replace("Worldserver Uptime |", "")
+      t = t.replace(new RegExp(',', 'g'), '');
+      t = t.replace("and", "")
+      t = t.replace(" Days", "d")
+      t = t.replace(" Day", "d")
+      t = t.replace(" Weeks", "w")
+      t = t.replace(" Week", "w")
+      t = t.replace(" Months", "m")
+      t = t.replace(" Month", "m")
+      t = t.replace(" Hours", "h")
+      t = t.replace(" Hour", "h")
+      t = t.replace(" Minutes", "m")
+      t = t.replace(" Minute", "m")
+      t = t.replace(" Seconds", "s")
+      t = t.replace(" Second", "s")
+      t = t.replace(/^\s+|\s+$/g, "")
+
+      return t.trim();
+    },
 
     readyToPoll() {
       return Date.now() - this.lastUpdateTime > this.updateIntervalSeconds * 1000
@@ -363,15 +358,15 @@ export default {
           // Disk stats
           const disk = r.data.disk[0]; // Assuming one disk for simplicity
           if (disk) {
-            const nowReadBytes = disk.readBytes;
+            const nowReadBytes  = disk.readBytes;
             const nowWriteBytes = disk.writeBytes;
 
             // Calculate per-second change
-            this.diskStats.readBytesPerSec = (nowReadBytes - this.diskStats.previousReadBytes) / 1024 / 1024;
+            this.diskStats.readBytesPerSec  = (nowReadBytes - this.diskStats.previousReadBytes) / 1024 / 1024;
             this.diskStats.writeBytesPerSec = (nowWriteBytes - this.diskStats.previousWriteBytes) / 1024 / 1024;
 
             // Update previous values
-            this.diskStats.previousReadBytes = nowReadBytes;
+            this.diskStats.previousReadBytes  = nowReadBytes;
             this.diskStats.previousWriteBytes = nowWriteBytes;
           }
 
@@ -481,6 +476,6 @@ export default {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 240px; /* Set the max-width to the desired length */
+  max-width: 450px; /* Set the max-width to the desired length */
 }
 </style>
