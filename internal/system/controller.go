@@ -28,6 +28,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "admin/system/mem", a.getMemory, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/network", a.getNetwork, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/disk", a.getDisk, nil),
+		routes.RegisterRoute(http.MethodGet, "admin/system/all", a.systemAll, nil),
 	}
 }
 
@@ -167,6 +168,20 @@ func (a *Controller) getResourceUsageSummary(c echo.Context) error {
 	)
 }
 
+// systemAll returns all system information
+func (a *Controller) systemAll(c echo.Context) error {
+	all, err := All()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	return c.JSON(http.StatusOK, all)
+}
+
+// contains checks if a string is in a slice
 func contains(s []string, str string) bool {
 	for _, v := range s {
 		if v == str {
