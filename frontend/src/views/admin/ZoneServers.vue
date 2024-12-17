@@ -193,7 +193,7 @@
           >
             <td
               colspan="11"
-              style="box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 6px rgba(0,0,0,0.7), 3px 3px 6px rgba(0, 0, 0, 0.1);"
+              style="box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 30px rgba(0,0,0,0.7), 3px 3px 6px rgba(0, 0, 0, 0.1);"
             >
               <div class="d-flex flex-wrap p-3">
                 <div
