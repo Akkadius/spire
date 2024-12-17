@@ -169,7 +169,7 @@
               <eq-progress-bar
                 :percent="parseFloat(zone.cpu)"
                 :show-percent="false"
-                color="blue"
+                :color="getCpuLoadColor(parseFloat(zone.cpu))"
               />
             </td>
             <td :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px; text-align: center'">
@@ -292,6 +292,17 @@ export default {
     this.init()
   },
   methods: {
+    getCpuLoadColor(load) {
+      if (load > 80) {
+        return 'red'
+      }
+      if (load > 50) {
+        return 'orange'
+      }
+
+      return '#2c7be5'
+    },
+
     debouncedUpdateQueryState: debounce(function () {
       this.updateQueryState();
     }, 300),

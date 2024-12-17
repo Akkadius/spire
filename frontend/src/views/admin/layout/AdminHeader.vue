@@ -13,7 +13,8 @@
           <h1
             class="header-title"
             :title="stats.server_name"
-            style="font-size: 1.1rem;">
+            style="font-size: 1.1rem;"
+          >
 
             <server-process-button-component class="d-inline-block mr-3"/>
 
@@ -32,8 +33,6 @@
             </a>
 
           </h1>
-
-
 
 
         </div>
@@ -61,8 +60,8 @@
             />
 
             <div class="col-lg-auto col-sm-12 mt-3-mobile">
-                <small class="text-muted text-uppercase">Zoneservers</small>
-                <span class="h2 mb-0 ml-3">
+              <small class="text-muted text-uppercase">Zoneservers</small>
+              <span class="h2 mb-0 ml-3">
                 {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
               </span>
             </div>
@@ -73,7 +72,7 @@
             />
 
             <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase mr-1">Players Online</small>
+              <small class="text-muted text-uppercase mr-1">Players</small>
               <span class="h2 mb-0 ml-3">
               {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
           </span>
@@ -85,51 +84,36 @@
             />
 
             <!-- Resource Utilization -->
-            <div class="col-lg-auto col-sm-12 pl-3 pr-3 mt-3-mobile">
-              <vue-ellipse-progress
-                :progress="cpuPercent"
-                animation="default 300 0"
-                thickness="4"
-                :legend-formatter="({ currentValue }) => `${currentValue}%`"
-                :size="60"
-                :color="getCpuLoadColor(cpuPercent)"
-                empty-color="#95aac9"
-                empty-thickness="1"
-                font-size=".8rem"
-                font-color="#95aac9"
-              >
-                <span
-                  slot="legend-caption"
-                  class="text-muted font-weight-bold"
-                  style="font-size: 10px"
-                > CPU </span>
-              </vue-ellipse-progress>
+            <div class="col-lg-auto col-sm-12 pl-3 pr-3 mt-3-mobile mb-2">
 
-              <vue-ellipse-progress
-                class="ml-3"
-                :progress="memoryPercent"
-                animation="loop 600 0"
-                thickness="4"
-                :legend-formatter="({ currentValue }) => `${currentValue}%`"
-                :size="60"
-                color="#2c7be5"
-                empty-color="#95aac9"
-                empty-thickness="1"
-                font-size=".8rem"
-                font-color="#95aac9"
-              >
-              <span
-                slot="legend-caption"
-                class="text-muted font-weight-bold"
-                style="font-size: 10px"
-              > MEM</span>
-              </vue-ellipse-progress>
+              <!-- CPU -->
+              <span class="small font-weight-bold text-muted" style="font-size: 10px">
+                CPU - {{ cpuPercent ? cpuPercent : "N/A" }} %
+              </span>
+              <eq-progress-bar
+                style="opacity: .95"
+                :percent="parseFloat(cpuPercent)"
+                :show-percent="false"
+                :color="getCpuLoadColor(cpuPercent)"
+              />
+
+              <!-- Memory -->
+              <span class="small font-weight-bold text-muted" style="font-size: 10px">
+                MEM - {{ memoryPercent ? memoryPercent : "N/A" }} %
+              </span>
+              <eq-progress-bar
+                style="opacity: .95"
+                :percent="parseFloat(memoryPercent)"
+                :show-percent="false"
+                color="lightgreen"
+              />
+
             </div>
 
-<!--            <div-->
-<!--              class="d-none d-lg-block ml-3 mr-3"-->
-<!--              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"-->
-<!--            />-->
+            <!--            <div-->
+            <!--              class="d-none d-lg-block ml-3 mr-3"-->
+            <!--              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"-->
+            <!--            />-->
           </div>
 
         </div>
@@ -142,15 +126,15 @@
 import ServerProcessButtonComponent from "@/views/admin/components/ServerProcessButtonComponent.vue";
 import {EventBus}                   from "@/app/event-bus/event-bus";
 import {SpireApi}                   from "@/app/api/spire-api";
-import {VueEllipseProgress}         from "vue-ellipse-progress";
 import {SpireWebsocket}             from "@/app/api/spire-websocket";
 import moment                       from "moment";
+import EqProgressBar                from "@/components/eq-ui/EQProgressBar.vue";
 
 export default {
   name: "AdminHeader",
   components: {
+    EqProgressBar,
     ServerProcessButtonComponent,
-    VueEllipseProgress,
   },
   data() {
     return {
@@ -262,7 +246,8 @@ export default {
 
           if (clientCount > 1000) {
             this.updateIntervalSeconds = 30
-          } if (clientCount > 500) {
+          }
+          if (clientCount > 500) {
             this.updateIntervalSeconds = 10
           } else if (clientCount > 100) {
             this.updateIntervalSeconds = 5
