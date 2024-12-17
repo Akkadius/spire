@@ -1299,6 +1299,22 @@ func (a *Controller) killProcess(c echo.Context) error {
 	processes, _ := process.Processes()
 	for _, p := range processes {
 		if int64(p.Pid) == pid {
+			err := p.Terminate()
+			if err != nil {
+				return c.JSON(
+					http.StatusInternalServerError,
+					echo.Map{"error": err.Error()},
+				)
+			}
+		}
+	}
+
+	// wait for process to die gracefully
+	time.Sleep(1 * time.Second)
+
+	processes, _ = process.Processes()
+	for _, p := range processes {
+		if int64(p.Pid) == pid {
 			err := p.Kill()
 			if err != nil {
 				return c.JSON(
@@ -1306,11 +1322,10 @@ func (a *Controller) killProcess(c echo.Context) error {
 					echo.Map{"error": err.Error()},
 				)
 			}
-
-			return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
 		}
 	}
 
+	// intercept if we are in distributed mode
 	if a.launcher.isLauncherDistributedModeRoot() {
 		err := a.launcher.rpcClientRootNodeKillProcess(zone)
 		if err != nil {
@@ -1320,5 +1335,5 @@ func (a *Controller) killProcess(c echo.Context) error {
 		return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
 	}
 
-	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Process not found!"})
+	return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
 }

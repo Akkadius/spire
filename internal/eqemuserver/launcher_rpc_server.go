@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
@@ -249,8 +248,6 @@ func (l *Launcher) rpcRootNodeKillProcess(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	pp.Println(zone)
-
 	for _, node := range l.nodes {
 		if node.ConnectedAddress == zone.ConnectedAddress {
 			l.logger.Info().
@@ -294,6 +291,7 @@ func (l *Launcher) rpcServerStop(c echo.Context) error {
 	// give the processes a second to terminate gracefully before killing them forcefully
 	time.Sleep(1 * time.Second)
 
+	processes, _ = process.Processes()
 	for _, p := range processes {
 		proc := l.getProcessDetails(p)
 		if proc.BaseProcessName == zoneProcessName {
