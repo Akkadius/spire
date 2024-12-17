@@ -84,16 +84,16 @@
             />
 
             <!-- Resource Utilization -->
-            <div class="col-lg-auto col-sm-12 pl-3 pr-3 mt-3-mobile mb-2">
+            <div class="col-lg-3 col-sm-12 pl-3 pr-3 mt-3-mobile mb-2">
 
               <!-- CPU -->
               <div class="row">
-                <div class="col-6 p-0">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px">
+                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
                     CPU - {{ cpuPercent ? cpuPercent : "N/A" }} %
                   </span>
                 </div>
-                <div class="col-6 p-0" style="margin-top: 10px;">
+                <div class="col-6 p-0 m-0 mt-1">
                   <eq-progress-bar
                     style="opacity: .95"
                     :percent="parseFloat(cpuPercent)"
@@ -105,17 +105,51 @@
 
               <!-- Memory -->
               <div class="row">
-                <div class="col-6 p-0">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px">
+                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
                     MEM - {{ memoryPercent ? memoryPercent : "N/A" }} %
                   </span>
                 </div>
-                <div class="col-6 p-0" style="margin-top: 10px;">
+                <div class="col-6 p-0 m-0 mt-1">
                   <eq-progress-bar
                     style="opacity: .95"
                     :percent="parseFloat(memoryPercent)"
                     :show-percent="false"
                     color="lightgreen"
+                  />
+                </div>
+              </div>
+
+              <!-- Network Download -->
+              <div class="row" v-if="net && net['all'] && bytesToMbytes(net['all'].bytes_recv_ps)">
+                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
+                    NET DL - {{ bytesToMbytes(net['all'].bytes_recv_ps) < 10000 ? bytesToMbytes(net['all'].bytes_recv_ps) : 0 }} Mbps
+                  </span>
+                </div>
+                <div class="col-6 p-0 m-0 mt-1">
+                  <eq-progress-bar
+                    style="opacity: .95"
+                    :percent="bytesToMbytes(net['all'].bytes_recv_ps) < 10000 ? bytesToMbytes(net['all'].bytes_recv_ps) / 10 : 0"
+                    :show-percent="false"
+                    color="limegreen"
+                  />
+                </div>
+              </div>
+
+              <!-- Network Upload -->
+              <div class="row" v-if="net && net['all'] && bytesToMbytes(net['all'].bytes_sent_ps)">
+                <div class="col-6 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
+                    NET UL - {{ bytesToMbytes(net['all'].bytes_sent_ps) < 10000 ? bytesToMbytes(net['all'].bytes_sent_ps) : 0 }} Mbps
+                  </span>
+                </div>
+                <div class="col-6 p-0 m-0 mt-1">
+                  <eq-progress-bar
+                    style="opacity: .95"
+                    :percent="bytesToMbytes(net['all'].bytes_sent_ps) < 10000 ? bytesToMbytes(net['all'].bytes_sent_ps) / 10 : 0"
+                    :show-percent="false"
+                    color="limegreen"
                   />
                 </div>
               </div>
@@ -157,6 +191,15 @@ export default {
       lastUpdateTime: 0,
       updateIntervalSeconds: 1,
 
+      net: {
+        all: {
+          bytes_recv: 0,
+          bytes_sent: 0,
+          bytes_recv_ps: 0,
+          bytes_sent_ps: 0
+        }
+      },
+
       serverLocked: false,
 
       cpuPercent: 0,
@@ -196,6 +239,7 @@ export default {
     this.timer = setInterval(() => {
       if (!document.hidden && this.readyToPoll()) {
         this.loadServerStats()
+        this.pollNetworkStats()
       }
     }, 1000)
 
@@ -337,7 +381,42 @@ export default {
       const seconds = duration.seconds();
 
       return `${minutes} minutes, ${seconds} seconds`;
-    }
+    },
+
+    async pollNetworkStats() {
+      let r = await SpireApi.v1().get("admin/system/network")
+      if (r.status === 200) {
+        for (let n of r.data) {
+          if (typeof this.net[n.name] === 'undefined') {
+            this.net[n.name] = {}
+          }
+
+          if (typeof this.net[n.name]['bytes_recv'] === 'undefined') {
+            this.net[n.name]['bytes_recv']    = 0
+            this.net[n.name]['bytes_recv_ps'] = 0
+          } else {
+            this.net[n.name]['bytes_recv_ps'] = n['bytesRecv'] - this.net[n.name]['bytes_recv']
+          }
+
+          if (typeof this.net[n.name]['bytes_sent'] === 'undefined') {
+            this.net[n.name]['bytes_sent']    = 0
+            this.net[n.name]['bytes_sent_ps'] = 0
+          } else {
+            this.net[n.name]['bytes_sent_ps'] = n['bytesSent'] - this.net[n.name]['bytes_sent']
+          }
+
+          // track per second
+          this.net[n.name]['bytes_recv'] = n['bytesRecv']
+          this.net[n.name]['bytes_sent'] = n['bytesSent']
+        }
+
+        // this.$forceUpdate()
+      }
+    },
+
+    bytesToMbytes: function (bytes) {
+      return parseFloat((bytes * 8) / 1024 / 1024).toFixed(2); // Convert to Mbps
+    },
   },
 }
 </script>
