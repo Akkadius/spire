@@ -99,9 +99,15 @@
         style="max-height: 65vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
         class="p-0"
       >
+
+        <div v-if="filterZoneList(zoneList).length === 0" class="p-3 text-center">
+          No zones found with specified criteria.
+        </div>
+
         <table
           :style="(!loaded ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; width: 100% '"
           class="eq-table bordered eq-highlight-rows"
+          v-if="filterZoneList(zoneList).length > 0"
         >
           <thead class="eq-table-floating-header">
           <tr>

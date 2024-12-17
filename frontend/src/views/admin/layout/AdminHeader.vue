@@ -87,26 +87,38 @@
             <div class="col-lg-auto col-sm-12 pl-3 pr-3 mt-3-mobile mb-2">
 
               <!-- CPU -->
-              <span class="small font-weight-bold text-muted" style="font-size: 10px">
-                CPU - {{ cpuPercent ? cpuPercent : "N/A" }} %
-              </span>
-              <eq-progress-bar
-                style="opacity: .95"
-                :percent="parseFloat(cpuPercent)"
-                :show-percent="false"
-                :color="getCpuLoadColor(cpuPercent)"
-              />
+              <div class="row">
+                <div class="col-6 p-0">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px">
+                    CPU - {{ cpuPercent ? cpuPercent : "N/A" }} %
+                  </span>
+                </div>
+                <div class="col-6 p-0" style="margin-top: 10px;">
+                  <eq-progress-bar
+                    style="opacity: .95"
+                    :percent="parseFloat(cpuPercent)"
+                    :show-percent="false"
+                    :color="getCpuLoadColor(cpuPercent)"
+                  />
+                </div>
+              </div>
 
               <!-- Memory -->
-              <span class="small font-weight-bold text-muted" style="font-size: 10px">
-                MEM - {{ memoryPercent ? memoryPercent : "N/A" }} %
-              </span>
-              <eq-progress-bar
-                style="opacity: .95"
-                :percent="parseFloat(memoryPercent)"
-                :show-percent="false"
-                color="lightgreen"
-              />
+              <div class="row">
+                <div class="col-6 p-0">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px">
+                    MEM - {{ memoryPercent ? memoryPercent : "N/A" }} %
+                  </span>
+                </div>
+                <div class="col-6 p-0" style="margin-top: 10px;">
+                  <eq-progress-bar
+                    style="opacity: .95"
+                    :percent="parseFloat(memoryPercent)"
+                    :show-percent="false"
+                    color="lightgreen"
+                  />
+                </div>
+              </div>
 
             </div>
 
