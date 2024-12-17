@@ -41,7 +41,9 @@ func (l *Launcher) StartRpcServer(port int) error {
 	e.GET("/api/v1/dzs/test", l.rpcTest)
 	e.GET("/api/v1/dzs/zone-count", l.rpcZoneCountDynamic)
 	e.GET("/api/v1/dzs/root-node-sys-get-all", l.rpcRootNodeSysGetAll)
+	e.GET("/api/v1/dzs/root-node-get-zoneservers", l.rpcRootNodeGetZoneservers)
 	e.GET("/api/v1/dzs/sys-get-all", l.rpcSysGetAll)
+	e.GET("/api/v1/dzs/get-zoneservers", l.rpcGetZoneservers)
 	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
 	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
 	e.POST("/api/v1/dzs/root-node-shutdown", l.rpcRootNodeShutdown)
@@ -276,7 +278,7 @@ func (l *Launcher) rpcRootNodeKillProcess(c echo.Context) error {
 	return c.JSON(http.StatusOK, "ok")
 }
 
-// rpcRootNodeSysGetAll handles the root node shutdown
+// rpcRootNodeSysGetAll gets the system information from the root node
 func (l *Launcher) rpcRootNodeSysGetAll(c echo.Context) error {
 	var systemAll []system.AllResponse
 	for _, node := range l.nodes {
@@ -289,6 +291,28 @@ func (l *Launcher) rpcRootNodeSysGetAll(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, systemAll)
+}
+
+// rpcRootNodeGetZoneservers gets the zoneservers from the root node
+func (l *Launcher) rpcRootNodeGetZoneservers(c echo.Context) error {
+	var zoneservers []ZoneServer
+	for _, node := range l.nodes {
+		r, err := l.rpcClientGetZoneservers(node)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+
+		var newZoneServers []ZoneServer
+		for _, z := range r {
+			z.ConnectedAddress = node.ConnectedAddress
+			z.ConfiguredAddress = node.Address
+			newZoneServers = append(newZoneServers, z)
+		}
+
+		zoneservers = append(zoneservers, newZoneServers...)
+	}
+
+	return c.JSON(http.StatusOK, zoneservers)
 }
 
 // rpcServerStop stops the server leaf node
@@ -402,4 +426,33 @@ func (l *Launcher) rpcSysGetAll(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, sys)
+}
+
+// rpcGetZoneservers gets the zoneservers from a node
+func (l *Launcher) rpcGetZoneservers(c echo.Context) error {
+	processes, _ := process.Processes()
+	var r []ZoneServer
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+
+		if proc.BaseProcessName == zoneProcessName {
+			z := ZoneServer{}
+			name, _ := p.Name()
+			cmdLine, _ := p.Cmdline()
+			cpuPercent, _ := p.CPUPercent()
+			memory, _ := p.MemoryInfo()
+			uptime, _ := p.CreateTime()
+			now := time.Now().Unix()
+			z.Pid = p.Pid
+			z.Name = name
+			z.CmdLine = cmdLine
+			z.Cpu = cpuPercent
+			z.Memory = memory.RSS
+			z.Elapsed = now - (uptime / 1000)
+
+			r = append(r, z)
+		}
+	}
+
+	return c.JSON(http.StatusOK, r)
 }

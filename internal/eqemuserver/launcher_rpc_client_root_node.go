@@ -20,3 +20,14 @@ func (l *Launcher) rpcClientRootFetchSystemAll() (any, error) {
 	var all []system.AllResponse
 	return all, l.makeRequest(http.MethodGet, "http://127.0.0.1:3005/api/v1/dzs/root-node-sys-get-all", nil, &all)
 }
+
+// rpcClientRootGetZoneservers sends a request to the root node to get the zoneservers
+func (l *Launcher) rpcClientRootGetZoneservers() ([]ZoneServer, error) {
+	var r []ZoneServer
+	err := l.makeRequest(http.MethodGet, "http://127.0.0.1:3005/api/v1/dzs/root-node-get-zoneservers", nil, &r)
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}

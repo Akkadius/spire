@@ -1264,6 +1264,44 @@ func (a *Controller) getWebsocketAuth(c echo.Context) error {
 }
 
 func (a *Controller) getZoneServerList(c echo.Context) error {
+
+	// intercept if we are in distributed mode
+	if a.launcher.isLauncherDistributedModeRoot() {
+		r, err := a.launcher.rpcClientRootGetZoneservers()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		list, err := a.launcher.GetZoneserverList()
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.Map{"error": fmt.Sprintf("Failed to get zoneserver list [%v]", err.Error())},
+			)
+		}
+
+		for i, p := range r {
+			for _, zone := range list {
+				matchesAddress := zone.ConnectedAddress == p.ConnectedAddress || zone.ConfiguredAddress == zone.ZoneServerAddress
+				if matchesAddress && int(p.Pid) == zone.ZoneOsPid {
+					r[i].ZoneServerAddress = zone.ZoneServerAddress
+					r[i].ZoneName = zone.ZoneName
+					r[i].ZoneLongName = zone.ZoneLongName
+					r[i].NumberPlayers = zone.NumberPlayers
+					r[i].InstanceID = zone.InstanceID
+					r[i].Clients = zone.Clients
+					r[i].ClientPort = zone.ClientPort
+					r[i].IsStaticZone = zone.IsStaticZone
+					r[i].ZoneID = zone.ZoneID
+					r[i].ID = zone.ID
+					r[i].ZoneOsPid = zone.ZoneOsPid
+				}
+			}
+		}
+
+		return c.JSON(http.StatusOK, r)
+	}
+
 	cachedList, found := a.cache.Get("zoneserver_list")
 	if found {
 		a.logger.Info().Msg("Returning cached zoneserver list")

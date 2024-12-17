@@ -147,3 +147,10 @@ func (l *Launcher) rpcClientSysGetAll(node LauncherDistributedNode) (system.AllR
 	var r system.AllResponse
 	return r, l.makeRequest(http.MethodGet, url, nil, &r)
 }
+
+// rpcClientGetZoneservers gets the zoneservers from a node.
+func (l *Launcher) rpcClientGetZoneservers(node LauncherDistributedNode) ([]ZoneServer, error) {
+	url := fmt.Sprintf("http://%v:3005/api/v1/dzs/get-zoneservers", node.Address)
+	var r []ZoneServer
+	return r, l.makeRequest(http.MethodGet, url, nil, &r)
+}
