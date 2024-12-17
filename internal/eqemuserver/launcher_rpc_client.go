@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/Akkadius/spire/internal/system"
 	"io"
 	"net/http"
 	"os"
@@ -138,4 +139,11 @@ func (l *Launcher) rpcClientServerStop(node LauncherDistributedNode) error {
 func (l *Launcher) rpcClientKillServerProcess(node LauncherDistributedNode, pid int) error {
 	url := fmt.Sprintf("http://%v:3005/api/v1/dzs/kill-process/%v", node.Address, pid)
 	return l.makeRequest(http.MethodPost, url, nil, nil)
+}
+
+// rpcClientSysGetAll sends a request to the node to fetch system information.
+func (l *Launcher) rpcClientSysGetAll(node LauncherDistributedNode) (system.AllResponse, error) {
+	url := fmt.Sprintf("http://%v:3005/api/v1/dzs/sys-get-all", node.Address)
+	var r system.AllResponse
+	return r, l.makeRequest(http.MethodGet, url, nil, &r)
 }

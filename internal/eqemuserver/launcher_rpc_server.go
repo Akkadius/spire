@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
+	"github.com/Akkadius/spire/internal/system"
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
@@ -39,6 +40,8 @@ func (l *Launcher) StartRpcServer(port int) error {
 	// RPC routes
 	e.GET("/api/v1/dzs/test", l.rpcTest)
 	e.GET("/api/v1/dzs/zone-count", l.rpcZoneCountDynamic)
+	e.GET("/api/v1/dzs/root-node-sys-get-all", l.rpcRootNodeSysGetAll)
+	e.GET("/api/v1/dzs/sys-get-all", l.rpcSysGetAll)
 	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
 	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
 	e.POST("/api/v1/dzs/root-node-shutdown", l.rpcRootNodeShutdown)
@@ -112,6 +115,12 @@ func (l *Launcher) rpcRegisterLeaf(c echo.Context) error {
 			l.nodes[i].LastSeen = time.Now()
 			l.nodes[i].Hostname = req.Hostname
 			l.nodes[i].TargetZoneCount = 0
+
+			l.logger.Info().
+				Any("nodes", l.nodes).
+				Any("client_address", req.ClientAddress).
+				Any("hostname", req.Hostname).
+				Msg("Client already registered")
 
 			return c.JSON(
 				http.StatusOK,
@@ -267,6 +276,21 @@ func (l *Launcher) rpcRootNodeKillProcess(c echo.Context) error {
 	return c.JSON(http.StatusOK, "ok")
 }
 
+// rpcRootNodeSysGetAll handles the root node shutdown
+func (l *Launcher) rpcRootNodeSysGetAll(c echo.Context) error {
+	var systemAll []system.AllResponse
+	for _, node := range l.nodes {
+		r, err := l.rpcClientSysGetAll(node)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+
+		systemAll = append(systemAll, r)
+	}
+
+	return c.JSON(http.StatusOK, systemAll)
+}
+
 // rpcServerStop stops the server leaf node
 func (l *Launcher) rpcServerStop(c echo.Context) error {
 	processes, _ := process.Processes()
@@ -368,4 +392,14 @@ func (l *Launcher) rpcKillServerProcess(c echo.Context) error {
 	}
 
 	return nil
+}
+
+// rpcSysGetAll stops the server leaf node
+func (l *Launcher) rpcSysGetAll(c echo.Context) error {
+	sys, err := system.All()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, sys)
 }

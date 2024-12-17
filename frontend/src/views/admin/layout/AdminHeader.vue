@@ -344,6 +344,7 @@ export default {
 
       SpireApi.v1().get("eqemuserver/system-all").then((r) => {
         let lastSys = JSON.parse(JSON.stringify(this.sys))
+
         let systems = []
         if (r.status === 200) {
           for (const e of r.data) {
@@ -353,8 +354,8 @@ export default {
               diskStats: {
                 readBytes: 0,
                 writeBytes: 0,
-                previousReadBytes: 0,
-                previousWriteBytes: 0,
+                previousReadBytes: null, // Initialize to null
+                previousWriteBytes: null, // Initialize to null
                 readBytesPerSec: 0,
                 writeBytesPerSec: 0,
               },
@@ -372,7 +373,9 @@ export default {
             // we need this for calculating per-second changes
             // in disk stats, network stats
             if (lastSys.length > 0) {
-              const last = lastSys.find((x) => x.id === e.id)
+              const last = lastSys.find((x) => {
+                return x.hostname === e.hostname
+              })
               if (last) {
                 s = JSON.parse(JSON.stringify(last))
               }
@@ -388,42 +391,49 @@ export default {
               const nowReadBytes  = disk.readBytes;
               const nowWriteBytes = disk.writeBytes;
 
-              // Calculate per-second change
-              let readBytesPerSec  = (nowReadBytes - s.diskStats.previousReadBytes) / 1024 / 1024;
-              let writeBytesPerSec = (nowWriteBytes - s.diskStats.previousWriteBytes) / 1024 / 1024;
+              // If this is the first pass, initialize previous values
+              if (s.diskStats.previousReadBytes === null || s.diskStats.previousWriteBytes === null) {
+                s.diskStats.previousReadBytes = nowReadBytes;
+                s.diskStats.previousWriteBytes = nowWriteBytes;
+                s.diskStats.readBytesPerSec = 0;
+                s.diskStats.writeBytesPerSec = 0;
+              } else {
+                // Calculate per-second change
+                s.diskStats.readBytesPerSec = (nowReadBytes - s.diskStats.previousReadBytes) / 1024 / 1024;
+                s.diskStats.writeBytesPerSec = (nowWriteBytes - s.diskStats.previousWriteBytes) / 1024 / 1024;
 
-              s.diskStats = {
-                readBytes: disk.readBytes,
-                writeBytes: disk.writeBytes,
-                readBytesPerSec: readBytesPerSec,
-                writeBytesPerSec: writeBytesPerSec,
-                previousReadBytes: nowReadBytes,
-                previousWriteBytes: nowWriteBytes,
+                // Update previous values
+                s.diskStats.previousReadBytes = nowReadBytes;
+                s.diskStats.previousWriteBytes = nowWriteBytes;
               }
             }
 
             // network stats
             for (let n of e.net) {
               if (typeof s.net[n.name] === 'undefined') {
-                s.net[n.name] = {}
+                s.net[n.name] = {
+                  bytes_recv: 0,
+                  bytes_sent: 0,
+                  bytes_recv_ps: 0,
+                  bytes_sent_ps: 0,
+                };
               }
 
-              if (typeof s.net[n.name]['bytes_recv'] === 'undefined') {
-                s.net[n.name]['bytes_recv']    = 0
-                s.net[n.name]['bytes_recv_ps'] = 0
+              if (s.net[n.name].bytes_recv === 0 && s.net[n.name].bytes_sent === 0) {
+                // First iteration: initialize without calculation
+                s.net[n.name].bytes_recv = n.bytesRecv;
+                s.net[n.name].bytes_sent = n.bytesSent;
+                s.net[n.name].bytes_recv_ps = 0;
+                s.net[n.name].bytes_sent_ps = 0;
               } else {
-                s.net[n.name]['bytes_recv_ps'] = n['bytesRecv'] - s.net[n.name]['bytes_recv']
-              }
+                // Calculate per-second changes
+                s.net[n.name].bytes_recv_ps = n.bytesRecv - s.net[n.name].bytes_recv;
+                s.net[n.name].bytes_sent_ps = n.bytesSent - s.net[n.name].bytes_sent;
 
-              if (typeof s.net[n.name]['bytes_sent'] === 'undefined') {
-                s.net[n.name]['bytes_sent']    = 0
-                s.net[n.name]['bytes_sent_ps'] = 0
-              } else {
-                s.net[n.name]['bytes_sent_ps'] = n['bytesSent'] - s.net[n.name]['bytes_sent']
+                // Update previous values
+                s.net[n.name].bytes_recv = n.bytesRecv;
+                s.net[n.name].bytes_sent = n.bytesSent;
               }
-
-              s.net[n.name]['bytes_recv'] = n['bytesRecv']
-              s.net[n.name]['bytes_sent'] = n['bytesSent']
             }
 
             systems.push(s)

@@ -1348,6 +1348,16 @@ func (a *Controller) killProcess(c echo.Context) error {
 func (a *Controller) getSystemAll(c echo.Context) error {
 	var systems []system.AllResponse
 
+	// intercept if we are in distributed mode
+	if a.launcher.isLauncherDistributedModeRoot() {
+		r, err := a.launcher.rpcClientRootFetchSystemAll()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		return c.JSON(http.StatusOK, r)
+	}
+
 	all, err := system.All()
 	if err != nil {
 		return c.JSON(
