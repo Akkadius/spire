@@ -5,21 +5,8 @@
       <div class="row align-items-center">
 
         <!-- Server Name -->
-        <div class="col-lg-4">
-          <h6 class="header-pretitle d-inline-block mr-3">
-            {{ pageName }}
-          </h6>
-
-          <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
-
-          <h1
-            class="header-title"
-            :title="stats.server_name"
-            style="font-size: 1.1rem;"
-          >
-
-            <server-process-button-component class="d-inline-block mr-3"/>
-
+        <div class="col-lg-auto">
+          <h3 class="d-inline-block mr-3">
             <a
               href="javascript:void(0)"
               @click="toggleServerLock()"
@@ -33,8 +20,13 @@
 
               <span v-if="stats.server_name">{{ stats.server_name }}</span>
             </a>
+          </h3>
 
-          </h1>
+          <div>
+            <server-process-button-component class="d-inline-block mr-3"/>
+            <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
+          </div>
+
         </div>
 
         <!-- Server Metrics -->
@@ -66,9 +58,12 @@
             />
 
             <!-- Resource Metrics -->
-            <div class="col-lg-4 col-sm-12 pl-3 pr-3 mt-3-mobile mb-2">
+            <div
+              class="col-lg-3 col-sm-12 pl-0 pr-0 mt-3-mobile"
+              v-for="(host, index) in hostMetrics"
+            >
               <!-- Render Metrics Dynamically -->
-              <div class="row" v-for="(metric, index) in metrics" :key="index">
+              <div class="row" v-for="(metric, index) in host" :key="index">
                 <!-- Left Label -->
                 <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
                   <span class="small font-weight-bold text-muted" style="font-size: 10px;">
@@ -77,7 +72,7 @@
                 </div>
 
                 <!-- Progress Bar -->
-                <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px">
+                <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px" v-if="typeof metric.percent !== 'undefined'">
                   <eq-progress-bar
                     style="opacity: .95"
                     :percent="metric.percent"
@@ -87,7 +82,7 @@
                 </div>
 
                 <!-- Right Value -->
-                <div class="col-3 p-0 m-0 text-left" style="line-height: .8 !important">
+                <div :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')" style="line-height: .8 !important">
                   <span class="small font-weight-bold text-muted" style="font-size: 10px;">
                     {{ metric.value }}
                   </span>
@@ -125,14 +120,7 @@ export default {
       lastUpdateTime: 0,
       updateIntervalSeconds: 1,
 
-      net: {
-        all: {
-          bytes_recv: 0,
-          bytes_sent: 0,
-          bytes_recv_ps: 0,
-          bytes_sent_ps: 0
-        }
-      },
+      sys: [],
 
       diskStats: {
         previousReadBytes: 0,
@@ -142,9 +130,6 @@ export default {
       },
 
       serverLocked: false,
-
-      cpuPercent: 0,
-      memoryPercent: 0,
 
       stopMessage: "",
 
@@ -179,46 +164,63 @@ export default {
       ]
     },
 
-    metrics() {
-      return [
-        {
-          label: "CPU",
-          value: `${this.cpuPercent || "N/A"} %`,
-          percent: parseFloat(this.cpuPercent || 0),
-          color: this.getCpuLoadColor(this.cpuPercent)
-        },
-        {
-          label: "MEM",
-          value: `${this.memoryPercent || "N/A"} %`,
-          percent: parseFloat(this.memoryPercent || 0),
-          color: "lightgreen"
-        },
-        {
-          label: "DISK READ",
-          value: `${this.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
-          percent: Math.min(this.diskStats.readBytesPerSec / 100, 100),
-          color: "deepskyblue"
-        },
-        {
-          label: "DISK WRITE",
-          value: `${this.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
-          percent: Math.min(this.diskStats.writeBytesPerSec / 100, 100),
-          color: "tomato"
-        },
-        {
-          label: "NET DL",
-          value: `${this.bytesToMbytes(this.net['all'].bytes_recv_ps)} Mbps`,
-          percent: Math.min(this.bytesToMbytes(this.net['all'].bytes_recv_ps) / 10, 100),
-          color: "limegreen"
-        },
-        {
-          label: "NET UL",
-          value: `${this.bytesToMbytes(this.net['all'].bytes_sent_ps)} Mbps`,
-          percent: Math.min(this.bytesToMbytes(this.net['all'].bytes_sent_ps) / 10, 100),
-          color: "limegreen"
-        }
-      ];
-    }
+    hostMetrics() {
+      let metrics = []
+
+      console.log(this.sys)
+
+      for (const e of this.sys) {
+        let metric = [
+          {
+            label: "Host",
+            value: e.hostname,
+          },
+          {
+            label: "CPU",
+            value: `${e.cpu || "N/A"} %`,
+            percent: parseFloat(e.cpu || 0),
+            color: this.getCpuLoadColor(e.cpu)
+          },
+          {
+            label: "MEM",
+            value: `${e.mem || "N/A"} %`,
+            percent: parseFloat(e.mem || 0),
+            color: "lightgreen"
+          },
+          {
+            label: "DISK READ",
+            value: `${e.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
+            percent: Math.min(e.diskStats.readBytesPerSec / 100, 100),
+            color: "deepskyblue"
+          },
+          {
+            label: "DISK WRITE",
+            value: `${e.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
+            percent: Math.min(e.diskStats.writeBytesPerSec / 100, 100),
+            color: "tomato"
+          },
+          {
+            label: "NET DL",
+            value: `${this.bytesToMbytes(e.net['all'].bytes_recv_ps)} Mbps`,
+            percent: Math.min(this.bytesToMbytes(e.net['all'].bytes_recv_ps) / 10, 100),
+            color: "limegreen"
+          },
+          {
+            label: "NET UL",
+            value: `${this.bytesToMbytes(e.net['all'].bytes_sent_ps)} Mbps`,
+            percent: Math.min(this.bytesToMbytes(e.net['all'].bytes_sent_ps) / 10, 100),
+            color: "limegreen"
+          }
+        ]
+
+        metrics.push(metric)
+      }
+
+      console.log(metrics)
+
+      return metrics
+    },
+
   },
 
   beforeDestroy() {
@@ -344,51 +346,97 @@ export default {
         }
       })
 
-      SpireApi.v1().get("admin/system/all").then((r) => {
+      SpireApi.v1().get("eqemuserver/system-all").then((r) => {
+        let lastSys = JSON.parse(JSON.stringify(this.sys))
+        let systems = []
         if (r.status === 200) {
-          this.cpuPercent    = Math.round(r.data.cpu)
-          this.memoryPercent = Math.round(r.data.mem_percent)
+          for (const e of r.data) {
+            let s = {
+              cpu: 0,
+              mem: 0,
+              diskStats: {
+                readBytes: 0,
+                writeBytes: 0,
+                previousReadBytes: 0,
+                previousWriteBytes: 0,
+                readBytesPerSec: 0,
+                writeBytesPerSec: 0,
+              },
+              net: {
+                all: {
+                  bytes_recv: 0,
+                  bytes_sent: 0,
+                  bytes_recv_ps: 0,
+                  bytes_sent_ps: 0
+                }
+              }
+            };
 
-          // Disk stats
-          const disk = r.data.disk[0]; // Assuming one disk for simplicity
-          if (disk) {
-            const nowReadBytes  = disk.readBytes;
-            const nowWriteBytes = disk.writeBytes;
+            // Find last system stats
+            // we need this for calculating per-second changes
+            // in disk stats, network stats
+            if (lastSys.length > 0) {
+              const last = lastSys.find((x) => x.id === e.id)
+              if (last) {
+                s = last
+                console.log("last", last)
+              }
+            }
 
-            // Calculate per-second change
-            this.diskStats.readBytesPerSec  = (nowReadBytes - this.diskStats.previousReadBytes) / 1024 / 1024;
-            this.diskStats.writeBytesPerSec = (nowWriteBytes - this.diskStats.previousWriteBytes) / 1024 / 1024;
+            s.cpu = Math.round(e.cpu)
+            s.mem = Math.round(e.mem_percent)
+            s.hostname = e.hostname
 
-            // Update previous values
-            this.diskStats.previousReadBytes  = nowReadBytes;
-            this.diskStats.previousWriteBytes = nowWriteBytes;
+            // Disk stats
+            const disk = e.disk[0]; // Assuming one disk for simplicity
+            if (disk) {
+              const nowReadBytes  = disk.readBytes;
+              const nowWriteBytes = disk.writeBytes;
+
+              // Calculate per-second change
+              this.diskStats.readBytesPerSec  = (nowReadBytes - this.diskStats.previousReadBytes) / 1024 / 1024;
+              this.diskStats.writeBytesPerSec = (nowWriteBytes - this.diskStats.previousWriteBytes) / 1024 / 1024;
+
+              // Update previous values
+              this.diskStats.previousReadBytes  = nowReadBytes;
+              this.diskStats.previousWriteBytes = nowWriteBytes;
+
+              s.diskStats = {
+                readBytes: disk.readBytes,
+                writeBytes: disk.writeBytes,
+                readBytesPerSec: this.diskStats.readBytesPerSec,
+                writeBytesPerSec: this.diskStats.writeBytesPerSec,
+              }
+            }
+
+            // network stats
+            for (let n of e.net) {
+              if (typeof s.net[n.name] === 'undefined') {
+                s.net[n.name] = {}
+              }
+
+              if (typeof s.net[n.name]['bytes_recv'] === 'undefined') {
+                s.net[n.name]['bytes_recv']    = 0
+                s.net[n.name]['bytes_recv_ps'] = 0
+              } else {
+                s.net[n.name]['bytes_recv_ps'] = n['bytesRecv'] - s.net[n.name]['bytes_recv']
+              }
+
+              if (typeof s.net[n.name]['bytes_sent'] === 'undefined') {
+                s.net[n.name]['bytes_sent']    = 0
+                s.net[n.name]['bytes_sent_ps'] = 0
+              } else {
+                s.net[n.name]['bytes_sent_ps'] = n['bytesSent'] - s.net[n.name]['bytes_sent']
+              }
+
+              s.net[n.name]['bytes_recv'] = n['bytesRecv']
+              s.net[n.name]['bytes_sent'] = n['bytesSent']
+            }
+
+            systems.push(s)
           }
 
-          // network stats
-          for (let n of r.data.net) {
-            if (typeof this.net[n.name] === 'undefined') {
-              this.net[n.name] = {}
-            }
-
-            if (typeof this.net[n.name]['bytes_recv'] === 'undefined') {
-              this.net[n.name]['bytes_recv']    = 0
-              this.net[n.name]['bytes_recv_ps'] = 0
-            } else {
-              this.net[n.name]['bytes_recv_ps'] = n['bytesRecv'] - this.net[n.name]['bytes_recv']
-            }
-
-            if (typeof this.net[n.name]['bytes_sent'] === 'undefined') {
-              this.net[n.name]['bytes_sent']    = 0
-              this.net[n.name]['bytes_sent_ps'] = 0
-            } else {
-              this.net[n.name]['bytes_sent_ps'] = n['bytesSent'] - this.net[n.name]['bytes_sent']
-            }
-
-            // track per second
-            this.net[n.name]['bytes_recv'] = n['bytesRecv']
-            this.net[n.name]['bytes_sent'] = n['bytesSent']
-          }
-
+          this.sys = systems
         }
       })
     },

@@ -15,6 +15,7 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/system"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	gocache "github.com/patrickmn/go-cache"
@@ -105,6 +106,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-websocket-auth", a.getWebsocketAuth, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/process-kill/:pid", a.killProcess, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/system-all", a.getSystemAll, nil),
 	}
 }
 
@@ -1340,4 +1342,21 @@ func (a *Controller) killProcess(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
+}
+
+// getSystemAll returns all system information
+func (a *Controller) getSystemAll(c echo.Context) error {
+	var systems []system.AllResponse
+
+	all, err := system.All()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	systems = append(systems, all)
+
+	return c.JSON(http.StatusOK, systems)
 }

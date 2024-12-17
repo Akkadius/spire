@@ -5,11 +5,13 @@ import (
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/net"
+	"os"
 	"path/filepath"
 )
 
 // AllResponse is the response for the systemAll endpoint
 type AllResponse struct {
+	Hostname   string                `json:"hostname"`
 	Cpu        float64               `json:"cpu"`
 	MemPercent float64               `json:"mem_percent"`
 	Disk       []disk.IOCountersStat `json:"disk"`
@@ -48,7 +50,10 @@ func All() (AllResponse, error) {
 		return AllResponse{}, err
 	}
 
+	hostname, _ := os.Hostname()
+
 	return AllResponse{
+		Hostname:   hostname,
 		Disk:       ioCounters,
 		Cpu:        ci[0],
 		MemPercent: memory.UsedPercent,
