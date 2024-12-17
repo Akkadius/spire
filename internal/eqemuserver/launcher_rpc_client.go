@@ -128,12 +128,14 @@ func (l *Launcher) rpcClientSetTargetZoneCount(node LauncherDistributedNode, zon
 	return l.makeRequest(http.MethodPost, url, payload, nil)
 }
 
-// rpcClientRootNodeServerShutdown sends a request to the root node
-func (l *Launcher) rpcClientRootNodeServerShutdown() error {
-	return l.makeRequest(http.MethodPost, "http://127.0.0.1:3005/api/v1/dzs/root-node-shutdown", nil, nil)
-}
-
+// rpcClientServerStart sends a request to the node to start the server.
 func (l *Launcher) rpcClientServerStop(node LauncherDistributedNode) error {
 	url := fmt.Sprintf("http://%v:3005/api/v1/dzs/server-stop", node.Address)
+	return l.makeRequest(http.MethodPost, url, nil, nil)
+}
+
+// rpcClientKillServerProcess sends a request to the node to kill a process.
+func (l *Launcher) rpcClientKillServerProcess(node LauncherDistributedNode, pid int) error {
+	url := fmt.Sprintf("http://%v:3005/api/v1/dzs/kill-process/%v", node.Address, pid)
 	return l.makeRequest(http.MethodPost, url, nil, nil)
 }

@@ -1036,6 +1036,8 @@ type ZoneServer struct {
 	InstanceID        int                `json:"instance_id,omitempty"`
 	Clients           []ZoneServerClient `json:"clients"`
 	ZoneServerAddress string             `json:"zone_server_address"`
+	ConnectedAddress  string             `json:"connected_address"`
+
 	// process info
 	Pid     int32   `json:"pid"`
 	Name    string  `json:"name"`
@@ -1095,6 +1097,7 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 			InstanceID:        zone.InstanceID,
 			Clients:           clients,
 			ZoneServerAddress: zone.ClientAddress,
+			ConnectedAddress:  zone.IP,
 		}
 
 		combinedData = append(combinedData, zoneInfo)

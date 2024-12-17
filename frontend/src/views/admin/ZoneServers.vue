@@ -143,7 +143,7 @@
 
               <button
                 class="btn btn-sm btn-danger"
-                @click="killZone(zone.zone_os_pid)"
+                @click="killZone(zone)"
                 style="font-size:12px"
                 title="Kill Zone"
               >
@@ -497,12 +497,12 @@ export default {
       return name.replaceAll("UNKNOWN", "Idle, ready to boot")
     },
 
-    async killZone(pid) {
-      if (confirm("Are you sure that you want to kill this process pid (" + pid + ")?")) {
+    async killZone(zone) {
+      if (confirm("Are you sure that you want to kill this process pid (" + zone.zone_os_pid + ")?")) {
         this.zoneList = []
 
         try {
-          const r = await SpireApi.v1().post(`eqemuserver/server/process-kill/${pid}`)
+          const r = await SpireApi.v1().post(`eqemuserver/server/process-kill/${zone.zone_os_pid}`, zone)
           if (r.status === 200) {
             this.notification = r.data.message
             this.error        = ""
@@ -510,14 +510,11 @@ export default {
             setTimeout(() => { this.getZoneList() }, 1000)
           }
         } catch (e) {
-
           // error notify
           if (e.response && e.response.data && e.response.data.error) {
             this.error = e.response.data.error
           }
         }
-
-
       }
     },
     async getZoneList() {
@@ -562,8 +559,6 @@ export default {
           if (typeof this.zoneList === "undefined") {
             this.zoneList = []
           }
-
-          this.error = ""
         }
       } catch (e) {
         // error notify

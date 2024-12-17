@@ -1291,6 +1291,11 @@ func (a *Controller) killProcess(c echo.Context) error {
 		)
 	}
 
+	zone := new(ZoneServer)
+	if err := c.Bind(zone); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
 	processes, _ := process.Processes()
 	for _, p := range processes {
 		if int64(p.Pid) == pid {
@@ -1304,6 +1309,15 @@ func (a *Controller) killProcess(c echo.Context) error {
 
 			return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
 		}
+	}
+
+	if a.launcher.isLauncherDistributedModeRoot() {
+		err := a.launcher.rpcClientRootNodeKillProcess(zone)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
 	}
 
 	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Process not found!"})

@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
+	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 	"unicode"
@@ -41,7 +43,9 @@ func (l *Launcher) StartRpcServer(port int) error {
 	e.POST("/api/v1/dzs/register", l.rpcRegisterLeaf)
 	e.POST("/api/v1/dzs/set-zone-count", l.rpcSetZoneCount)
 	e.POST("/api/v1/dzs/root-node-shutdown", l.rpcRootNodeShutdown)
+	e.POST("/api/v1/dzs/root-node-kill-process", l.rpcRootNodeKillProcess)
 	e.POST("/api/v1/dzs/server-stop", l.rpcServerStop)
+	e.POST("/api/v1/dzs/kill-process/:pid", l.rpcKillServerProcess)
 
 	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
 		Format: fmt.Sprintf(
@@ -238,6 +242,34 @@ func (l *Launcher) rpcRootNodeShutdown(c echo.Context) error {
 	return c.JSON(http.StatusOK, "ok")
 }
 
+// rpcRootNodeKillProcess handles the root node shutdown
+func (l *Launcher) rpcRootNodeKillProcess(c echo.Context) error {
+	zone := new(ZoneServer)
+	if err := c.Bind(zone); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	pp.Println(zone)
+
+	for _, node := range l.nodes {
+		if node.ConnectedAddress == zone.ConnectedAddress {
+			l.logger.Info().
+				Any("node", node.Hostname).
+				Any("address", node.Address).
+				Any("connectedAddress", node.ConnectedAddress).
+				Any("pid", zone.ZoneOsPid).
+				Msg("Killing process")
+
+			err := l.rpcClientKillServerProcess(node, zone.ZoneOsPid)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, err.Error())
+			}
+		}
+	}
+
+	return c.JSON(http.StatusOK, "ok")
+}
+
 // rpcServerStop stops the server leaf node
 func (l *Launcher) rpcServerStop(c echo.Context) error {
 	processes, _ := process.Processes()
@@ -265,6 +297,63 @@ func (l *Launcher) rpcServerStop(c echo.Context) error {
 	for _, p := range processes {
 		proc := l.getProcessDetails(p)
 		if proc.BaseProcessName == zoneProcessName {
+			l.logger.Info().
+				Any("pid", p.Pid).
+				Any("BaseProcessName", proc.BaseProcessName).
+				Msg("Stopping zone via termination")
+
+			err := p.Kill()
+			if err != nil {
+				l.logger.Debug().
+					Any("error", err.Error()).
+					Any("pid", p.Pid).
+					Msg("Error killing process")
+			}
+		}
+	}
+
+	return nil
+}
+
+// rpcServerStop stops the server leaf node
+func (l *Launcher) rpcKillServerProcess(c echo.Context) error {
+	pid := c.Param("pid")
+	pidInt := 0
+
+	// convert pid string to int
+	if pid != "" {
+		atoi, err := strconv.Atoi(pid)
+		if err != nil {
+			return err
+		}
+
+		pidInt = atoi
+	}
+
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+		if int(proc.Pid) == pidInt {
+			l.logger.Info().
+				Any("pid", p.Pid).
+				Any("BaseProcessName", proc.BaseProcessName).
+				Msg("Stopping zone via termination")
+
+			if err := p.Terminate(); err != nil {
+				l.logger.Debug().
+					Any("error", err.Error()).
+					Any("pid", p.Pid).
+					Msg("Error terminating process")
+			}
+		}
+	}
+
+	// give the processes a second to terminate gracefully before killing them forcefully
+	time.Sleep(1 * time.Second)
+
+	for _, p := range processes {
+		proc := l.getProcessDetails(p)
+		if int(proc.Pid) == pidInt {
 			l.logger.Info().
 				Any("pid", p.Pid).
 				Any("BaseProcessName", proc.BaseProcessName).
