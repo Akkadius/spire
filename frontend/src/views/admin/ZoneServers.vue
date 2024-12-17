@@ -76,6 +76,13 @@
       <span class="font-weight-bold">• Highest Zone Memory</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.memory / 1024 / 1024))).toFixed(2) : 0 }}MB
       <span class="font-weight-bold">• Highest Zone Uptime</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.elapsed / 60 / 60))).toFixed(2) : 0 }}h
 
+      <div v-if="zoneList.length > 1" class="mt-2">
+
+      <span v-for="(count, ip) in zoneCountByIP" :key="ip" class="mt-2">
+        <span class="font-weight-bold">• {{ ip }}</span> - {{ count }} Zones
+      </span>
+      </div>
+
     </eq-window>
 
     <eq-window
@@ -274,6 +281,26 @@ export default {
       // api responses
       error: "",
       notification: "",
+    }
+  },
+
+  computed: {
+    zoneCountByIP() {
+      const count = {};
+
+      this.zoneList.forEach(zone => {
+        const ip = zone.zone_server_address;
+
+        // Initialize count for the IP if it doesn't exist
+        if (!count[ip]) {
+          count[ip] = 0;
+        }
+
+        // Increment the count for the current IP
+        count[ip]++;
+      });
+
+      return count; // Return the object with IP -> count mapping
     }
   },
 
@@ -556,7 +583,7 @@ export default {
         if (e.response && e.response.data && e.response.data.error) {
           this.error = e.response.data.error
 
-          if (this.error.includes("Failed to")) {
+          if (this.error.includes("Failed to") || this.error.includes("connection refused")) {
             this.error    = ""
             this.zoneList = []
           }

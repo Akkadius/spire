@@ -1139,24 +1139,8 @@ func (l *Launcher) processDistributed() {
 	if l.isDistributedRoot {
 		for len(l.nodes) == 1 {
 			l.logger.Info().Msg("Waiting for leaf nodes to connect before starting zones")
-			time.Sleep(1 * time.Second)
+			time.Sleep(5 * time.Second)
 		}
-
-		// launcher
-		// [x] poll all the nodes to get the zone counts
-		// [x] calculate how many zones we need to boot from the root
-		// [x] determine how many zones each node should boot
-		// [x] send the boot command to each node
-		// [x] monitor the nodes to ensure they are running the correct number of zones
-		// [x] enforce max zones per node from config
-
-		// [x] Fetch process stats from each node (10s) ?
-
-		// UI
-		// [x] start server distributed
-		// [x] stop server distributed
-		// [x] restart server distributed
-		// [ ] show each node and their zone counts
 
 		totalZoneProcesses := 0
 		var indicesToRemove []int
