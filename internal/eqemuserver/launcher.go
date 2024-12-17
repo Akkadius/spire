@@ -1025,6 +1025,7 @@ type ZoneServerClient struct {
 }
 
 type ZoneServer struct {
+	ID                int                `json:"id"`
 	ZoneID            int                `json:"zone_id"`
 	ZoneName          string             `json:"zone_name"`
 	ZoneLongName      string             `json:"zone_long_name"`
@@ -1083,6 +1084,7 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 		}
 
 		zoneInfo := ZoneServer{
+			ID:                zone.ID,
 			ZoneID:            zone.ZoneID,
 			ZoneName:          zone.ZoneName,
 			ZoneLongName:      zone.ZoneLongName,

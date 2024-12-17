@@ -25,128 +25,156 @@
       </div>
     </div>
 
-    <div class="card mb-3 mr-4" v-if="zoneList.length > 0 && loaded">
-      <div class="card-body pt-0 pb-0 pl-3 pr-3">
-        <div class="input-group input-group-flush">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fe fe-search"></i></span>
+    <eq-window
+      title="Zone Servers"
+      class="mb-3 pb-3"
+      v-if="zoneList.length > 0 && loaded"
+      style=""
+    >
+      <div>
+        <div class="row">
+          <div class="col-10">
+            <b-form-input
+              type="text"
+              class="form-control list-search mt-1"
+              @keyup="updateQueryState()"
+              v-model="search"
+              placeholder="Search zone servers by zone name or player name..."
+              autofocus
+            />
           </div>
-          <input
-            class="list-search form-control"
-            type="search"
-            @keyup="updateQueryState"
-            v-model="search"
-            placeholder="Filter zones..."
-            autofocus
-          >
+
+          <div class="text-center col-1 font-weight-bold">
+            Show Players
+            <eq-checkbox
+              class="mt-1"
+              :fade-when-not-true="true"
+              :true-value="true"
+              :false-value="false"
+              v-model="showPlayers"
+              @input="updateQueryState()"
+            />
+          </div>
+
+          <div class="col-1 mt-1">
+            <button
+              title="Reset"
+              class="eq-button m-0"
+              @click="search = ''; updateQueryState()"
+            ><i class="fa fa-refresh"></i> Reset
+            </button>
+          </div>
+
         </div>
       </div>
-    </div>
+    </eq-window>
 
-    <div style="max-height: 80vh; overflow-y: scroll">
+    <eq-window
+      class="p-0"
+    >
+      <app-loader
+        style="opacity: .3; top: 300px; left: 20%; position: absolute;"
+        :is-loading="!loaded"
+      />
+
+      <div v-if="filterZoneList(zoneList) === 0" class="font-weight-bold text-center p-3">
+        No events found with specified criteria.
+      </div>
+
       <div
-        :class="['card', 'mb-3', 'zone-card', 'zone-background-' + zone.zone_name]"
-        v-for="zone in filterZoneList(zoneList)"
-        :style="formatZoneRow(zone)"
-        :key="zone.zone_id + '_' + zone.zone_os_pid + '_' + zone.zone_name + '_' + parseFloat(zone.cpu).toFixed(2) + '_' + zone.number_players"
+        style="max-height: 75vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
+        class="p-0"
       >
-        <div
-          :class="['card-body', 'btn-default', 'card-slim', 'zone-card-body']"
-          :style="'box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);'"
+        <table
+          :style="(!loaded ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; width: 100% '"
+          class="eq-table bordered eq-highlight-rows"
         >
-          <div class="row align-items-center">
-
-            <div class="col-2 ml-n1">
-              <h4 class="mb-1">
-
-                <span
-                  :class="'h2 fe mb-0 ' + formatRowIcon(zone) + ' mr-3'"
-                />
-
-                <h3 v-if="zone.zone_long_name" class="d-inline-block header-title">
-                  {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
-                </h3>
-
-                <span
-                  style="color:#666;font-weight:200;font-size: 18px;"
-                  class="text-muted"
-                  v-if="!zone.zone_long_name"
-                >
-                Ready for players...
-              </span>
-
-              </h4>
-            </div>
-
-            <div class="col-10 text-right">
-              <div class="ml-2 d-inline-block" style="min-width: 200px">
-                <div class="ml-3 d-inline-block">
-                  {{ formatZoneName(zone.zone_name) }}
-                  ({{ zone.zone_id }})
-                  <span v-if="zone.instance_id">Instance: {{ zone.instance_id }}</span>
-                </div>
-
-                <div class="d-inline-block ml-3">{{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}</div>
-                <i class="fe fe-proc ml-3"></i> PID {{ zone.zone_os_pid }}
-                <i class="fe fe-cloud ml-3"></i> IP {{ zone.zone_server_address }}:{{ zone.client_port }}
-                <i class="fe fe-users ml-3"></i> {{ zone.number_players }}
-              </div>
-
-              <div
-                class="text-left d-inline-block ml-3"
-                :style="'color: ' + getCpuUsageColor(zone) + ' !important; min-width: 70px;'"
-              >
-                <i class="fe fe-cpu"></i> {{ zone.cpu ? parseFloat(zone.cpu).toFixed(2) : "N/A" }} %
-              </div>
-
-              <div
-                :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px'"
-                class="ml-3 d-inline-block text-left"
-              >
-                <i class="fe fe-hard-drive"></i>
-                {{ zone.memory ? parseFloat(zone.memory / 1024 / 1024).toFixed(2) + "MB" : "N/A" }}
-              </div>
-
-              <div class="ml-3 d-inline-block text-left" style="min-width: 70px">
-                <i class="fe fe-clock"></i>
-                {{ zone.elapsed > 0 ? parseFloat(zone.elapsed / 60 / 60).toFixed(2) + "h" : "N/A" }}
-              </div>
-
-              <div class="d-inline-block btn-group ml-4 text-right" role="group">
-                <router-link
-                  style="font-size:12px"
-                  class="btn btn-sm btn-primary"
-                  :to="'zoneservers/' +zone.client_port + '/logs'"
-                >
-                  <i class="fa fa-eye"></i> Logs
-                </router-link>
-
-                <button
-                  class="btn btn-sm btn-danger"
-                  @click="killZone(zone.zone_os_pid)"
-                  style="font-size:12px"
-                >
-                  <i class="fa fa-power-off"></i> Kill Zone
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          <div
-            class="row pl-0 mt-3"
-            v-if="zone.number_players > 0"
-            style="border-top: 1px solid rgba(0, 0, 0, .2); padding-top: 10px; margin-top: 10px;"
+          <thead class="eq-table-floating-header">
+          <tr>
+            <th style="width: 100px; text-align: center">Tools</th>
+            <th>Zone</th>
+            <th style="width: 70px; text-align: center"><i class="fe fe-users"></i></th>
+            <th style="width: 100px; text-align: center"><i class="fe fe-cpu"></i> PID</th>
+            <th style="width: 100px">Zone Type</th>
+            <th style="width: 85px">Zone ID</th>
+            <th>Instance ID</th>
+            <th><i class="fe fe-cloud"></i> IP</th>
+            <th><i class="fe fe-cpu"></i> CPU</th>
+            <th><i class="fe fe-hard-drive"></i> Memory</th>
+            <th><i class="fe fe-clock"></i> Uptime</th>
+          </tr>
+          </thead>
+          <tbody
+            v-for="zone in filterZoneList(zoneList)"
+            :key="zone.zone_id + '_' + zone.zone_os_pid + '_' + zone.zone_name + '_' + parseFloat(zone.cpu).toFixed(2) + '_' + zone.number_players + '_' + showPlayersForZone[zone.id]"
           >
-            <div class="col-auto">
-              <div class="d-flex flex-wrap">
+          <tr
+            :style="formatZoneRow(zone)"
+          >
+            <td style="text-align: center">
+              <router-link
+                style="font-size:12px; color: white"
+                class="btn btn-sm btn-primary mr-1"
+                :to="'zoneservers/' +zone.client_port + '/logs'"
+                title="Logs"
+              >
+                <i class="fa fa-eye"></i>
+              </router-link>
+
+              <button
+                class="btn btn-sm btn-danger"
+                @click="killZone(zone.zone_os_pid)"
+                style="font-size:12px"
+                title="Kill Zone"
+              >
+                <i class="fa fa-power-off"></i>
+              </button>
+            </td>
+            <td>{{ formatZoneName(zone.zone_name) }}</td>
+            <td style="text-align: center">
+              <a
+                href="javascript:;"
+                @click="toggleShowPlayers(zone.id)"
+                v-if="zone.number_players > 0"
+              >
+                {{ (zone.number_players).toLocaleString('en-US') }}
+              </a>
+              <span v-if="zone.number_players === 0">
+                    {{ (zone.number_players).toLocaleString('en-US') }}
+                  </span>
+            </td>
+            <td style="text-align: center">{{ zone.zone_os_pid }}</td>
+            <td>{{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}</td>
+            <td>{{ zone.zone_id }}</td>
+            <td>{{ zone.instance_id ? zone.instance_id : 0 }}</td>
+            <td>{{ zone.zone_server_address }}:{{ zone.client_port }}</td>
+            <td :style="'color: ' + getCpuUsageColor(zone) + ' !important; min-width: 70px;'">
+              {{ zone.cpu ? parseFloat(zone.cpu).toFixed(2) : "N/A" }} %
+            </td>
+            <td :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px'">
+              {{ zone.memory ? parseFloat(zone.memory / 1024 / 1024).toFixed(2) + "MB" : "N/A" }}
+            </td>
+            <td>
+              {{ zone.elapsed > 0 ? parseFloat(zone.elapsed / 60 / 60).toFixed(2) + "h" : "N/A" }}
+            </td>
+          </tr>
+
+          <tr
+            class="fade-in"
+            :style="formatZoneRow(zone)"
+            v-if="(showPlayers || showPlayersForZone[zone.id]) && zone.number_players > 0"
+          >
+            <td
+              colspan="11"
+              style="box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 6px rgba(0,0,0,0.7), 3px 3px 6px rgba(0, 0, 0, 0.1);"
+            >
+              <div class="d-flex flex-wrap p-3">
                 <div
                   v-for="(c, index) in filterClients(zone.clients)"
                   :key="c.id"
                 >
-
                   <div
-                    class="avatar-group mr-3"
+                    class="avatar-group"
                     :title="formatPlayerTooltip(c)"
                   >
                     <img
@@ -170,27 +198,31 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+    </eq-window>
 
   </div>
 </template>
 
 <script>
-import {ROUTE}             from "@/routes";
-import {SpireApi}          from "@/app/api/spire-api";
-import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
-import {DB_RACES_ICONS}    from "@/app/constants/eq-race-icon-constants";
-import util                from "util";
-import {DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
-import {DB_CLASSES_ICONS}  from "@/app/constants/eq-class-icon-constants";
+import {ROUTE}                     from "@/routes";
+import {SpireApi}                  from "@/app/api/spire-api";
+import InfoErrorBanner             from "@/components/InfoErrorBanner.vue";
+import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
+import util                        from "util";
+import {DB_PLAYER_CLASSES}         from "@/app/constants/eq-classes-constants";
+import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants";
+import EqWindow                    from "@/components/eq-ui/EQWindow.vue";
+import EqCheckbox                  from "@/components/eq-ui/EQCheckbox.vue";
+import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
 
 export default {
   name: "ZoneServers",
-  components: { InfoErrorBanner },
+  components: { PlayerEventDisplayComponent, EqCheckbox, EqWindow, InfoErrorBanner },
   data() {
     return {
       search: "",
@@ -203,6 +235,11 @@ export default {
       zoneServerLoop: null,
       chartLoaded: false,
       zoneBackgroundImages: {},
+
+      showPlayers: false,
+      showPlayersForZone: {},
+
+      highlightedZone: {},
 
       guilds: {},
 
@@ -224,6 +261,10 @@ export default {
     this.init()
   },
   methods: {
+    toggleShowPlayers(zoneId) {
+      this.$set(this.showPlayersForZone, zoneId, !this.showPlayersForZone[zoneId]);
+    },
+
     readyToPoll() {
       return Date.now() - this.lastUpdateTime > this.updateIntervalSeconds * 1000
     },
@@ -308,7 +349,8 @@ export default {
         return {
           backgroundColor: 'rgba(0,0,0,.8)',
           color: 'rgba(255, 255, 255, .7) !important',
-          border: '1px solid #e9ecef',
+          // opacity: '.7',
+          // border: '1px solid #e9ecef',
           borderRadius: '5px',
           marginBottom: '10px'
         }
@@ -316,9 +358,10 @@ export default {
 
       if (zone.number_players === 0) {
         return {
-          backgroundColor: 'rgba(0,0,0,1)',
+          // backgroundColor: 'rgba(0,0,0,1)',
           color: 'rgba(255, 255, 255, .9) !important',
-          border: '1px solid white',
+          opacity: '.5',
+          // border: '1px solid white',
           // inner shadow white
           // boxShadow: 'inset 0 0 13px rgba(255,255,255,.1)',
           borderRadius: '5px',
@@ -327,8 +370,8 @@ export default {
       }
 
       return {
-        backgroundColor: '#f8f9fa',
-        border: '1px solid #e9ecef',
+        // backgroundColor: '#f8f9fa',
+        // border: '1px solid #e9ecef',
         color: 'rgba(18,38,63,1) !important',
         borderRadius: '5px',
         marginBottom: '10px'
@@ -376,6 +419,9 @@ export default {
       if (this.search !== "") {
         q.search = this.search
       }
+      if (typeof this.showPlayers !== "undefined") {
+        q.showPlayers = this.showPlayers
+      }
 
       this.$router.push(
         {
@@ -388,6 +434,10 @@ export default {
     loadQueryState() {
       if (this.$route.query.search && this.$route.query.search.length > 0) {
         this.search = this.$route.query.search
+      }
+
+      if (this.$route.query.showPlayers) {
+        this.showPlayers = this.$route.query.showPlayers === "true"
       }
     },
 
@@ -467,7 +517,7 @@ export default {
           this.error = e.response.data.error
 
           if (this.error.includes("Failed to")) {
-            this.error = ""
+            this.error    = ""
             this.zoneList = []
           }
         }
@@ -477,7 +527,8 @@ export default {
 
       if (this.zoneList.length > 1000) {
         this.updateIntervalSeconds = 30
-      } if (this.zoneList.length > 500) {
+      }
+      if (this.zoneList.length > 500) {
         this.updateIntervalSeconds = 10
       } else if (this.zoneList.length > 100) {
         this.updateIntervalSeconds = 5
@@ -491,7 +542,7 @@ export default {
 
       let zoneList = []
       for (let z of list) {
-        let clients       = this.filterClients(z.id)
+        let clients       = this.filterClients(z.clients)
         let matchesClient = false
         for (let c of clients) {
           if (c.name.toLowerCase().includes(search)) {
