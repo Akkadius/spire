@@ -8,10 +8,8 @@ import (
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/net"
-	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
 	"path/filepath"
-	"strconv"
 )
 
 type Controller struct {
@@ -30,7 +28,6 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "admin/system/mem", a.getMemory, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/network", a.getNetwork, nil),
 		routes.RegisterRoute(http.MethodGet, "admin/system/disk", a.getDisk, nil),
-		routes.RegisterRoute(http.MethodPost, "admin/system/process-kill/:pid", a.killProcess, nil),
 	}
 }
 
@@ -130,33 +127,6 @@ func (a *Controller) getDisk(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, diskInfo)
-}
-
-func (a *Controller) killProcess(c echo.Context) error {
-	pidStr := c.Param("pid")
-	pid, err := strconv.ParseInt(pidStr, 10, 64)
-	if err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			echo.Map{"error": err.Error()},
-		)
-	}
-
-	processes, _ := process.Processes()
-	for _, p := range processes {
-		if int64(p.Pid) == pid {
-			err := p.Kill()
-			if err != nil {
-				return c.JSON(
-					http.StatusInternalServerError,
-					echo.Map{"error": err.Error()},
-				)
-			}
-			break
-		}
-	}
-
-	return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
 }
 
 func (a *Controller) getCpuPercent(c echo.Context) error {

@@ -104,6 +104,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/restart", a.serverRestart, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-websocket-auth", a.getWebsocketAuth, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/process-kill/:pid", a.killProcess, nil),
 	}
 }
 
@@ -1277,4 +1278,33 @@ func (a *Controller) getZoneServerList(c echo.Context) error {
 
 	// Return combined data
 	return c.JSON(http.StatusOK, list)
+}
+
+// killProcess kills a process by PID
+func (a *Controller) killProcess(c echo.Context) error {
+	pidStr := c.Param("pid")
+	pid, err := strconv.ParseInt(pidStr, 10, 64)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		if int64(p.Pid) == pid {
+			err := p.Kill()
+			if err != nil {
+				return c.JSON(
+					http.StatusInternalServerError,
+					echo.Map{"error": err.Error()},
+				)
+			}
+
+			return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
+		}
+	}
+
+	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Process not found!"})
 }

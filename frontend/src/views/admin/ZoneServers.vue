@@ -502,10 +502,12 @@ export default {
         this.zoneList = []
 
         try {
-          const r = await SpireApi.v1().post(`admin/system/process-kill/${pid}`)
+          const r = await SpireApi.v1().post(`eqemuserver/server/process-kill/${pid}`)
           if (r.status === 200) {
             this.notification = r.data.message
             this.error        = ""
+            setTimeout(() => { this.getZoneList() }, 100)
+            setTimeout(() => { this.getZoneList() }, 1000)
           }
         } catch (e) {
 
@@ -515,7 +517,7 @@ export default {
           }
         }
 
-        this.getZoneList()
+
       }
     },
     async getZoneList() {
