@@ -83,7 +83,7 @@
 
                 <!-- Right Value -->
                 <div :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
+                  <span :class="' font-weight-bold' + (typeof metric.percent === 'undefined' ? '' : 'small text-muted')" style="font-size: 10px;">
                     {{ metric.value }}
                   </span>
                 </div>
@@ -167,8 +167,6 @@ export default {
     hostMetrics() {
       let metrics = []
 
-      console.log(this.sys)
-
       for (const e of this.sys) {
         let metric = [
           {
@@ -215,8 +213,6 @@ export default {
 
         metrics.push(metric)
       }
-
-      console.log(metrics)
 
       return metrics
     },
@@ -378,8 +374,7 @@ export default {
             if (lastSys.length > 0) {
               const last = lastSys.find((x) => x.id === e.id)
               if (last) {
-                s = last
-                console.log("last", last)
+                s = JSON.parse(JSON.stringify(last))
               }
             }
 
@@ -394,18 +389,16 @@ export default {
               const nowWriteBytes = disk.writeBytes;
 
               // Calculate per-second change
-              this.diskStats.readBytesPerSec  = (nowReadBytes - this.diskStats.previousReadBytes) / 1024 / 1024;
-              this.diskStats.writeBytesPerSec = (nowWriteBytes - this.diskStats.previousWriteBytes) / 1024 / 1024;
-
-              // Update previous values
-              this.diskStats.previousReadBytes  = nowReadBytes;
-              this.diskStats.previousWriteBytes = nowWriteBytes;
+              let readBytesPerSec  = (nowReadBytes - s.diskStats.previousReadBytes) / 1024 / 1024;
+              let writeBytesPerSec = (nowWriteBytes - s.diskStats.previousWriteBytes) / 1024 / 1024;
 
               s.diskStats = {
                 readBytes: disk.readBytes,
                 writeBytes: disk.writeBytes,
-                readBytesPerSec: this.diskStats.readBytesPerSec,
-                writeBytesPerSec: this.diskStats.writeBytesPerSec,
+                readBytesPerSec: readBytesPerSec,
+                writeBytesPerSec: writeBytesPerSec,
+                previousReadBytes: nowReadBytes,
+                previousWriteBytes: nowWriteBytes,
               }
             }
 
