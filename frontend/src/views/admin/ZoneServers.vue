@@ -37,7 +37,7 @@
             <b-form-input
               type="text"
               class="form-control list-search mt-1"
-              @keyup="updateQueryState()"
+              @keyup="debouncedUpdateQueryState()"
               v-model="search"
               placeholder="Search zone servers by zone name or player name..."
               autofocus
@@ -70,6 +70,20 @@
     </eq-window>
 
     <eq-window
+      class="text-center"
+      title="Zoneserver Stats">
+
+      <span class="font-weight-bold">• Zones</span> {{ zoneList.length }}
+      <span class="font-weight-bold">• Statics</span> {{ zoneList.filter(z => z.is_static_zone === true).length }}
+      <span class="font-weight-bold">• Dynamics</span> {{ zoneList.filter(z => z.is_static_zone === false).length }}
+      <span class="font-weight-bold">• Sleeping</span> {{ zoneList.filter(z => z.number_players === 0).length }}
+      <span class="font-weight-bold">• Highest Zone CPU</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.cpu))).toFixed(2) : 0 }}%
+      <span class="font-weight-bold">• Highest Zone Memory</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.memory / 1024 / 1024))).toFixed(2) : 0 }}MB
+      <span class="font-weight-bold">• Highest Zone Uptime</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.elapsed / 60 / 60))).toFixed(2) : 0 }}h
+      
+    </eq-window>
+
+    <eq-window
       class="p-0"
     >
       <app-loader
@@ -82,7 +96,7 @@
       </div>
 
       <div
-        style="max-height: 75vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
+        style="max-height: 65vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
         class="p-0"
       >
         <table
@@ -148,8 +162,15 @@
             <td>{{ zone.zone_id }}</td>
             <td>{{ zone.instance_id ? zone.instance_id : 0 }}</td>
             <td>{{ zone.zone_server_address }}:{{ zone.client_port }}</td>
-            <td :style="'color: ' + getCpuUsageColor(zone) + ' !important; min-width: 70px;'">
-              {{ zone.cpu ? parseFloat(zone.cpu).toFixed(2) : "N/A" }} %
+            <td :style="'min-width: 70px; text-align: center'">
+              <span :style="'color: ' + getCpuUsageColor(zone) + ' !important'">
+                {{ zone.cpu ? parseFloat(zone.cpu).toFixed(0) : "N/A" }} %
+              </span>
+              <eq-progress-bar
+                :percent="parseFloat(zone.cpu)"
+                :show-percent="false"
+                color="blue"
+              />
             </td>
             <td :style="'color: ' + getMemUsageColor(zone) + ' !important; min-width: 100px'">
               {{ zone.memory ? parseFloat(zone.memory / 1024 / 1024).toFixed(2) + "MB" : "N/A" }}
@@ -219,10 +240,20 @@ import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants
 import EqWindow                    from "@/components/eq-ui/EQWindow.vue";
 import EqCheckbox                  from "@/components/eq-ui/EQCheckbox.vue";
 import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
+import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
+
+// Simple debounce function
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
+  };
+}
 
 export default {
   name: "ZoneServers",
-  components: { PlayerEventDisplayComponent, EqCheckbox, EqWindow, InfoErrorBanner },
+  components: { EqProgressBar, PlayerEventDisplayComponent, EqCheckbox, EqWindow, InfoErrorBanner },
   data() {
     return {
       search: "",
@@ -261,6 +292,10 @@ export default {
     this.init()
   },
   methods: {
+    debouncedUpdateQueryState: debounce(function () {
+      this.updateQueryState();
+    }, 300),
+
     toggleShowPlayers(zoneId) {
       this.$set(this.showPlayersForZone, zoneId, !this.showPlayersForZone[zoneId]);
     },
