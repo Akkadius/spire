@@ -5,7 +5,7 @@
       <div class="row align-items-center">
 
         <!-- Server Name -->
-        <div class="mr-3">
+        <div class="col-lg-4">
           <h6 class="header-pretitle d-inline-block mr-3">
             {{ pageName }}
           </h6>
@@ -37,14 +37,8 @@
           </h1>
         </div>
 
-        <!-- Divider -->
-        <div
-          class="d-none d-lg-block mr-3 ml-3"
-          style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-        />
-
         <!-- Server Metrics -->
-        <div class="col-lg-8 col-sm-12 pl-3 pr-0 ml-0 text-center">
+        <div class="col-lg-8 col-sm-12 pr-0 ml-0 text-center">
           <div class="row align-items-center">
 
             <!-- Server Metrics -->
