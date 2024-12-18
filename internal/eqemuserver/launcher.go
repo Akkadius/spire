@@ -82,6 +82,7 @@ type Launcher struct {
 	// mutexes
 	pollProcessMutex sync.Mutex
 	nodesMutex       sync.Mutex
+	configMutex      sync.Mutex
 }
 
 func NewLauncher(
@@ -644,6 +645,9 @@ func (l *Launcher) startServerProcessSync(name string, args ...string) error {
 // loadServerConfig loads the server config
 // this is called on startup and when the server config changes
 func (l *Launcher) loadServerConfig() {
+	l.configMutex.Lock()
+	defer l.configMutex.Unlock()
+
 	cfg, _ := l.serverconfig.Get()
 	l.isRunning = cfg.Spire.LauncherStart
 	l.runSharedMemory = cfg.WebAdmin.Launcher.RunSharedMemory
