@@ -1390,10 +1390,12 @@ func (a *Controller) getSystemAll(c echo.Context) error {
 	if a.launcher.isLauncherDistributedModeRoot() {
 		r, err := a.launcher.rpcClientRootFetchSystemAll()
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+			a.logger.Error().Err(err).Msg("Failed to fetch system all")
 		}
 
-		return c.JSON(http.StatusOK, r)
+		if err == nil {
+			return c.JSON(http.StatusOK, r)
+		}
 	}
 
 	all, err := system.All()
