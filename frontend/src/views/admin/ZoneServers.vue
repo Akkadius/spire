@@ -33,7 +33,6 @@
               @keyup="debouncedUpdateQueryState()"
               v-model="search"
               placeholder="Search zone servers by zone name or player name..."
-              autofocus
             />
           </div>
 

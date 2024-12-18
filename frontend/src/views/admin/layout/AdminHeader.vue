@@ -186,13 +186,13 @@ export default {
             color: "lightgreen"
           },
           {
-            label: "DISK READ",
+            label: "DISK R",
             value: `${e.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
             percent: Math.min(e.diskStats.readBytesPerSec / 100, 100),
             color: "deepskyblue"
           },
           {
-            label: "DISK WRITE",
+            label: "DISK W",
             value: `${e.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
             percent: Math.min(e.diskStats.writeBytesPerSec / 100, 100),
             color: "tomato"
