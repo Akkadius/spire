@@ -71,9 +71,14 @@
       <span class="font-weight-bold">• Statics</span> {{ zoneList.filter(z => z.is_static_zone === true).length }}
       <span class="font-weight-bold">• Dynamics</span> {{ zoneList.filter(z => z.is_static_zone === false).length }}
       <span class="font-weight-bold">• Sleeping</span> {{ zoneList.filter(z => z.number_players === 0).length }}
-      <span class="font-weight-bold">• Highest Zone CPU</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.cpu))).toFixed(2) : 0 }}%
-      <span class="font-weight-bold">• Highest Zone Memory</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.memory / 1024 / 1024))).toFixed(2) : 0 }}MB
-      <span class="font-weight-bold">• Highest Zone Uptime</span> {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.elapsed / 60 / 60))).toFixed(2) : 0 }}h
+      <span class="font-weight-bold">• Highest Zone CPU</span>
+      {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.cpu))).toFixed(2) : 0 }}%
+      <span class="font-weight-bold">• Highest Zone Memory</span> {{
+        zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.memory / 1024 / 1024))).toFixed(2) : 0
+      }}MB
+      <span class="font-weight-bold">• Highest Zone Uptime</span> {{
+        zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.elapsed / 60 / 60))).toFixed(2) : 0
+      }}h
 
       <div v-if="zoneList.length > 1" class="mt-2">
 
@@ -416,34 +421,19 @@ export default {
     formatZoneRow(zone) {
       if (zone.zone_id === 0) {
         return {
-          backgroundColor: 'rgba(0,0,0,.8)',
-          color: 'rgba(255, 255, 255, .7) !important',
-          // opacity: '.7',
-          // border: '1px solid #e9ecef',
-          borderRadius: '5px',
-          marginBottom: '10px'
+          opacity: '.5',
         }
       }
 
       if (zone.number_players === 0) {
         return {
-          // backgroundColor: 'rgba(0,0,0,1)',
           color: 'rgba(255, 255, 255, .9) !important',
           opacity: '.5',
-          // border: '1px solid white',
-          // inner shadow white
-          // boxShadow: 'inset 0 0 13px rgba(255,255,255,.1)',
-          borderRadius: '5px',
-          marginBottom: '10px'
         }
       }
 
       return {
-        // backgroundColor: '#f8f9fa',
-        // border: '1px solid #e9ecef',
         color: 'rgba(18,38,63,1) !important',
-        borderRadius: '5px',
-        marginBottom: '10px'
       }
     },
 
@@ -523,8 +513,12 @@ export default {
           if (r.status === 200) {
             this.notification = r.data.message
             this.error        = ""
-            setTimeout(() => { this.getZoneList() }, 100)
-            setTimeout(() => { this.getZoneList() }, 1000)
+            setTimeout(() => {
+              this.getZoneList()
+            }, 100)
+            setTimeout(() => {
+              this.getZoneList()
+            }, 1000)
           }
         } catch (e) {
           // error notify
