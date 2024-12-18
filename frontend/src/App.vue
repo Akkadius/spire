@@ -125,7 +125,7 @@ export default {
             if (n.visible) {
               break;
             }
-            this.$bvModal.show('keypress-commands-modal');
+            // this.$bvModal.show('keypress-commands-modal');
             break;
           case 191: // Ctrl + /
           case 75: // Ctrl + K
