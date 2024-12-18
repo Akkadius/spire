@@ -70,9 +70,8 @@ func (l *Launcher) StartRpcServer(port int) error {
 					http.StatusUnauthorized,
 					echo.Map{
 						"error": fmt.Sprintf(
-							"Invalid key, unauthorized. Request key [%v] does not match server key [%v]",
+							"Invalid key, unauthorized. Request key [%v] does not match server key",
 							key,
-							cfg.Server.World.Key,
 						),
 					},
 				)
