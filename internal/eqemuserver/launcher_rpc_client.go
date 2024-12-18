@@ -52,8 +52,24 @@ func (l *Launcher) makeRequest(method, url string, payload any, result any) erro
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("RPC_KEY", cfg.Server.World.Key)
 
+	//transport := &http.Transport{
+	//	DisableKeepAlives:   true,
+	//	MaxConnsPerHost:     -1,
+	//	MaxIdleConnsPerHost: -1,
+	//	DialContext: (&net.Dialer{
+	//		Timeout:   1 * time.Second,
+	//		KeepAlive: 0,
+	//	}).DialContext,
+	//	ForceAttemptHTTP2: false,
+	//}
+	//
+	//transport.CloseIdleConnections()
+
 	// Send the request
-	client := &http.Client{Timeout: 10 * time.Second}
+	client := &http.Client{
+		Timeout: 1 * time.Second,
+		//Transport: transport,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return err

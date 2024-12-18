@@ -1,6 +1,7 @@
 package eqemuserver
 
 import (
+	"context"
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
@@ -8,8 +9,11 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/shirou/gopsutil/v3/process"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 	"unicode"
 )
@@ -90,7 +94,36 @@ func (l *Launcher) StartRpcServer(port int) error {
 
 	l.logger.Info().Any("port", port).Msgf("Starting Spire DZS HTTP RPC server")
 
-	return e.Start(fmt.Sprintf(":%v", port))
+	// Custom HTTP server settings
+	s := &http.Server{
+		Addr:         "0.0.0.0:3005",
+		ReadTimeout:  5 * time.Second, // Timeout for reading request data
+		WriteTimeout: 5 * time.Second, // Timeout for writing response
+		IdleTimeout:  5 * time.Second, // Timeout for keeping idle connections
+	}
+
+	go func() {
+		err := e.StartServer(s)
+		if err != nil {
+			l.logger.Error().Err(err).Msg("Failed to start HTTP RPC server")
+		}
+	}()
+
+	// Graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, os.Kill, os.Signal(syscall.SIGTERM), syscall.SIGTERM)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	fmt.Println("cleaned up")
+	os.Exit(0)
+
+	return nil
 }
 
 // rpcTest is a test route

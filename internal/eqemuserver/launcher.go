@@ -1138,8 +1138,8 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 
 // processDistributed processes launcher for both root and leaf nodes
 func (l *Launcher) processDistributed() {
-	l.nodesMutex.Lock()
-	defer l.nodesMutex.Unlock()
+	//
+	//defer l.nodesMutex.Unlock()
 
 	l.logger.Info().
 		//Any("isDistributedRoot", l.isDistributedRoot).
@@ -1148,13 +1148,16 @@ func (l *Launcher) processDistributed() {
 		Msg("Processing distributed")
 
 	if l.isDistributedRoot {
-		for len(l.nodes) == 1 {
-			l.logger.Info().Msg("Waiting for leaf nodes to connect before starting zones")
-			time.Sleep(5 * time.Second)
-		}
-
 		totalZoneProcesses := 0
 		var indicesToRemove []int
+		l.nodesMutex.Lock()
+
+		if len(l.nodes) == 1 {
+			l.logger.Info().Msg("Waiting for leaf nodes to connect before starting zones")
+			l.nodesMutex.Unlock()
+			return
+		}
+
 		for i, node := range l.nodes {
 			r, err := l.rpcClientGetZoneCount(node)
 			if err != nil {
@@ -1186,6 +1189,7 @@ func (l *Launcher) processDistributed() {
 				Msg("Removing node from list")
 			l.nodes = append(l.nodes[:index], l.nodes[index+1:]...)
 		}
+		l.nodesMutex.Unlock()
 
 		delta := totalZoneProcesses - l.zoneAssignedDynamics
 		l.logger.DebugVvv().
@@ -1206,6 +1210,7 @@ func (l *Launcher) processDistributed() {
 
 			// distribute the zones to the nodes
 			// sort the nodes by the number of zones they are running, least to most
+			l.nodesMutex.Lock()
 			sort.Slice(l.nodes, func(i, j int) bool {
 				return l.nodes[i].CurrentZoneCount < l.nodes[j].CurrentZoneCount
 			})
@@ -1269,6 +1274,7 @@ func (l *Launcher) processDistributed() {
 					}
 				}
 			}
+			l.nodesMutex.Unlock()
 
 			// check to see if all nodes are at max zone count
 			allAtMaxZoneCount := true
