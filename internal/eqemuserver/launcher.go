@@ -78,6 +78,10 @@ type Launcher struct {
 
 	processSleepTime     time.Duration
 	zoneAssignedDynamics int
+
+	// mutexes
+	pollProcessMutex sync.Mutex
+	nodesMutex       sync.Mutex
 }
 
 func NewLauncher(
@@ -1130,6 +1134,9 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 
 // processDistributed processes launcher for both root and leaf nodes
 func (l *Launcher) processDistributed() {
+	l.nodesMutex.Lock()
+	defer l.nodesMutex.Unlock()
+
 	l.logger.Info().
 		//Any("isDistributedRoot", l.isDistributedRoot).
 		//Any("isLeafNode", l.isLeafNode).
@@ -1303,6 +1310,9 @@ func (l *Launcher) processDistributed() {
 }
 
 func (l *Launcher) pollProcessCounts() {
+	l.pollProcessMutex.Lock()
+	defer l.pollProcessMutex.Unlock()
+
 	// reset
 	l.currentProcessCounts = make(map[string]int)
 	l.currentOnlineStatics = []string{}

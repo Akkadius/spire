@@ -101,6 +101,9 @@ func (l *Launcher) rpcTest(c echo.Context) error {
 
 // rpcRegisterLeaf registers a leaf node with the launcher
 func (l *Launcher) rpcRegisterLeaf(c echo.Context) error {
+	l.nodesMutex.Lock()
+	defer l.nodesMutex.Unlock()
+
 	// bind to RpcClientRegisterRequest
 	var req RpcClientRegisterRequest
 	if err := c.Bind(&req); err != nil {

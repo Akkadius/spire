@@ -94,7 +94,7 @@
       />
 
       <div
-        style="max-height: 65vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
+        style="max-height: 60vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
         class="p-0"
       >
 
