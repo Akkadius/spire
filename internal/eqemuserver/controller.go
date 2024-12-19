@@ -1150,6 +1150,13 @@ func (a *Controller) serverStop(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
 	}
 
+	if a.launcher.GetStopTimer() > 0 {
+		return c.JSON(
+			http.StatusBadRequest,
+			echo.Map{"error": "Server already has a scheduled stop or restart in progress"},
+		)
+	}
+
 	a.launcher.SetStopTimer(stop.Timer)
 	a.launcher.SetStopTypeStopping()
 

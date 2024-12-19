@@ -711,6 +711,13 @@ func (l *Launcher) SetStopTimer(timer int) {
 	stopTimerMutex.Unlock()
 }
 
+func (l *Launcher) GetStopTimer() int {
+	stopTimerMutex.Lock()
+	defer stopTimerMutex.Unlock()
+
+	return l.stopTimer
+}
+
 func (l *Launcher) SetStopTypeStopping() {
 	l.stopType = "stopping"
 }
