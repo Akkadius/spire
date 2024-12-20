@@ -1,3 +1,7 @@
+## [4.10.1] 12/20/2024
+
+* **Spire Admin** Minor UI tweaks admin header and zoneservers page
+
 ## [4.10.0] 12/20/2024
 
 * **Spire Admin** Fixed an issue where if two timed restarts were invoked at the same time, the timer feedback in the panel would flip between the two times.

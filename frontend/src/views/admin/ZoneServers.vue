@@ -201,6 +201,7 @@
                 <div
                   v-for="(c, index) in filterClients(zone.clients)"
                   :key="c.id"
+                  class="mr-3"
                 >
                   <div
                     class="avatar-group"
