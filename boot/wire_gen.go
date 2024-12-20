@@ -103,7 +103,7 @@ func InitializeApplication() (App, error) {
 	userController := user.NewController(resolver, userUser, encrypter)
 	settingsController := spire.NewSettingController(resolver, encrypter, settings)
 	telnetClient := telnet.NewClient(appLogger)
-	eqemuserverClient := eqemuserver.NewClient(telnetClient)
+	eqemuserverClient := eqemuserver.NewClient(telnetClient, appLogger)
 	updater := eqemuserver.NewUpdater(resolver, appLogger, config, settings, pathManagement, unzipper)
 	clientManager := websocket.NewClientManager(appLogger)
 	launcher := eqemuserver.NewLauncher(appLogger, config, settings, pathManagement, eqemuserverClient, clientManager)

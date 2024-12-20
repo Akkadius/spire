@@ -836,9 +836,6 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				},
 			}
 
-			//pp.Println(r)
-			//fmt.Println("")
-
 			recipeWriteMutex.Lock()
 			recipes = append(recipes, r)
 			recipeWriteMutex.Unlock()

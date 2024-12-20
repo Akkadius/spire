@@ -47,6 +47,7 @@
 <script>
 
 import {EventBus} from "@/app/event-bus/event-bus";
+import {SpireApi} from "@/app/api/spire-api";
 
 export default {
   name: 'DashboardProcessCounts',
@@ -62,6 +63,12 @@ export default {
   },
 
   mounted() {
+    SpireApi.v1().get("eqemuserver/server-stats").then((r) => {
+      if (r.status === 200) {
+        EventBus.$emit("server-stats", r.data)
+      }
+    })
+
     EventBus.$on('server-stats', async (e) => {
       this.processCounts = []
 

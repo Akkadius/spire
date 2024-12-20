@@ -5,13 +5,12 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/ziutek/telnet"
-	"io"
-	"net"
 	"strings"
 	"sync"
 	"time"
 )
 
+// Client is a telnet client
 type Client struct {
 	debugging bool
 	t         *telnet.Conn
@@ -19,6 +18,7 @@ type Client struct {
 	mu        sync.Mutex
 }
 
+// NewClient creates a new telnet client
 func NewClient(logger *logger.AppLogger) *Client {
 	return &Client{
 		debugging: env.GetInt("TELNET_DEBUG", "0") >= 3,
@@ -30,80 +30,98 @@ const (
 	linebreak = "\n\r> "
 )
 
-func expect(t *telnet.Conn, d ...string) bool {
-	err := t.SkipUntil(d...)
-	if err != nil {
-		return false
+// Connect connects to the telnet server
+func (c *Client) Connect() error {
+	var err error
+
+	// If the connection is already alive, return early
+	if c.t != nil {
+		if c.isConnectionAlive() {
+			return nil
+		}
+		c.Close()
 	}
 
-	return true
-}
+	d := 2 * time.Second // Increased timeout for stability
+	c.t, err = telnet.DialTimeout("tcp", "127.0.0.1:9000", d)
+	if err != nil {
+		return err
+	}
 
-func sendln(t *telnet.Conn, s string) error {
 	defer func() {
 		if r := recover(); r != nil {
-			t.Close()
+			c.fail(fmt.Errorf("panic during Connect: %v", r))
+		}
+	}()
+
+	if err = c.t.SetReadDeadline(time.Now().Add(d)); err != nil {
+		return c.fail(err)
+	}
+	if err = c.t.SetWriteDeadline(time.Now().Add(d)); err != nil {
+		return c.fail(err)
+	}
+	if err = c.t.SetEcho(false); err != nil {
+		return c.fail(err)
+	}
+
+	if err = c.expect("assuming admin"); err != nil {
+		return c.fail(err)
+	}
+
+	c.debug("\n###################################\n# Logging into World\n###################################")
+
+	if err = c.expect(">"); err != nil {
+		return c.fail(err)
+	}
+	if err = c.sendln("echo off"); err != nil {
+		return c.fail(err)
+	}
+	if err = c.expect(">"); err != nil {
+		return c.fail(err)
+	}
+	if err = c.sendln("acceptmessages off"); err != nil {
+		return c.fail(err)
+	}
+	if err = c.expect(">"); err != nil {
+		return c.fail(err)
+	}
+
+	return nil
+}
+
+// fail closes the connection and returns the error
+func (c *Client) fail(err error) error {
+	c.Close()
+	return err
+}
+
+// expect reads the telnet connection until it finds the expected string
+func (c *Client) expect(d ...string) error {
+	err := c.t.SkipUntil(d...)
+	if err != nil {
+		return c.fail(err)
+	}
+	return nil
+}
+
+// sendln sends a string to the telnet connection
+func (c *Client) sendln(s string) error {
+	defer func() {
+		if r := recover(); r != nil {
+			c.fail(fmt.Errorf("panic in sendln: %v", r))
 		}
 	}()
 
 	buf := make([]byte, len(s)+1)
 	copy(buf, s)
 	buf[len(s)] = '\n'
-	_, err := t.Write(buf)
+	_, err := c.t.Write(buf)
+
+	if err != nil {
+		return c.fail(fmt.Errorf("failed to send command: %w", err))
+	}
+
 	return err
-}
-
-func (c *Client) Connect() error {
-	var err error
-
-	// connection check
-	if c.t != nil {
-		one := make([]byte, 1)
-		_ = c.t.SetReadDeadline(time.Now())
-		if _, err := c.t.Read(one); err == io.EOF {
-			c.Close()
-		}
-		if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
-			c.Close()
-		}
-	}
-
-	if c.t != nil {
-		return nil
-	}
-
-	d := 300 * time.Millisecond
-	c.t, err = telnet.DialTimeout("tcp", "127.0.0.1:9000", d)
-	if err != nil {
-		return err
-	}
-
-	err = c.t.SetReadDeadline(time.Now().Add(d))
-	if err != nil {
-		return err
-	}
-	err = c.t.SetWriteDeadline(time.Now().Add(d))
-	if err != nil {
-		return err
-	}
-
-	err = c.t.SetEcho(false)
-	if err != nil {
-		return err
-	}
-
-	// what the console expects when connecting locally
-	if expect(c.t, "assuming admin") {
-		c.debug("\n###################################\n# Logging into World\n###################################")
-
-		expect(c.t, ">")
-		_ = sendln(c.t, "echo off")
-		expect(c.t, ">")
-		_ = sendln(c.t, "acceptmessages off")
-		expect(c.t, ">")
-	}
-
-	return nil
 }
 
 // CommandConfig is a configuration for a command
@@ -121,24 +139,26 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 
 	err = c.Connect()
 	if err != nil {
-		c.Close()
-		return "", err
+		return "", c.fail(err)
 	}
 
 	err = c.t.SetReadDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
-		return "", err
+		return "", c.fail(err)
 	}
 	err = c.t.SetWriteDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
-		return "", err
+		return "", c.fail(err)
 	}
 
 	if c.debugging {
 		c.logger.Debug().Any("command", cmd.Command).Msg("Sending command")
 	}
 
-	sendln(c.t, cmd.Command)
+	err = c.sendln(cmd.Command)
+	if err != nil {
+		return "", c.fail(err)
+	}
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -155,8 +175,7 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 		c.debug("Read operation took %v", time.Since(start))
 		if err != nil {
 			c.logger.Debug().Err(err).Msg("Warning - Failed to read from telnet, this may mean World API is down and not accepting connections.")
-			c.Close()
-			return "", err
+			return "", c.fail(err)
 		}
 
 		output += string(data)
@@ -175,8 +194,7 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 			// if we are enforcing json, make sure the output is json
 			if cmd.EnforceJson {
 				if !strings.HasPrefix(output, "{") && !strings.HasSuffix(output, "}") {
-					c.Close()
-					return "", fmt.Errorf("response was not json: %v", output)
+					return "", c.fail(fmt.Errorf("response was not json: %v", output))
 				}
 			}
 
@@ -185,8 +203,10 @@ func (c *Client) Command(cmd CommandConfig) (string, error) {
 	}
 }
 
+// Close closes the telnet connection
 func (c *Client) Close() {
 	if c.t != nil {
+		c.debug("Closing telnet connection")
 		err := c.t.Close()
 		if err != nil {
 			c.logger.Error().Err(err).Msg("Failed to close telnet connection")
@@ -195,8 +215,28 @@ func (c *Client) Close() {
 	}
 }
 
+// debug logs a debug message
 func (c *Client) debug(msg string, a ...interface{}) {
 	if c.debugging {
 		c.logger.Debug().Msgf(msg, a...)
 	}
+}
+
+// isConnectionAlive checks if the connection is alive
+func (c *Client) isConnectionAlive() bool {
+	if c.t == nil {
+		return false
+	}
+
+	// Perform a zero-byte write to check if the connection is alive
+	if err := c.t.SetWriteDeadline(time.Now().Add(1 * time.Millisecond)); err != nil {
+		return false
+	}
+
+	_, err := c.t.Write([]byte{})
+	if err != nil {
+		return false // Connection is dead
+	}
+
+	return true
 }

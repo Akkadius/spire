@@ -15,6 +15,7 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/system"
 	"github.com/labstack/echo/v4"
 	"github.com/mholt/archiver/v4"
 	gocache "github.com/patrickmn/go-cache"
@@ -104,6 +105,8 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/restart", a.serverRestart, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/stop-cancel", a.serverStopCancel, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-websocket-auth", a.getWebsocketAuth, nil),
+		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/process-kill/:pid", a.killProcess, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/system-all", a.getSystemAll, nil),
 	}
 }
 
@@ -143,6 +146,7 @@ type ServerStatsResponse struct {
 	QueryServOnline bool            `json:"query_serv_online"`
 	ZoneList        WorldZoneList   `json:"zone_list"`
 	PlayersOnline   WorldClientList `json:"client_list"`
+	Uptime          string          `json:"uptime"`
 }
 
 func (a *Controller) getServerStats(c echo.Context) error {
@@ -186,6 +190,9 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	if len(clientList.Data) > 0 {
 		r.PlayersOnline = clientList
 	}
+
+	uptime, _ := a.eqemuserverapi.GetWorldUptime()
+	r.Uptime = uptime
 
 	cfg, _ := a.serverconfig.Get()
 	r.ServerName = cfg.Server.World.Longname
@@ -1143,6 +1150,13 @@ func (a *Controller) serverStop(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind stop options")
 	}
 
+	if a.launcher.GetStopTimer() > 0 {
+		return c.JSON(
+			http.StatusBadRequest,
+			echo.Map{"error": "Server already has a scheduled stop or restart in progress"},
+		)
+	}
+
 	a.launcher.SetStopTimer(stop.Timer)
 	a.launcher.SetStopTypeStopping()
 
@@ -1257,6 +1271,44 @@ func (a *Controller) getWebsocketAuth(c echo.Context) error {
 }
 
 func (a *Controller) getZoneServerList(c echo.Context) error {
+
+	// intercept if we are in distributed mode
+	if a.launcher.isLauncherDistributedModeRoot() {
+		r, err := a.launcher.rpcClientRootGetZoneservers()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		list, err := a.launcher.GetZoneserverList()
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.Map{"error": fmt.Sprintf("Failed to get zoneserver list [%v]", err.Error())},
+			)
+		}
+
+		for i, p := range r {
+			for _, zone := range list {
+				matchesAddress := zone.ConnectedAddress == p.ConnectedAddress || zone.ConfiguredAddress == zone.ZoneServerAddress
+				if matchesAddress && int(p.Pid) == zone.ZoneOsPid {
+					r[i].ZoneServerAddress = zone.ZoneServerAddress
+					r[i].ZoneName = zone.ZoneName
+					r[i].ZoneLongName = zone.ZoneLongName
+					r[i].NumberPlayers = zone.NumberPlayers
+					r[i].InstanceID = zone.InstanceID
+					r[i].Clients = zone.Clients
+					r[i].ClientPort = zone.ClientPort
+					r[i].IsStaticZone = zone.IsStaticZone
+					r[i].ZoneID = zone.ZoneID
+					r[i].ID = zone.ID
+					r[i].ZoneOsPid = zone.ZoneOsPid
+				}
+			}
+		}
+
+		return c.JSON(http.StatusOK, r)
+	}
+
 	cachedList, found := a.cache.Get("zoneserver_list")
 	if found {
 		a.logger.Info().Msg("Returning cached zoneserver list")
@@ -1277,4 +1329,91 @@ func (a *Controller) getZoneServerList(c echo.Context) error {
 
 	// Return combined data
 	return c.JSON(http.StatusOK, list)
+}
+
+// killProcess kills a process by PID
+func (a *Controller) killProcess(c echo.Context) error {
+	pidStr := c.Param("pid")
+	pid, err := strconv.ParseInt(pidStr, 10, 64)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	zone := new(ZoneServer)
+	if err := c.Bind(zone); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	processes, _ := process.Processes()
+	for _, p := range processes {
+		if int64(p.Pid) == pid {
+			err := p.Terminate()
+			if err != nil {
+				return c.JSON(
+					http.StatusInternalServerError,
+					echo.Map{"error": err.Error()},
+				)
+			}
+		}
+	}
+
+	// wait for process to die gracefully
+	time.Sleep(1 * time.Second)
+
+	processes, _ = process.Processes()
+	for _, p := range processes {
+		if int64(p.Pid) == pid {
+			err := p.Kill()
+			if err != nil {
+				return c.JSON(
+					http.StatusInternalServerError,
+					echo.Map{"error": err.Error()},
+				)
+			}
+		}
+	}
+
+	// intercept if we are in distributed mode
+	if a.launcher.isLauncherDistributedModeRoot() {
+		err := a.launcher.rpcClientRootNodeKillProcess(zone)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		}
+
+		return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"message": "Process killed successfully!"})
+}
+
+// getSystemAll returns all system information
+func (a *Controller) getSystemAll(c echo.Context) error {
+	var systems []system.AllResponse
+
+	// intercept if we are in distributed mode
+	if a.launcher.isLauncherDistributedModeRoot() {
+		r, err := a.launcher.rpcClientRootFetchSystemAll()
+		if err != nil {
+			a.logger.Error().Err(err).Msg("Failed to fetch system all")
+		}
+
+		if err == nil {
+			return c.JSON(http.StatusOK, r)
+		}
+	}
+
+	all, err := system.All()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": err.Error()},
+		)
+	}
+
+	systems = append(systems, all)
+
+	return c.JSON(http.StatusOK, systems)
 }

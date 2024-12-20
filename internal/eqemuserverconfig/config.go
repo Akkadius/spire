@@ -43,6 +43,10 @@ type WebAdminLauncherConfig struct {
 	StaticZones                 string `json:"staticZones,omitempty"`
 	UpdateOpcodesOnStart        bool   `json:"updateOpcodesOnStart"`
 	DeleteLogFilesOlderThanDays int    `json:"deleteLogFilesOlderThanDays"`
+
+	// leaf nodes do not run any process but zones
+	DistributedNodeType     string `json:"distributed_node_type,omitempty"`      // root or leaf
+	DistributedMaxZoneCount int    `json:"distributed_max_zone_count,omitempty"` // max zone count for leaf nodes
 }
 
 type WebAdminQuestsConfig struct {

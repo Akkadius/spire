@@ -3,20 +3,10 @@
     <div class="card-body pl-4 pr-4 pt-3 pb-3">
 
       <div class="row align-items-center">
-        <div class="mr-3 pr-5">
-          <h6 class="header-pretitle d-inline-block mr-3">
-            {{ pageName }}
-          </h6>
 
-          <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
-
-          <h1
-            class="header-title"
-            :title="stats.server_name"
-            style="font-size: 1.1rem;">
-
-            <server-process-button-component class="d-inline-block mr-3"/>
-
+        <!-- Server Name -->
+        <div class="col-lg-auto">
+          <h3 class="d-inline-block mr-3">
             <a
               href="javascript:void(0)"
               @click="toggleServerLock()"
@@ -30,29 +20,36 @@
 
               <span v-if="stats.server_name">{{ stats.server_name }}</span>
             </a>
+          </h3>
 
-          </h1>
-
-
-
+          <div>
+            <server-process-button-component class="d-inline-block mr-3"/>
+            <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
+          </div>
 
         </div>
 
-        <div
-          class="d-none d-lg-block mr-3 ml-3"
-          style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-        />
-
-        <div class="col-lg-8 col-sm-12 pl-3 pr-0 ml-0 text-center">
-
+        <!-- Server Metrics -->
+        <div class="col-lg-8 col-sm-12 pr-0 ml-0 text-center">
           <div class="row align-items-center">
 
-            <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase mr-1">World</small>
-              <span
-                :class="`badge badge-${stats.world_online ? 'success' : 'danger'} ml-3`"
-                style="font-size: 12px"
-              >{{ stats.world_online ? 'Online' : 'Offline' }}</span>
+            <!-- Server Metrics -->
+            <div class="col-lg-2 col-sm-12 mt-3-mobile">
+              <div class="row" v-for="(metric, index) in serverStats" :key="index">
+                <!-- Left Label -->
+                <div class="col-6 p-0 m-0 text-right" style="line-height: 1 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 12px;">
+                    {{ metric.label }}
+                  </span>
+                </div>
+
+                <!-- Right Value -->
+                <div class="col-6 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
+                  <span class="small font-weight-bold" style="font-size: 12px;">
+                    {{ metric.value.toLocaleString() }}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div
@@ -60,78 +57,40 @@
               style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
             />
 
-            <div class="col-lg-auto col-sm-12 mt-3-mobile">
-                <small class="text-muted text-uppercase">Zoneservers</small>
-                <span class="h2 mb-0 ml-3">
-                {{ stats && stats.zone_list && stats.zone_list.data ? stats.zone_list.data.length : 0 }}
-              </span>
-            </div>
-
+            <!-- Resource Metrics -->
             <div
-              class="d-none d-lg-block mr-3 ml-3"
-              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-            />
+              class="col-lg-3 col-sm-12 pl-0 pr-0 mt-3-mobile"
+              v-for="(host, index) in hostMetrics"
+            >
+              <!-- Render Metrics Dynamically -->
+              <div class="row" v-for="(metric, index) in host" :key="index">
+                <!-- Left Label -->
+                <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
+                    {{ metric.label }}
+                  </span>
+                </div>
 
-            <div class="col-lg-auto col-sm-12 mt-3-mobile">
-              <small class="text-muted text-uppercase mr-1">Players Online</small>
-              <span class="h2 mb-0 ml-3">
-              {{ stats && stats.client_list && stats.client_list.data ? stats.client_list.data.length : 0 }}
-          </span>
+                <!-- Progress Bar -->
+                <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px" v-if="typeof metric.percent !== 'undefined'">
+                  <eq-progress-bar
+                    style="opacity: .95"
+                    :percent="metric.percent"
+                    :show-percent="false"
+                    :color="metric.color"
+                  />
+                </div>
+
+                <!-- Right Value -->
+                <div :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')" style="line-height: .8 !important">
+                  <span :class="' font-weight-bold' + (typeof metric.percent === 'undefined' ? '' : 'small text-muted')" style="font-size: 10px;">
+                    {{ metric.value }}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div
-              class="d-none d-lg-block mr-3 ml-3"
-              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-            />
-
-            <!-- Resource Utilization -->
-            <div class="col-lg-auto col-sm-12 pl-3 pr-3 mt-3-mobile">
-              <vue-ellipse-progress
-                :progress="cpuPercent"
-                animation="default 300 0"
-                thickness="4"
-                :legend-formatter="({ currentValue }) => `${currentValue}%`"
-                :size="60"
-                :color="getCpuLoadColor(cpuPercent)"
-                empty-color="#95aac9"
-                empty-thickness="1"
-                font-size=".8rem"
-                font-color="#95aac9"
-              >
-                <span
-                  slot="legend-caption"
-                  class="text-muted font-weight-bold"
-                  style="font-size: 10px"
-                > CPU </span>
-              </vue-ellipse-progress>
-
-              <vue-ellipse-progress
-                class="ml-3"
-                :progress="memoryPercent"
-                animation="loop 600 0"
-                thickness="4"
-                :legend-formatter="({ currentValue }) => `${currentValue}%`"
-                :size="60"
-                color="#2c7be5"
-                empty-color="#95aac9"
-                empty-thickness="1"
-                font-size=".8rem"
-                font-color="#95aac9"
-              >
-              <span
-                slot="legend-caption"
-                class="text-muted font-weight-bold"
-                style="font-size: 10px"
-              > MEM</span>
-              </vue-ellipse-progress>
-            </div>
-
-<!--            <div-->
-<!--              class="d-none d-lg-block ml-3 mr-3"-->
-<!--              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"-->
-<!--            />-->
           </div>
-
         </div>
       </div>
     </div>
@@ -142,15 +101,15 @@
 import ServerProcessButtonComponent from "@/views/admin/components/ServerProcessButtonComponent.vue";
 import {EventBus}                   from "@/app/event-bus/event-bus";
 import {SpireApi}                   from "@/app/api/spire-api";
-import {VueEllipseProgress}         from "vue-ellipse-progress";
 import {SpireWebsocket}             from "@/app/api/spire-websocket";
 import moment                       from "moment";
+import EqProgressBar                from "@/components/eq-ui/EQProgressBar.vue";
 
 export default {
   name: "AdminHeader",
   components: {
+    EqProgressBar,
     ServerProcessButtonComponent,
-    VueEllipseProgress,
   },
   data() {
     return {
@@ -161,15 +120,103 @@ export default {
       lastUpdateTime: 0,
       updateIntervalSeconds: 1,
 
-      serverLocked: false,
+      sys: [],
 
-      cpuPercent: 0,
-      memoryPercent: 0,
+      diskStats: {
+        previousReadBytes: 0,
+        previousWriteBytes: 0,
+        readBytesPerSec: 0,
+        writeBytesPerSec: 0,
+      },
+
+      serverLocked: false,
 
       stopMessage: "",
 
       timer: null,
     }
+  },
+
+  computed: {
+
+    serverStats() {
+      return [
+        {
+          label: "World",
+          value: this.stats && this.stats.world_online ? "Online" : "Offline",
+        },
+        {
+          label: "Zoneservers",
+          value: this.stats && this.stats.zone_list && this.stats.zone_list.data ? this.stats.zone_list.data.length : 0,
+        },
+        {
+          label: "Players",
+          value: this.stats && this.stats.client_list && this.stats.client_list.data ? this.stats.client_list.data.length : 0,
+        },
+        {
+          label: "Uptime",
+          value: this.stats && this.stats.uptime ? this.formatUptime(this.stats.uptime) : "N/A",
+        },
+        {
+          label: "Locked",
+          value: this.serverLocked ? "Yes" : "No",
+        },
+      ]
+    },
+
+    hostMetrics() {
+      let metrics = []
+
+      for (const e of this.sys) {
+        let metric = [
+          {
+            label: "Host",
+            value: e.hostname,
+          },
+          {
+            label: "CPU",
+            value: `${e.cpu || "N/A"} %`,
+            percent: parseFloat(e.cpu || 0),
+            color: this.getCpuLoadColor(e.cpu)
+          },
+          {
+            label: "MEM",
+            value: `${e.mem || "N/A"} %`,
+            percent: parseFloat(e.mem || 0),
+            color: "lightgreen"
+          },
+          {
+            label: "DISK R",
+            value: `${e.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
+            percent: Math.min(e.diskStats.readBytesPerSec / 100, 100),
+            color: "deepskyblue"
+          },
+          {
+            label: "DISK W",
+            value: `${e.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
+            percent: Math.min(e.diskStats.writeBytesPerSec / 100, 100),
+            color: "tomato"
+          },
+          {
+            label: "NET DL",
+            value: `${this.bytesToMbytes(e.net['all'].bytes_recv_ps)} Mbps`,
+            percent: Math.min(this.bytesToMbytes(e.net['all'].bytes_recv_ps) / 10, 100),
+            color: "limegreen"
+          },
+          {
+            label: "NET UL",
+            value: `${this.bytesToMbytes(e.net['all'].bytes_sent_ps)} Mbps`,
+            percent: Math.min(this.bytesToMbytes(e.net['all'].bytes_sent_ps) / 10, 100),
+            color: "limegreen"
+          }
+        ]
+
+        metrics.push(metric)
+      }
+
+      return metrics
+    },
+
   },
 
   beforeDestroy() {
@@ -209,6 +256,28 @@ export default {
     }
   },
   methods: {
+
+    formatUptime(t) {
+      // reformat
+      t = t.replace("Worldserver Uptime |", "")
+      t = t.replace(new RegExp(',', 'g'), '');
+      t = t.replace("and", "")
+      t = t.replace(" Days", "d")
+      t = t.replace(" Day", "d")
+      t = t.replace(" Weeks", "w")
+      t = t.replace(" Week", "w")
+      t = t.replace(" Months", "m")
+      t = t.replace(" Month", "m")
+      t = t.replace(" Hours", "h")
+      t = t.replace(" Hour", "h")
+      t = t.replace(" Minutes", "m")
+      t = t.replace(" Minute", "m")
+      t = t.replace(" Seconds", "s")
+      t = t.replace(" Second", "s")
+      t = t.replace(/^\s+|\s+$/g, "")
+
+      return t.trim();
+    },
 
     readyToPoll() {
       return Date.now() - this.lastUpdateTime > this.updateIntervalSeconds * 1000
@@ -262,7 +331,8 @@ export default {
 
           if (clientCount > 1000) {
             this.updateIntervalSeconds = 30
-          } if (clientCount > 500) {
+          }
+          if (clientCount > 500) {
             this.updateIntervalSeconds = 10
           } else if (clientCount > 100) {
             this.updateIntervalSeconds = 5
@@ -272,10 +342,104 @@ export default {
         }
       })
 
-      SpireApi.v1().get("admin/system/resource-usage-summary").then((r) => {
+      SpireApi.v1().get("eqemuserver/system-all").then((r) => {
+        let lastSys = JSON.parse(JSON.stringify(this.sys))
+
+        let systems = []
         if (r.status === 200) {
-          this.cpuPercent    = Math.round(r.data.cpu)
-          this.memoryPercent = Math.round(r.data.memory.usedPercent)
+          for (const e of r.data) {
+            let s = {
+              cpu: 0,
+              mem: 0,
+              diskStats: {
+                readBytes: 0,
+                writeBytes: 0,
+                previousReadBytes: null, // Initialize to null
+                previousWriteBytes: null, // Initialize to null
+                readBytesPerSec: 0,
+                writeBytesPerSec: 0,
+              },
+              net: {
+                all: {
+                  bytes_recv: 0,
+                  bytes_sent: 0,
+                  bytes_recv_ps: 0,
+                  bytes_sent_ps: 0
+                }
+              }
+            };
+
+            // Find last system stats
+            // we need this for calculating per-second changes
+            // in disk stats, network stats
+            if (lastSys.length > 0) {
+              const last = lastSys.find((x) => {
+                return x.hostname === e.hostname
+              })
+              if (last) {
+                s = JSON.parse(JSON.stringify(last))
+              }
+            }
+
+            s.cpu = Math.round(e.cpu)
+            s.mem = Math.round(e.mem_percent)
+            s.hostname = e.hostname
+
+            // Disk stats
+            const disk = e.disk[0]; // Assuming one disk for simplicity
+            if (disk) {
+              const nowReadBytes  = disk.readBytes;
+              const nowWriteBytes = disk.writeBytes;
+
+              // If this is the first pass, initialize previous values
+              if (s.diskStats.previousReadBytes === null || s.diskStats.previousWriteBytes === null) {
+                s.diskStats.previousReadBytes = nowReadBytes;
+                s.diskStats.previousWriteBytes = nowWriteBytes;
+                s.diskStats.readBytesPerSec = 0;
+                s.diskStats.writeBytesPerSec = 0;
+              } else {
+                // Calculate per-second change
+                s.diskStats.readBytesPerSec = (nowReadBytes - s.diskStats.previousReadBytes) / 1024 / 1024;
+                s.diskStats.writeBytesPerSec = (nowWriteBytes - s.diskStats.previousWriteBytes) / 1024 / 1024;
+
+                // Update previous values
+                s.diskStats.previousReadBytes = nowReadBytes;
+                s.diskStats.previousWriteBytes = nowWriteBytes;
+              }
+            }
+
+            // network stats
+            for (let n of e.net) {
+              if (typeof s.net[n.name] === 'undefined') {
+                s.net[n.name] = {
+                  bytes_recv: 0,
+                  bytes_sent: 0,
+                  bytes_recv_ps: 0,
+                  bytes_sent_ps: 0,
+                };
+              }
+
+              if (s.net[n.name].bytes_recv === 0 && s.net[n.name].bytes_sent === 0) {
+                // First iteration: initialize without calculation
+                s.net[n.name].bytes_recv = n.bytesRecv;
+                s.net[n.name].bytes_sent = n.bytesSent;
+                s.net[n.name].bytes_recv_ps = 0;
+                s.net[n.name].bytes_sent_ps = 0;
+              } else {
+                // Calculate per-second changes
+                s.net[n.name].bytes_recv_ps = n.bytesRecv - s.net[n.name].bytes_recv;
+                s.net[n.name].bytes_sent_ps = n.bytesSent - s.net[n.name].bytes_sent;
+
+                // Update previous values
+                s.net[n.name].bytes_recv = n.bytesRecv;
+                s.net[n.name].bytes_sent = n.bytesSent;
+              }
+            }
+
+            systems.push(s)
+          }
+
+          this.sys = systems
         }
       })
     },
@@ -340,7 +504,11 @@ export default {
       const seconds = duration.seconds();
 
       return `${minutes} minutes, ${seconds} seconds`;
-    }
+    },
+
+    bytesToMbytes: function (bytes) {
+      return parseFloat((bytes * 8) / 1024 / 1024).toFixed(2); // Convert to Mbps
+    },
   },
 }
 </script>
@@ -353,6 +521,6 @@ export default {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 240px; /* Set the max-width to the desired length */
+  max-width: 450px; /* Set the max-width to the desired length */
 }
 </style>
