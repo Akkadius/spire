@@ -1,3 +1,14 @@
+## [4.10.0] 12/20/2024
+
+* **Spire Admin** Fixed an issue where if two timed restarts were invoked at the same time, the timer feedback in the panel would flip between the two times.
+* **Spire Admin** Fixed an issue where during a timed restart or stop, Spire admin would notify that a scheduled restart or stop after the server restarted or stopped.
+* **Spire Admin** Overhauled the zoneservers page to be more functional, readable and far more performant.
+* **Spire Admin** Significantly improved the performance of the EQEmu Server API communication from Spire admin by upwards of 10x!
+
+![image](https://github.com/user-attachments/assets/87f3f335-070d-4d56-8f92-cd402bca2248)
+
+![image](https://github.com/user-attachments/assets/da6fbc58-a1bf-476e-8221-2ec183761f94)
+
 ## [4.9.4] 11/30/2024
 
 * **Spire Admin** Improve zone server page performance when large amounts of zoneservers are displayed.
