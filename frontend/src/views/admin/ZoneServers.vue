@@ -80,7 +80,7 @@
       <div v-if="Object.keys(zoneCountByIP).length > 1" class="mt-2">
         <span class="font-weight-bold mr-2">Zones by IP ›</span>
         <span v-for="(count, ip) in zoneCountByIP" :key="ip" class="mt-2">
-          <span class="font-weight-bold">{{ ip }}</span> - {{ count }} Zones
+          <span class="font-weight-bold">{{ ip }}</span> ({{ count }} Zones)
         </span>
       </div>
 
@@ -88,7 +88,7 @@
       <div v-if="Object.keys(getZonesWithMorethanOneInstance()).length > 0" class="mt-2">
         <span class="font-weight-bold mr-2">Zones With More Than One Instance ›</span>
         <span v-for="(count, name) in getZonesWithMorethanOneInstance()">
-          <span class="font-weight-bold">{{ name }}</span> - {{ count }} Zones
+          <span class="font-weight-bold">{{ name }}</span> ({{ count }})
         </span>
       </div>
 
