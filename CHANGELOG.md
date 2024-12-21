@@ -1,9 +1,7 @@
-## [4.10.2] 12/20/2024
+## [4.10.3] 12/20/2024
 
 * **Spire Admin** Mobile UI improvements to admin header and zone servers page.
-
-## [4.10.1] 12/20/2024
-
+* **Spire Admin** Improvements to zoneserver stats UI
 * **Spire Admin** Minor UI tweaks admin header and zoneservers page
 
 ## [4.10.0] 12/20/2024

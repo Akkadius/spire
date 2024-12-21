@@ -62,29 +62,34 @@
     </eq-window>
 
     <eq-window
-      class="text-center"
+      class=""
       title="Zoneserver Stats"
       v-if="zoneList.length > 0"
     >
 
-      <span class="font-weight-bold">• Zones</span> {{ zoneList.length }}
-      <span class="font-weight-bold">• Statics</span> {{ zoneList.filter(z => z.is_static_zone === true).length }}
-      <span class="font-weight-bold">• Dynamics</span> {{ zoneList.filter(z => z.is_static_zone === false).length }}
-      <span class="font-weight-bold">• Sleeping</span> {{ zoneList.filter(z => z.number_players === 0).length }}
-      <span class="font-weight-bold">• Highest Zone CPU</span>
-      {{ zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.cpu))).toFixed(2) : 0 }}%
-      <span class="font-weight-bold">• Highest Zone Memory</span> {{
-        zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.memory / 1024 / 1024))).toFixed(2) : 0
-      }}MB
-      <span class="font-weight-bold">• Highest Zone Uptime</span> {{
-        zoneList.length > 0 ? parseFloat(Math.max.apply(Math, zoneList.map(z => z.elapsed / 60 / 60))).toFixed(2) : 0
-      }}h
+      <div>
+        <div class="d-inline-block mr-1" v-for="stat in zoneStats" :key="stat.label">
+          <span class="font-weight-bold">
+          {{ stat.label }}
+        </span>
+          {{ stat.value }} ›
+        </div>
 
-      <div v-if="zoneList.length > 1" class="mt-2">
+      </div>
 
-      <span v-for="(count, ip) in zoneCountByIP" :key="ip" class="mt-2">
-        <span class="font-weight-bold">• {{ ip }}</span> - {{ count }} Zones
-      </span>
+      <div v-if="Object.keys(zoneCountByIP).length > 1" class="mt-2">
+        <span class="font-weight-bold mr-2">Zones by IP ›</span>
+        <span v-for="(count, ip) in zoneCountByIP" :key="ip" class="mt-2">
+          <span class="font-weight-bold">{{ ip }}</span> - {{ count }} Zones
+        </span>
+      </div>
+
+      <!-- For each zone that has more than one copy in the list, show a count of the zone -->
+      <div v-if="Object.keys(getZonesWithMorethanOneInstance()).length > 0" class="mt-2">
+        <span class="font-weight-bold mr-2">Zones With More Than One Instance ›</span>
+        <span v-for="(count, name) in getZonesWithMorethanOneInstance()">
+          <span class="font-weight-bold">{{ name }}</span> - {{ count }} Zones
+        </span>
       </div>
 
     </eq-window>
@@ -306,7 +311,42 @@ export default {
       });
 
       return count; // Return the object with IP -> count mapping
-    }
+    },
+
+    zoneStats() {
+      if (this.zoneList.length === 0) {
+        return [
+          { label: "Zones", value: 0 },
+          { label: "Statics", value: 0 },
+          { label: "Dynamics", value: 0 },
+          { label: "Sleeping", value: 0 },
+          { label: "Ready to Boot", value: 0 },
+          { label: "Highest Zone CPU", value: "0%" },
+          { label: "Highest Zone Memory", value: "0MB" },
+          { label: "Highest Zone Uptime", value: "0h" },
+        ];
+      }
+
+      const totalZones = this.zoneList.length;
+      const statics = this.zoneList.filter(z => z.is_static_zone === true).length;
+      const dynamics = this.zoneList.filter(z => z.is_static_zone === false).length;
+      const sleeping = this.zoneList.filter(z => z.number_players === 0 && z.zone_id > 0).length;
+      const readyToBoot = this.zoneList.filter(z => z.number_players === 0 && z.zone_id === 0).length;
+      const highestCpu = `${parseFloat(Math.max(...this.zoneList.map(z => z.cpu || 0))).toFixed(2)}%`;
+      const highestMemory = `${parseFloat(Math.max(...this.zoneList.map(z => (z.memory || 0) / 1024 / 1024))).toFixed(2)}MB`;
+      const highestUptime = `${parseFloat(Math.max(...this.zoneList.map(z => (z.elapsed || 0) / 60 / 60))).toFixed(2)}h`;
+
+      return [
+        { label: "Zones", value: totalZones },
+        { label: "Statics", value: statics },
+        { label: "Dynamics", value: dynamics },
+        { label: "Sleeping", value: sleeping },
+        { label: "Ready to Boot", value: readyToBoot },
+        { label: "Highest Zone CPU", value: highestCpu },
+        { label: "Highest Zone Memory", value: highestMemory },
+        { label: "Highest Zone Uptime", value: highestUptime },
+      ];
+    },
   },
 
   watch: {
@@ -321,6 +361,30 @@ export default {
     this.init()
   },
   methods: {
+
+    getZoneCounts() {
+      return this.zoneList.reduce((acc, zone) => {
+        if (!acc[zone.zone_name]) {
+          acc[zone.zone_name] = 0;
+        }
+        if (zone.zone_id !== 0) {
+          acc[zone.zone_name]++;
+        }
+
+        return acc;
+      }, {});
+    },
+
+    getZonesWithMorethanOneInstance() {
+      const filterZones = (zones, threshold) => {
+        return Object.fromEntries(
+          Object.entries(zones).filter(([key, value]) => value > threshold)
+        );
+      };
+
+      return filterZones(this.getZoneCounts(), 1);
+    },
+
     getCpuLoadColor(load) {
       if (load > 80) {
         return 'red'
