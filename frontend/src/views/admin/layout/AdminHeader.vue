@@ -37,14 +37,14 @@
             <div class="col-lg-2 col-sm-12 mt-3-mobile">
               <div class="row" v-for="(metric, index) in serverStats" :key="index">
                 <!-- Left Label -->
-                <div class="col-6 p-0 m-0 text-right" style="line-height: 1 !important">
+                <div class="col-lg-6 col-3 p-0 m-0 text-right" style="line-height: 1 !important">
                   <span class="small font-weight-bold text-muted" style="font-size: 12px;">
                     {{ metric.label }}
                   </span>
                 </div>
 
                 <!-- Right Value -->
-                <div class="col-6 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
+                <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
                   <span class="small font-weight-bold" style="font-size: 12px;">
                     {{ metric.value.toLocaleString() }}
                   </span>
@@ -277,7 +277,7 @@ export default {
 
       return t.trim();
     },
-    
+
     getCpuLoadColor(load) {
       if (load > 80) {
         return 'red'

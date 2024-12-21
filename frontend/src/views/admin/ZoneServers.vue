@@ -26,7 +26,7 @@
     >
       <div>
         <div class="row">
-          <div class="col-10">
+          <div class="col-lg-10 col-sm-12">
             <b-form-input
               type="text"
               class="form-control list-search mt-1"
@@ -36,7 +36,7 @@
             />
           </div>
 
-          <div class="text-center col-1 font-weight-bold">
+          <div class="text-center col-lg-1 col-sm-12 font-weight-bold">
             Show Players
             <eq-checkbox
               class="mt-1"
@@ -48,10 +48,10 @@
             />
           </div>
 
-          <div class="col-1 mt-1">
+          <div class="col-lg-1 col-sm-12 mt-1">
             <button
               title="Reset"
-              class="eq-button m-0"
+              class="eq-button m-0 ml-3"
               @click="search = ''; updateQueryState()"
             ><i class="fa fa-refresh"></i> Reset
             </button>
@@ -98,7 +98,7 @@
       />
 
       <div
-        style="max-height: 60vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
+        style="max-height: 60vh; overflow-y: scroll; overflow-x: scroll; border: 1px solid #ffffff1c !important"
         class="p-0"
       >
 
@@ -107,7 +107,7 @@
         </div>
 
         <table
-          :style="(!loaded ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; width: 100% '"
+          :style="(!loaded ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'width: 100% '"
           class="eq-table bordered eq-highlight-rows"
           v-if="filterZoneList(zoneList).length > 0"
         >
