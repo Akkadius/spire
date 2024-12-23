@@ -460,6 +460,8 @@ func (l *Launcher) Stop() error {
 		}
 	}
 
+	l.stopTimer = 0
+
 	l.logger.Info().Msg("Stopped server launcher")
 
 	return nil
