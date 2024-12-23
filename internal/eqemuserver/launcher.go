@@ -52,6 +52,7 @@ type Launcher struct {
 	runSharedMemory             bool
 	runLoginserver              bool
 	runQueryServ                bool
+	runUcs                      bool
 	updateOpcodesOnStart        bool
 	deleteLogFilesOlderThanDays int
 	patchesDirectory            string
@@ -655,6 +656,7 @@ func (l *Launcher) loadServerConfig() {
 	l.runSharedMemory = cfg.WebAdmin.Launcher.RunSharedMemory
 	l.runLoginserver = cfg.WebAdmin.Launcher.RunLoginserver
 	l.runQueryServ = cfg.WebAdmin.Launcher.RunQueryServ
+	l.runUcs = cfg.WebAdmin.Launcher.RunUcs
 	l.minZoneProcesses = cfg.WebAdmin.Launcher.MinZoneProcesses
 	l.updateOpcodesOnStart = cfg.WebAdmin.Launcher.UpdateOpcodesOnStart
 	l.deleteLogFilesOlderThanDays = cfg.WebAdmin.Launcher.DeleteLogFilesOlderThanDays

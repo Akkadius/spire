@@ -38,6 +38,7 @@ type WebAdminLauncherConfig struct {
 	RunSharedMemory             bool   `json:"runSharedMemory"`
 	RunLoginserver              bool   `json:"runLoginserver"`
 	RunQueryServ                bool   `json:"runQueryServ"`
+	RunUcs                      bool   `json:"runUcs"`
 	IsRunning                   bool   `json:"isRunning"`
 	MinZoneProcesses            int    `json:"minZoneProcesses,omitempty"`
 	StaticZones                 string `json:"staticZones,omitempty"`
@@ -263,6 +264,7 @@ func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
 				RunSharedMemory:             true,
 				RunLoginserver:              false,
 				RunQueryServ:                false,
+				RunUcs:                      true,
 				MinZoneProcesses:            10,
 				UpdateOpcodesOnStart:        true,
 				DeleteLogFilesOlderThanDays: 7,

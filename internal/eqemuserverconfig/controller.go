@@ -59,6 +59,7 @@ type LauncherConfig struct {
 	RunSharedMemory             bool   `json:"runSharedMemory"`
 	RunLoginserver              bool   `json:"runLoginserver"`
 	RunQueryServ                bool   `json:"runQueryServ"`
+	RunUcs                      bool   `json:"runUcs"`
 	IsRunning                   bool   `json:"isRunning"`
 	SpireLauncherStart          bool   `json:"spireLauncherStart"`
 	MinZoneProcesses            int    `json:"minZoneProcesses"`
@@ -73,6 +74,7 @@ func (a *Controller) getLauncherConfig(c echo.Context) error {
 		RunSharedMemory:             cfg.WebAdmin.Launcher.RunSharedMemory,
 		RunLoginserver:              cfg.WebAdmin.Launcher.RunLoginserver,
 		RunQueryServ:                cfg.WebAdmin.Launcher.RunQueryServ,
+		RunUcs:                      cfg.WebAdmin.Launcher.RunUcs,
 		IsRunning:                   cfg.WebAdmin.Launcher.IsRunning,
 		SpireLauncherStart:          cfg.Spire.LauncherStart,
 		MinZoneProcesses:            cfg.WebAdmin.Launcher.MinZoneProcesses,
@@ -95,6 +97,7 @@ func (a *Controller) saveLauncherConfig(c echo.Context) error {
 	cfg.WebAdmin.Launcher.RunSharedMemory = config.RunSharedMemory
 	cfg.WebAdmin.Launcher.RunLoginserver = config.RunLoginserver
 	cfg.WebAdmin.Launcher.RunQueryServ = config.RunQueryServ
+	cfg.WebAdmin.Launcher.RunUcs = config.RunUcs
 	cfg.WebAdmin.Launcher.IsRunning = config.IsRunning
 	cfg.WebAdmin.Launcher.MinZoneProcesses = config.MinZoneProcesses
 	cfg.WebAdmin.Launcher.StaticZones = config.StaticZones
