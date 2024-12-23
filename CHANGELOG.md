@@ -1,8 +1,9 @@
-## [4.10.4] 12/20/2024
+## [4.10.5] 12/20/2024
 
 * **Spire Admin** Mobile UI improvements to admin header and zone servers page.
-* **Spire Admin** Improvements to zoneserver stats UI
-* **Spire Admin** Minor UI tweaks admin header and zoneservers page
+* **Spire Admin** Improvements to zoneserver stats UI.
+* **Spire Admin** Minor UI tweaks admin header and zoneservers page.
+* **Spire Admin** Stability improvements to distributed launcher.
 
 ## [4.10.0] 12/20/2024
 

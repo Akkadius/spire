@@ -67,7 +67,7 @@ func (l *Launcher) makeRequest(method, url string, payload any, result any) erro
 
 	// Send the request
 	client := &http.Client{
-		Timeout: 1 * time.Second,
+		Timeout: 10 * time.Second,
 		//Transport: transport,
 	}
 	resp, err := client.Do(req)

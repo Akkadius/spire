@@ -1300,6 +1300,10 @@ func (l *Launcher) processDistributed() {
 
 			// send the target zone count to each node
 			for _, node := range l.nodes {
+				if node.TargetZoneCount == 0 {
+					continue
+				}
+
 				err := l.rpcClientSetTargetZoneCount(node, node.TargetZoneCount)
 				if err != nil {
 					l.logger.Error().

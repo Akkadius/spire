@@ -231,19 +231,27 @@ func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 	// if node was just registered with no zone servers, check to see if we need to start shared memory
 	currentZoneCount := 0
 	processes, _ := process.Processes()
+	isSharedRunning := false
 	for _, p := range processes {
 		proc := l.getProcessDetails(p)
 		if proc.BaseProcessName == zoneProcessName {
 			currentZoneCount++
+		} else if proc.BaseProcessName == sharedMemoryProcessName {
+			isSharedRunning = true
 		}
+	}
+
+	if isSharedRunning {
+		l.logger.Info().Msg("Shared memory is currently running")
+		return c.JSON(http.StatusInternalServerError, echo.Map{"message": "Shared memory is currently running"})
 	}
 
 	if currentZoneCount == 0 {
 		if l.runSharedMemory {
-			l.logger.Info().Msg("Starting shared memory")
+			l.logger.Info().Any("req.ZoneCount", req.ZoneCount).Msg("Starting shared memory")
 			err := l.startServerProcessSync(sharedMemoryProcessName)
 			if err != nil {
-				return err
+				return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 			}
 		}
 	}
@@ -280,6 +288,11 @@ func (l *Launcher) rpcRootNodeShutdown(c echo.Context) error {
 
 		err := l.rpcClientServerStop(node)
 		if err != nil {
+			l.logger.Error().
+				Err(err).
+				Any("node", node.Hostname).
+				Any("address", node.Address).
+				Msg("Failed to stop node")
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
 	}
