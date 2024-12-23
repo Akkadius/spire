@@ -55,6 +55,7 @@ type WebAdminQuestsConfig struct {
 }
 
 type WebAdminConfig struct { // Occulus
+	Version string `json:"version,omitempty"`
 	Discord *struct {
 		CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
 	} `json:"discord,omitempty"`
@@ -275,6 +276,13 @@ func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
 			if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
 				e.logger.Debug().Msg("Setting default web-admin launcher min zone processes")
 				c.WebAdmin.Launcher.MinZoneProcesses = 10
+				save = true
+			}
+
+			if c.WebAdmin.Version == "" {
+				e.logger.Debug().Msg("Setting default web-admin config version")
+				c.WebAdmin.Version = "1.0.0"
+				c.WebAdmin.Launcher.RunUcs = true
 				save = true
 			}
 		}

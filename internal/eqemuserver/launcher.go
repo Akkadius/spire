@@ -520,7 +520,7 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	// boot ucs if needed
-	if l.currentProcessCounts[ucsProcessName] == 0 {
+	if l.runUcs && l.currentProcessCounts[ucsProcessName] == 0 {
 		l.logger.Info().Msg("Starting UCS")
 		err := l.startServerProcess(ucsProcessName)
 		if err != nil {

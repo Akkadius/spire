@@ -1,3 +1,7 @@
+## [4.11.0] 12/23/2024
+
+* **Spire Admin** Add the ability to make booting UCS optional in the Spire Launcher.
+
 ## [4.10.6] 12/20/2024
 
 * **Spire Admin** Mobile UI improvements to admin header and zone servers page.

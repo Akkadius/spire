@@ -2062,6 +2062,7 @@ func (a *Installer) setPostInstallConfigValues() error {
 		config.WebAdmin.Launcher.UpdateOpcodesOnStart = true
 		config.WebAdmin.Launcher.MinZoneProcesses = 10
 		config.WebAdmin.Launcher.RunSharedMemory = true
+		config.WebAdmin.Launcher.RunUcs = true
 		// boat zones mainly
 		config.WebAdmin.Launcher.StaticZones = "butcher,erudnext,freporte,qeynos,freeporte,oot,iceclad,nro,oasis,nedaria,abysmal,natimbi,timorous,firiona,overthere"
 	}
