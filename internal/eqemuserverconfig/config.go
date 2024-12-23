@@ -38,6 +38,7 @@ type WebAdminLauncherConfig struct {
 	RunSharedMemory             bool   `json:"runSharedMemory"`
 	RunLoginserver              bool   `json:"runLoginserver"`
 	RunQueryServ                bool   `json:"runQueryServ"`
+	RunUcs                      bool   `json:"runUcs"`
 	IsRunning                   bool   `json:"isRunning"`
 	MinZoneProcesses            int    `json:"minZoneProcesses,omitempty"`
 	StaticZones                 string `json:"staticZones,omitempty"`
@@ -54,6 +55,7 @@ type WebAdminQuestsConfig struct {
 }
 
 type WebAdminConfig struct { // Occulus
+	Version string `json:"version,omitempty"`
 	Discord *struct {
 		CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
 	} `json:"discord,omitempty"`
@@ -263,6 +265,7 @@ func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
 				RunSharedMemory:             true,
 				RunLoginserver:              false,
 				RunQueryServ:                false,
+				RunUcs:                      true,
 				MinZoneProcesses:            10,
 				UpdateOpcodesOnStart:        true,
 				DeleteLogFilesOlderThanDays: 7,
@@ -273,6 +276,13 @@ func (e *Config) setConfigDefaults(c *EQEmuConfigJson) {
 			if c.WebAdmin.Launcher.MinZoneProcesses == 0 {
 				e.logger.Debug().Msg("Setting default web-admin launcher min zone processes")
 				c.WebAdmin.Launcher.MinZoneProcesses = 10
+				save = true
+			}
+
+			if c.WebAdmin.Version == "" {
+				e.logger.Debug().Msg("Setting default web-admin config version")
+				c.WebAdmin.Version = "1.0.0"
+				c.WebAdmin.Launcher.RunUcs = true
 				save = true
 			}
 		}

@@ -23,6 +23,16 @@
       </div>
       <div class="mb-3">
         <b-form-checkbox
+          v-model="launcher.runUcs"
+          name="check-button"
+          switch
+          @change="saveLauncherOptions()"
+        >
+          Run UCS <div class="text-muted d-inline-block">(Optional)</div>
+        </b-form-checkbox>
+      </div>
+      <div class="mb-3">
+        <b-form-checkbox
           v-model="launcher.runLoginserver"
           name="check-button"
           switch
@@ -142,6 +152,7 @@ export default {
         runSharedMemory: false,
         runLoginserver: false,
         runQueryServ: false,
+        runUcs: true,
         updateOpcodesOnStart: true,
         staticZones: ""
       },
@@ -163,6 +174,10 @@ export default {
 
     if (typeof this.launcher.deleteLogFilesOlderThanDays !== 'undefined' && this.launcher.deleteLogFilesOlderThanDays === 0) {
       this.launcher.deleteLogFilesOlderThanDays = 7
+    }
+
+    if (typeof this.launcher.runUcs === 'undefined') {
+      this.launcher.runUcs = true
     }
 
     // zone options
