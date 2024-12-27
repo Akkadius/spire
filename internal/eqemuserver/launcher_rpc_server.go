@@ -488,14 +488,14 @@ func (l *Launcher) rpcGetZoneservers(c echo.Context) error {
 			name, _ := p.Name()
 			cmdLine, _ := p.Cmdline()
 			cpuPercent, _ := p.CPUPercent()
-			memory, _ := p.MemoryInfo()
+			memory, _ := p.MemoryInfoEx()
 			uptime, _ := p.CreateTime()
 			now := time.Now().Unix()
 			z.Pid = p.Pid
 			z.Name = name
 			z.CmdLine = cmdLine
 			z.Cpu = cpuPercent
-			z.Memory = memory.RSS
+			z.Memory = memory.RSS - memory.Shared
 			z.Elapsed = now - (uptime / 1000)
 
 			r = append(r, z)

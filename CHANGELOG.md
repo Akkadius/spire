@@ -1,8 +1,9 @@
-## [4.11.1] 12/27/2024
+## [4.11.2] 12/27/2024
 
 * **Spire Admin** Fix issue where the crash log watcher would display partial contents
 * **Spire Admin** Fix issue where crash log watcher might display fragmented code bocks
 * **Spire Admin** The crash log watcher that alerts to Discord will now run from the launcher instead of Spire web
+* **Spire Admin** Zone process memory now no longer shows shared memory values, only true RSS values 
 
 ## [4.11.0] 12/23/2024
 

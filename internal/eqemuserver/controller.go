@@ -260,7 +260,7 @@ func (a *Controller) getZoneList(c echo.Context) error {
 				name, _ := p.Name()
 				cmdLine, _ := p.Cmdline()
 				cpuPercent, _ := p.CPUPercent()
-				memory, _ := p.MemoryInfo()
+				memory, _ := p.MemoryInfoEx()
 				uptime, _ := p.CreateTime()
 				now := time.Now().Unix()
 				zoneProcessInfo = append(zoneProcessInfo, ZoneProcessInfo{
@@ -268,7 +268,7 @@ func (a *Controller) getZoneList(c echo.Context) error {
 					Name:    name,
 					CmdLine: cmdLine,
 					Cpu:     cpuPercent,
-					Memory:  memory.RSS,
+					Memory:  memory.RSS - memory.Shared,
 					Elapsed: now - (uptime / 1000),
 				})
 			}
