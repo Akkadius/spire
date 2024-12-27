@@ -1141,14 +1141,13 @@ func (l *Launcher) GetZoneserverList() ([]ZoneServer, error) {
 				name, _ := p.Name()
 				cmdLine, _ := p.Cmdline()
 				cpuPercent, _ := p.CPUPercent()
-				memory, _ := p.MemoryInfoEx()
 				uptime, _ := p.CreateTime()
 				now := time.Now().Unix()
 				combinedData[i].Pid = p.Pid
 				combinedData[i].Name = name
 				combinedData[i].CmdLine = cmdLine
 				combinedData[i].Cpu = cpuPercent
-				combinedData[i].Memory = memory.RSS - memory.Shared
+				combinedData[i].Memory = getMemoryUsage(p)
 				combinedData[i].Elapsed = now - (uptime / 1000)
 			}
 		}
