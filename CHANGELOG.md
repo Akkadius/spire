@@ -1,3 +1,9 @@
+## [4.11.1] 12/27/2024
+
+* **Spire Admin** Fix issue where the crash log watcher would display partial contents
+* **Spire Admin** Fix issue where crash log watcher might display fragmented code bocks
+* **Spire Admin** The crash log watcher that alerts to Discord will now run from the launcher instead of Spire web
+
 ## [4.11.0] 12/23/2024
 
 * **Spire Admin** Add the ability to make booting UCS optional in the Spire Launcher.

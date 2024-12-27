@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -148,8 +149,6 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 
 	defer l.watcher.Close()
 
-	done := make(chan bool)
-
 	// Start listening for events.
 	go func(l *CrashLogWatcher) {
 		for {
@@ -165,29 +164,37 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 
 				// if event is create or write
 				if event.Op == fsnotify.Create {
-					l.logger.Info().
-						Any("event.Name", event.Name).
-						Msg("Detected crash log creation")
+					go func(event fsnotify.Event) {
+						time.Sleep(1 * time.Second) // Wait for file write
+						contents, err := os.ReadFile(event.Name)
+						if err != nil {
+							l.logger.Debug().Err(err).Msg("Error reading crash log")
+							return
+						}
 
-					// ship to discord
-					filename := filepath.Base(event.Name)
-					contents, err := os.ReadFile(event.Name)
-					if err != nil {
-						l.logger.Debug().
-							Any("error", err.Error()).
-							Msg("Error reading crash log file")
-					}
+						lines := strings.Split(string(contents), "\n")
 
-					discord.SendMessage(
-						l.discordWebhook,
-						fmt.Sprintf(
-							"**Crash Report** | **Server** [%s] **File** [%s] ",
-							l.serverLongName,
-							filename,
-						),
-						string(contents),
-					)
+						// Process each line
+						for i, line := range lines {
+							// Check if "[Crash]" exists in the line
+							if idx := strings.Index(line, "[Crash]"); idx != -1 {
+								// Remove everything up to and including "[Crash]"
+								lines[i] = strings.TrimSpace(line[idx+len("[Crash]"):])
+							} else {
+								// No changes for lines without "[Crash]"
+								lines[i] = strings.TrimSpace(line)
+							}
+						}
 
+						// Join the cleaned lines back into a single string
+						cleanedContents := strings.Join(lines, "\n")
+
+						discord.SendCrashMessage(
+							l.discordWebhook,
+							fmt.Sprintf("Crash Report | Server [%s] File [%s]", l.serverLongName, filepath.Base(event.Name)),
+							cleanedContents,
+						)
+					}(event)
 				}
 
 			case err, ok := <-l.watcher.Errors:
@@ -224,5 +231,5 @@ func (l *CrashLogWatcher) startCrashLogWatcher() {
 			Msg("Error adding path to watcher")
 	}
 
-	<-done
+	<-make(chan struct{})
 }

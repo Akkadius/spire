@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -38,13 +39,14 @@ const (
 var stopTimerMutex = sync.Mutex{}
 
 type Launcher struct {
-	logger       *logger.AppLogger
-	serverconfig *eqemuserverconfig.Config
-	settings     *spire.Settings
-	pathmgmt     *pathmgmt.PathManagement
-	serverApi    *Client
-	watcher      *rfsnotify.RWatcher
-	websocketMgr *websocket.ClientManager
+	logger          *logger.AppLogger
+	serverconfig    *eqemuserverconfig.Config
+	settings        *spire.Settings
+	pathmgmt        *pathmgmt.PathManagement
+	serverApi       *Client
+	watcher         *rfsnotify.RWatcher
+	websocketMgr    *websocket.ClientManager
+	crashLogWatcher *CrashLogWatcher
 
 	// properties
 	configLastModified          time.Time
@@ -93,6 +95,8 @@ func NewLauncher(
 	pathmgmt *pathmgmt.PathManagement,
 	serverApi *Client,
 	websocketMgr *websocket.ClientManager,
+	crashLogWatcher *CrashLogWatcher,
+
 ) *Launcher {
 	l := &Launcher{
 		logger:               logger,
@@ -104,6 +108,7 @@ func NewLauncher(
 		stopTimer:            0,
 		websocketMgr:         websocketMgr,
 		processSleepTime:     1 * time.Second,
+		crashLogWatcher:      crashLogWatcher,
 	}
 
 	return l
@@ -220,6 +225,11 @@ func (l *Launcher) Start() error {
 	l.logger.Info().
 		Any("World name", cfg.Server.World.Longname).
 		Msg("Starting server launcher")
+
+	if env.IsAppModeCli() {
+		l.logger.Info().Msg("Starting crash log watcher")
+		go l.crashLogWatcher.Process()
+	}
 
 	if cfg.WebAdmin != nil && cfg.WebAdmin.Launcher != nil {
 		if l.isLauncherDistributedModeLeaf() {

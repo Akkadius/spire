@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -34,13 +35,19 @@ func SendDiscordWebhook(webhookUrl string, msg string) error {
 	return nil
 }
 
-// SendMessage sends a message to a discord webhook
-func SendMessage(webhookUrl, header, contents string) {
+// SendCrashMessage sends a message to a discord webhook
+func SendCrashMessage(webhookUrl, header, contents string) {
 	chunkCount := 1
 	for _, chunk := range chunkString(contents, 1800) {
+		chunk := strings.ReplaceAll(chunk, "`", "\\`")
 		_ = SendDiscordWebhook(
 			webhookUrl,
-			header+fmt.Sprintf(" **Chunk** [%v]\n```\n%v\n```", chunkCount, chunk),
+			fmt.Sprintf(
+				"**%v** **Chunk** [%v]\n```bash\n%v\n```",
+				header,
+				chunkCount,
+				chunk,
+			),
 		)
 
 		//fmt.Println(header + fmt.Sprintf(" **Chunk** [%v]\n```\n%v\n```", chunkCount, chunk))
@@ -50,19 +57,32 @@ func SendMessage(webhookUrl, header, contents string) {
 
 // chunkSubstr splits a string into chunks of a given size
 func chunkString(s string, chunkSize int) []string {
+	if len(s) == 0 {
+		return []string{}
+	}
+
 	var chunks []string
-	runes := []rune(s)
+	var currentChunk string
+	lines := strings.Split(s, "\n") // Split input into lines
 
-	if len(runes) == 0 {
-		return []string{s}
-	}
-
-	for i := 0; i < len(runes); i += chunkSize {
-		nn := i + chunkSize
-		if nn > len(runes) {
-			nn = len(runes)
+	for _, line := range lines {
+		// Check if adding this line would exceed the chunk size
+		if len(currentChunk)+len(line)+1 > chunkSize { // +1 accounts for the newline
+			chunks = append(chunks, currentChunk)
+			currentChunk = ""
 		}
-		chunks = append(chunks, string(runes[i:nn]))
+
+		// Add the line to the current chunk
+		if currentChunk != "" {
+			currentChunk += "\n"
+		}
+		currentChunk += line
 	}
+
+	// Add the last chunk if it's not empty
+	if currentChunk != "" {
+		chunks = append(chunks, currentChunk)
+	}
+
 	return chunks
 }
