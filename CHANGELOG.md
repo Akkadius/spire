@@ -1,3 +1,7 @@
+## [4.12.0] 1/1/2025
+
+* **Spire Admin** Improve resiliency within the Launcher and fix concurrent map writes under extreme edge cases.
+
 ## [4.11.2] 12/27/2024
 
 * **Spire Admin** Fix issue where the crash log watcher would display partial contents
