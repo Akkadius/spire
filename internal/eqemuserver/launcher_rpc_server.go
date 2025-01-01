@@ -228,6 +228,9 @@ func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": first(err.Error())})
 	}
 
+	l.setZoneCountMutex.Lock()
+	defer l.setZoneCountMutex.Unlock()
+
 	// if node was just registered with no zone servers, check to see if we need to start shared memory
 	currentZoneCount := 0
 	processes, _ := process.Processes()

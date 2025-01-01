@@ -83,9 +83,10 @@ type Launcher struct {
 	zoneAssignedDynamics int
 
 	// mutexes
-	pollProcessMutex sync.Mutex
-	nodesMutex       sync.Mutex
-	configMutex      sync.Mutex
+	pollProcessMutex  sync.Mutex
+	nodesMutex        sync.Mutex
+	configMutex       sync.Mutex
+	setZoneCountMutex sync.Mutex
 }
 
 func NewLauncher(
