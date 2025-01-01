@@ -4,7 +4,7 @@
 # . or absolute path, please note that the directories following must be under root.
 root = "."
 # tmp_dir = "/tmp/"
-
+# root = "/home/eqemu/spire"
 [build]
 # Just plain old shell command. You could use `make` as well.
 
@@ -13,6 +13,10 @@ cmd = "go build -o /tmp/bin/app ."
 bin = "/bin/main"
 # Customize binary.
 full_bin = "APP_ENV=local /tmp/bin/app http:serve --port=3010"
+# Web backend development (default)
+# full_bin = "APP_ENV=local /tmp/bin/app http:serve --port=3010"
+# Launcher development
+# full_bin = "APP_ENV=local /tmp/bin/app eqemu-server:launcher start"
 # Watch these filename extensions.
 include_ext = ["go", "tpl", "tmpl", "html", "md", "json", "env"]
 # Ignore these filename extensions or directories.
