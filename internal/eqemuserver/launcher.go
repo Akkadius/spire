@@ -282,13 +282,22 @@ func (l *Launcher) Start() error {
 		}
 	}
 
-	serverOnline := false
+	l.pollProcessCounts()
+
+	worldOnline := false
 	uptime, err := l.serverApi.GetWorldUptime()
 	if err == nil && len(uptime) > 0 {
-		serverOnline = true
+		worldOnline = true
 	}
 
 	var g errgroup.Group
+	serverOnline := worldOnline || l.getProcessCounts(zoneProcessName) > 0
+	l.logger.Info().
+		Any("worldOnline", worldOnline).
+		Any("serverOnline", serverOnline).
+		Any("worldProcessCount", l.getProcessCounts(worldProcessName)).
+		Any("zoneProcessCount", l.getProcessCounts(zoneProcessName)).
+		Msg("Server online check")
 
 	// start shared memory if needed
 	// this needs to be started and completed before the server processes

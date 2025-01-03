@@ -244,6 +244,12 @@ func (l *Launcher) rpcSetZoneCount(c echo.Context) error {
 		}
 	}
 
+	l.logger.Info().
+		Any("currentZoneCount", currentZoneCount).
+		Any("newZoneCount", req.ZoneCount).
+		Any("isSharedRunning", isSharedRunning).
+		Msg("Setting zone count")
+
 	if isSharedRunning {
 		l.logger.Info().Msg("Shared memory is currently running")
 		return c.JSON(http.StatusInternalServerError, echo.Map{"message": "Shared memory is currently running"})

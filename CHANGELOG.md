@@ -1,4 +1,4 @@
-## [4.12.0] 1/1/2025
+## [4.12.1] 1/1/2025
 
 * **Spire Admin** Improve resiliency within the Launcher and fix concurrent map writes under extreme edge cases.
 
