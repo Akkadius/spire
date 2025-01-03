@@ -45,7 +45,9 @@ func (l *Launcher) startServerProcess(name string, args ...string) error {
 		return err
 	}
 
+	l.pollProcessMutex.Lock()
 	l.currentProcessCounts[name]++
+	l.pollProcessMutex.Unlock()
 
 	// we do this otherwise we get a zombie process
 	go func() {

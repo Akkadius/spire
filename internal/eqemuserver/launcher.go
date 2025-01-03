@@ -83,9 +83,10 @@ type Launcher struct {
 	zoneAssignedDynamics int
 
 	// mutexes
-	pollProcessMutex sync.Mutex
-	nodesMutex       sync.Mutex
-	configMutex      sync.Mutex
+	pollProcessMutex  sync.Mutex
+	nodesMutex        sync.Mutex
+	configMutex       sync.Mutex
+	setZoneCountMutex sync.Mutex
 }
 
 func NewLauncher(
@@ -163,8 +164,8 @@ func (l *Launcher) Process() {
 		}
 
 		// variable sleep time based on the number of processes running
-		if l.currentProcessCounts[zoneProcessName] > 0 {
-			cnt := l.currentProcessCounts[zoneProcessName]
+		cnt := l.getProcessCounts(zoneProcessName)
+		if cnt > 0 {
 			if cnt > 1000 {
 				l.processSleepTime = 10 * time.Second
 			} else if cnt > 500 {
@@ -503,7 +504,7 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	// boot world process if needed
-	if l.currentProcessCounts[worldProcessName] == 0 {
+	if l.getProcessCounts(worldProcessName) == 0 {
 		l.logger.Info().Msg("Starting World")
 		err := l.startServerProcess(worldProcessName)
 		if err != nil {
@@ -512,7 +513,7 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	// boot loginserver if needed
-	if l.runLoginserver && l.currentProcessCounts[loginServerProcessName] == 0 {
+	if l.runLoginserver && l.getProcessCounts(loginServerProcessName) == 0 {
 		l.logger.Info().Msg("Starting Loginserver")
 		err := l.startServerProcess(loginServerProcessName)
 		if err != nil {
@@ -521,7 +522,7 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	// boot queryserv if needed
-	if l.runQueryServ && l.currentProcessCounts[queryServProcessName] == 0 {
+	if l.runQueryServ && l.getProcessCounts(queryServProcessName) == 0 {
 		l.logger.Info().Msg("Starting QueryServ")
 		err := l.startServerProcess(queryServProcessName)
 		if err != nil {
@@ -530,7 +531,7 @@ func (l *Launcher) Supervisor() error {
 	}
 
 	// boot ucs if needed
-	if l.runUcs && l.currentProcessCounts[ucsProcessName] == 0 {
+	if l.runUcs && l.getProcessCounts(ucsProcessName) == 0 {
 		l.logger.Info().Msg("Starting UCS")
 		err := l.startServerProcess(ucsProcessName)
 		if err != nil {
@@ -592,19 +593,19 @@ func (l *Launcher) Supervisor() error {
 			Msg("Supervisor - Booting static zone(s)")
 	}
 
-	l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
+	l.bootedTotalDynamics = l.getProcessCounts(zoneProcessName) - l.currentZoneStatics
 	l.targetDynamics = l.zoneAssignedDynamics + l.minZoneProcesses
 
 	// boot dynamics if needed
 	if !l.isDistributedRoot {
-		for l.currentProcessCounts[zoneProcessName]-l.currentZoneStatics < (l.zoneAssignedDynamics + l.minZoneProcesses) {
+		for l.getProcessCounts(zoneProcessName)-l.currentZoneStatics < (l.zoneAssignedDynamics + l.minZoneProcesses) {
 			// we don't want to start dynamic zone processes normally when distributed mode is enabled
 			err := l.startServerProcess(zoneProcessName)
 			if err != nil {
 				return err
 			}
 
-			l.bootedTotalDynamics = l.currentProcessCounts[zoneProcessName] - l.currentZoneStatics
+			l.bootedTotalDynamics = l.getProcessCounts(zoneProcessName) - l.currentZoneStatics
 			l.targetDynamics = l.zoneAssignedDynamics + l.minZoneProcesses
 
 			l.logger.Info().
@@ -621,7 +622,6 @@ func (l *Launcher) Supervisor() error {
 
 	l.logger.DebugVv().
 		Any("took", time.Now().Sub(now).String()).
-		Any("currentProcessCounts", l.currentProcessCounts).
 		Any("currentZoneDynamics", l.currentZoneDynamics).
 		Any("currentZoneStatics", l.currentZoneStatics).
 		Any("zoneAssignedDynamics", l.zoneAssignedDynamics).
@@ -1437,4 +1437,11 @@ func (l *Launcher) isLauncherDistributedModeLeaf() bool {
 	}
 
 	return false
+}
+
+func (l *Launcher) getProcessCounts(name string) int {
+	l.pollProcessMutex.Lock()
+	count := l.currentProcessCounts[name]
+	l.pollProcessMutex.Unlock()
+	return count
 }
