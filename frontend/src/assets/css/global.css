@@ -634,7 +634,7 @@ html, body{
 }
 
 @media (prefers-color-scheme: dark) {
-    .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select {
+    .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select, .table thead th {
         background-color: #000000 !important;
         color: #edd9c0;
     }
