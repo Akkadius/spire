@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid" style="padding-left: 15px !important; padding-right: 15px !important;">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-12 col-xl-12 content-pop mt-0">
+    <div class="row justify-content-center main-content">
+      <div class="col-12 col-lg-12 col-xl-12 content-pop card mt-0">
 
         <div class="container-fluid" style="min-height: 100vh">
 

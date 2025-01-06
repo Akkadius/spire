@@ -10,7 +10,7 @@
     />
 
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8 content-pop">
+      <div class="col-12 col-lg-10 col-xl-8 content-pop card">
         <div class="container-fluid">
 
           <div class="row justify-content-between align-items-center mt-5">
