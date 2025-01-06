@@ -632,3 +632,55 @@ html, body{
 .dropdown-menu {
     z-index: 10000;
 }
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .content-area, .modal-content, .vue-back-to-top {
+        filter: invert(1) hue-rotate(180deg);
+        /*background-color: black;*/
+        /*color: white;*/
+
+        img, video, iframe {
+            filter: invert(1) hue-rotate(180deg); /* Cancel out the global inversion */
+        }
+
+        .eq-window-simple, .eq-window {
+            filter: invert(1) hue-rotate(180deg) contrast(1.4); /* Cancel out the global inversion */
+
+            img, video, iframe {
+                filter: invert(1) hue-rotate(180deg); /* Cancel out the global inversion */
+            }
+        }
+    }
+
+    .navbar .dropdown-menu {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    .content-area {
+        /*box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.5);*/
+    }
+
+    .dropdown-menu {
+        z-index: 10000000000000 !important;
+    }
+
+    .eq-window-simple {
+        /*opacity: 0.97;*/
+    }
+
+    .eq-window:hover, .eq-window-simple:hover {
+        animation: glow 1s infinite;
+    }
+}
