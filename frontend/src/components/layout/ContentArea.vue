@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid content-area">
     <div class="panel-body">
       <div class="panel panel-default">
         <div class="row">

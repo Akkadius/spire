@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="p-0 card-body">
+    <div class="p-0 card-body p-3">
       <div class="mb-3">
         <div class="mb-3">
           <b-form-checkbox
@@ -85,6 +85,7 @@
                 @change="saveLauncherOptions()"
                 :disabled="disabled || availableOptions.length === 0"
                 :options="availableOptions"
+                class="mr-3"
               >
                 <template
                   #first

@@ -632,3 +632,39 @@ html, body{
 .dropdown-menu {
     z-index: 10000;
 }
+
+@media (prefers-color-scheme: dark) {
+    .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select {
+        background-color: #000000 !important;
+        color: #edd9c0;
+    }
+
+    h1, h2, h3, h4, h5, h6, p, .card-title, .card-subtitle, .card-text, .card-header, .card-footer, .card-body {
+        color: #edd9c0;
+    }
+
+    .modal-content .card {
+        /*border-color: #000000;*/
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity for desired darkness */
+        pointer-events: none; /* Ensure interaction is not blocked */
+        z-index: -1; /* Keep the overlay below the content */
+    }
+
+    .navbar {
+        background-image: radial-gradient(circle, transparent 0%, var(--color-v) 100%), linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url(/img/eq-wallpaper-1.b2319219.jpg) !important;
+    }
+
+    .custom-control-label::before {
+        background-color: #201e1e;
+    }
+
+    .lazy-image {
+        background-color: #000000 !important;
+    }
+}

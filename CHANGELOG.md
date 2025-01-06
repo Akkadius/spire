@@ -1,3 +1,7 @@
+## [4.13.0] 1/6/2025
+
+* **Dark Mode** Ship the initial dark mode theme for Spire Admin, requires that you have dark mode enabled in your system preferences.
+
 ## [4.12.1] 1/1/2025
 
 * **Spire Admin** Improve resiliency within the Launcher and fix concurrent map writes under extreme edge cases.
