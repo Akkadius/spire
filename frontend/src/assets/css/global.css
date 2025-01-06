@@ -633,18 +633,6 @@ html, body{
     z-index: 10000;
 }
 
-@keyframes glow {
-    0% {
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 10px rgb(255, 255, 255);
-    }
-    100% {
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
-}
-
 @media (prefers-color-scheme: dark) {
     .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select {
         background-color: #000000 !important;
@@ -678,10 +666,5 @@ html, body{
 
     .lazy-image {
         background-color: #000000 !important;
-    }
-
-
-    .eq-window:hover, .eq-window-simple:hover {
-        /*animation: glow 3s infinite;*/
     }
 }
