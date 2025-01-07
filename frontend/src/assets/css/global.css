@@ -640,6 +640,11 @@ html, body{
         color: #95aac9;
     }
 
+    /*.eq-window-simple, .eq-table-floating-header, .eq-window-complex-fancy, .eq-window-complex {*/
+    /*    position: relative; !* Ensures the pseudo-element is scoped to this element *!*/
+    /*    overflow: scroll; !* Allows scrolling *!*/
+    /*}*/
+
     .eq-window-simple::before, .eq-table-floating-header::before, .eq-window-complex-fancy::before, .eq-window-complex::before {
         position: absolute;
         top: 0;
@@ -664,6 +669,7 @@ html, body{
 
     .eq-window-simple {
         opacity: 0.95;
+        transition: .5s;
     }
 
     /*.card {*/

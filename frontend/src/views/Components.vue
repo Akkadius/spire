@@ -444,6 +444,19 @@
         </button>
       </div>
 
+      <button
+        type="button"
+        class="btn"
+        @click="showModal"
+      >
+        Open Modal!
+      </button>
+
+<!--      <EqModal-->
+<!--        v-show="isModalVisible"-->
+<!--        @close="closeModal"-->
+<!--      />-->
+
     </eq-window>
 
     <!-- Tabs -->
@@ -527,10 +540,12 @@ import {SpireApi}          from "../app/api/spire-api";
 import {SpireQueryBuilder} from "../app/api/spire-query-builder";
 import ContentArea              from "../components/layout/ContentArea";
 import FacialAppearanceSelector from "../components/selectors/FacialAppearanceSelector";
+import EqModal                  from "@/components/eq-ui/EQModal.vue";
 
 export default {
   name: "Home",
   components: {
+    EqModal,
     FacialAppearanceSelector,
     ContentArea,
     EqNpcCardPreview,
@@ -565,8 +580,20 @@ export default {
         { icon: 50, iconSize: 30, },
         { icon: 50, iconSize: 40, },
       ],
+
+      isModalVisible: false,
     }
   },
+
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    }
+  },
+
   created() {
     this.npcs = {}
   },

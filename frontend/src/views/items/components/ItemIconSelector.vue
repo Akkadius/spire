@@ -74,12 +74,14 @@
 
     <!-- Content -->
     <eq-window-simple
-      :style="'height: ' + (findByModel ? 70 : 85) + 'vh; overflow-y: scroll; overflow-x: hidden'"
-      class="text-center"
+      class="text-center p-0"
       id="item-icon-view-port"
       v-if="filteredIcons && filteredIcons.length > 0"
+      classes="pr-0"
     >
-
+      <div
+        :style="'height: ' + (findByModel ? 70 : 85) + 'vh; overflow-y: scroll; overflow-x: hidden'"
+      >
       <span v-if="filteredIcons && filteredIcons.length === 0">
         No icons found...
       </span>
@@ -96,6 +98,8 @@
           style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
         />
       </span>
+
+      </div>
     </eq-window-simple>
 
     <app-loader :is-loading="!loaded" padding="4"/>

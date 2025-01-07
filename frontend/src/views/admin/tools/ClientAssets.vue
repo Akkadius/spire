@@ -22,7 +22,7 @@
           v-for="r in assetDownloads"
           :key="r.path"
         >
-          <td class="text-right">
+          <td class="text-right pr-3 pt-3 pb-3">
             <a class="eq-button" :href="download(r)" :target="r.path">{{ r.asset }}</a>
           </td>
           <td>
