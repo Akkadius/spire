@@ -1,3 +1,7 @@
+## [4.14.0] 1/6/2025
+
+* **Spire Admin** Expand loginserver configuration editor to allow up to 5 loginservers.
+
 ## [4.13.2] 1/6/2025
 
 * **Dark Mode** Additional UI tweaks to make dark mode more consistent across the application.

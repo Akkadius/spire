@@ -127,6 +127,27 @@ type EQEmuConfigJson struct {
 				Host     string `json:"host"`
 				Port     string `json:"port"`
 			} `json:"loginserver2,omitempty"`
+			Loginserver3 *struct {
+				Account  string `json:"account"`
+				Password string `json:"password"`
+				Legacy   string `json:"legacy,omitempty"`
+				Host     string `json:"host"`
+				Port     string `json:"port"`
+			} `json:"loginserver3,omitempty"`
+			Loginserver4 *struct {
+				Account  string `json:"account"`
+				Password string `json:"password"`
+				Legacy   string `json:"legacy,omitempty"`
+				Host     string `json:"host"`
+				Port     string `json:"port"`
+			} `json:"loginserver4,omitempty"`
+			Loginserver5 *struct {
+				Account  string `json:"account"`
+				Password string `json:"password"`
+				Legacy   string `json:"legacy,omitempty"`
+				Host     string `json:"host"`
+				Port     string `json:"port"`
+			} `json:"loginserver5,omitempty"`
 			TCP struct {
 				IP   string `json:"ip"`
 				Port string `json:"port"`
@@ -136,16 +157,9 @@ type EQEmuConfigJson struct {
 				Port    string `json:"port"`
 				Enabled string `json:"enabled"`
 			} `json:"telnet,omitempty"`
-			Key          string `json:"key"`
-			Shortname    string `json:"shortname"`
-			Longname     string `json:"longname"`
-			Loginserver3 *struct {
-				Account  string `json:"account"`
-				Password string `json:"password"`
-				Legacy   string `json:"legacy,omitempty"`
-				Host     string `json:"host"`
-				Port     string `json:"port"`
-			} `json:"loginserver3,omitempty"`
+			Key       string `json:"key"`
+			Shortname string `json:"shortname"`
+			Longname  string `json:"longname"`
 		} `json:"world"`
 		Database        *DatabaseConfig `json:"database"`
 		ContentDatabase *DatabaseConfig `json:"content_database,omitempty"`

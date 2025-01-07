@@ -139,13 +139,17 @@
             </div>
           </eq-tab>
 
-          <eq-tab name="Loginserver #1">
-            <div class="form-row" v-if="config.server.world.loginserver1">
+          <eq-tab
+            v-for="i in maxLoginServers"
+            :key="i"
+            :name="`Loginserver #${i}`"
+          >
+            <div class="form-row">
               <div class="form-group col-md-4">
                 <label class="form-label">Loginserver Host</label>
                 <input
                   type="text" class="form-control"
-                  v-model="config.server.world.loginserver1.host"
+                  v-model="config.server.world['loginserver' + i].host"
                 />
                 <small class="form-text text-muted mt-3">Loginserver host your server is connecting to</small>
               </div>
@@ -154,33 +158,27 @@
                 <label class="form-label">Loginserver Port</label>
                 <input
                   type="text" class="form-control"
-                  v-model="config.server.world.loginserver1.port"
+                  v-model="config.server.world['loginserver' + i].port"
                 />
-                <small class="form-text text-muted mt-3">Loginserver port your server is connecting to (usually
-                  5998)
-                </small>
+                <small class="form-text text-muted mt-3">Loginserver port your server is connecting to (usually 5998)</small>
               </div>
 
               <div class="form-group col-md-4">
                 <label class="form-label">Legacy Network Connection</label>
                 <input
                   type="text" class="form-control"
-                  v-model="config.server.world.loginserver1.legacy"
+                  v-model="config.server.world['loginserver' + i].legacy"
                 />
-                <small class="form-text text-muted mt-3">Used to determine if this is a legacy network
-                  connection, needed for eqemulator.net
-                </small>
+                <small class="form-text text-muted mt-3">Used to determine if this is a legacy network connection</small>
               </div>
 
               <div class="form-group col-md-6">
                 <label class="form-label">Loginserver Account</label>
                 <input
                   type="text" class="form-control"
-                  v-model="config.server.world.loginserver1.account"
+                  v-model="config.server.world['loginserver' + i].account"
                 />
-                <small class="form-text text-muted mt-3">Used to authenticate your server as a registered server
-                  with the connecting loginserver <br> (Not Required)
-                </small>
+                <small class="form-text text-muted mt-3">Used to authenticate your server as a registered server</small>
               </div>
 
               <div class="form-group col-md-6">
@@ -188,149 +186,19 @@
                 <div class="input-group">
                   <input
                     :type="passwordFieldType" class="form-control"
-                    data-lpignore="true"
-                    v-model="config.server.world.loginserver1.password"
+                    v-model="config.server.world['loginserver' + i].password"
                   />
                   <span class="input-group-append">
-                <button class="btn btn-light btn-sm" type="button" @click="switchPasswordVisibility()">
-                  <i class="fa fa-eye pr-1"></i>
-                    Show / Hide
-                </button>
-              </span>
-                </div>
-              </div>
-
-            </div>
-          </eq-tab>
-
-          <eq-tab name="Loginserver #2">
-            <div class="form-row" v-if="config.server.world.loginserver2">
-              <div class="form-group col-md-4">
-                <label class="form-label">Loginserver Host</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver2.host"
-                />
-                <small class="form-text text-muted mt-3">Loginserver host your server is connecting to</small>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label class="form-label">Loginserver Port</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver2.port"
-                />
-                <small class="form-text text-muted mt-3">Loginserver port your server is connecting to (usually
-                  5998)
-                </small>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label class="form-label">Legacy Network Connection</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver2.legacy"
-                />
-                <small class="form-text text-muted mt-3">Used to determine if this is a legacy network
-                  connection, needed for eqemulator.net
-                </small>
-              </div>
-
-              <div class="form-group col-md-6">
-                <label class="form-label">Loginserver Account</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver2.account"
-                />
-                <small class="form-text text-muted mt-3">Used to authenticate your server as a registered server
-                  with the connecting loginserver <br> (Not Required)
-                </small>
-              </div>
-
-              <div class="form-group col-md-6">
-                <label class="form-label">Loginserver Password</label>
-                <div class="input-group">
-                  <input
-                    :type="passwordFieldType" class="form-control"
-                    data-lpignore="true"
-                    v-model="config.server.world.loginserver2.password"
-                  />
-                  <span class="input-group-append">
-                    <button class="btn btn-light btn-sm" type="button" @click="switchPasswordVisibility()"><i
-                      class="fa fa-eye pr-1"
-                    ></i>
-                        Show / Hide
+                    <button class="btn btn-light btn-sm" type="button" @click="switchPasswordVisibility()">
+                      <i class="fa fa-eye pr-1"></i>
+                      Show / Hide
                     </button>
                   </span>
                 </div>
               </div>
-
             </div>
           </eq-tab>
 
-          <eq-tab name="Loginserver #3">
-            <div class="form-row" v-if="config.server.world.loginserver3">
-              <div class="form-group col-md-4">
-                <label class="form-label">Loginserver Host</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver3.host"
-                />
-                <small class="form-text text-muted mt-3">Loginserver host your server is connecting to</small>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label class="form-label">Loginserver Port</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver3.port"
-                />
-                <small class="form-text text-muted mt-3">Loginserver port your server is connecting to (usually
-                  5998)
-                </small>
-              </div>
-
-              <div class="form-group col-md-4">
-                <label class="form-label">Legacy Network Connection</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver3.legacy"
-                />
-                <small class="form-text text-muted mt-3">Used to determine if this is a legacy network
-                  connection, needed for eqemulator.net
-                </small>
-              </div>
-
-              <div class="form-group col-md-6">
-                <label class="form-label">Loginserver Account</label>
-                <input
-                  type="text" class="form-control"
-                  v-model="config.server.world.loginserver3.account"
-                />
-                <small class="form-text text-muted mt-3">Used to authenticate your server as a registered server
-                  with the connecting loginserver <br> (Not Required)
-                </small>
-              </div>
-
-              <div class="form-group col-md-6">
-                <label class="form-label">Loginserver Password</label>
-                <div class="input-group">
-                  <input
-                    :type="passwordFieldType" class="form-control"
-                    v-model="config.server.world.loginserver3.password"
-                  />
-                  <span class="input-group-append">
-                      <button class="btn btn-light btn-sm" type="button" @click="switchPasswordVisibility()"><i
-                        class="fa fa-eye pr-1"
-                      ></i>
-                          Show / Hide
-                      </button>
-                    </span>
-                </div>
-              </div>
-
-            </div>
-          </eq-tab>
 
         </eq-tabs>
       </eq-tab>
@@ -589,8 +457,16 @@ export default {
   components: { EqWindowComplex, InfoErrorBanner, EqTab, EqTabs, EqWindow },
   data() {
     return {
-      config: {},
+      config: {
+        server: {
+          world: {
+            loginservers: [], // Array to hold loginserver configurations
+          },
+        },
+      },
       tabSelected: "World Server",
+
+      maxLoginServers: 5,
 
       passwordFieldType: 'password',
       loaded: false,
@@ -654,16 +530,11 @@ export default {
       'port': '5998'
     }
 
-    if (typeof this.config.server.world.loginserver1 === 'undefined') {
-      this.config.server.world.loginserver1 = loginServerConfigModel
-    }
-
-    if (typeof this.config.server.world.loginserver2 === 'undefined') {
-      this.config.server.world.loginserver2 = loginServerConfigModel
-    }
-
-    if (typeof this.config.server.world.loginserver3 === 'undefined') {
-      this.config.server.world.loginserver3 = loginServerConfigModel
+    for (let i = 1; i <= this.maxLoginServers; i++) {
+      const key = `loginserver${i}`;
+      if (!this.config.server.world[key]) {
+        this.config.server.world[key] = { ...loginServerConfigModel };
+      }
     }
 
   },
@@ -713,41 +584,33 @@ export default {
         delete this.config.server.content_database
       }
 
-      // remove empty loginserver configs
-      if (this.config.server.world.loginserver1 && Object.keys(this.config.server.world.loginserver1).length === 0) {
-        delete this.config.server.world.loginserver1
-      }
+      for (let i = 1; i <= this.maxLoginServers; i++) {
+        const key = `loginserver${i}`;
+        const loginserver = this.config.server.world[key];
 
-      if (this.config.server.world.loginserver2 && Object.keys(this.config.server.world.loginserver2).length === 0) {
-        delete this.config.server.world.loginserver2
-      }
-
-      if (this.config.server.world.loginserver3 && Object.keys(this.config.server.world.loginserver3).length === 0) {
-        delete this.config.server.world.loginserver3
-      }
-
-      // loop through the above if checks dynamically 1-3
-      for (let i = 1; i <= 3; i++) {
-        if (this.config.server.world[`loginserver${i}`] && Object.keys(this.config.server.world[`loginserver${i}`]).length === 0) {
-          delete this.config.server.world[`loginserver${i}`]
-        }
-        if (this.config.server.world[`loginserver${i}`]
-          && typeof this.config.server.world[`loginserver${i}`].host !== 'undefined'
-          && this.config.server.world[`loginserver${i}`].host === '') {
-          delete this.config.server.world[`loginserver${i}`]
+        if (!loginserver || Object.keys(loginserver).every((k) => loginserver[k] === '')) {
+          delete this.config.server.world[key];
         }
       }
 
-      // if loginserver 3 is defined and 2 is not, move 3 to 2
-      if (this.config.server.world.loginserver3 && !this.config.server.world.loginserver2) {
-        this.config.server.world.loginserver2 = this.config.server.world.loginserver3
-        delete this.config.server.world.loginserver3
+      let loginServers = [];
+      for (let i = 1; i <= this.maxLoginServers; i++) {
+        const key = `loginserver${i}`;
+        const loginserver = this.config.server.world[key];
+
+        if (loginserver && Object.keys(loginserver).length > 0 && loginserver.host) {
+          loginServers.push(loginserver); // Only keep valid loginservers
+        }
+
+        // Clean up the original object to remove gaps
+        delete this.config.server.world[key];
       }
-      // if loginserver 2 is defined and 1 is not, move 2 to 1
-      if (this.config.server.world.loginserver2 && !this.config.server.world.loginserver1) {
-        this.config.server.world.loginserver1 = this.config.server.world.loginserver2
-        delete this.config.server.world.loginserver2
-      }
+
+      // Reassign valid loginservers back without gaps
+      loginServers.forEach((loginserver, index) => {
+        const key = `loginserver${index + 1}`;
+        this.config.server.world[key] = loginserver;
+      });
 
       try {
         const r = await SpireApi.v1().post('admin/serverconfig', this.config)
