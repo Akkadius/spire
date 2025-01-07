@@ -1,6 +1,7 @@
-## [4.14.0] 1/6/2025
+## [4.14.1] 1/6/2025
 
 * **Spire Admin** Expand loginserver configuration editor to allow up to 5 loginservers.
+* **Spire Admin** Minor fixes to player event log viewer.
 
 ## [4.13.2] 1/6/2025
 

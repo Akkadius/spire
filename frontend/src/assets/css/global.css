@@ -640,7 +640,6 @@ html, body{
     }
 
     .eq-window-simple::before, .eq-table-floating-header::before, .eq-window-complex-fancy::before, .eq-window-complex::before {
-        content: "";
         position: absolute;
         top: 0;
         left: 0;

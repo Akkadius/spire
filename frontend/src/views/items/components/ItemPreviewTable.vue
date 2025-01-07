@@ -8,7 +8,7 @@
     </div>
 
     <div
-      class='eq-window'
+      class='eq-window-simple'
       :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
       v-if="items.length > 0"
     >
@@ -20,7 +20,7 @@
 
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
           <table id="items-table" class="eq-table bordered eq-highlight-rows" style="display: table;">
-            <thead>
+            <thead class="eq-table-floating-header">
             <tr>
               <th style="text-align: center; width: 120px"></th>
               <th style="text-align: center; width: 100px" class="text-center">Id</th>

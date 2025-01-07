@@ -1,7 +1,6 @@
 <template>
   <div>
 
-
     <v-runtime-template/>
 
     <eq-window
@@ -9,7 +8,6 @@
       title="Player Event Log Explorer"
     >
       <app-loader :is-loading="initialLoading"/>
-
 
       <div
         class="row justify-content-center"
@@ -27,7 +25,6 @@
           />
         </div>
       </div>
-
 
       <div v-if="!initialLoading">
         <div class="row mb-3">
@@ -635,7 +632,7 @@ export default {
     },
 
     getCharacter(id) {
-      return Characters.getCacheById(id)
+      return Characters.getCacheById(id) ? Characters.getCacheById(id) : { class: 0, race: 0 }
     },
 
     secondsToHumanTime(seconds) {
@@ -829,11 +826,12 @@ export default {
             Items.loadItemsBulk(itemIds)
           ]
         ).then(async (r) => {
-
           console.log("Preloading done")
           this.events         = events
           this.initialLoading = false
           this.loading        = false
+        }).catch((e) => {
+          console.error(e)
         });
       } else {
         this.events         = events

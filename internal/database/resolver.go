@@ -93,6 +93,8 @@ func (d *Resolver) GetEncKey(userId uint) string {
 var connCreationMutex = sync.Mutex{}
 
 func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
+	connCreationMutex.Lock()
+	defer connCreationMutex.Unlock()
 
 	// use default otherwise key off of another connection type
 	connectionType := "default"
@@ -129,10 +131,6 @@ func (d *Resolver) ResolveUserEqemuConnection(model models.Modelable, user model
 	// if we didn't find a cached connection, lock the user mutex for
 	// database connection creation incase user fires off multiple requests
 	if !found {
-		// lock mutex
-		connCreationMutex.Lock()
-		defer connCreationMutex.Unlock()
-
 		//fmt.Println("after mutex firing " + connectionKey + " for user " + fmt.Sprintf("%v", user.ID))
 		cachedConn, found = d.cache.Get(connectionKey)
 		if found {

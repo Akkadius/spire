@@ -53,7 +53,9 @@ export class AA {
           this._dbStrs = dbStrs
         }
       }
-    );
+    ).catch((e) => {
+      console.error(e)
+    });
   }
 
   static async getAARankById(rankId) {

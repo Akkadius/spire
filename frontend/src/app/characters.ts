@@ -40,15 +40,20 @@ export class Characters {
       return []
     }
 
-    const r = await (new CharacterDatumApi(...SpireApi.cfg()))
-      .getCharacterDataBulk({body: {ids: ids}})
-    if (r.status === 200) {
-      for (let c of r.data) {
-        // @ts-ignore
-        this._cachedCharacters[c.id] = c
-      }
+    try {
+      const r = await (new CharacterDatumApi(...SpireApi.cfg()))
+        .getCharacterDataBulk({body: {ids: ids}})
+      if (r.status === 200) {
+        for (let c of r.data) {
+          // @ts-ignore
+          this._cachedCharacters[c.id] = c
+        }
 
-      return r.data
+        return r.data
+      }
+    }
+    catch (e) {
+      console.error(e)
     }
 
     return []

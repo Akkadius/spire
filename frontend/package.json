@@ -16,6 +16,8 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",
+    "browserslist": "^4.24.3",
+    "caniuse-lite": "^1.0.30001690",
     "cheerio": "^1.0.0-rc.10",
     "core-js": "^2.6.12",
     "dot-object": "^2.1.4",

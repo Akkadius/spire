@@ -18,7 +18,7 @@
         <table id="spell-table" class="eq-table bordered eq-highlight-rows">
           <thead class="eq-table-floating-header">
           <tr>
-            <th style="width: 140px;"></th>
+            <th style="width: 200px;"></th>
             <th style="width: auto;">Id</th>
             <th style="width: auto; min-width: 270px">Spell</th>
             <th style="width: auto; min-width: 300px">Level</th>
