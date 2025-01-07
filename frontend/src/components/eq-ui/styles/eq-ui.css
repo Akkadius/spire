@@ -331,7 +331,7 @@ DIV.eq-progress-bar DIV {
     position: relative;
     background-color: #ff0000;
     z-index: 1;
-    transition: width .01s;
+    transition: width .3s;
 }
 
 DIV.eq-progress-bar DIV:before {
@@ -412,8 +412,7 @@ A.eq-progress-bar DIV:before {
 .eq-button:hover {
     height: 36px;
     border: 0px;
-    margin: 10px auto;
-    display: block;
+    margin: 0px auto;
     /*line-height:       21px;*/
     text-decoration: none;
     font-weight: none;
@@ -861,7 +860,7 @@ table.eq-table tr:nth-child(even) {
 /* makes rows highlight in brown */
 .eq-highlight-rows TBODY TR:hover {
     /*background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);*/
-    background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0) 50%, rgba(123, 113, 74, 1) 100%);
+    background: linear-gradient(180deg, rgba(123, 113, 74, .2) 0%, rgba(123, 113, 74, 0) 50%, rgba(123, 113, 74, .2) 100%);
 }
 
 table.bordered tr {

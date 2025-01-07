@@ -1,6 +1,6 @@
 <template>
   <!--        <page-header title="Components" pre-title="Preview Components"/>-->
-  <content-area class="content-pop" style="width: 90%">
+  <content-area class="content-pop card" style="width: 90%">
 
     <!-- Faces -->
     <div class="header mt-md-1">
@@ -387,8 +387,7 @@
     </div>
 
     <eq-window title="Form Elements">
-
-      <table style="align-content: center; margin: auto">
+      <table >
         <tr>
           <td style="vertical-align: middle">
             Checkbox 1
@@ -418,7 +417,7 @@
         </tr>
       </table>
 
-      <div class="form-group">
+      <div class="form-group mt-3">
         <input id="name" type="text" name="name" class="eq-input form-control" value="Input value">
       </div>
 
@@ -430,12 +429,19 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group mb-1">
         <button class='eq-button-wrap' onclick="alert('click')">Large</button>
       </div>
 
-      <div class="form-group">
-        <button class='eq-button' onclick="alert('click')">Centered</button>
+      <div class="form-group mb-1">
+        <button class='eq-button' onclick="alert('click')">Button</button>
+      </div>
+
+      <div class="form-group mb-1">
+        <button class='eq-button' onclick="alert('click')">
+          <i class="fe fe-save"></i>
+          Button
+        </button>
       </div>
 
     </eq-window>
