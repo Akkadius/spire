@@ -58,6 +58,11 @@ Vue.component('app-loader', () => import('@/components/LoaderComponent.vue'));
 
 Vue.config.productionTip = false
 
+Vue.config.errorHandler = function (err, vm, info) {
+  console.error(`Error in ${info}:`, err);
+};
+
+
 new Vue({
   router,
   store,

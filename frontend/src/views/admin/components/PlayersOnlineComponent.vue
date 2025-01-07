@@ -1,7 +1,7 @@
 <template>
   <div class="row" :style="loaded ? 'opacity:1' : 'opacity:.3'">
     <div class="col-12">
-      <div class="card mb-3" v-if="clientList && clientList.length > 0 && filteredClientList && filteredClientList.length > 0">
+      <div class="card mb-3" v-if="hasClients && hasFilteredClients">
         <div class="card-body pt-0 pb-0 pl-3 pr-3">
           <div class="input-group input-group-flush">
             <div class="input-group-prepend">
@@ -128,6 +128,12 @@ export default {
   computed: {
     ROUTE() {
       return ROUTE
+    },
+    hasClients() {
+      return Array.isArray(this.clientList) && this.clientList.length > 0;
+    },
+    hasFilteredClients() {
+      return Array.isArray(this.filteredClientList) && this.filteredClientList.length > 0;
     }
   },
 
@@ -166,33 +172,28 @@ export default {
     },
 
     filterPlayers() {
-      this.filteredClientList = []
-
+      this.filteredClientList = [];
       if (!this.playerSearchFilter) {
-        this.filteredClientList = this.clientList;
+        this.filteredClientList = this.clientList || [];
         return;
       }
 
-      let clients = [];
-      this.clientList.forEach(c => {
-        const filter = this.playerSearchFilter.toLowerCase();
-
-        if (!c || !c.name) {
+      const filter = this.playerSearchFilter.toLowerCase();
+      this.clientList.forEach(client => {
+        if (!client || !client.name) {
           return;
         }
 
-        if (
-          c.name.toLowerCase().includes(filter) ||
-          (c.server && c.server.zone_long_name.toLowerCase().includes(filter)) ||
-          (c.server && c.server.zone_name.toLowerCase().includes(filter)) ||
-          (c.ip && this.intToIP(c.ip).includes(filter))
-        ) {
-          clients.push(c);
-        }
-      })
+        const nameMatch = client.name.toLowerCase().includes(filter);
+        const zoneMatch = client.server && client.server.zone_name && client.server.zone_name.toLowerCase().includes(filter);
+        const ipMatch = client.ip && this.intToIP(client.ip).includes(filter);
 
-      this.filteredClientList = clients;
+        if (nameMatch || zoneMatch || ipMatch) {
+          this.filteredClientList.push(client);
+        }
+      });
     },
+
 
     /**
      * @param num
@@ -285,7 +286,9 @@ export default {
    * Destroy
    */
   beforeDestroy() {
-    clearInterval(Timer.timer['players-online'])
+    if (Timer.timer['players-online']) {
+      clearInterval(Timer.timer['players-online'])
+    }
   },
 
   /**
