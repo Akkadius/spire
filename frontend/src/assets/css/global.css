@@ -636,11 +636,38 @@ html, body{
 @media (prefers-color-scheme: dark) {
     .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select, .table thead th {
         background-color: #000000 !important;
-        color: #edd9c0;
+        color: #95aac9;
     }
 
-    h1, h2, h3, h4, h5, h6, p, .card-title, .card-subtitle, .card-text, .card-header, .card-footer, .card-body {
-        color: #edd9c0;
+    .eq-window-simple::before, .eq-table-floating-header::before, .eq-window-complex-fancy::before, .eq-window-complex::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3); /* Black overlay with 50% opacity */
+        pointer-events: none; /* Ensures it doesn’t interfere with clicks */
+        background-image: none;
+    }
+
+    .eq-window-complex-fancy:before, .eq-window-complex::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3); /* Black overlay with 50% opacity */
+        pointer-events: none; /* Ensures it doesn’t interfere with clicks */
+    }
+
+    .badge {
+        filter: invert(1);
+    }
+
+    h1, h2, h3, h4, h5, h6, p, .card-title, .card-subtitle, .card-text, .card-header, .card-footer, .card-body, .table {
+        color: #95aac9 ;
     }
 
     .modal-content .card {

@@ -1,3 +1,7 @@
+## [4.13.2] 1/6/2025
+
+* **Dark Mode** Additional UI tweaks to make dark mode more consistent across the application.
+
 ## [4.13.1] 1/6/2025
 
 * **Dark Mode** Ship the initial dark mode theme for Spire Admin, requires that you have dark mode enabled in your system preferences.
