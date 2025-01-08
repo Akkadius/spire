@@ -62,7 +62,7 @@
 <script>
 import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
 import EqWindowSimple                from "@/components/eq-ui/EQWindowSimple";
-import {HorseApi}                    from "@/app/api";
+import {HorseApi}                    from "@/app/api/api/horse-api";
 import {SpireApi}              from "@/app/api/spire-api";
 import util                          from "util";
 import Expansions                    from "@/app/utility/expansions";
@@ -127,7 +127,7 @@ export default {
         this.filteredHorses = horses;
       }
     },
-    
+
     async loadHorses() {
       const api    = (new HorseApi(...SpireApi.cfg()))
       const result = await api.listHorses(

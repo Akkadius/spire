@@ -58,7 +58,7 @@
 <script>
 import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
 import EqWindowSimple                from "@/components/eq-ui/EQWindowSimple";
-import {AuraApi}                     from "@/app/api";
+import {AuraApi}                     from "@/app/api/api/aura-api";
 import {SpireApi}              from "@/app/api/spire-api";
 import util                          from "util";
 import Expansions                    from "@/app/utility/expansions";

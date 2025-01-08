@@ -134,12 +134,18 @@
               <tr v-for="(data, stat) in stats">
 
                 <!-- Label -->
-                <td style="font-weight: bold" v-if="parseInt(itemData[data.stat]) !== 0 || parseInt(itemData[data.heroic]) !== 0">
+                <td
+                  style="font-weight: bold"
+                  v-if="parseInt(itemData[data.stat]) !== 0 || parseInt(itemData[data.heroic]) !== 0"
+                >
                   {{ stat }}
                 </td>
 
                 <!-- Regular stat -->
-                <td style="text-align: right" v-if="parseInt(itemData[data.stat]) !== 0 || parseInt(itemData[data.heroic]) !== 0">
+                <td
+                  style="text-align: right"
+                  v-if="parseInt(itemData[data.stat]) !== 0 || parseInt(itemData[data.heroic]) !== 0"
+                >
                   {{ commify(itemData[data.stat]) }}
                 </td>
 
@@ -168,7 +174,10 @@
                 </td>
 
                 <!-- Regular stat -->
-                <td style="text-align: right" v-if="parseInt(itemData[data.stat]) !== 0 || parseInt(itemData[data.heroic]) !== 0">
+                <td
+                  style="text-align: right"
+                  v-if="parseInt(itemData[data.stat]) !== 0 || parseInt(itemData[data.heroic]) !== 0"
+                >
                   {{ itemData[data.stat] }}
                 </td>
 
@@ -508,21 +517,20 @@ import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-cons
 import {DB_RACE_NAMES, DB_RACES_SHORT}     from "@/app/constants/eq-races-constants";
 import {DB_DIETIES, DB_DIETIES_FULL}       from "@/app/constants/eq-deities-constants";
 import EqDebug                             from "@/components/eq-ui/EQDebug";
-import {App}                from "@/constants/app";
-import EqSpellPreview       from "@/components/preview/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
-import EqWindow                    from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
-import {Spells}                    from "@/app/spells";
-import util          from "util";
-import {ROUTE}       from "@/routes";
-import EqCashDisplay from "@/components/eq-ui/EqCashDisplay";
-import {Items}                     from "@/app/items";
-import {FactionListApi} from "@/app/api";
-import {SpireApi}       from "../../app/api/spire-api";
-import {Zones}          from "@/app/zones";
-import {TRADESKILLS}               from "@/app/constants/eq-tradeskill-constants";
+import EqSpellPreview                      from "@/components/preview/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}                from "@/app/constants/eq-example-spell-data";
+import EqWindow                            from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS}         from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                         from "@/app/constants/eq-aug-constants";
+import {Spells}                            from "@/app/spells";
+import util                                from "util";
+import {ROUTE}                             from "@/routes";
+import EqCashDisplay                       from "@/components/eq-ui/EqCashDisplay";
+import {Items}                             from "@/app/items";
+import {FactionListApi}                    from "@/app/api/api/faction-list-api";
+import {SpireApi}                          from "@/app/api/spire-api";
+import {Zones}                             from "@/app/zones";
+import {TRADESKILLS}                       from "@/app/constants/eq-tradeskill-constants";
 
 export default {
   name: "EqItemCardPreview",
