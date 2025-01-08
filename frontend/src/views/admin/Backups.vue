@@ -35,7 +35,7 @@
           :key="r.path"
         >
           <td class="text-center pr-3 pt-3 pb-3">
-            <a class="eq-button" @click="download(r)" :target="r.path">{{ r.asset }}</a>
+            <a class="eq-button d-block" @click="download(r)" :target="r.path">{{ r.asset }}</a>
           </td>
           <td>
             <span class="font-weight-bold">{{ r.description }}</span>

@@ -1,7 +1,10 @@
 <template>
   <!--        <page-header title="Components" pre-title="Preview Components"/>-->
   <content-area class="content-pop card" style="width: 90%">
-
+    <EqModal
+      v-show="isModalVisible"
+      @close="closeModal"
+    />
     <!-- Faces -->
     <div class="header mt-md-1">
       <div class="header-body">
@@ -393,8 +396,7 @@
             Checkbox 1
           </td>
           <td>
-            <input type="checkbox" id="checkbox-1" checked class='eq-checkbox'>
-            <label for="checkbox-1"></label>
+            <eq-checkbox/>
           </td>
         </tr>
         <tr>
@@ -402,8 +404,7 @@
             Checkbox 2
           </td>
           <td>
-            <input type="checkbox" id="checkbox-2" class='eq-checkbox'>
-            <label for="checkbox-2"></label>
+            <eq-checkbox/>
           </td>
         </tr>
         <tr>
@@ -411,8 +412,7 @@
             Checkbox 3
           </td>
           <td>
-            <input type="checkbox" id="checkbox-3" class='eq-checkbox'>
-            <label for="checkbox-3"></label>
+            <eq-checkbox/>
           </td>
         </tr>
       </table>
@@ -452,10 +452,7 @@
         Open Modal!
       </button>
 
-<!--      <EqModal-->
-<!--        v-show="isModalVisible"-->
-<!--        @close="closeModal"-->
-<!--      />-->
+
 
     </eq-window>
 
@@ -541,10 +538,12 @@ import {SpireQueryBuilder} from "../app/api/spire-query-builder";
 import ContentArea              from "../components/layout/ContentArea";
 import FacialAppearanceSelector from "../components/selectors/FacialAppearanceSelector";
 import EqModal                  from "@/components/eq-ui/EQModal.vue";
+import EqCheckbox               from "@/components/eq-ui/EQCheckbox.vue";
 
 export default {
   name: "Home",
   components: {
+    EqCheckbox,
     EqModal,
     FacialAppearanceSelector,
     ContentArea,

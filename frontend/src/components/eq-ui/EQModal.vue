@@ -1,8 +1,8 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask" @click="dismiss()">
-      <div class="modal-wrapper" >
-        <eq-window class="modal-container"  @click.stop>
+    <div class="modal-mask">
+      <div class="modal-wrapper" @click.self="dismiss()">
+        <eq-window class="modal-container" style="width: 1000px">
 
           <div class="modal-header">
             <slot name="header">
