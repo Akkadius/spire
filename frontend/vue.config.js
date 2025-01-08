@@ -44,6 +44,9 @@ module.exports = {
       .path(path.resolve(__dirname, "dist"))
       .clean(true);
 
+    config.plugins.delete('prefetch')
+
+    //
     // config.optimization.moduleIds    = 'deterministic'
     // config.optimization.runtimeChunk = 'single'
     config.optimization.splitChunks = {

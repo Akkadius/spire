@@ -757,25 +757,6 @@ export default {
 </script>
 
 <style scoped>
-.navbar-nav .nav-link > .fe {
-  min-width: 1.25rem;
-}
 
-.navbar-dark.navbar-vibrant {
-  background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg);
-}
-
-@media only screen and (max-device-width: 640px) {
-  .small-mobile {
-    font-size: 40px !important;
-  }
-}
-
-.connection-status-box {
-  display: block; /* or inline-block */
-  text-overflow: ellipsis;
-  word-wrap: break-word;
-  overflow: hidden;
-}
 
 </style>
