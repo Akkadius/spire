@@ -275,22 +275,29 @@
           </h1>
 
           <p class="header-subtitle">
-            Like the Quest API explorer? Have all of the EverQuest Emulator server Quest API readily available and always up to date within
+            Like the Quest API explorer? Have all of the EverQuest Emulator server Quest API readily available and
+            always up to date within
             your editor by using Visual Studio Code and using Spire's plugin extension all completely for free!
           </p>
 
         </div>
 
-        <a href="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview" target="_blank">
-          <img src="https://github.com/EQEmu/Server/assets/3319450/55d8a923-47d8-4584-aede-f3aa9220fbaa" style="width: 100%; border-radius: 10px">
+        <a
+          href="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"
+          target="_blank"
+        >
+          <img
+            src="https://github.com/EQEmu/Server/assets/3319450/55d8a923-47d8-4584-aede-f3aa9220fbaa"
+            style="width: 100%; border-radius: 10px"
+          >
         </a>
 
-<!--        <iframe-->
-<!--          frameborder="0"-->
-<!--          allowtransparency="true"-->
-<!--          style="width: 100%; height: 75vh; border-radius: 10px"-->
-<!--          src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"-->
-<!--        />-->
+        <!--        <iframe-->
+        <!--          frameborder="0"-->
+        <!--          allowtransparency="true"-->
+        <!--          style="width: 100%; height: 75vh; border-radius: 10px"-->
+        <!--          src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"-->
+        <!--        />-->
 
       </div>
     </div>
@@ -303,12 +310,10 @@
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {SpireApi} from "../../app/api/spire-api";
-import axios from "axios";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import EqTabs from "@/components/eq-ui/EQTabs.vue";
 import EqTab from "@/components/eq-ui/EQTab.vue";
 import slugify from "slugify";
-import moment from "moment";
 import * as util from "util";
 import QuestApiDisplayMethods from "@/views/quest-api-explorer/components/QuestApiDisplayMethods.vue";
 import Analytics from "@/app/analytics/analytics";
@@ -321,6 +326,7 @@ import {ROUTE} from "@/routes";
 import {AppEnv} from "@/app/env/app-env";
 import ContentArea from "@/components/layout/ContentArea.vue";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
+import Time from "@/app/time/time";
 
 export default {
   components: {
@@ -525,7 +531,7 @@ export default {
     }, 500),
 
     fromNow(time) {
-      return moment(time).fromNow()
+      return Time.fromNow(time)
     },
     closeExampleKeyHandler(e) {
       if (e.keyCode === 27) {

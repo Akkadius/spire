@@ -25,8 +25,10 @@
       <item-popover
         :item="itemData[event(e).item_id]"
         class="mr-1 font-weight-bold d-inline-block"
-      /> ({{ event(e).charges }})
-      for <eq-cash-display
+      />
+      ({{ event(e).charges }})
+      for
+      <eq-cash-display
         class="font-weight-bold"
         :price="parseInt(event(e).price)"
       />
@@ -43,8 +45,10 @@
       <item-popover
         :item="itemData[event(e).item_id]"
         class="mr-1 font-weight-bold d-inline-block"
-      /> ({{ event(e).charges }})
-      for <eq-cash-display
+      />
+      ({{ event(e).charges }})
+      for
+      <eq-cash-display
         class="font-weight-bold"
         :price="parseInt(event(e).price)"
       />
@@ -469,7 +473,6 @@
 
 <script>
 import {PLAYER_EVENT} from "@/views/admin/player-event-logs/player-events";
-import moment         from "moment";
 import {Items}        from "@/app/items";
 import ItemPopover    from "@/components/ItemPopover.vue";
 import {DB_SKILLS}    from "@/app/constants/eq-skill-constants";
@@ -572,9 +575,6 @@ export default {
     },
     event(e) {
       return JSON.parse(e.event_data)
-    },
-    fromNow(time) {
-      return moment(time).fromNow()
     },
   }
 }

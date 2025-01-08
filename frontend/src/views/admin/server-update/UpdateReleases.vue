@@ -149,7 +149,6 @@
 import EqWindow        from "@/components/eq-ui/EQWindow.vue";
 import util            from "util";
 import {ROUTE}         from "@/routes";
-import moment          from "moment";
 import EqTabs          from "@/components/eq-ui/EQTabs.vue";
 import EqTab           from "@/components/eq-ui/EQTab.vue";
 import axios           from "axios";
@@ -157,6 +156,7 @@ import semver          from "semver";
 import {AppEnv}        from "@/app/env/app-env";
 import {SpireApi}      from "@/app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
+import Time            from "@/app/time/time";
 
 export default {
   name: "UpdateReleases",
@@ -284,10 +284,10 @@ export default {
       }, 10)
     },
     formatTime(time) {
-      return moment(time).fromNow()
+      return Time.fromNow(time)
     },
     formatDate(time) {
-      return moment(time).format("MMM Do YYYY")
+      return Time.format(time, "MMM D YYYY")
     },
     goToRelease(r) {
       window.open(util.format("http://spire.akkadius.com/dev/release/%s", r), 'release_' + r);
@@ -298,7 +298,7 @@ export default {
           try {
             const r = await axios.get(`${url}/analytics/server-crash-report/counts`)
             if (r.status === 200) {
-              this.counts = r.data.crash_report_counts
+              this.counts       = r.data.crash_report_counts
               this.uniqueCounts = r.data.unique_crash_counts
 
               this.selfBuilt = r.data.crash_report_counts.filter((e) => {
@@ -321,23 +321,23 @@ export default {
     },
     async loadReleases() {
       return new Promise(async (resolve) => {
-      for (let url of SpireApi.getPublicWithLocalFallbacks()) {
-        try {
-          const r = await axios.get(`${url}/analytics/releases`)
-          if (r.status === 200) {
-            this.releases = r.data.data.filter((e) => {
-              return e.name.split(".").length === 3
-            })
-          }
+        for (let url of SpireApi.getPublicWithLocalFallbacks()) {
+          try {
+            const r = await axios.get(`${url}/analytics/releases`)
+            if (r.status === 200) {
+              this.releases = r.data.data.filter((e) => {
+                return e.name.split(".").length === 3
+              })
+            }
 
-          return resolve()
-        } catch (e) {
-          if (e.response && e.response.data && e.response.data.error) {
-            this.error = e.response.data.error
             return resolve()
+          } catch (e) {
+            if (e.response && e.response.data && e.response.data.error) {
+              this.error = e.response.data.error
+              return resolve()
+            }
           }
         }
-      }
       });
     },
     getWindowsDownloads(r) {
@@ -396,7 +396,7 @@ export default {
     },
     getUniqueCrashCount(r) {
       const version = r.name.replaceAll("v", "")
-      let total = 0;
+      let total     = 0;
       for (let v of this.uniqueCounts) {
         if (v.server_version === version) {
           total++;

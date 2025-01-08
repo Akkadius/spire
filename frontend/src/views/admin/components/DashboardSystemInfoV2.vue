@@ -28,7 +28,7 @@
 
 <script>
 import {SpireApi} from "@/app/api/spire-api";
-import moment     from "moment";
+import Time       from "@/app/time/time";
 
 export default {
   name: 'DashboardSystemInfoV2',
@@ -53,7 +53,7 @@ export default {
       v.push({ key: "Platform", value: `${d.platform} (${d.platformVersion})` })
       v.push({ key: "Version", value: d.kernelVersion })
       v.push({ key: "Virtualization", value: `${d.virtualizationSystem} ${d.virtualizationRole}` })
-      v.push({ key: "Uptime", value: moment.unix(d.bootTime).fromNow() })
+      v.push({ key: "Uptime", value: Time.fromNowUnix(d.uptime) })
       v.push({ key: "Processes", value: d.procs })
     }
 
