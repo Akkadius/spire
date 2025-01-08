@@ -320,7 +320,7 @@ import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-
 import Timer                       from "@/app/timer/timer";
 import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
 import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
-import hljs                        from "highlight.js";
+import hljs                        from "highlight.js/lib/highlight";
 import {Navbar}                    from "@/app/navbar";
 import {Characters}                from "@/app/characters";
 import util                        from "util";

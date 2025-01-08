@@ -27,7 +27,7 @@ import "rpg-awesome/css/rpg-awesome.min.css";
 
 import 'highlight.js/styles/tomorrow-night-bright.css';
 
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json.js';
 hljs.registerLanguage('json', json);
 

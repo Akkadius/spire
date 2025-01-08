@@ -1,4 +1,6 @@
 const path = require("path");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 module.exports = {
   devServer: {
@@ -22,11 +24,11 @@ module.exports = {
       },
     } : null,
   },
-  // pluginOptions: {
-  //   webpackBundleAnalyzer: {
-  //     openAnalyzer: false
-  //   }
-  // },
+  configureWebpack: {
+    plugins: [
+      new BundleAnalyzerPlugin({analyzerHost: '0.0.0.0', analyzerPort: 3005})
+    ]
+  },
   chainWebpack: (config) => {
     config.performance.maxEntrypointSize(40000000).maxAssetSize(40000000);
 
