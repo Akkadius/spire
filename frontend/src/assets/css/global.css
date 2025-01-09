@@ -635,15 +635,21 @@ html, body{
 
 /*dark mode*/
 @media (prefers-color-scheme: dark) {
-    .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select, .table thead th {
+    .card,
+    .dropdown-menu,
+    .modal-content,
+    .vue-back-to-top btn,
+    .form-control,
+    .custom-select,
+    .table thead th,
+    .b-toaster {
         background-color: #000000 !important;
         color: #95aac9;
     }
 
-    /*.eq-window-simple, .eq-table-floating-header, .eq-window-complex-fancy, .eq-window-complex {*/
-    /*    position: relative; !* Ensures the pseudo-element is scoped to this element *!*/
-    /*    overflow: scroll; !* Allows scrolling *!*/
-    /*}*/
+    .badge {
+        color: black;
+    }
 
     .eq-window-simple::before, .eq-table-floating-header::before, .eq-window-complex-fancy::before, .eq-window-complex::before {
         position: absolute;
@@ -681,9 +687,7 @@ html, body{
     /*    transition: .3s;*/
     /*}*/
 
-    .badge {
-        filter: invert(1);
-    }
+
 
     h1, h2, h3, h4, h5, h6, p, .card-title, .card-subtitle, .card-text, .card-header, .card-footer, .card-body, .table {
         color: #95aac9 ;
