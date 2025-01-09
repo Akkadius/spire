@@ -1,3 +1,10 @@
+## [4.15.0] 1/8/2025
+
+* **Appearance** Add more wallpapers to the rotation.
+* **Dark Mode** Removed color inversion from badges, improved dark mode with EQ UI elements.
+* **Performance** Improved load times by no longer requiring all dependencies to be loaded on boot.
+* **Performance** Improved load times by removing some bloated dependencies.
+
 ## [4.14.2] 1/6/2025
 
 * **Spire Admin** Expand loginserver configuration editor to allow up to 5 loginservers.
