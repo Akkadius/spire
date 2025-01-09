@@ -309,24 +309,24 @@ import EqWindow                    from "@/components/eq-ui/EQWindow.vue";
 import {SpireApi}                  from "@/app/api/spire-api";
 import {PlayerEventLogApi}         from "@/app/api/api/player-event-log-api";
 import {SpireQueryBuilder}         from "@/app/api/spire-query-builder";
-import moment                      from "moment/moment";
 import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants";
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
 import {AA}                        from "@/app/aa";
 import {Zones}                     from "@/app/zones";
-import {Npcs}                     from "@/app/npcs";
-import {Items}                    from "@/app/items";
-import {PlayerEventLogSettingApi} from "@/app/api/api/player-event-log-setting-api";
-import Timer                      from "@/app/timer/timer";
-import EqProgressBar              from "@/components/eq-ui/EQProgressBar.vue";
-import LoaderFakeProgress         from "@/components/LoaderFakeProgress.vue";
-import hljs                       from "highlight.js";
-import {Navbar}                   from "@/app/navbar";
-import {Characters}               from "@/app/characters";
-import util                       from "util";
-import InfoErrorBanner            from "@/components/InfoErrorBanner.vue";
-import EqCheckbox                 from "@/components/eq-ui/EQCheckbox.vue";
+import {Npcs}                      from "@/app/npcs";
+import {Items}                     from "@/app/items";
+import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-api";
+import Timer                       from "@/app/timer/timer";
+import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
+import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
+import hljs                        from "highlight.js/lib/highlight";
+import {Navbar}                    from "@/app/navbar";
+import {Characters}                from "@/app/characters";
+import util                        from "util";
+import InfoErrorBanner             from "@/components/InfoErrorBanner.vue";
+import EqCheckbox                  from "@/components/eq-ui/EQCheckbox.vue";
+import Time                        from "@/app/time/time";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -656,7 +656,7 @@ export default {
     },
 
     fromNow(time) {
-      return moment(time).fromNow()
+      return Time.fromNow(time)
     },
 
     getClassImage: classId => {

@@ -1465,13 +1465,10 @@
 
           <div class="text-center mt-3" v-if="item">
 
-            <div
-              :class="'text-center mt-2 btn-xs eq-button-fancy'"
-              @click="saveItem()"
-            >
-              <i class="ra ra-shield mr-1"></i>
+            <button class='eq-button' @click="saveItem()">
+              <i class="fe fe-save"></i>
               Save Item
-            </div>
+            </button>
 
             <!--                <b-button-->
             <!--                  class="btn-dark btn-sm btn-outline-warning"-->
@@ -1693,6 +1690,7 @@ import {EditFormFieldUtil}  from "../../app/forms/edit-form-field-util";
 import {FreeIdFetcher}      from "../../app/free-id-fetcher";
 import ContentArea          from "../../components/layout/ContentArea";
 import {ROUTE}              from "../../routes";
+import {Navbar}             from "@/app/navbar";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1982,6 +1980,12 @@ export default {
       deep: true,
       immediate: true,
     },
+  },
+  beforeDestroy() {
+    Navbar.expand()
+  },
+  mounted() {
+    Navbar.collapse()
   },
   async created() {
     this.item         = null;

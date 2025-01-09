@@ -217,6 +217,8 @@ export default {
         "qeynos.png",
         "soldungb.png",
         "spire-wall.jpg",
+        "qeynos-wallpaper.png",
+        "firiona-fan-blondy-nkitezgraja.jpeg",
       ]
 
       const background = util.format("%s%s",

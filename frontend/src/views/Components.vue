@@ -1,7 +1,10 @@
 <template>
   <!--        <page-header title="Components" pre-title="Preview Components"/>-->
-  <content-area class="content-pop" style="width: 90%">
-
+  <content-area class="content-pop card" style="width: 90%">
+    <EqModal
+      v-show="isModalVisible"
+      @close="closeModal"
+    />
     <!-- Faces -->
     <div class="header mt-md-1">
       <div class="header-body">
@@ -387,15 +390,13 @@
     </div>
 
     <eq-window title="Form Elements">
-
-      <table style="align-content: center; margin: auto">
+      <table >
         <tr>
           <td style="vertical-align: middle">
             Checkbox 1
           </td>
           <td>
-            <input type="checkbox" id="checkbox-1" checked class='eq-checkbox'>
-            <label for="checkbox-1"></label>
+            <eq-checkbox/>
           </td>
         </tr>
         <tr>
@@ -403,8 +404,7 @@
             Checkbox 2
           </td>
           <td>
-            <input type="checkbox" id="checkbox-2" class='eq-checkbox'>
-            <label for="checkbox-2"></label>
+            <eq-checkbox/>
           </td>
         </tr>
         <tr>
@@ -412,13 +412,12 @@
             Checkbox 3
           </td>
           <td>
-            <input type="checkbox" id="checkbox-3" class='eq-checkbox'>
-            <label for="checkbox-3"></label>
+            <eq-checkbox/>
           </td>
         </tr>
       </table>
 
-      <div class="form-group">
+      <div class="form-group mt-3">
         <input id="name" type="text" name="name" class="eq-input form-control" value="Input value">
       </div>
 
@@ -430,13 +429,30 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group mb-1">
         <button class='eq-button-wrap' onclick="alert('click')">Large</button>
       </div>
 
-      <div class="form-group">
-        <button class='eq-button' onclick="alert('click')">Centered</button>
+      <div class="form-group mb-1">
+        <button class='eq-button' onclick="alert('click')">Button</button>
       </div>
+
+      <div class="form-group mb-1">
+        <button class='eq-button' onclick="alert('click')">
+          <i class="fe fe-save"></i>
+          Button
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="btn"
+        @click="showModal"
+      >
+        Open Modal!
+      </button>
+
+
 
     </eq-window>
 
@@ -521,10 +537,14 @@ import {SpireApi}          from "../app/api/spire-api";
 import {SpireQueryBuilder} from "../app/api/spire-query-builder";
 import ContentArea              from "../components/layout/ContentArea";
 import FacialAppearanceSelector from "../components/selectors/FacialAppearanceSelector";
+import EqModal                  from "@/components/eq-ui/EQModal.vue";
+import EqCheckbox               from "@/components/eq-ui/EQCheckbox.vue";
 
 export default {
   name: "Home",
   components: {
+    EqCheckbox,
+    EqModal,
     FacialAppearanceSelector,
     ContentArea,
     EqNpcCardPreview,
@@ -559,8 +579,20 @@ export default {
         { icon: 50, iconSize: 30, },
         { icon: 50, iconSize: 40, },
       ],
+
+      isModalVisible: false,
     }
   },
+
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    }
+  },
+
   created() {
     this.npcs = {}
   },

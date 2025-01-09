@@ -82,8 +82,14 @@
                 </div>
 
                 <!-- Right Value -->
-                <div :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')" style="line-height: .8 !important">
-                  <span :class="' font-weight-bold' + (typeof metric.percent === 'undefined' ? '' : 'small text-muted')" style="font-size: 10px;">
+                <div
+                  :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')"
+                  style="line-height: .8 !important"
+                >
+                  <span
+                    :class="' font-weight-bold' + (typeof metric.percent === 'undefined' ? '' : 'small text-muted')"
+                    style="font-size: 10px;"
+                  >
                     {{ metric.value }}
                   </span>
                 </div>
@@ -102,8 +108,8 @@ import ServerProcessButtonComponent from "@/views/admin/components/ServerProcess
 import {EventBus}                   from "@/app/event-bus/event-bus";
 import {SpireApi}                   from "@/app/api/spire-api";
 import {SpireWebsocket}             from "@/app/api/spire-websocket";
-import moment                       from "moment";
 import EqProgressBar                from "@/components/eq-ui/EQProgressBar.vue";
+import Time                         from "@/app/time/time";
 
 export default {
   name: "AdminHeader",
@@ -359,8 +365,8 @@ export default {
               }
             }
 
-            s.cpu = Math.round(e.cpu)
-            s.mem = Math.round(e.mem_percent)
+            s.cpu      = Math.round(e.cpu)
+            s.mem      = Math.round(e.mem_percent)
             s.hostname = e.hostname
 
             // Disk stats
@@ -371,17 +377,17 @@ export default {
 
               // If this is the first pass, initialize previous values
               if (s.diskStats.previousReadBytes === null || s.diskStats.previousWriteBytes === null) {
-                s.diskStats.previousReadBytes = nowReadBytes;
+                s.diskStats.previousReadBytes  = nowReadBytes;
                 s.diskStats.previousWriteBytes = nowWriteBytes;
-                s.diskStats.readBytesPerSec = 0;
-                s.diskStats.writeBytesPerSec = 0;
+                s.diskStats.readBytesPerSec    = 0;
+                s.diskStats.writeBytesPerSec   = 0;
               } else {
                 // Calculate per-second change
-                s.diskStats.readBytesPerSec = (nowReadBytes - s.diskStats.previousReadBytes) / 1024 / 1024;
+                s.diskStats.readBytesPerSec  = (nowReadBytes - s.diskStats.previousReadBytes) / 1024 / 1024;
                 s.diskStats.writeBytesPerSec = (nowWriteBytes - s.diskStats.previousWriteBytes) / 1024 / 1024;
 
                 // Update previous values
-                s.diskStats.previousReadBytes = nowReadBytes;
+                s.diskStats.previousReadBytes  = nowReadBytes;
                 s.diskStats.previousWriteBytes = nowWriteBytes;
               }
             }
@@ -399,8 +405,8 @@ export default {
 
               if (s.net[n.name].bytes_recv === 0 && s.net[n.name].bytes_sent === 0) {
                 // First iteration: initialize without calculation
-                s.net[n.name].bytes_recv = n.bytesRecv;
-                s.net[n.name].bytes_sent = n.bytesSent;
+                s.net[n.name].bytes_recv    = n.bytesRecv;
+                s.net[n.name].bytes_sent    = n.bytesSent;
                 s.net[n.name].bytes_recv_ps = 0;
                 s.net[n.name].bytes_sent_ps = 0;
               } else {
@@ -459,7 +465,7 @@ export default {
           const timerData = JSON.parse(data.message)
           const time      = timerData.time
           const type      = timerData.type
-          const remaining = this.calculateTimeRemainingWithMoment(time)
+          const remaining = this.calcRemainingTime(time)
 
           if (remaining === "") {
             this.stopMessage = ""
@@ -469,19 +475,8 @@ export default {
         }
       }
     },
-    calculateTimeRemainingWithMoment(unixTimestamp) {
-      const now      = moment();
-      const endTime  = moment.unix(unixTimestamp);
-      const duration = moment.duration(endTime.diff(now));
-
-      if (duration.asMilliseconds() < 0) {
-        return "";
-      }
-
-      const minutes = duration.minutes();
-      const seconds = duration.seconds();
-
-      return `${minutes} minutes, ${seconds} seconds`;
+    calcRemainingTime(unixTimestamp) {
+      return Time.calculateRemainingTimeServerReboot(unixTimestamp)
     },
 
     bytesToMbytes: function (bytes) {

@@ -87,10 +87,10 @@ import ContentArea     from "../../components/layout/ContentArea";
 import EqWindow        from "../../components/eq-ui/EQWindow";
 import InfoErrorBanner from "../../components/InfoErrorBanner";
 import {SpireApi}      from "../../app/api/spire-api";
-import moment          from "moment/moment";
 import Tablesort       from "../../app/utility/tablesort";
 import {ROUTE}         from "../../routes";
 import util            from "util";
+import Time            from "@/app/time/time";
 
 export default {
   name: "AuditLog",
@@ -157,7 +157,7 @@ export default {
     },
 
     formatTime(time) {
-      return moment(time).fromNow()
+      return Time.fromNow(time)
     },
 
     init() {

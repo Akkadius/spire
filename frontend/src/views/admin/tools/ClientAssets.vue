@@ -22,8 +22,8 @@
           v-for="r in assetDownloads"
           :key="r.path"
         >
-          <td class="text-right">
-            <a class="eq-button" :href="download(r)" :target="r.path">{{ r.asset }}</a>
+          <td class="text-right pr-3 pt-3 pb-3">
+            <a class="eq-button d-block" :href="download(r)" :target="r.path">{{ r.asset }}</a>
           </td>
           <td>
             <span class="font-weight-bold">{{ r.description }}</span>

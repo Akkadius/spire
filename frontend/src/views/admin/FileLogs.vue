@@ -87,49 +87,52 @@
             </div>
 
             <div style="overflow-x: scroll">
-            <table
-              class="eq-table eq-highlight-rows bordered player-events mt-3"
-              style="overflow: auto; width: 100%; border-collapse: collapse; white-space: nowrap; "
-              v-if="files && files.length > 0 && getFilteredFiles().length > 0"
-              id="file-logs"
-            >
-              <thead class="eq-table-floating-header">
-              <tr>
-                <th style="width: 130px"></th>
-                <th style="width: 260px" class="text-center">Last Modified</th>
-                <th style="width: 100px" class="text-center">Size</th>
-                <th>File</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr
-                :class="'fade-in ' + (fileToWatch && f.path === fileToWatch ? 'pulsate-highlight-white' : '')"
-                v-for="f in getFilteredFiles()"
-                :key="`${f.path}-${f.modified_time}`"
+              <table
+                class="eq-table eq-highlight-rows bordered player-events mt-3"
+                style="overflow: auto; width: 100%; border-collapse: collapse; white-space: nowrap; "
+                v-if="files && files.length > 0 && getFilteredFiles().length > 0"
+                id="file-logs"
               >
-                <td class="text-center p-1">
-                  <b-button
-                    class="btn-danger btn-sm"
-                    @click="deleteFile(f)"
-                    title="Delete File"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </b-button>
+                <thead class="eq-table-floating-header">
+                <tr>
+                  <th style="width: 130px"></th>
+                  <th style="width: 260px" class="text-center">Last Modified</th>
+                  <th style="width: 100px" class="text-center">Size</th>
+                  <th>File</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                  :class="'fade-in ' + (fileToWatch && f.path === fileToWatch ? 'pulsate-highlight-white' : '')"
+                  v-for="f in getFilteredFiles()"
+                  :key="`${f.path}-${f.modified_time}`"
+                >
+                  <td class="text-center p-1">
+                    <b-button
+                      class="btn-danger btn-sm"
+                      @click="deleteFile(f)"
+                      title="Delete File"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </b-button>
 
-                  <b-button
-                    class="btn-white btn-sm ml-1"
-                    @click="viewLog(f)"
-                    title="View and watch log file"
-                  >
-                    <i class="fa fa-eye"></i>
-                  </b-button>
-                </td>
-                <td class="text-center">{{ formatTime(f.modified_time) }} {{ `(${formatTimeFromNow(f.modified_time)})` }}</td>
-                <td class="text-center">{{ formatBytes(f.size) }}</td>
-                <td>{{ f.path }}</td>
-              </tr>
-              </tbody>
-            </table>
+                    <b-button
+                      class="btn-white btn-sm ml-1"
+                      @click="viewLog(f)"
+                      title="View and watch log file"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </b-button>
+                  </td>
+                  <td class="text-center">{{ formatTime(f.modified_time) }} {{
+                      `(${formatTimeFromNow(f.modified_time)})`
+                    }}
+                  </td>
+                  <td class="text-center">{{ formatBytes(f.size) }}</td>
+                  <td>{{ f.path }}</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -259,12 +262,12 @@
 <script>
 import EqWindow           from "@/components/eq-ui/EQWindow.vue";
 import {SpireApi}         from "@/app/api/spire-api";
-import moment             from "moment";
 import {Navbar}           from "@/app/navbar";
 import InfoErrorBanner    from "@/components/InfoErrorBanner.vue";
 import LoaderFakeProgress from "@/components/LoaderFakeProgress.vue";
 import ClipBoard          from "@/app/clipboard/clipboard";
 import {debounce}         from "@/app/utility/debounce";
+import Time               from "@/app/time/time";
 
 export default {
   name: "FileLogs",
@@ -303,7 +306,7 @@ export default {
   watch: {
     '$route'() {
       this.fileToWatch = ""
-      this.fileCursor = 0
+      this.fileCursor  = 0
       this.stopLogStream()
 
       this.loadQueryState()
@@ -336,10 +339,10 @@ export default {
     resetAll() {
       this.filterType = ""
       this.stopLogStream()
-      this.fileToWatch = ""
-      this.fileCursor = 0
+      this.fileToWatch     = ""
+      this.fileCursor      = 0
       this.searchAllString = ""
-      this.searchResults = []
+      this.searchResults   = []
       this.updateQueryState()
     },
 
@@ -631,10 +634,10 @@ export default {
       return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
     },
     formatTime(unix) {
-      return moment.unix(unix).format('M-D-YYYY h:mm:ss a')
+      return Time.formatUnix(unix, 'M-D-YYYY h:mm:ss a')
     },
     formatTimeFromNow(unix) {
-      return moment.unix(unix).fromNow()
+      return Time.fromNowUnix(unix)
     },
 
     formatContents(c) {

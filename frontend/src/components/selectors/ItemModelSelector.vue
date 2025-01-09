@@ -70,16 +70,13 @@
       </div>
     </eq-window-simple>
 
-    <eq-window-simple
-      style="height: 85vh; overflow-y: scroll"
-      id="item-model-view-port"
-    >
+    <eq-window-simple class="p-0" classes="pr-0">
+      <div style="height: 85vh; overflow-y: scroll" id="item-model-view-port">
+        <span v-if="filteredItemModels && filteredItemModels.length === 0">
+          No models found...
+        </span>
 
-      <span v-if="filteredItemModels && filteredItemModels.length === 0">
-        No models found...
-      </span>
-
-      <div class="row justify-content-center">
+        <div class="row justify-content-center">
         <div
           v-for="modelId in filteredItemModels"
           :key="modelId"
@@ -95,7 +92,7 @@
           </span>
         </div>
       </div>
-
+      </div>
     </eq-window-simple>
 
     <app-loader :is-loading="!loaded" padding="4"/>

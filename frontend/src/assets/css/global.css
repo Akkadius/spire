@@ -633,10 +633,22 @@ html, body{
     z-index: 10000;
 }
 
+/*dark mode*/
 @media (prefers-color-scheme: dark) {
-    .card, .dropdown-menu, .modal-content, .vue-back-to-top btn, .form-control, .custom-select, .table thead th {
+    .card,
+    .dropdown-menu,
+    .modal-content,
+    .vue-back-to-top btn,
+    .form-control,
+    .custom-select,
+    .table thead th,
+    .b-toaster {
         background-color: #000000 !important;
         color: #95aac9;
+    }
+
+    .badge {
+        color: black;
     }
 
     .eq-window-simple::before, .eq-table-floating-header::before, .eq-window-complex-fancy::before, .eq-window-complex::before {
@@ -661,9 +673,21 @@ html, body{
         pointer-events: none; /* Ensures it doesn’t interfere with clicks */
     }
 
-    .badge {
-        filter: invert(1);
+    .eq-window-simple {
+        opacity: 0.95;
+        transition: .5s;
     }
+
+    /*.card {*/
+    /*    opacity: 0.9;*/
+    /*}*/
+
+    /*.eq-window-simple:hover, .card:hover {*/
+    /*    opacity: 1;*/
+    /*    transition: .3s;*/
+    /*}*/
+
+
 
     h1, h2, h3, h4, h5, h6, p, .card-title, .card-subtitle, .card-text, .card-header, .card-footer, .card-body, .table {
         color: #95aac9 ;
@@ -693,4 +717,31 @@ html, body{
     .lazy-image {
         background-color: #000000 !important;
     }
+}
+
+/*misc fixes*/
+
+.navbar-nav .nav-link > .fe {
+    min-width: 1.25rem;
+}
+
+.navbar-dark.navbar-vibrant {
+    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg);
+}
+
+@media only screen and (max-device-width: 640px) {
+    .small-mobile {
+        font-size: 40px !important;
+    }
+}
+
+.connection-status-box {
+    display: block; /* or inline-block */
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.avatar-image {
+    background-image: url("~@/assets/img/eqemu-avatar.png");
 }

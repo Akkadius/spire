@@ -56,12 +56,6 @@
   </div>
 </template>
 
-<style>
-  .avatar-image {
-    background-image: url("~@/assets/img/eqemu-avatar.png");
-  }
-</style>
-
 <script>
 
   export default {
