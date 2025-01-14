@@ -1,4 +1,4 @@
-## [4.15.1] 1/14/2025
+## [4.15.2] 1/14/2025
 
 * **Appearance** Fixed dark mode for "to top" button.
 * **Appearance** Fixed dark mode for toast notifications.

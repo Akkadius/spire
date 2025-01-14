@@ -5,8 +5,6 @@
     :ok-disabled="true"
     id="app-update-modal"
     title="Update Spire"
-    header-text-variant="dark"
-    body-text-variant="dark"
     cancel-title="Ignore Update"
     size="xl"
     @cancel="ignoreUpdate"
