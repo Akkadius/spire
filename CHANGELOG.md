@@ -1,3 +1,16 @@
+## [4.15.1] 1/14/2025
+
+* **Appearance** Fixed dark mode for "to top" button.
+* **Appearance** Fixed dark mode for toast notifications.
+* **Performance** Improved initial application load time significantly by loading only necessary assets on boot.
+* **Performance** CSS is loaded after initial application mount. 
+* **Performance** Reduced initial application boot calls to the /me endpoint which was called upwards of 5 times by various components.
+* **Performance** Lazy load YouTube videos in the video renderer to prevent them from loading on boot.
+* **Spire Admin** Players online component on the dashboard will no longer render IP addresses. The full page will still show IP addresses.
+* **Spire Admin** Fix an issue where the header would not render the world stats properly under lower resolutions.
+* **Spire Admin** Fix an issue where the header would not render the server stats properly under Windows.
+* **Spire Admin** Improved error handling within the players online component.
+
 ## [4.15.0] 1/8/2025
 
 * **Appearance** Add more wallpapers to the rotation.

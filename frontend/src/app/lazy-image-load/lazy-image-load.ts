@@ -42,6 +42,21 @@ export default class LazyImageLoader {
         }
       }
     }
+
+    // @ts-ignore
+    let videos   = document.getElementsByClassName("lazy-video");
+    for (let i = 0; i < videos.length; i++) {
+      let video = videos.item(i)
+      if (video) {
+        let dataSrc = video.getAttribute("data-src");
+        if (dataSrc && LazyImageLoader.elementInViewport(video)) {
+          // @ts-ignore
+          video.src = dataSrc;
+          video.classList.add('fade-in')
+          video.classList.remove('lazy-video')
+        }
+      }
+    }
   }, 10);
 
   public static elementInViewport(elem) {

@@ -2,8 +2,11 @@
 
 import {MeApi} from "@/app/api";
 import {SpireApi} from "../api/spire-api";
+import {Mutex} from "@/app/mutex";
 
 const TOKEN_KEY = 'spire-web-access-token-' + location.host;
+
+let mutex = new Mutex();
 
 export default class UserContext {
   private static user: any          = {};
@@ -23,7 +26,9 @@ export default class UserContext {
    * Get user data
    */
   static async getUser() {
+    const unlock = await mutex.lock();
     if (this.loaded) {
+      unlock();
       return this.user;
     }
 
@@ -54,12 +59,15 @@ export default class UserContext {
           this.setIsAdmin(true)
         }
 
+        unlock();
         return this.user
       }
     } catch (e) {
       // squash
+      unlock();
     }
 
+    unlock();
     return null
   }
 

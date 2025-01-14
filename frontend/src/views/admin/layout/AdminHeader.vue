@@ -34,7 +34,7 @@
           <div class="row align-items-center">
 
             <!-- Server Metrics -->
-            <div class="col-lg-2 col-sm-12 mt-3-mobile">
+            <div class="col-lg-3 col-sm-12 mt-3-mobile">
               <div class="row" v-for="(metric, index) in serverStats" :key="index">
                 <!-- Left Label -->
                 <div class="col-lg-6 col-3 p-0 m-0 text-right" style="line-height: 1 !important">
@@ -52,10 +52,6 @@
               </div>
             </div>
 
-            <div
-              class="d-none d-lg-block mr-3 ml-3"
-              style="color: #95aac9; border-left: 1px solid #95aac9; height: 50px; opacity: .3"
-            />
 
             <!-- Resource Metrics -->
             <div
@@ -370,7 +366,7 @@ export default {
             s.hostname = e.hostname
 
             // Disk stats
-            const disk = e.disk[0]; // Assuming one disk for simplicity
+            const disk = e.disk[0] ? e.disk[0] : null;
             if (disk) {
               const nowReadBytes  = disk.readBytes;
               const nowWriteBytes = disk.writeBytes;

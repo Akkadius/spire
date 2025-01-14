@@ -216,7 +216,7 @@ func (a *Controller) getClientList(c echo.Context) error {
 	types, err := a.eqemuserverapi.GetWorldClientList()
 	if err != nil {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusNoContent,
 			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
 		)
 	}

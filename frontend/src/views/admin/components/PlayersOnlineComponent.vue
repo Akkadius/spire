@@ -54,7 +54,7 @@
               <th style="width: 75px">Level</th>
               <th style="min-width: 100px">Zone</th>
               <th style="width: 150px">Client</th>
-              <th>IP</th>
+              <th v-if="fullList">IP</th>
             </tr>
             </thead>
 
@@ -75,28 +75,28 @@
               <td style="align-content: center">{{ client.name }}</td>
               <td>{{ client.level }}</td>
               <td>
-            <span v-if="client.server && client.server.zone_name">
-              {{ client.server.zone_name }}
-              <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{
-                  client.server.instance_id
-                }})</span>
-            </span>
-                <span v-if="!client.server && client.online === 1">
-              Character Select
-            </span>
-                <span v-if="!client.server && client.online > 0">
-              Zoning
-            </span>
+                <span v-if="client.server && client.server.zone_name">
+                  {{ client.server.zone_name }}
+                  <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{
+                      client.server.instance_id
+                    }})</span>
+                </span>
+                    <span v-if="!client.server && client.online === 1">
+                  Character Select
+                </span>
+                    <span v-if="!client.server && client.online > 0">
+                  Zoning
+                </span>
               </td>
               <td>
-            <span v-if="client.client_version">
-              {{ eqClientVersionConstants[client.client_version] }}
-            </span>
+                <span v-if="client.client_version">
+                  {{ eqClientVersionConstants[client.client_version] }}
+                </span>
               </td>
-              <td>
-            <span v-if="client.ip">
-              {{ intToIP(client.ip) }}
-            </span>
+              <td v-if="fullList">
+                <span v-if="client.ip">
+                  {{ intToIP(client.ip) }}
+                </span>
               </td>
             </tr>
             </tbody>
@@ -186,7 +186,7 @@ export default {
 
         const nameMatch = client.name.toLowerCase().includes(filter);
         const zoneMatch = client.server && client.server.zone_name && client.server.zone_name.toLowerCase().includes(filter);
-        const ipMatch = client.ip && this.intToIP(client.ip).includes(filter);
+        const ipMatch   = client.ip && this.intToIP(client.ip).includes(filter);
 
         if (nameMatch || zoneMatch || ipMatch) {
           this.filteredClientList.push(client);
@@ -241,43 +241,51 @@ export default {
      */
     async buildPlayersOnlineList() {
 
-      const r = await SpireApi.v1().get("eqemuserver/client-list")
-      if (r.status === 200) {
-        const apiClientList = r.data.data
-        if (!apiClientList) {
-          this.filteredClientList = []
-          this.clientList         = []
-          return false
+      try {
+        const r = await SpireApi.v1().get("eqemuserver/client-list")
+        if (r.status === 200) {
+          const apiClientList = r.data.data
+          if (!apiClientList) {
+            this.filteredClientList = []
+            this.clientList         = []
+            return false
+          }
+
+          let clientList = []
+          if (apiClientList.length > 0) {
+            apiClientList.forEach(function (row) {
+              if (row.character_id === 0) {
+                return
+              }
+              clientList.push(row)
+            })
+          }
+
+          if (clientList.length === 0) {
+            this.clientList = []
+            return false
+          }
+
+          this.clientList = clientList
+          this.filterPlayers()
+
+          const clientCount = this.clientList.length
+          if (clientCount > 1000) {
+            this.updateIntervalSeconds = 30
+          }
+          if (clientCount > 500) {
+            this.updateIntervalSeconds = 10
+          } else if (clientCount > 100) {
+            this.updateIntervalSeconds = 5
+          }
+
+          this.lastUpdateTime = Date.now()
         }
-
-        let clientList = []
-        if (apiClientList.length > 0) {
-          apiClientList.forEach(function (row) {
-            if (row.character_id === 0) {
-              return
-            }
-            clientList.push(row)
-          })
-        }
-
-        if (clientList.length === 0) {
-          this.clientList = []
-          return false
-        }
-
-        this.clientList = clientList
-        this.filterPlayers()
-
-        const clientCount = this.clientList.length
-        if (clientCount > 1000) {
-          this.updateIntervalSeconds = 30
-        } if (clientCount > 500) {
-          this.updateIntervalSeconds = 10
-        } else if (clientCount > 100) {
-          this.updateIntervalSeconds = 5
-        }
-
-        this.lastUpdateTime = Date.now()
+      } catch (e) {
+        this.clientList         = []
+        this.filteredClientList = []
+        console.log("Error fetching client list")
+        return false
       }
     }
   },
@@ -298,10 +306,7 @@ export default {
    */
   async created() {
 
-    try {
-      await this.buildPlayersOnlineList()
-    } catch (e) {
-    }
+    await this.buildPlayersOnlineList()
 
     this.loaded = true
 

@@ -41,6 +41,7 @@ export default {
   },
 
   async mounted() {
+    this.loadCssFiles();
     this.loadKeypressBindings();
     this.loadWallpaper();
     this.loadSpellIconSettings();
@@ -314,8 +315,36 @@ export default {
         }
       }
     },
-  },
+    loadCssFiles() {
+      const cssFiles = [
+        { href: "item-icons.css" },
+        { href: "item-icons-sm.css" },
+        { href: "objects.css" },
+        { href: "race-models-sm.css" },
+        { href: "race-models.css" },
+        { href: "faces.css" },
+        { href: "client-versions.css" },
+        { href: "client-versions-med.css" },
+        { href: "client-versions-sm.css" },
+        { href: "spell-icons-12.css", id: "spell-icons-12" },
+        { href: "spell-icons-20.css", id: "spell-icons-20" },
+        { href: "spell-icons-30.css", id: "spell-icons-30" },
+        { href: "spell-icons-40.css", id: "spell-icons-40" },
+      ];
 
+      cssFiles.forEach(file => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `/eq-asset-preview-master/assets/sprites/${file.href}`;
+
+        if (file.id) {
+          link.id = file.id; // Add the id attribute if it exists
+        }
+
+        document.head.appendChild(link);
+      });
+    }
+  },
 }
 </script>
 

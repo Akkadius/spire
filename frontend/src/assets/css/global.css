@@ -642,9 +642,11 @@ html, body{
     .form-control,
     .custom-select,
     .table thead th,
-    .b-toaster {
+    .toast-body,
+    .toast-header,
+    .vue-back-to-top .btn {
         background-color: #000000 !important;
-        color: #95aac9;
+        color: #d3dae6;
     }
 
     .badge {
@@ -690,7 +692,7 @@ html, body{
 
 
     h1, h2, h3, h4, h5, h6, p, .card-title, .card-subtitle, .card-text, .card-header, .card-footer, .card-body, .table {
-        color: #95aac9 ;
+        color: #d3dae6;
     }
 
     .modal-content .card {

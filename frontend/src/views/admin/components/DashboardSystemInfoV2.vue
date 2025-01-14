@@ -57,11 +57,6 @@ export default {
       v.push({ key: "Processes", value: d.procs })
     }
 
-    r = await SpireApi.v1().get("admin/system/disk")
-    if (r.status === 200) {
-      console.log(r.data)
-    }
-
     this.items = v
   },
   methods: {}
