@@ -1,1 +1,0 @@
-"C:\Program Files\Git\git-bash.exe" -c 'docker-compose exec workspace bash'

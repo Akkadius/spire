@@ -25,7 +25,7 @@ choco install -y make
 
 :: Install NodeJS
 :: choco install -y nodejs-lts
-choco install -y nodejs --version=12.13.0
+choco install -y nodejs-lts
 
 :: Install Go (If want to use outside of docker)
 choco install -y golang

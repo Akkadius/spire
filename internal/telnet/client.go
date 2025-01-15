@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/ziutek/telnet"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -43,6 +44,10 @@ func (c *Client) Connect() error {
 	}
 
 	d := 2 * time.Second // Increased timeout for stability
+	if runtime.GOOS == "windows" {
+		d = 100 * time.Millisecond
+	}
+
 	c.t, err = telnet.DialTimeout("tcp", "127.0.0.1:9000", d)
 	if err != nil {
 		return err

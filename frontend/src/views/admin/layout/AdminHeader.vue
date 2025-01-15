@@ -366,7 +366,7 @@ export default {
             s.hostname = e.hostname
 
             // Disk stats
-            const disk = e.disk[0] ? e.disk[0] : null;
+            const disk = e && e.disk && e.disk.length > 0 ? e.disk[0] : null;
             if (disk) {
               const nowReadBytes  = disk.readBytes;
               const nowWriteBytes = disk.writeBytes;

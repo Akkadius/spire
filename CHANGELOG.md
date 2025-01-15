@@ -1,3 +1,8 @@
+## [4.15.3] 1/15/2025
+
+* **Spire Admin** Fix issue where server resource statistics would not show up under Windows.
+* **Spire Admin** Fix EQEmu server API responsiveness under Windows.
+
 ## [4.15.2] 1/14/2025
 
 * **Appearance** Fixed dark mode for "to top" button.

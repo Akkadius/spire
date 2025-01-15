@@ -11,7 +11,7 @@ cmd = "windows-build-spire.bat"
 # Binary file yields from `cmd`.
 bin = "spire"
 # Customize binary.
-full_bin = "spire http:serve --port=3001 null"
+full_bin = "start spire http:serve --port=3001 null"
 # Watch these filename extensions.
 include_ext = ["go", "tpl", "tmpl", "html"]
 # Ignore these filename extensions or directories.
@@ -51,3 +51,6 @@ runner = "green"
 [misc]
 # Delete tmp directory on exit
 clean_on_exit = true
+
+[screen]
+  no_pty = true
