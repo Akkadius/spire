@@ -1,7 +1,8 @@
-## [4.15.3] 1/15/2025
+## [4.15.4] 1/15/2025
 
 * **Spire Admin** Fix issue where server resource statistics would not show up under Windows.
 * **Spire Admin** Fix EQEmu server API responsiveness under Windows.
+* **Spire Admin** Fix issue where server disk resource stats were not showing properly on Windows.
 
 ## [4.15.2] 1/14/2025
 

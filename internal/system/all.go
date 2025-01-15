@@ -7,6 +7,7 @@ import (
 	"github.com/shirou/gopsutil/v3/net"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 // AllResponse is the response for the systemAll endpoint
@@ -35,13 +36,23 @@ func All() (AllResponse, error) {
 	// disk
 	var ioCounters []disk.IOCountersStat
 	part, _ := disk.Partitions(false)
-	var uniqueDeviceNames []string
 
-	for _, p := range part {
-		counters, _ := disk.IOCounters(p.Device)
-		if !contains(uniqueDeviceNames, p.Device) && len(counters[filepath.Base(p.Device)].Name) != 0 {
-			ioCounters = append(ioCounters, counters[filepath.Base(p.Device)])
-			uniqueDeviceNames = append(uniqueDeviceNames, p.Device)
+	var uniqueDeviceNames []string
+	if runtime.GOOS == "windows" {
+		for _, p := range part {
+			counters, _ := disk.IOCounters(p.Device)
+			if !contains(uniqueDeviceNames, p.Device) {
+				ioCounters = append(ioCounters, counters[p.Device])
+				uniqueDeviceNames = append(uniqueDeviceNames, p.Device)
+			}
+		}
+	} else {
+		for _, p := range part {
+			counters, _ := disk.IOCounters(p.Device)
+			if !contains(uniqueDeviceNames, p.Device) && len(counters[filepath.Base(p.Device)].Name) != 0 {
+				ioCounters = append(ioCounters, counters[filepath.Base(p.Device)])
+				uniqueDeviceNames = append(uniqueDeviceNames, p.Device)
+			}
 		}
 	}
 
