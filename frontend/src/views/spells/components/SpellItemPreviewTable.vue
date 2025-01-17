@@ -37,7 +37,7 @@
             <td>
               <div class="btn-group" role="group">
                 <b-button
-                  class="btn-dark btn-sm btn-outline-warning"
+                  class="btn-dark btn-sm btn-dark"
                   @click="selectItem(item)"
                 >
                   <i class="fa fa-arrow-left"></i>

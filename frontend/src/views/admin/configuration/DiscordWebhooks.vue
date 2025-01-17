@@ -69,7 +69,7 @@
             <td class="text-center p-0 m-0">
               <b-button
                 variant="primary"
-                class="btn-dark btn-sm btn-outline-danger ml-1"
+                class="btn-dark btn-sm ml-1"
                 style="padding: 0px 6px;"
                 title="Delete"
                 @click="deleteWebhook(w)"

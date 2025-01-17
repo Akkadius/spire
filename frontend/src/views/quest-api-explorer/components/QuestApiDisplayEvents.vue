@@ -4,7 +4,7 @@
       <div class="d-inline-block mt-2" style="vertical-align: top"
       >
         <button
-          class='btn btn-sm btn-outline-warning mb-1 mr-2'
+          class='btn btn-sm btn-dark mb-1 mr-2'
           @click="copyToClip(event)"
           style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6">
           <i class="fa fa-clipboard"></i>

@@ -244,8 +244,6 @@
             <td
               style="vertical-align: middle; text-align: left;"
             >
-
-
               <player-event-display-component
                 :e="e"
               />

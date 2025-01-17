@@ -1042,4 +1042,8 @@ h6.eq-header {
     list-style-type: circle !important;
 }
 
+.eq-window-simple {
+    border-radius: 10px;
+}
+
 
