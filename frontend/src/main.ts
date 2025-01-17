@@ -15,6 +15,7 @@ import './assets/fonts/feather/feather.min.css'
 
 // EQ Assets - These should be moved into the assets themselves
 import '@/components/eq-ui/styles/eq-ui.css'
+import '@/components/eq-ui/styles/eq-ui-buttons.css'
 
 // global custom
 import './assets/css/global.css'

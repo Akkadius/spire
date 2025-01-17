@@ -1,25 +1,25 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper" @click.self="dismiss()">
-        <eq-window class="modal-container" style="width: 1000px">
+    <div class="eq-modal-mask">
+      <div class="eq-modal-wrapper" @click.self="dismiss()">
+        <eq-window class="eq-modal-container" style="width: 1000px">
 
-          <div class="modal-header">
+          <div class="eq-modal-header">
             <slot name="header">
               default header
             </slot>
           </div>
 
-          <div class="modal-body">
+          <div class="eq-modal-body">
             <slot name="body">
               default body
             </slot>
           </div>
 
-          <div class="modal-footer">
+          <div class="eq-modal-footer">
             <slot name="footer">
               default footer
-              <button class="modal-default-button" @click="$emit('close')">
+              <button class="eq-modal-default-button" @click="$emit('close')">
                 OK
               </button>
             </slot>
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style>
-.modal-mask {
+.eq-modal-mask {
   position: fixed;
   z-index: 9998;
   top: 0;
@@ -56,15 +56,14 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity 0.3s ease;
 }
 
-.modal-wrapper {
+.eq-modal-wrapper {
   display: table-cell;
   vertical-align: middle;
 }
 
-.modal-container {
+.eq-modal-container {
   width: 300px;
   margin: 0px auto;
   padding: 20px 30px;
@@ -76,16 +75,11 @@ export default {
   z-index: 99999999999 !important;
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
-.modal-body {
+.eq-modal-body {
   margin: 20px 0;
 }
 
-.modal-default-button {
+.eq-modal-default-button {
   float: right;
 }
 
@@ -98,16 +92,16 @@ export default {
  * these styles.
  */
 
-.modal-enter {
+.eq-modal-enter {
   opacity: 0;
 }
 
-.modal-leave-active {
+.eq-modal-leave-active {
   opacity: 0;
 }
 
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
+.eq-modal-enter .eq-modal-container,
+.eq-modal-leave-active .eq-modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }

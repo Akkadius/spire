@@ -317,9 +317,9 @@ import {Items}               from "../../app/items";
 import EqCheckbox            from "../../components/eq-ui/EQCheckbox";
 import EqDebug               from "../../components/eq-ui/EQDebug";
 import ItemSelector          from "../../components/selectors/ItemSelector";
-import {MerchantlistApi}   from "../../app/api";
-import {SpireApi}          from "../../app/api/spire-api";
-import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import {MerchantlistApi}     from "../../app/api";
+import {SpireApi}            from "../../app/api/spire-api";
+import {SpireQueryBuilder}   from "../../app/api/spire-query-builder";
 import {chunk}               from "../../app/utility/chunk";
 import {Npcs}                from "../../app/npcs";
 import MerchantlistEntryEdit from "./components/MerchantlistEntryEdit";
@@ -329,7 +329,7 @@ import util                  from "util";
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
-  name: "MerchantSubEditor",
+  name: "Merchants",
   components: {
     MerchantEdit,
     MerchantlistEntryEdit,
@@ -348,7 +348,7 @@ export default {
     this.loadQueryState()
     this.ml             = []
     this.editList       = []
-    this.itemData      = {}
+    this.itemData       = {}
     this.merchantLists  = []
     this.associatedNpcs = {}
 
@@ -432,7 +432,7 @@ export default {
       if (confirm(`Are you sure you want to delete this Merchant? (${m.merchantid}) with (${m.slot}) items?`)) {
         await Merchants.deleteMerchant(m.merchantid)
         this.activeMerchantList = {}
-        this.loading = true
+        this.loading            = true
         await this.showAllMerchants()
         this.$forceUpdate()
         this.loading = false
