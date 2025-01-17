@@ -84,13 +84,13 @@
             v-if="updateType === 'self-compiled'"
           >
             <div class="col-3 text-center">
-              <button class="btn btn-outline-warning mt-4 btn-sm" @click="buildSource()" :disabled="buildRunning">
+              <button class="btn btn-dark mt-4 btn-sm" @click="buildSource()" :disabled="buildRunning">
                 <i class="fa fa-wrench"></i> Build
               </button>
               <button class="btn btn-outline-primary mt-4 btn-sm ml-3" @click="buildClean()" :disabled="buildRunning">
                 <i class="fa fa-refresh"></i> Clean
               </button>
-              <button class="btn btn-outline-warning mt-4 btn-sm ml-3" @click="buildCancel()">
+              <button class="btn btn-dark mt-4 btn-sm ml-3" @click="buildCancel()">
                 <i class="fa fa-remove"></i> Cancel
               </button>
             </div>

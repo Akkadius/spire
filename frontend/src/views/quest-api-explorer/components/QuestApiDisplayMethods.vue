@@ -10,7 +10,7 @@
 
       <div class="d-inline-block">
         <button
-          class='btn btn-sm btn-outline-warning mb-1 mr-2'
+          class='btn btn-sm btn-dark mb-1 mr-2'
           @click="copyToClip(buildFullMethod(method))"
           style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
         >

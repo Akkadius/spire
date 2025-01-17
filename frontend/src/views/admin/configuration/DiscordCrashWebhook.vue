@@ -32,7 +32,7 @@
           v-model="serverConfig['web-admin'].discord.crash_log_webhook"
         />
 
-        <button type="submit" class="btn btn-sm mt-3 btn-outline-warning ml-auto" @click="submitServerConfig()">
+        <button type="submit" class="btn btn-sm mt-3 btn-dark ml-auto" @click="submitServerConfig()">
           <i class="fe fe-save"></i>
           Save
         </button>

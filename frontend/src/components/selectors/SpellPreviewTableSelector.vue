@@ -30,7 +30,7 @@
           <td style="vertical-align: middle">
 
             <b-button
-              class="btn-dark btn-sm btn-outline-warning mb-3"
+              class="btn-dark btn-sm btn-dark mb-3"
               @click="selectSpell(spell.id)"
             >
               <i class="fa fa-arrow-left"></i>

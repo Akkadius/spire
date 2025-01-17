@@ -1471,7 +1471,7 @@
             </button>
 
             <!--                <b-button-->
-            <!--                  class="btn-dark btn-sm btn-outline-warning"-->
+            <!--                  class="btn-dark btn-sm btn-dark"-->
             <!--                  @click="saveItem"-->
             <!--                >-->
             <!--                  <i class="ra ra-book mr-1"></i>-->

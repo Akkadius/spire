@@ -414,7 +414,7 @@
 
       <div class="row">
         <div class="justify-content-center col-12">
-          <button type="submit" class="btn btn-outline-warning btn-sm ml-auto" @click="submitServerConfig()">
+          <button type="submit" class="btn btn-dark btn-sm ml-auto" @click="submitServerConfig()">
             <i class="fe fe-save"></i>
             Save
           </button>

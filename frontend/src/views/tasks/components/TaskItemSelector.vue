@@ -5,7 +5,7 @@
       class="text-center"
     >
       <b-button
-        class="btn-dark btn-sm btn-outline-warning"
+        class="btn-dark btn-sm btn-dark"
         @click="searchPerformed = false"
       >
         Return to Search
@@ -143,7 +143,7 @@
               </div>
 
               <b-button
-                class="btn-dark btn-sm btn-outline-warning ml-3"
+                class="btn-dark btn-sm btn-dark ml-3"
                 @click="search()"
               >
                 <i class="fa fa-search"></i> Search

@@ -24,7 +24,7 @@
           class="text-center"
         >
           <b-button
-            class="btn-dark btn-sm btn-outline-warning"
+            class="btn-dark btn-sm btn-dark"
             @click="setSelectorActive('zone-preview', true)"
           >
             <i class="fa fa-chevron-up"></i> Return to Zone

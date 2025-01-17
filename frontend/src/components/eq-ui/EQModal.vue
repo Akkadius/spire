@@ -1,24 +1,22 @@
 <template>
-  <transition name="modal">
     <div class="eq-modal-mask">
       <div class="eq-modal-wrapper" @click.self="dismiss()">
-        <eq-window class="eq-modal-container" style="width: 1000px">
+        <eq-window class="eq-modal-container" >
 
           <div class="eq-modal-header">
             <slot name="header">
-              default header
+
             </slot>
           </div>
 
           <div class="eq-modal-body">
             <slot name="body">
-              default body
+
             </slot>
           </div>
 
           <div class="eq-modal-footer">
             <slot name="footer">
-              default footer
               <button class="eq-modal-default-button" @click="$emit('close')">
                 OK
               </button>
@@ -27,7 +25,6 @@
         </eq-window>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>
@@ -41,8 +38,21 @@ export default {
   methods: {
     dismiss() {
       this.$emit('close');
+    },
+    keyPress(e) {
+      if (e.key === 'Escape') {
+        this.dismiss();
+      }
     }
-  }
+  },
+  beforeDestroy() {
+    // remove keypress listener
+    document.removeEventListener('keydown', this.keyPress);
+  },
+  mounted() {
+    // listen keypress for escape key
+    document.addEventListener('keydown', this.keyPress);
+  },
 }
 </script>
 
@@ -61,18 +71,23 @@ export default {
 .eq-modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  text-align: center; /* Ensures the modal is centered horizontally */
 }
 
 .eq-modal-container {
-  width: 300px;
-  margin: 0px auto;
+  display: inline-block; /* Adapts the width to content size */
   padding: 20px 30px;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
   z-index: 99999999999 !important;
+
+  /* Constraints */
+  max-width: 90%; /* Prevents the modal from becoming too wide */
+  max-height: 90%; /* Ensures the modal doesn't exceed screen height */
+  overflow: auto; /* Adds scrollbars if content overflows */
 }
 
 .eq-modal-body {
@@ -83,21 +98,8 @@ export default {
   float: right;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.eq-modal-enter {
-  opacity: 0;
-}
-
-.eq-modal-leave-active {
-  opacity: 0;
+.eq-modal-footer {
+  min-height: 25px;
 }
 
 .eq-modal-enter .eq-modal-container,

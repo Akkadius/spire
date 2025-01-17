@@ -62,7 +62,7 @@
         </div>
 
         <div class="col-lg-2 col-sm-12">
-          <b-button variant="primary" class="btn-dark btn-sm btn-outline-warning" @click="reset">
+          <b-button variant="primary" class="btn-dark btn-sm btn-dark" @click="reset">
             <i class="fa fa-eraser mr-1"></i>
             Reset
           </b-button>

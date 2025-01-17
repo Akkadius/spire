@@ -16,7 +16,7 @@
         >
           <div :title="'$client->AssignTask(int task_id);'" v-b-tooltip.hover.v-dark.left>
             <button
-              class='btn btn-sm btn-outline-warning mb-1 mr-2'
+              class='btn btn-sm btn-dark mb-1 mr-2'
               @click="copyToClip(`$client->AssignTask(${task.id});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
@@ -26,7 +26,7 @@
           </div>
           <div :title="'$client->TaskSelector(task1, task2, task3);'" v-b-tooltip.hover.v-dark.left>
             <button
-              class='btn btn-sm btn-outline-warning mb-1 mr-2'
+              class='btn btn-sm btn-dark mb-1 mr-2'
               @click="copyToClip(`$client->TaskSelector(${task.id});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
@@ -52,7 +52,7 @@
         >
           <div :title="'client:AssignTask(int task);'" v-b-tooltip.hover.v-dark.left>
             <button
-              class='btn btn-sm btn-outline-warning mb-1 mr-2'
+              class='btn btn-sm btn-dark mb-1 mr-2'
               @click="copyToClip(`client:AssignTask(${task.id});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
@@ -62,7 +62,7 @@
           </div>
           <div :title="'client:TaskSelector({task1, task2, task3, etc.});'" v-b-tooltip.hover.v-dark.left>
             <button
-              class='btn btn-sm btn-outline-warning mb-1 mr-2'
+              class='btn btn-sm btn-dark mb-1 mr-2'
               @click="copyToClip(`client:TaskSelector({${task.id}});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >

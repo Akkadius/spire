@@ -44,7 +44,7 @@
 
           <b-button
             variant="primary"
-            class="btn-dark btn-sm btn-outline-success"
+            class="btn-dark btn-sm"
             style="padding: 0px 6px;"
             title="Edit spell entry"
             @click="editSpellListEntry(e)"

@@ -5,7 +5,14 @@
       @close="closeModal"
     >
       <template v-slot:header>
-        <h3 class="eq-header">Modal Header</h3>
+        <h3 class="eq-header text-center">Modal Header</h3>
+      </template>
+      <template v-slot:body>
+
+        <div class="text-center">
+          <p>This is the body of the modal</p>
+          <img src="https://www.giantbomb.com/a/uploads/original/0/1992/2118741-sleeper_fight2.jpg">
+        </div>
       </template>
     </EqModal>
 
@@ -64,7 +71,7 @@
           <button type="button" class="btn btn-outline-secondary">Secondary</button>
           <button type="button" class="btn btn-outline-success">Success</button>
           <button type="button" class="btn btn-outline-danger">Danger</button>
-          <button type="button" class="btn btn-outline-warning">Warning</button>
+          <button type="button" class="btn btn-dark">Warning</button>
           <button type="button" class="btn btn-outline-info">Info</button>
           <button type="button" class="btn btn-outline-light">Light</button>
           <button type="button" class="btn btn-outline-white">White</button>
@@ -102,8 +109,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 
 
 </style>

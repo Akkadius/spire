@@ -82,7 +82,7 @@
             >
 
               <b-button
-                class="btn-dark btn-sm btn-outline-warning"
+                class="btn-dark btn-sm btn-dark"
                 title="Select Merchant List"
                 @click="selectMerchantList(n.merchant_id)"
               >
@@ -90,7 +90,7 @@
               </b-button>
 
               <b-button
-                class="btn-dark btn-sm btn-outline-warning ml-3"
+                class="btn-dark btn-sm btn-dark ml-3"
                 @click="editMerchantList(n.merchant_id)"
                 title="Edit Merchant List"
               >

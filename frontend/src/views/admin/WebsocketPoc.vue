@@ -18,22 +18,22 @@
           </div>
 
           <div class="mt-3">
-            <button class="btn btn-outline-warning btn-sm" @click="runProcess('world')">
+            <button class="btn btn-dark btn-sm" @click="runProcess('world')">
               <i class="fa fa-crosshairs"></i>
               Run World
             </button>
 
-            <button class="btn btn-outline-warning btn-sm ml-3" @click="runProcess('zone')">
+            <button class="btn btn-dark btn-sm ml-3" @click="runProcess('zone')">
               <i class="fa fa-crosshairs"></i>
               Run Zone
             </button>
 
-            <button class="btn btn-outline-warning btn-sm ml-3" @click="runProcess('loginserver')">
+            <button class="btn btn-dark btn-sm ml-3" @click="runProcess('loginserver')">
               <i class="fa fa-crosshairs"></i>
               Run Loginsever
             </button>
 
-            <button class="btn btn-outline-warning btn-sm ml-3" @click="runProcess('ucs')">
+            <button class="btn btn-dark btn-sm ml-3" @click="runProcess('ucs')">
               <i class="fa fa-crosshairs"></i>
               Run UCS
             </button>

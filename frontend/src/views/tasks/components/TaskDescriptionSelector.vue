@@ -78,7 +78,7 @@
       <div class="row">
         <div class="col-12">
           <b-button
-            class="btn-dark btn-sm btn-outline-warning mr-3"
+            class="btn-dark btn-sm btn-dark mr-3"
             @click="addActivityDescriptionRow"
           >
             <i class="fa fa-plus"></i>

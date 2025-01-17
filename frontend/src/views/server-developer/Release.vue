@@ -65,7 +65,7 @@
           >
             <td class="text-center">
               <b-button
-                class="btn-dark btn-sm btn-outline-warning d-inline-block"
+                class="btn-dark btn-sm btn-dark d-inline-block"
                 style="padding: 0px 6px;"
                 title="View Crash"
                 @click="viewCrash(c)"

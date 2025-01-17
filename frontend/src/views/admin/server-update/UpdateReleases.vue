@@ -61,7 +61,7 @@
             <td class="text-center">
               <b-button
                 variant="primary"
-                class="btn-dark btn-sm btn-outline-warning"
+                class="btn-dark btn-sm btn-dark"
                 style="padding: 0px 6px;"
                 title="View Release Notes"
                 @click="viewReleaseNotes(r)"
@@ -73,7 +73,7 @@
             <td class="text-center">
               <b-button
                 variant="primary"
-                class="btn-dark btn-sm btn-outline-warning"
+                class="btn-dark btn-sm btn-dark"
                 style="padding: 0px 6px;"
                 title="Install"
                 @click="installRelease(r)"
@@ -110,7 +110,7 @@
             <td class="text-center">
               <b-button
                 variant="primary"
-                class="btn-dark btn-sm btn-outline-warning ml-1"
+                class="btn-dark btn-sm btn-dark ml-1"
                 style="padding: 0px 6px; width: 50px"
                 title="View Release Crashes"
                 @click="goToRelease(r.name.replaceAll('v', ''))"

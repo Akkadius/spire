@@ -29,7 +29,7 @@
       style="height: 83vh; "
       class="fade-in text-center p-3" v-if="changelog && !loading">
       <button
-        class='btn btn-sm btn-outline-warning mb-3'
+        class='btn btn-sm btn-dark mb-3'
         @click="copyToClip(changelog)"
       >
         <i class="fa fa-clipboard"></i>

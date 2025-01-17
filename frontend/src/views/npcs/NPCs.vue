@@ -9,13 +9,13 @@
           <div class="row">
             <div :class="(isAnySelectorActive() ? 'col-2' : 'col-1') + 'text-right'">
               <button
-                class='btn btn-outline-warning btn-sm mt-1'
+                class='btn btn-dark btn-sm mt-1'
                 @click="reset"
               >
                 <i class="fa fa-refresh"></i> Reset
               </button>
               <button
-                class='btn btn-outline-warning btn-sm mt-1 ml-3'
+                class='btn btn-dark btn-sm mt-1 ml-3'
                 @click="bulkEdit()"
               >
                 <i class="fa fa-edit"></i> Bulk Edit

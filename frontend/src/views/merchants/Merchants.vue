@@ -113,7 +113,7 @@
                 >
                   <b-button
                     v-if="isSelector"
-                    class="btn-dark btn-sm btn-outline-warning mr-3"
+                    class="btn-dark btn-sm btn-dark mr-3"
                     title="Select Merchant List"
                     @click="selectMerchantList(n.merchant_id);"
                   >
@@ -183,7 +183,7 @@
                 >
                   <b-button
                     v-if="isSelector"
-                    class="btn-dark btn-sm btn-outline-warning mr-3"
+                    class="btn-dark btn-sm btn-dark mr-3"
                     title="Select Merchant List"
                     @click="selectMerchantList(m.merchantid);"
                   >
@@ -199,7 +199,7 @@
                   </b-button>
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning"
+                    class="btn-dark btn-sm btn-dark"
                     @click="editMerchantList(m.merchantid)"
                     title="Edit Merchant List"
                   >

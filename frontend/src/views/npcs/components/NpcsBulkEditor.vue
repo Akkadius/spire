@@ -38,7 +38,7 @@
         </div>
         <div class="col-2">
           <button
-            class='btn btn-outline-warning btn-sm mt-2'
+            class='btn btn-dark btn-sm mt-2'
             @click="setValuesTo"
             v-if="(setValue !== '' && isDataTypeNumber(selectedField)) || (!isDataTypeNumber(selectedField))"
           >
@@ -75,7 +75,7 @@
         </div>
         <div class="col-2">
           <button
-            class='btn btn-outline-warning btn-sm mt-2'
+            class='btn btn-dark btn-sm mt-2'
             @click="setMinMaxValuesTo"
             v-if="(setMax !== '' && setMin !== '')"
           >
@@ -108,7 +108,7 @@
           >{{ Math.round(setPercentage * 100) }}%
           </div>
           <button
-            class='btn btn-outline-warning btn-sm'
+            class='btn btn-dark btn-sm'
             @click="setPercentageTo"
             v-if="setPercentage"
           >

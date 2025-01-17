@@ -41,7 +41,7 @@
                   variant="primary"
                   size="sm"
                   style="width: 28px; height: 28px"
-                  class="btn-dark btn-outline-danger mr-2"
+                  class="btn-outline-danger mr-2"
                   title="Delete"
                   @click="deleteItem(item)"
                 >

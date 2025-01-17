@@ -12,7 +12,7 @@
         <textarea class="form-control" rows="7" v-model="motd.value"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-outline-warning btn-sm ml-auto mt-3" @click="submit()">
+      <button type="submit" class="btn btn-dark btn-sm ml-auto mt-3" @click="submit()">
         <i class="fe fe-save"></i>
         Save
       </button>

@@ -39,7 +39,7 @@
         <div class="col-1">
 
           <button
-            class='btn btn-outline-warning btn-sm mb-1 mr-2 mt-4'
+            class='btn btn-dark btn-sm mb-1 mr-2 mt-4'
             @click="reset"
           >
             <i class="fa fa-refresh"></i> Reset
