@@ -4,7 +4,11 @@
     <EqModal
       v-show="isModalVisible"
       @close="closeModal"
-    />
+    >
+      <template v-slot:header>
+        <h3>Modal Header</h3>
+      </template>
+    </EqModal>
     <!-- Faces -->
     <div class="header mt-md-1">
       <div class="header-body">

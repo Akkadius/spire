@@ -244,6 +244,8 @@
             <td
               style="vertical-align: middle; text-align: left;"
             >
+
+
               <player-event-display-component
                 :e="e"
               />
@@ -252,7 +254,7 @@
                 title="View raw"
                 @click="showRawEvent(e)"
                 v-if="!showRaw[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
-                class="ml-3 btn btn-sm btn-warning"
+                :class="'btn btn-sm btn-dark d-inline-block ' + (e.event_type_id === 43 ? '' : 'ml-3')"
                 style="font-size: 10px; min-width: 50px"
               >
                 <i class="fa fa-search"></i> ({{ Object.keys(JSON.parse(e.event_data)).length }})

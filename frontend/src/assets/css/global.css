@@ -392,15 +392,6 @@ th[role=columnheader]:hover:not(.no-sort):after {
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    /*.map-tiles {*/
-    /*    filter: invert(100%);*/
-    /*}*/
-    /*.map-tiles img, .map-tiles .eq-window-simple {*/
-    /*    filter: invert(100%);*/
-    /*}*/
-}
-
 .leaflet-zoom-anim .leaflet-zoom-animated {
     transition: .5s !important;
 }
@@ -639,7 +630,6 @@ html, body{
     .dropdown-menu,
     .modal-content,
     .vue-back-to-top btn,
-    .form-control,
     .custom-select,
     .table thead th,
     .toast-body,

@@ -70,7 +70,7 @@
                 </b-button>
 
                 <b-button
-                  class="btn-sm mr-2 btn-outline-white btn-dark"
+                  class="btn-sm mr-2 btn-dark"
                   @click="resetAll()"
                   title="Reset"
                 >
