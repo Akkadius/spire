@@ -94,7 +94,7 @@
           <div class="col-1">
             <button
               title="Reset"
-              class="eq-button m-0"
+              class="btn m-0"
               style="margin-top: 20px !important"
               @click="reset(); updateQueryState()"
             ><i class="fa fa-refresh"></i> Reset

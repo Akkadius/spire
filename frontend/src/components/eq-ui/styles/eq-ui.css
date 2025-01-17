@@ -1046,4 +1046,7 @@ h6.eq-header {
     border-radius: 10px;
 }
 
+[class|="eq-window"] .b-form-tags {
+    background-color: transparent !important;
+}
 
