@@ -51,7 +51,7 @@
           <div class="col-lg-1 col-sm-12 mt-1">
             <button
               title="Reset"
-              class="eq-button m-0 ml-3"
+              class="btn m-0 ml-3"
               @click="search = ''; updateQueryState()"
             ><i class="fa fa-refresh"></i> Reset
             </button>

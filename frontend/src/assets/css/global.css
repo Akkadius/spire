@@ -634,6 +634,8 @@ html, body{
     .table thead th,
     .toast-body,
     .toast-header,
+    .b-form-tags,
+    .form-control,
     .vue-back-to-top .btn {
         background-color: #000000 !important;
         color: #d3dae6;

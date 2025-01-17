@@ -14,6 +14,12 @@
     cursor: pointer;
 }
 
+[class|="eq-window"] button:not(.btn) {
+    padding: .5rem .75rem;
+    font-size: .9375rem;
+    line-height: 1.5;
+}
+
 [class|="eq-window"] button:active {
     background: linear-gradient(180deg, #1f1f31, #4b4b63); /* Reverse gradient for pressed effect */
     box-shadow: inset 2px 2px 4px #1a1a2a, inset -2px -2px 4px #5a5a7a; /* Adjust inset shadows */
@@ -25,6 +31,7 @@
     opacity: 1 !important;
     box-shadow: inset 0 0 7px white;
 
+    color: #ffffff; /* White text */
     text-decoration: none;
     background-color: rgba(204, 204, 204, 0.08);
     border: 1px solid rgb(204, 204, 204);

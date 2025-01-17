@@ -31,7 +31,7 @@
         <div class="col-9 text-left mt-3">
           <button
             :style="loading ? 'opacity: .3' : 'opacity: 1'"
-            class="eq-button d-inline-block"
+            class="d-inline-block"
             :disabled="loading"
             @click="backup"
           >
