@@ -1,3 +1,7 @@
+## [4.15.5] 1/29/2025
+
+* **Spire Admin** Admin header changes to allow showing more than 3 hosts
+
 ## [4.15.4] 1/15/2025
 
 * **Spire Admin** Fix issue where server resource statistics would not show up under Windows.

@@ -31,9 +31,12 @@
 
         <!-- Server Metrics -->
         <div class="col-lg-8 col-sm-12 pr-0 ml-0 text-center">
-          <div class="row align-items-center">
+          <div
+            class="row align-items-center admin-header"
+            style="flex-wrap: nowrap; overflow-x: scroll; overflow-y: hidden; padding-bottom: 5px;"
+          >
 
-            <!-- Server Metrics -->
+          <!-- Server Metrics -->
             <div class="col-lg-3 col-sm-12 mt-3-mobile">
               <div class="row" v-for="(metric, index) in serverStats" :key="index">
                 <!-- Left Label -->
@@ -57,6 +60,7 @@
             <div
               class="col-lg-3 col-sm-12 pl-0 pr-0 mt-3-mobile"
               v-for="(host, index) in hostMetrics"
+              style="display: inline-block"
             >
               <!-- Render Metrics Dynamically -->
               <div class="row" v-for="(metric, index) in host" :key="index">
@@ -188,25 +192,25 @@ export default {
           },
           {
             label: "DISK R",
-            value: `${e.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
+            value: `${e.diskStats.readBytesPerSec.toFixed(2) > 1000 ? 0 : e.diskStats.readBytesPerSec.toFixed(2)} MB/s`,
             percent: Math.min(e.diskStats.readBytesPerSec / 100, 100),
             color: "deepskyblue"
           },
           {
             label: "DISK W",
-            value: `${e.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
+            value: `${e.diskStats.writeBytesPerSec.toFixed(2) > 1000 ? 0 : e.diskStats.writeBytesPerSec.toFixed(2)} MB/s`,
             percent: Math.min(e.diskStats.writeBytesPerSec / 100, 100),
             color: "tomato"
           },
           {
             label: "NET DL",
-            value: `${this.bytesToMbytes(e.net['all'].bytes_recv_ps)} Mbps`,
+            value: `${this.bytesToMbytes(e.net['all'].bytes_recv_ps) > 10000 ? 0 : this.bytesToMbytes(e.net['all'].bytes_recv_ps)} Mbps`,
             percent: Math.min(this.bytesToMbytes(e.net['all'].bytes_recv_ps) / 10, 100),
             color: "limegreen"
           },
           {
             label: "NET UL",
-            value: `${this.bytesToMbytes(e.net['all'].bytes_sent_ps)} Mbps`,
+            value: `${this.bytesToMbytes(e.net['all'].bytes_sent_ps) > 10000 ? 0 : this.bytesToMbytes(e.net['all'].bytes_sent_ps)} Mbps`,
             percent: Math.min(this.bytesToMbytes(e.net['all'].bytes_sent_ps) / 10, 100),
             color: "limegreen"
           }
@@ -214,6 +218,17 @@ export default {
 
         metrics.push(metric)
       }
+
+      // sort by hostname value
+      metrics.sort((a, b) => {
+        if (a[0].label === "Host" && a[0].value < b[0].value) {
+          return -1
+        }
+        if (a[0].label === "Host" && a[0].value > b[0].value) {
+          return 1
+        }
+        return 0
+      })
 
       return metrics
     },
