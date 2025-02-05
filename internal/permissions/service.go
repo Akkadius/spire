@@ -51,7 +51,7 @@ func (s *Service) RegisterManualResources() map[string][]string {
 
 		// admin server
 		"Server Configuration":    {"admin/serverconfig"},
-		"Server System Resources": {"admin/system"},
+		"Server System Resources": {"admin/system", "eqemuserver/system-all", "eqemuserver/get-websocket-auth"},
 		"Server Update / Build": {
 			"eqemuserver/build",
 			"eqemuserver/install-release",
@@ -65,6 +65,7 @@ func (s *Service) RegisterManualResources() map[string][]string {
 		"Server Manual Backup":     {"eqemuserver/manual-backup"},
 		"Server Pre-Flight Checks": {"eqemuserver/pre-flight"},
 		"Server Reload API":        {"eqemuserver/reload"},
+		"Server Lock":              {"eqemuserver/get-lock-status", "eqemuserver/toggle-server-lock"},
 		"Server Process Management": {
 			"eqemuserver/server/start",
 			"eqemuserver/server/stop",
@@ -72,8 +73,12 @@ func (s *Service) RegisterManualResources() map[string][]string {
 			"eqemuserver/server/stop-cancel",
 		},
 		"Server Process Stats": {"eqemuserver/server-stats"},
-		"Server Zone Servers":  {"eqemuserver/zone-list"},
-		"Spire Settings":       {"spire/setting"},
+		"Server Zone Servers": {
+			"eqemuserver/zone-list",
+			"eqemuserver/zoneserver-list",
+			"eqemuserver/server/process-kill",
+		},
+		"Spire Settings": {"spire/setting"},
 	}
 }
 

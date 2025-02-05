@@ -1,3 +1,7 @@
+## [4.15.6] 2/04/2025
+
+* **Spire Admin** Fix zoneserver list permission mapping.
+
 ## [4.15.5] 1/29/2025
 
 * **Spire Admin** Admin header changes to allow showing more than 3 hosts
