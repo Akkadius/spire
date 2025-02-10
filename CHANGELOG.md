@@ -1,3 +1,7 @@
+## [4.15.7] 2/10/2025
+
+* **Spire Admin** Fix onboarding endpoint
+
 ## [4.15.6] 2/04/2025
 
 * **Spire Admin** Fix zoneserver list permission mapping.

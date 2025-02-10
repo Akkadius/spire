@@ -16,6 +16,7 @@ import (
 	gocache "github.com/patrickmn/go-cache"
 	gormMysql "gorm.io/driver/mysql"
 	"strconv"
+	"time"
 )
 
 // Init is a type responsible for bootstrapping and initializing the application
@@ -113,9 +114,37 @@ func (o *Init) SetIsInitialized(isInitialized bool) {
 	o.isInitialized = isInitialized
 }
 
+type ConnectionInfo struct {
+	User   string `json:"User"`
+	Addr   string `json:"Addr"`
+	DBName string `json:"DBName"`
+	Params struct {
+		Charset string `json:"charset"`
+	} `json:"Params"`
+	Collation string `json:"Collation"`
+	Loc       struct {
+	} `json:"Loc"`
+	MaxAllowedPacket        int           `json:"MaxAllowedPacket"`
+	ServerPubKey            string        `json:"ServerPubKey"`
+	Timeout                 time.Duration `json:"Timeout"`
+	ReadTimeout             time.Duration `json:"ReadTimeout"`
+	WriteTimeout            time.Duration `json:"WriteTimeout"`
+	AllowAllFiles           bool          `json:"AllowAllFiles"`
+	AllowCleartextPasswords bool          `json:"AllowCleartextPasswords"`
+	AllowNativePasswords    bool          `json:"AllowNativePasswords"`
+	AllowOldPasswords       bool          `json:"AllowOldPasswords"`
+	CheckConnLiveness       bool          `json:"CheckConnLiveness"`
+	ClientFoundRows         bool          `json:"ClientFoundRows"`
+	ColumnsWithAlias        bool          `json:"ColumnsWithAlias"`
+	InterpolateParams       bool          `json:"InterpolateParams"`
+	MultiStatements         bool          `json:"MultiStatements"`
+	ParseTime               bool          `json:"ParseTime"`
+	RejectReadOnly          bool          `json:"RejectReadOnly"`
+}
+
 // GetConnectionInfo will get the connection info for Spire to display to the
 // user while going through the initial onboarding and setup pages
-func (o *Init) GetConnectionInfo() *mysql.Config {
+func (o *Init) GetConnectionInfo() ConnectionInfo {
 	f, ok := o.connections.SpireDbNoLog().Config.Dialector.(*gormMysql.Dialector)
 	if ok {
 		p, err := mysql.ParseDSN(f.DSN)
@@ -123,9 +152,32 @@ func (o *Init) GetConnectionInfo() *mysql.Config {
 			o.logger.Error().Err(err).Msg("failed to parse dsn")
 		}
 
-		return p
+		var ci ConnectionInfo
+		ci.User = p.User
+		ci.Addr = p.Addr
+		ci.DBName = p.DBName
+		ci.Params.Charset = p.Params["charset"]
+		ci.Collation = p.Collation
+		ci.MaxAllowedPacket = p.MaxAllowedPacket
+		ci.ServerPubKey = p.ServerPubKey
+		ci.Timeout = p.Timeout
+		ci.ReadTimeout = p.ReadTimeout
+		ci.WriteTimeout = p.WriteTimeout
+		ci.AllowAllFiles = p.AllowAllFiles
+		ci.AllowCleartextPasswords = p.AllowCleartextPasswords
+		ci.AllowNativePasswords = p.AllowNativePasswords
+		ci.AllowOldPasswords = p.AllowOldPasswords
+		ci.CheckConnLiveness = p.CheckConnLiveness
+		ci.ClientFoundRows = p.ClientFoundRows
+		ci.ColumnsWithAlias = p.ColumnsWithAlias
+		ci.InterpolateParams = p.InterpolateParams
+		ci.MultiStatements = p.MultiStatements
+		ci.ParseTime = p.ParseTime
+		ci.RejectReadOnly = p.RejectReadOnly
+
+		return ci
 	}
-	return nil
+	return ConnectionInfo{}
 }
 
 // GetInstallationTables will return installation tables

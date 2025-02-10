@@ -115,6 +115,10 @@ func (d *Controller) env(c echo.Context) error {
 
 // getOnboardingInfo is used to get the spireinit info
 func (d *Controller) getOnboardingInfo(c echo.Context) error {
+	if d.spireinit.IsInitialized() {
+		return c.JSON(http.StatusOK, echo.Map{"data": "Spire is already initialized"})
+	}
+
 	return c.JSON(http.StatusOK,
 		echo.Map{
 			"data": echo.Map{
