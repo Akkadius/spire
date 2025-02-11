@@ -7,11 +7,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/gammazero/workerpool"
-	"github.com/gosimple/slug"
-	"github.com/spf13/cobra"
-	"gorm.io/gorm"
 	"io"
 	"log"
 	"net/http"
@@ -23,6 +18,12 @@ import (
 	"strings"
 	"sync"
 	"unicode"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/gammazero/workerpool"
+	"github.com/gosimple/slug"
+	"github.com/spf13/cobra"
+	"gorm.io/gorm"
 )
 
 type ScrapeCommand struct {
@@ -138,7 +139,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=295&rsa=Brewing&sub=dron&sb=item&menustr=080030000000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Fletching Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=296&rsa=Fletching&sb=item&sub=dron&menustr=080060000000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=298&rsa=Jewelcraft&sb=item&sub=dron&menustr=080070000000"},
-		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Pottery Recipes", Url: "https://www.eqtraders.com/recipes/pottery_recipe_page.php?article=299&rsa=Pottery&sb=item&sub=dron&menustr=080010000000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Pottery Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=299&rsa=Pottery&sub=Dron"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=297&rsa=Tinkering&sub=dron&sb=item&menustr=080120000000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Barbarian Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=301&rsa=Smithing&rc=BAR&sb=item&sub=Dron&menustr=080040010000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Barbarian Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=302&rsa=Tailoring&rc=BAR&sb=item&sub=Dron&menustr=080040010000"},
@@ -171,23 +172,57 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Vah Shir Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=323&rsa=Tailoring&rc=VAH&sub=DroN&sb=item&menustr=080040140040"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=336&rsa=Smithing&rc=ELF&sb=item&sub=dron&menustr=080040120050"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Wood Elf Cultural Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=337&rsa=Tailoring&rc=ELF&sb=item&sub=dron&menustr=080040120080"},
-		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Agnostic Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=agnostic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Agnostic Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=agnostic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Agnostic Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=agnostic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Agnostic Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=agnostic&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bertoxxulous Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=bertox&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bertoxxulous Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=bertox&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bertoxxulous Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=bertox&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Brell Serilis Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=brell&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Brell Serilis Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=brell&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Brell Serilis Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=brell&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bristlebane Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=bristlebane&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bristlebane Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=bristlebane&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Bristlebane Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=bristlebane&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Cazic Thule Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=cazic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Cazic Thule Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=cazic&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Cazic Thule Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=cazic&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Erollisi Marr Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=erollisi&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Erollisi Marr Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=erollisi&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Erollisi Marr Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=erollisi&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Innoruuk Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=innoruuk&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Innoruuk Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=innoruuk&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Innoruuk Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=innoruuk&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Karana Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=karana&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Karana Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=karana&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Karana Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=karana&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Mithaniel Marr Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=mithaniel&menustr=080110235000"},
-		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Prexus Cultural Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=prexus&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Mithaniel Marr Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=mithaniel&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Mithaniel Marr Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=mithaniel&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Prexus Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=prexus&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Prexus Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=prexus&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Prexus Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=prexus&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Quellious Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=quellious&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Quellious Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=quellious&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Quellious Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=quellious&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rallos Zek Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=rallos&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rallos Zek Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=rallos&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rallos Zek Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=rallos&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rodcet Nife Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=rodcet&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rodcet Nife Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=rodcet&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Rodcet Nife Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=rodcet&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Solusek Ro Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=solusek&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Solusek Ro Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=solusek&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Solusek Ro Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=solusek&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "The Tribunal Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=tribunal&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "The Tribunal Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=tribunal&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "The Tribunal Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=tribunal&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Tunare Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=tunare&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Tunare Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=tunare&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Tunare Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=tunare&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=veeshan&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=veeshan&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=veeshan&menustr=080110235000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=346&rsa=Baking&sb=item&sub=dodh&menustr=080020220000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=347&rsa=Brewing&sb=item&sub=dodh&menustr=080030044000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Fletching Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=348&rsa=Fletching&sb=item&sub=dodh&menustr=080060030000"},
