@@ -70,6 +70,18 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	}
 
 	list := []ExpansionRecipe{
+		{ExpId: -1, ExpName: "All", PageTitle: "Smithing Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Smithing"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Tailoring Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Tailoring"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Tinkering Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Tinkering"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Pottery Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Pottery"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Bakery Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Baking"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Brewing Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Brewing"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Alchemy Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Alchemy"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Fletching Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Fletching"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Jewelcraft Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Jewelcraft"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Make Poison Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=make%20poison"},
+		{ExpId: -1, ExpName: "All", PageTitle: "Spell Research Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Spell%20Research"},
+		{ExpId: -1, ExpName: "All", PageTitle: "No Skill Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=No%20Skill"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=velluc&sb=item&menustr=080020040000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=SoV&menustr=080110120000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=SoV&sb=item&menustr=080070000000"},
