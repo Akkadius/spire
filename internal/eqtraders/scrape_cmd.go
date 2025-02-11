@@ -223,6 +223,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tailoring&sb=item&sub=veeshan&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Smithing&sb=item&sub=veeshan&menustr=080110235000"},
 		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Veeshan Cultural Augment Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=339&rsa=Tinkering&sb=item&sub=veeshan&menustr=080110235000"},
+		{ExpId: 9, ExpName: "Dragons of Norrath", PageTitle: "Dragons of Norrath No Skill Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=298&rsa=No%20Skill&sub=dron"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=346&rsa=Baking&sb=item&sub=dodh&menustr=080020220000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=347&rsa=Brewing&sb=item&sub=dodh&menustr=080030044000"},
 		{ExpId: 10, ExpName: "Depths of Darkhollow", PageTitle: "Fletching Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=348&rsa=Fletching&sb=item&sub=dodh&menustr=080060030000"},
