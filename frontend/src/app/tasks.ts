@@ -10,6 +10,7 @@ export class Tasks {
       .limit(100000)
       .get()
 
+    // @ts-ignore
     const r = await (new TaskApi(...SpireApi.cfg())).listTasks(request)
     if (r.status === HttpStatus.OK) {
       return r.data
