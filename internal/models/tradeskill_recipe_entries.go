@@ -19,6 +19,7 @@ func (TradeskillRecipeEntry) TableName() string {
 func (TradeskillRecipeEntry) Relationships() []string {
     return []string{
 		"TradeskillRecipe",
+		"TradeskillRecipe.TradeskillRecipeEntries",
 	}
 }
 

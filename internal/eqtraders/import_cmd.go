@@ -62,7 +62,35 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
 	// bulk query for all recipes
 	var existingRecipes []models.TradeskillRecipe
-	c.db.Find(&existingRecipes)
+	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&existingRecipes)
+
+	existingRecipeLookup := make(map[string]bool)
+
+	// loop through all recipes
+	for _, recipe := range existingRecipes {
+
+		// create a unique key for each recipe
+		itemSummation := 0
+		for _, entry := range recipe.TradeskillRecipeEntries {
+			if entry.Componentcount > 0 {
+				itemSummation += entry.ItemId
+			}
+		}
+
+		key := fmt.Sprintf(
+			"%v-%v-%v-%v",
+			recipe.Name,
+			recipe.Tradeskill,
+			recipe.MinExpansion,
+			itemSummation,
+		)
+
+		if _, ok := existingRecipeLookup[key]; ok {
+			continue
+		}
+
+		existingRecipeLookup[key] = true
+	}
 
 	for _, recipe := range recipes {
 		if len(singleRecipe) > 0 && recipe.RecipeName != singleRecipe {
@@ -78,17 +106,36 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
 		var r models.TradeskillRecipe
 
+		itemSummation := 0
+		for _, entry := range recipe.Components {
+			itemSummation += entry.ItemId
+		}
+
+		key := fmt.Sprintf(
+			"%v-%v-%v-%v",
+			recipe.RecipeName,
+			recipe.Skill.SkillId,
+			recipe.ExpansionId,
+			itemSummation,
+		)
+
 		hasExistingRecipe := false
 		for _, existingRecipe := range existingRecipes {
-			if existingRecipe.Name == recipe.RecipeName &&
-				existingRecipe.Tradeskill == int16(recipe.Skill.SkillId) &&
-				existingRecipe.MinExpansion == int8(recipe.ExpansionId) {
+			if _, ok := existingRecipeLookup[key]; ok {
 				fmt.Printf("Found existing recipe: %v\n", existingRecipe.Name)
 				r = existingRecipe
 				hasExistingRecipe = true
 				break
 			}
 		}
+		//
+		//if recipe.RecipeName == "Eminent Boot Symbol of the Warmonger" {
+		//	pp.Println(recipe)
+		//	pp.Println("Traders")
+		//	pp.Println(key)
+		//	pp.Println("Database")
+		//	pp.Println(r)
+		//}
 
 		r.Name = recipe.RecipeName
 		r.Tradeskill = int16(recipe.Skill.SkillId)

@@ -832,7 +832,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				learnedItem = re.ReplaceAllString(learnedItem, "")
 
 				if len(learnedItem) > 0 {
-					fmt.Println("learned item [%v] for recipe [%v]", learnedItem, recipeName)
+					fmt.Printf("learned item [%v] for recipe [%v]\n", learnedItem, recipeName)
 				}
 			}
 
