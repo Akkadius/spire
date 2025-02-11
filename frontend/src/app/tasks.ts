@@ -6,7 +6,11 @@ import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 export class Tasks {
 
   public static async getTasks() {
-    const r = await (new TaskApi(...SpireApi.cfg())).listTasks()
+    let request = (new SpireQueryBuilder())
+      .limit(100000)
+      .get()
+
+    const r = await (new TaskApi(...SpireApi.cfg())).listTasks(request)
     if (r.status === HttpStatus.OK) {
       return r.data
     }

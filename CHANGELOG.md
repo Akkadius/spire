@@ -1,6 +1,7 @@
-## [4.15.7] 2/10/2025
+## [4.15.8] 2/10/2025
 
 * **Spire Admin** Fix onboarding endpoint
+* **Spire Admin** Fix tasks limit on the tasks page to 100,000
 
 ## [4.15.6] 2/04/2025
 
