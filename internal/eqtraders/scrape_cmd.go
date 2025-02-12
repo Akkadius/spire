@@ -458,8 +458,10 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 
 	if expansion == "all" {
 		for _, r := range list {
-			c.parseRecipePage(r)
-			c.SaveItemCache()
+			if r.ExpId == -1 {
+				c.parseRecipePage(r)
+				c.SaveItemCache()
+			}
 		}
 	} else {
 		expansionId, err := strconv.Atoi(expansion)
