@@ -1,3 +1,7 @@
+## [4.15.9] 2/14/2025
+
+* **Spire Admin** Only serve SPA assets from within the embedded file system
+
 ## [4.15.8] 2/10/2025
 
 * **Spire Admin** Fix onboarding endpoint

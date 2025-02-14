@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -96,8 +95,7 @@ func (s Packer) MiddlewareHandler() echo.MiddlewareFunc {
 				return
 			}
 
-			name := filepath.Join(s.config.BasePath, path.Clean("/"+p)) // "/"+ for security
-
+			name := filepath.Join(s.config.BasePath, path.Clean("/"+p))
 			if name == "/" || name == "\\" {
 				index, err := s.box.Find(s.config.SpaIndex)
 				if err != nil {
@@ -106,32 +104,24 @@ func (s Packer) MiddlewareHandler() echo.MiddlewareFunc {
 				return c.HTML(http.StatusOK, string(index))
 			}
 
-			_, err = os.Stat(name)
-			if err != nil {
-				if os.IsNotExist(err) {
-
-					// If we find a valid non-index file in the box, continue the request as normal
-					// and let the static asset handler pick up the request later
-					fileRequest := strings.Replace(c.Request().RequestURI, s.config.BasePath, "", -1)
-					_, err := s.box.Find(fileRequest)
-					if err == nil {
-						return next(c)
-					}
-
-					// If we didn't find a non-index asset at this point, we need to return the
-					// spa index when nested SPA route requests are made
-					// eg: /spa/nested/route
-					index, err := s.box.Find(s.config.SpaIndex)
-					if err != nil {
-						s.logger.Error().Err(err).Msg("error finding spa index")
-					}
-
-					return c.HTML(http.StatusOK, string(index))
-				}
-				return
+			// If we find a valid non-index file in the box, continue the request as normal
+			// and let the static asset handler pick up the request later
+			fileRequest := strings.Replace(c.Request().RequestURI, s.config.BasePath, "", -1)
+			_, err = s.box.Find(fileRequest)
+			if err == nil {
+				return next(c)
 			}
 
-			return c.File(name)
+			// If we didn't find a non-index asset at this point, we need to return the
+			// spa index when nested SPA route requests are made
+			// eg: /spa/nested/route
+			index, err := s.box.Find(s.config.SpaIndex)
+			if err != nil {
+				s.logger.Error().Err(err).Msg("error finding spa index")
+				return next(c)
+			}
+
+			return c.HTML(http.StatusOK, string(index))
 		}
 	}
 }
