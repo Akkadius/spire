@@ -453,83 +453,136 @@ export default {
         // pets
         if ([33, 106, 71].includes(e["effectid_" + effectIndex])) {
           console.log("[bot-spell-list-editor] detected pet spell SPA [%s]", e["effectid_" + effectIndex])
-          return 32;
+          return 5;
         }
 
         // charm
         if ([22].includes(e["effectid_" + effectIndex])) {
           console.log("[bot-spell-list-editor] detected charm spell SPA [%s]", e["effectid_" + effectIndex])
-          return 4096;
+          return 12;
         }
 
         // snare
         if ([128].includes(e["effectid_" + effectIndex])) {
           console.log("[bot-spell-list-editor] detected snare spell SPA [%s]", e["effectid_" + effectIndex])
-          return 128;
+          return 7;
         }
 
         // dispell
         if ([209].includes(e["effectid_" + effectIndex])) {
           console.log("[bot-spell-list-editor] detected dispell spell SPA [%s]", e["effectid_" + effectIndex])
-          return 512;
+          return 9;
         }
 
         // mez
         if ([31].includes(e["effectid_" + effectIndex])) {
           console.log("[bot-spell-list-editor] detected mez spell SPA [%s]", e["effectid_" + effectIndex])
-          return 2048;
+          return 11;
         }
 
         // heal
         if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] > 0 && e.good_effect === 1) {
           console.log("[bot-spell-list-editor] detected heal SPA [%s]", e["effectid_" + effectIndex])
-          return 2;
+          return 1;
         }
 
         // nuke
         if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] > 0 && e.good_effect === 0) {
           console.log("[bot-spell-list-editor] detected nuke SPA [%s]", e["effectid_" + effectIndex])
-          return 1;
+          return 0;
         }
 
         // DOT
         if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] !== 0 && e.good_effect === 0 && e.buffduration > 0) {
           console.log("[bot-spell-list-editor] detected DOT SPA [%s]", e["effectid_" + effectIndex])
-          return 256;
+          return 8;
         }
 
         // buff
         if (e.good_effect === 1) {
           console.log("[bot-spell-list-editor] detected buff SPA [%s]", e["effectid_" + effectIndex])
-          return 8;
+          return 3;
         }
       }
 
-      // Need to add support for additional bot spell types (will be expanding further)
-      //   1: "Nuke",
-      //   2: "Heal",
-      //   4: "Root",
-      //   8: "Buff",
-      //   16: "Escape",
-      //   32: "Pet",
-      //   64: "Lifetap",
-      //   128: "Snare",
-      //   256: "DOT",
-      //   512: "Dispel",
-      //   1024: "In-Combat Buff",
-      //   2048: "Mez",
-      //   4096: "Charm"
-      //   8192: "Slow",
-      //   16384: "Debuff",
-      //   32768: "Cure",
-      //   65536: "Resurrect",
-      //   131072: "Hate Reduction",
-      //   262144: "In Combat Buff Song",
-      //   524288: "Out Of Combat Buff Song",
-      //   1048576: "Pre Combat Buff",
-      //   2097152: "Pre Combat Buff Song"
+	// 0: "Nuke",
+	// 1: "RegularHeal",
+	// 2: "Root",
+	// 3: "Buff",
+	// 4: "Escape",
+	// 5: "Pet",
+	// 6: "Lifetap",
+	// 7: "Snare",
+	// 8: "DOT",
+	// 9: "Dispel",
+	// 10: "InCombatBuff",
+	// 11: "Mez",
+	// 12: "Charm",
+	// 13: "Slow",
+	// 14: "Debuff",
+	// 15: "Cure",
+	// 16: "Resurrect",
+	// 17: "HateRedux",
+	// 18: "InCombatBuffSong",
+	// 19: "OutOfCombatBuffSong",
+	// 20: "PreCombatBuff",
+	// 21: "PreCombatBuffSong",
+	// 22: "Fear",
+	// 23: "Stun",
+	// 24: "HateLine",
+	// 25: "GroupCures",
+	// 26: "CompleteHeal",
+	// 27: "FastHeals",
+	// 28: "VeryFastHeals",
+	// 29: "GroupHeals",
+	// 30: "GroupCompleteHeals",
+	// 31: "GroupHoTHeals",
+	// 32: "HoTHeals",
+	// 33: "AENukes",
+	// 34: "AERains",
+	// 35: "AEMez",
+	// 36: "AEStun",
+	// 37: "AEDebuff",
+	// 38: "AESlow",
+	// 39: "AESnare",
+	// 40: "AEFear",
+	// 41: "AEDispel",
+	// 42: "AERoot",
+	// 43: "AEDoT",
+	// 44: "AELifetap",
+	// 45: "AEHateLine",
+	// 46: "PBAENuke",
+	// 47: "PetBuffs",
+	// 48: "PetRegularHeals",
+	// 49: "PetCompleteHeals",
+	// 50: "PetFastHeals",
+	// 51: "PetVeryFastHeals",
+	// 52: "PetHoTHeals",
+	// 53: "PetCures",
+	// 54: "DamageShields",
+	// 55: "ResistBuffs",
+	// 56: "PetDamageShields",
+	// 57: "PetResistBuffs",
+	// 100: "Teleport",
+	// 101: "Lull",
+	// 102: "Succor",
+	// 103: "BindAffinity",
+	// 104: "Identify",
+	// 105: "Levitate",
+	// 106: "Rune",
+	// 107: "WaterBreathing",
+	// 108: "Size",
+	// 109: "Invisibility",
+	// 110: "MovementSpeed",
+	// 111: "SendHome",
+	// 112: "SummonCorpse",
+	// 113: "AELull",
+	// 200: "Discipline",
+	// 201: "DiscAggressive",
+	// 202: "DiscDefensive",
+	// 203: "DiscUtility",
 
-      return 1;
+      return 0;
     },
 
     async addSpellToList(spellId) {
