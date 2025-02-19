@@ -4,9 +4,11 @@
 package eqemuserver
 
 import (
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"syscall"
 )
 
