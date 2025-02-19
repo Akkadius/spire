@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/labstack/echo/v4"
@@ -44,6 +45,14 @@ func (a *Controller) backupMysql(c echo.Context) error {
 func (a *Controller) mysqlBackupDownload(c echo.Context) error {
 	file := c.Param("file")
 	downloadPath := filepath.Join(a.pathmgmt.GetBackupsDir(), filepath.Base(file))
+
+	checks := []string{file, downloadPath}
+	for _, check := range checks {
+		err := filepathcheck.IsValid(check)
+		if err != nil {
+			return err
+		}
+	}
 
 	return c.Inline(downloadPath, filepath.Base(file))
 }

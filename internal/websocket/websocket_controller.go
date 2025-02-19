@@ -88,9 +88,10 @@ func (a *Controller) websocketHandler(c echo.Context) error {
 				if m.Action == "hello" {
 					err = a.handler.HandleHello(ws, msg)
 				}
-				if m.Action == "exec_server_bin" {
-					err = a.handler.HandleExecServerBin(ws, msg)
-				}
+				// this was a POC anyhow
+				//if m.Action == "exec_server_bin" {
+				//	err = a.handler.HandleExecServerBin(ws, msg)
+				//}
 			}
 
 			// close connection on error

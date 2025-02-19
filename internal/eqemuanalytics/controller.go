@@ -36,7 +36,7 @@ func v1AnalyticsRateLimit() echo.MiddlewareFunc {
 		appmiddleware.RateLimiterConfig{
 			LimitConfig: appmiddleware.LimiterConfig{
 				Max:      15,
-				Duration: time.Minute * 1,
+				Duration: time.Hour * 1,
 				Strategy: "ip",
 				Key:      "",
 			},
@@ -99,10 +99,14 @@ func (a *Controller) serverCrashReport(c echo.Context) error {
 			Count(&count)
 	}
 
-	a.db.GetSpireDb().Create(r)
+	err := a.db.GetSpireDb().Create(r).Error
+	if err != nil {
+		fmt.Printf("Error ingesting crash report: %v\n", err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
 	// if count is 0, then this is a new crash
-	if count == 0 && isReleaseVersion {
+	if count == 0 && r.ID > 0 && isReleaseVersion {
 		// send discord webhook
 		go func() {
 

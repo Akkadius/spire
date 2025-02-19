@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/unzip"
 	gocache "github.com/patrickmn/go-cache"
 	"io/ioutil"
@@ -44,6 +45,15 @@ type SourceResult struct {
 
 // Source downloads files and returns filename:contents
 func (g *SourceDownloader) Source(org string, repo string, branch string, forceRefresh bool) SourceResult {
+	checks := []string{org, repo, branch}
+	for _, check := range checks {
+		err := filepathcheck.IsValid(check)
+		if err != nil {
+			fmt.Println(err)
+			return SourceResult{}
+		}
+	}
+
 	lockKey := fmt.Sprintf("%v-%v-%v", org, repo, branch)
 	// if lock set, return
 	_, found := g.cache.Get(lockKey)

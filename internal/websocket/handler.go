@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"golang.org/x/net/websocket"
 	"io"
@@ -13,6 +14,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 type Handler struct {
@@ -55,6 +57,14 @@ func (h *Handler) HandleExecServerBin(ws *websocket.Conn, msg string) error {
 		startCmd = filepath.Join(basePath, m.Command)
 	} else if _, err := os.Stat(filepath.Join(startCmd, fmt.Sprintf("%v.exe", m.Command))); err == nil {
 		startCmd = filepath.Join(basePath, fmt.Sprintf("%v.exe", m.Command))
+	}
+
+	checks := []string{basePath, m.Command, strings.Join(m.Arguments, " ")}
+	for _, check := range checks {
+		err = filepathcheck.IsValid(check)
+		if err != nil {
+			return err
+		}
 	}
 
 	if len(startCmd) == 0 {

@@ -3,6 +3,7 @@ package eqemuserver
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
@@ -273,6 +274,11 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 		c.LineBreak()
 		fmt.Println(info.BuildTool, "-j"+info.BuildCores)
 		c.LineBreak()
+
+		err = filepathcheck.IsValid(info.BuildTool)
+		if err != nil {
+			c.logger.Info().Err(err).Msg("Build tool path failure")
+		}
 
 		cmd = exec.Command(info.BuildTool, "-j"+info.BuildCores)
 		cmd.Dir = info.SourceDirectory

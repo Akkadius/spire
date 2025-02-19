@@ -9,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/logger"
@@ -753,6 +754,11 @@ func (a *Controller) getManualBackup(c echo.Context) error {
 	file := fmt.Sprintf("%v-%v.zip", downloadType.name, time.Now().Format("2006-01-02"))
 	downloadFile := filepath.Join(os.TempDir(), file)
 
+	err = filepathcheck.IsValid(downloadFile)
+	if err != nil {
+		return err
+	}
+
 	_ = os.Remove(downloadFile)
 
 	// create the output file we'll write to
@@ -837,6 +843,11 @@ func (a *Controller) getFileLog(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
 	}
 
+	err := filepathcheck.IsValid(logFile)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
 	stat, err := os.Stat(logFile)
 	if os.IsNotExist(err) {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "File does not exist!"})
@@ -892,7 +903,12 @@ func (a *Controller) deleteFileLog(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
 	}
 
-	_, err := os.Stat(logFile)
+	err := filepathcheck.IsValid(logFile)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	_, err = os.Stat(logFile)
 	if os.IsNotExist(err) {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "File does not exist!"})
 	}
@@ -1012,6 +1028,17 @@ func (a *Controller) preflight(c echo.Context) error {
 	defer cancel()
 
 	bin := filepath.Join(a.pathmgmt.GetEQEmuServerBinPath(), check.process)
+
+	err := filepathcheck.IsValid(bin)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	err = filepathcheck.IsValid(strings.Join(check.args, " "))
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
 	cmd := exec.CommandContext(ctx, bin, check.args...)
 	cmd.Env = os.Environ()
 	if runtime.GOOS == "linux" {

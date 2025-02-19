@@ -1,3 +1,7 @@
+## [4.15.10] 2/18/2025
+
+* **Spire Admin** Adjustments to the crash analytics ingestion
+
 ## [4.15.9] 2/14/2025
 
 * **Spire Admin** Only serve SPA assets from within the embedded file system

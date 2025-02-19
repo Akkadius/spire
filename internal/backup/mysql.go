@@ -3,6 +3,7 @@ package backup
 import (
 	"bufio"
 	"fmt"
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"os/exec"
 	"path/filepath"
@@ -68,6 +69,19 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 	}
 
 	runPath := filepath.Join(m.pathmanager.GetEQEmuServerPath(), "bin", "world")
+
+	checks := []string{runPath, strings.Join(args, " ")}
+	for _, check := range checks {
+		err := filepathcheck.IsValid(check)
+		if err != nil {
+			return MysqlBackupResponse{
+				Command:  fmt.Sprintf("%v %v", runPath, strings.Join(args, " ")),
+				StdOut:   fmt.Sprintf("failed to validate path: %v", err),
+				FilePath: "",
+			}
+		}
+	}
+
 	cmd := exec.Command(runPath, args...)
 	stdout, _ := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
@@ -100,6 +114,15 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 				path = filepath.Join(m.pathmanager.GetEQEmuServerPath(), path)
 				finalPath = path
 			}
+		}
+	}
+
+	err = filepathcheck.IsValid(finalPath)
+	if err != nil {
+		return MysqlBackupResponse{
+			Command:  fmt.Sprintf("%v %v", runPath, strings.Join(args, " ")),
+			StdOut:   fmt.Sprintf("failed to validate path: %v", err),
+			FilePath: "",
 		}
 	}
 

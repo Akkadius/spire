@@ -4,9 +4,11 @@
 package eqemuserver
 
 import (
+	"github.com/Akkadius/spire/internal/filepathcheck"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"syscall"
 )
 
@@ -15,6 +17,12 @@ func (l *Launcher) startServerProcess(name string, args ...string) error {
 	if err != nil {
 		return err
 	}
+
+	err = filepathcheck.IsValid(strings.Join(args, " "))
+	if err != nil {
+		return err
+	}
+
 	cmd := exec.Command(bin, args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 
