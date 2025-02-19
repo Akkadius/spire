@@ -4,11 +4,9 @@
 package eqemuserver
 
 import (
-	"github.com/Akkadius/spire/internal/filepathcheck"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"syscall"
 )
 
@@ -34,11 +32,6 @@ const (
 
 func (l *Launcher) startServerProcess(name string, args ...string) error {
 	bin, err := exec.LookPath(filepath.Join(l.pathmgmt.GetEQEmuServerPath(), "bin", name))
-	if err != nil {
-		return err
-	}
-
-	err = filepathcheck.IsValid(strings.Join(args, " "))
 	if err != nil {
 		return err
 	}

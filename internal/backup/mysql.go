@@ -69,23 +69,19 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 	}
 
 	runPath := filepath.Join(m.pathmanager.GetEQEmuServerPath(), "bin", "world")
-
-	checks := []string{runPath, strings.Join(args, " ")}
-	for _, check := range checks {
-		err := filepathcheck.IsValid(check)
-		if err != nil {
-			return MysqlBackupResponse{
-				Command:  fmt.Sprintf("%v %v", runPath, strings.Join(args, " ")),
-				StdOut:   fmt.Sprintf("failed to validate path: %v", err),
-				FilePath: "",
-			}
+	err := filepathcheck.ValidateSafePath(m.pathmanager.GetEQEmuServerPath(), runPath)
+	if err != nil {
+		return MysqlBackupResponse{
+			Command:  fmt.Sprintf("%v %v", runPath, strings.Join(args, " ")),
+			StdOut:   fmt.Sprintf("failed to validate path: %v", err),
+			FilePath: "",
 		}
 	}
 
 	cmd := exec.Command(runPath, args...)
 	stdout, _ := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
-	err := cmd.Start()
+	err = cmd.Start()
 	if err != nil {
 		fmt.Printf("failed to start command: %v", err)
 	}
@@ -117,7 +113,7 @@ func (m *Mysql) Backup(r BackupRequest) MysqlBackupResponse {
 		}
 	}
 
-	err = filepathcheck.IsValid(finalPath)
+	err = filepathcheck.ValidateSafePath(m.pathmanager.GetEQEmuServerPath(), finalPath)
 	if err != nil {
 		return MysqlBackupResponse{
 			Command:  fmt.Sprintf("%v %v", runPath, strings.Join(args, " ")),

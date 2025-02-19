@@ -1,4 +1,4 @@
-## [4.15.11] 2/18/2025
+## [4.15.12] 2/18/2025
 
 * **Spire Admin** Adjustments to the crash analytics ingestion
 

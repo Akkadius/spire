@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
-	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
@@ -175,11 +174,6 @@ func (u *Updater) GetBuildInfo() (BuildInfo, error) {
 
 	buildTool := ""
 	if len(foundPath) > 0 {
-		err = filepathcheck.IsValid(foundPath)
-		if err != nil {
-			return BuildInfo{}, err
-		}
-
 		file, err := os.Open(foundPath)
 		if err != nil {
 			return BuildInfo{}, err

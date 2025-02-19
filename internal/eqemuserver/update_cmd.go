@@ -3,7 +3,6 @@ package eqemuserver
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/eqemuserverconfig"
-	"github.com/Akkadius/spire/internal/filepathcheck"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/spire"
@@ -13,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -275,9 +275,22 @@ func (c *UpdateCommand) Handle(_ *cobra.Command, args []string) {
 		fmt.Println(info.BuildTool, "-j"+info.BuildCores)
 		c.LineBreak()
 
-		err = filepathcheck.IsValid(info.BuildTool)
-		if err != nil {
-			c.logger.Info().Err(err).Msg("Build tool path failure")
+		// validate build tool types (make, ninja, gcc etc)
+		if info.BuildTool == "" {
+			c.logger.Fatal().Msg("Build tool not found")
+		}
+
+		buildToolTypes := []string{"make", "ninja"}
+		found := false
+		for _, t := range buildToolTypes {
+			if t == filepath.Base(info.BuildTool) {
+				found = true
+			}
+		}
+
+		if !found {
+			c.logger.Fatal().Msg("Invalid build tool")
+			return
 		}
 
 		cmd = exec.Command(info.BuildTool, "-j"+info.BuildCores)

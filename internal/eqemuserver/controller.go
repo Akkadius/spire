@@ -754,11 +754,6 @@ func (a *Controller) getManualBackup(c echo.Context) error {
 	file := fmt.Sprintf("%v-%v.zip", downloadType.name, time.Now().Format("2006-01-02"))
 	downloadFile := filepath.Join(os.TempDir(), file)
 
-	err = filepathcheck.IsValid(downloadFile)
-	if err != nil {
-		return err
-	}
-
 	_ = os.Remove(downloadFile)
 
 	// create the output file we'll write to
@@ -839,11 +834,7 @@ type FileReadResponse struct {
 
 func (a *Controller) getFileLog(c echo.Context) error {
 	logFile := filepath.Join(a.pathmgmt.GetLogsDirPath(), c.Param("file"))
-	if !strings.Contains(logFile, a.pathmgmt.GetLogsDirPath()) {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
-	}
-
-	err := filepathcheck.IsValid(logFile)
+	err := filepathcheck.ValidateSafePath(a.pathmgmt.GetLogsDirPath(), logFile)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -899,11 +890,7 @@ func (a *Controller) getFileLog(c echo.Context) error {
 
 func (a *Controller) deleteFileLog(c echo.Context) error {
 	logFile := filepath.Join(a.pathmgmt.GetLogsDirPath(), c.Param("file"))
-	if !strings.Contains(logFile, a.pathmgmt.GetLogsDirPath()) {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invalid access!"})
-	}
-
-	err := filepathcheck.IsValid(logFile)
+	err := filepathcheck.ValidateSafePath(a.pathmgmt.GetLogsDirPath(), logFile)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -1028,15 +1015,9 @@ func (a *Controller) preflight(c echo.Context) error {
 	defer cancel()
 
 	bin := filepath.Join(a.pathmgmt.GetEQEmuServerBinPath(), check.process)
-
-	err := filepathcheck.IsValid(bin)
+	err := filepathcheck.ValidateSafePath(a.pathmgmt.GetEQEmuServerBinPath(), bin)
 	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
-	}
-
-	err = filepathcheck.IsValid(strings.Join(check.args, " "))
-	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	cmd := exec.CommandContext(ctx, bin, check.args...)

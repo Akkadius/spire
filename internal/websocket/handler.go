@@ -14,7 +14,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strings"
 )
 
 type Handler struct {
@@ -59,12 +58,9 @@ func (h *Handler) HandleExecServerBin(ws *websocket.Conn, msg string) error {
 		startCmd = filepath.Join(basePath, fmt.Sprintf("%v.exe", m.Command))
 	}
 
-	checks := []string{basePath, m.Command, strings.Join(m.Arguments, " ")}
-	for _, check := range checks {
-		err = filepathcheck.IsValid(check)
-		if err != nil {
-			return err
-		}
+	err = filepathcheck.ValidateSafePath(basePath, startCmd)
+	if err != nil {
+		return err
 	}
 
 	if len(startCmd) == 0 {

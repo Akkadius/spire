@@ -46,12 +46,9 @@ func (a *Controller) mysqlBackupDownload(c echo.Context) error {
 	file := c.Param("file")
 	downloadPath := filepath.Join(a.pathmgmt.GetBackupsDir(), filepath.Base(file))
 
-	checks := []string{file, downloadPath}
-	for _, check := range checks {
-		err := filepathcheck.IsValid(check)
-		if err != nil {
-			return err
-		}
+	err := filepathcheck.ValidateSafePath(a.pathmgmt.GetBackupsDir(), downloadPath)
+	if err != nil {
+		return err
 	}
 
 	return c.Inline(downloadPath, filepath.Base(file))
