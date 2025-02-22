@@ -7,6 +7,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
+	"github.com/Akkadius/spire/internal/models"
+	"golang.org/x/net/html"
 	"io"
 	"log"
 	"net/http"
@@ -29,6 +32,7 @@ import (
 type ScrapeCommand struct {
 	db      *gorm.DB
 	command *cobra.Command
+	logger  *logger.AppLogger
 }
 
 func (c *ScrapeCommand) Command() *cobra.Command {
@@ -40,6 +44,7 @@ var singleRecipe string
 
 func NewScrapeCommand(
 	db *gorm.DB,
+	logger *logger.AppLogger,
 ) *ScrapeCommand {
 	i := &ScrapeCommand{
 		db: db,
@@ -47,6 +52,7 @@ func NewScrapeCommand(
 			Use:   "eq-traders:scrape [expansion_number]",
 			Short: "A command for scraping / downloading eq traders recipes. Use eq-traders:import to import the data into the database.",
 		},
+		logger: logger,
 	}
 
 	i.command.Args = cobra.MinimumNArgs(1)
@@ -536,6 +542,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		}
 
 		contents = string(data)
+		contents = strings.ReplaceAll(contents, "<td>&nbsp;&nbsp;</td>", "")
 	}
 
 	// if cache doesn't exist, fetch page and write cache
@@ -578,6 +585,13 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 		wp.Submit(func() {
 
+			// this is a td that contains <td>&nbsp;&nbsp;</td> and messed up the parsing
+			messedUpRow := false
+			messedUpRowStr, _ := s.Find("td").First().Html()
+			if len(messedUpRowStr) == 4 {
+				messedUpRow = true
+			}
+
 			recipeName := strings.TrimSpace(s.Find("td a").First().Text())
 			recipeNameHtml, err := s.Find("td").First().Html()
 			if err != nil {
@@ -588,6 +602,19 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				fmt.Println(err)
 			}
 			recipeText := s.Find("td").Next().Text()
+
+			// some pages are formatted strange and have an extra <td> beginning of the row
+			if messedUpRow {
+				recipeName = s.Find("td").First().Next().Text()
+				recipeNameHtml = strings.TrimSpace(s.Find("td").First().Next().Text())
+				recipe, err = s.Find("td").First().Next().Next().Html()
+				if err != nil {
+					c.logger.Error().Err(err).Msg("error parsing recipe html")
+				}
+				recipeText = s.Find("td").First().Next().Next().Text()
+
+				//fmt.Printf("messed up recipeName [%v] recipeNameHtml [%v] recipeText [%v] recipe [%v]\n", recipeName, recipeNameHtml, recipeText, recipe)
+			}
 
 			consumeContainer := false
 
@@ -608,6 +635,10 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			trivialInt := 0
 			trivial := s.Find("td").Next().Next().Text()
 			//pp.Println(trivial)
+
+			if messedUpRow {
+				trivial = s.Find("td").First().Next().Next().Next().Text()
+			}
 
 			trivialInt, _ = strconv.Atoi(trivial)
 
@@ -640,7 +671,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				// parse out "300" in Required Skill Level: 300
 				requiredSkillLevel, err = strconv.Atoi(reqStr)
 				if err != nil {
-					c.logger.Errorf("error parsing required skill level [%v] err [%v]", c.getStringInBetween(recipe, "Required Skill Level:", "<"), err.Error())
+					c.logger.Info().Msgf("error parsing required skill level [%v] err [%v]", c.getStringInBetween(recipe, "Required Skill Level:", "<"), err.Error())
 				}
 			}
 
@@ -664,9 +695,12 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					}
 				}
 
+				name := c.getStringInBetween(s, ">", "<")
+				name = html.UnescapeString(name)
+
 				componentsList = append(componentsList, Item{
 					ItemId:   c.getItemIdFromHtml(s),
-					ItemName: c.getStringInBetween(s, ">", "<"),
+					ItemName: name,
 					Count:    quantity,
 				})
 			}
@@ -684,6 +718,9 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					name = strings.ReplaceAll(name, " (Stationary)", "")
 					name = strings.ReplaceAll(name, " (Formerly Ak&#39;Anon Forge)", "")
 					name = strings.TrimSpace(name)
+
+					// html decode name
+					name = html.UnescapeString(name)
 
 					objectType := c.getObjectTypeFromName(name)
 					if objectType.Type > 0 {
@@ -740,9 +777,12 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					}
 				}
 
+				name := c.getStringInBetween(s, ">", "<")
+				name = html.UnescapeString(name)
+
 				returnItems = append(returnItems, Item{
 					ItemId:   i,
-					ItemName: c.getStringInBetween(s, ">", "<"),
+					ItemName: name,
 					Count:    quantity,
 				})
 			}
@@ -899,7 +939,31 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				skill = c.getSkillFromName(r.Url)
 			}
 			if skill.SkillId == 0 {
-				c.logger.Errorf("skill not found for recipe [%v] [%v]", recipeName, r.Url)
+				c.logger.Info().Msgf("skill not found for recipe [%v] [%v]", recipeName, r.Url)
+			}
+
+			if len(componentsList) == 0 {
+				c.logger.Info().Msgf("components not found for recipe [%v] [%v]", recipeName, r.Url)
+				return
+			}
+
+			for _, component := range componentsList {
+				if component.ItemId == 0 {
+					c.logger.Info().Msgf("component item not found for recipe [%v] [%v]", recipeName, r.Url)
+					return
+				}
+			}
+
+			recipeItemId := 0
+			if messedUpRow {
+				var item models.Item
+				c.db.Where("Name = ?", strings.TrimSpace(recipeName)).First(&item)
+
+				if item.ID > 0 {
+					recipeItemId = item.ID
+				}
+			} else {
+				recipeItemId = c.getItemIdFromHtml(recipeNameHtml)
 			}
 
 			r := Recipe{
@@ -911,7 +975,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				RequiredSkillLevel: requiredSkillLevel,
 				ConsumeContainer:   consumeContainer,
 				NoFail:             noFail,
-				RecipeItemId:       c.getItemIdFromHtml(recipeNameHtml),
+				RecipeItemId:       recipeItemId,
 				Components:         componentsList,
 				In:                 inList,
 				Yield:              yieldInt,
