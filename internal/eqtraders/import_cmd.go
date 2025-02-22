@@ -155,12 +155,12 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		if recipe.LearnedByItem.ItemName != "" {
 			additionalNotes = append(
 				additionalNotes,
-				fmt.Sprintf(" - Learned by item [%v]", recipe.LearnedByItem.ItemName),
+				fmt.Sprintf("Learned by item [%v]", recipe.LearnedByItem.ItemName),
 			)
 		}
 
 		r.Notes = null.StringFrom(
-			fmt.Sprintf("%v-%v%v (eqtraders import)",
+			fmt.Sprintf("%v - %v (eqtraders import) %v",
 				recipe.ExpansionName,
 				recipe.Skill.SkillName,
 				strings.Join(additionalNotes, ", "),
@@ -169,10 +169,16 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.Enabled = int8(1)
 		r.MustLearn = int8(0)
 		r.Quest = int8(0)
-		r.ReplaceContainer = int8(0) // todo - figure out what this is
+		// replace container appear to be mostly quest based recipes
+		// todo handle this with quest cases
+		r.ReplaceContainer = int8(0)
+		if recipe.ConsumeContainer {
+			r.ReplaceContainer = int8(1)
+		}
+
 		r.ContentFlags = null.StringFrom("")
 		r.ContentFlagsDisabled = null.StringFrom("")
-		r.Skillneeded = 0 // todo - figure out what this is
+		r.Skillneeded = int16(recipe.RequiredSkillLevel)
 
 		if len(recipe.LearnedByItem.ItemName) > 0 {
 			if i, ok := itemLookupCache[recipe.LearnedByItem.ItemName]; ok {
@@ -240,7 +246,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 				}
 			}
 
-			if e.Failcount == 0 {
+			if e.Failcount == 0 && !recipe.NoFail {
 				e.Salvagecount = int8(component.Count)
 			}
 
