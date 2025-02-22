@@ -68,23 +68,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
 	// loop through all recipes
 	for _, recipe := range existingRecipes {
-
-		// create a unique key for each recipe
-		itemSummation := 0
-		for _, entry := range recipe.TradeskillRecipeEntries {
-			if entry.Componentcount > 0 {
-				itemSummation += entry.ItemId
-			}
-		}
-
-		key := fmt.Sprintf(
-			"%v-%v-%v-%v",
-			recipe.Name,
-			recipe.Tradeskill,
-			recipe.MinExpansion,
-			itemSummation,
-		)
-
+		key := GetDbRecipeSignature(recipe)
 		if _, ok := existingRecipeLookup[key]; ok {
 			continue
 		}
@@ -103,19 +87,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		}
 
 		var r models.TradeskillRecipe
-
-		itemSummation := 0
-		for _, entry := range recipe.Components {
-			itemSummation += entry.ItemId
-		}
-
-		key := fmt.Sprintf(
-			"%v-%v-%v-%v",
-			recipe.RecipeName,
-			recipe.Skill.SkillId,
-			recipe.ExpansionId,
-			itemSummation,
-		)
+		key := GetRecipeSignature(recipe)
 
 		hasExistingRecipe := false
 		for _, existingRecipe := range existingRecipes {

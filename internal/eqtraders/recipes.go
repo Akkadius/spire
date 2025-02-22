@@ -1,6 +1,9 @@
 package eqtraders
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/Akkadius/spire/internal/models"
+)
 
 // Item is a struct that represents an item
 type Item struct {
@@ -42,6 +45,24 @@ func GetRecipeSignature(r Recipe) string {
 		r.RecipeName,
 		r.Skill.SkillId,
 		r.ExpansionId,
+		itemSummation,
+	)
+}
+
+func GetDbRecipeSignature(r models.TradeskillRecipe) string {
+	// create a unique key for each recipe
+	itemSummation := 0
+	for _, entry := range r.TradeskillRecipeEntries {
+		if entry.Componentcount > 0 {
+			itemSummation += entry.ItemId
+		}
+	}
+
+	return fmt.Sprintf(
+		"%v-%v-%v-%v",
+		r.Name,
+		r.Tradeskill,
+		r.MinExpansion,
 		itemSummation,
 	)
 }
