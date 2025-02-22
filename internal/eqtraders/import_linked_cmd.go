@@ -136,7 +136,7 @@ func (c *ImportLinkedCommand) Handle(cmd *cobra.Command, args []string) {
 					r.Trivial = int16(recipe.Trivial)
 					r.Nofail = int8(0)
 					//r.MinExpansion = int8(recipe.ExpansionId)
-					r.MinExpansion = int8(recipe.ExpansionId)
+					r.MinExpansion = int8(expansionNumber)
 					r.MaxExpansion = 99
 
 					var nofail int8
