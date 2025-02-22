@@ -141,6 +141,9 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		r.Nofail = int8(0)
 		r.MinExpansion = int8(recipe.ExpansionId)
 		r.MaxExpansion = 99
+		if recipe.Skill.SkillId == 75 {
+			r.Quest = int8(1)
+		}
 
 		var nofail int8
 		if recipe.NoFail {

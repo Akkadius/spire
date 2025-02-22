@@ -119,6 +119,7 @@ func (c *ImportLinkedCommand) Handle(cmd *cobra.Command, args []string) {
 
 					var r models.TradeskillRecipe
 
+					recipe.ExpansionId = expansionNumber
 					key := GetRecipeSignature(recipe)
 
 					hasExistingRecipe := false
@@ -197,10 +198,19 @@ func (c *ImportLinkedCommand) Handle(cmd *cobra.Command, args []string) {
 					c.db.Save(&r)
 
 					// insert into cache as created
-					existingRecipeLookup[key] = true
-
-					// insert into cache
-					existingRecipes = append(existingRecipes, r)
+					if !hasExistingRecipe {
+						existingRecipeLookup[key] = true
+						// insert into cache
+						existingRecipes = append(existingRecipes, r)
+					} else {
+						// update existing recipe
+						for i, existingRecipe := range existingRecipes {
+							if existingRecipe.ID == r.ID {
+								existingRecipes[i] = r
+								break
+							}
+						}
+					}
 
 					if r.ID == 0 {
 						c.logger.Fatal().Msgf("Error inserting recipe id: %v name: %v into database", r.ID, r.Name)
