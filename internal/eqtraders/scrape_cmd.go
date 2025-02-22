@@ -608,7 +608,10 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		fmt.Println(err)
 	}
 
-	wp := workerpool.New(50)
+	workerCount := 2000
+	wp := workerpool.New(workerCount)
+
+	var parsedRecipes []Recipe
 
 	doc.Find("table tr").Each(func(i int, s *goquery.Selection) {
 		if i == 0 {
@@ -1029,57 +1032,42 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 
 			recipeWriteMutex.Lock()
+			parsedRecipes = append(parsedRecipes, r)
+			recipeWriteMutex.Unlock()
+		})
+	})
 
-			dontUpdate := false
+	wp.StopWait()
 
-			// if we are parsing the "all" pages we want to make sure that we don't overwrite more specific information
-			if r.ExpansionId == 99 {
-				for _, recipe := range recipes {
-					newSig := GetRecipeSignature(r)
-					existingSig := GetRecipeSignature(recipe)
-					if newSig == existingSig {
-						if recipe.ExpansionId < 99 {
-							c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
-							dontUpdate = true
-						}
-					}
-				}
-			}
-
-			// dedupe
-			for _, recipe := range recipes {
-				newSig := GetRecipeSignature(r)
-				existingSig := GetRecipeSignature(recipe)
-				if newSig == existingSig {
-					if recipe.ExpansionId == 99 {
-						c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
-						dontUpdate = true
-					}
-				}
-			}
-
-			// if we find a more specific expansion id other than 99, we need to update our existing recipe with the more specific one
+	for _, r := range parsedRecipes {
+		dontUpdate := false
+		// if we are parsing the "all" pages we want to make sure that we don't overwrite more specific information
+		if r.ExpansionId == 99 {
 			for i, recipe := range recipes {
 				newSig := GetRecipeSignature(r)
 				existingSig := GetRecipeSignature(recipe)
 				if newSig == existingSig {
+					if recipe.ExpansionId < 99 {
+						c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+						dontUpdate = true
+					}
 					if recipe.ExpansionId == 99 {
+						c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+						dontUpdate = true
+					}
+					if recipe.ExpansionId == 99 && r.ExpansionId != 99 {
 						recipes[i] = r
 						c.logger.Info().Msgf("updating recipe [%v] with expansion [%v]", r.RecipeName, r.ExpansionId)
 						dontUpdate = false
 					}
 				}
 			}
+		}
 
-			if !dontUpdate {
-				recipes = append(recipes, r)
-			}
-
-			recipeWriteMutex.Unlock()
-		})
-	})
-
-	wp.StopWait()
+		if !dontUpdate {
+			recipes = append(recipes, r)
+		}
+	}
 }
 
 var itemLookupCache = make(map[string]int, 0)

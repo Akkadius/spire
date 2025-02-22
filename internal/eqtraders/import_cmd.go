@@ -3,6 +3,7 @@ package eqtraders
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/spf13/cobra"
 	"github.com/volatiletech/null/v8"
@@ -16,6 +17,7 @@ import (
 type ImportCommand struct {
 	db      *gorm.DB
 	command *cobra.Command
+	logger  *logger.AppLogger
 }
 
 func (c *ImportCommand) Command() *cobra.Command {
@@ -24,6 +26,7 @@ func (c *ImportCommand) Command() *cobra.Command {
 
 func NewImportCommand(
 	db *gorm.DB,
+	logger *logger.AppLogger,
 ) *ImportCommand {
 	i := &ImportCommand{
 		db: db,
@@ -31,6 +34,7 @@ func NewImportCommand(
 			Use:   "eq-traders:import [expansion_number]",
 			Short: "Imports data from eqtraders.com using data scraped via eq-traders:scrape",
 		},
+		logger: logger,
 	}
 
 	i.command.Args = cobra.MinimumNArgs(1)
@@ -64,7 +68,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	var existingRecipes []models.TradeskillRecipe
 	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&existingRecipes)
 
-	existingRecipeLookup := make(map[string]bool)
+	existingRecipeLookup := make(map[string]models.TradeskillRecipe)
 
 	// loop through all recipes
 	for _, recipe := range existingRecipes {
@@ -73,7 +77,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		existingRecipeLookup[key] = true
+		existingRecipeLookup[key] = recipe
 	}
 
 	for _, recipe := range recipes {
@@ -87,17 +91,18 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		}
 
 		var r models.TradeskillRecipe
-		key := GetRecipeSignature(recipe)
+		recipeKey := GetRecipeSignature(recipe)
 
 		hasExistingRecipe := false
-		for _, existingRecipe := range existingRecipes {
-			if _, ok := existingRecipeLookup[key]; ok {
-				fmt.Printf("Found existing recipe: %v\n", existingRecipe.Name)
-				r = existingRecipe
-				hasExistingRecipe = true
-				break
-			}
+		existingRecipeModel := models.TradeskillRecipe{}
+
+		if existingRecipe, ok := existingRecipeLookup[recipeKey]; ok {
+			fmt.Printf("Found existing recipe: %v\n", existingRecipe.Name)
+			r = existingRecipe
+			existingRecipeModel = existingRecipe
+			hasExistingRecipe = true
 		}
+
 		//
 		//if recipe.RecipeName == "Eminent Boot Symbol of the Warmonger" {
 		//	pp.Println(recipe)
@@ -171,6 +176,12 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			}
 		}
 
+		// make sure the recipe doesn't already exist before we do a bunch of work
+		if hasExistingRecipe && GetDbRecipeSignatureDeep(r) == GetDbRecipeSignatureDeep(existingRecipeModel) {
+			c.logger.Info().Any("recipe", r.Name).Msg("Same exact recipe already exists in database, skipping update")
+			continue
+		}
+
 		// insert recipe into database
 		c.db.Save(&r)
 
@@ -204,6 +215,9 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			e.RecipeId = r.ID
 			e.ItemId = component.ItemId
 			e.Componentcount = int8(component.Count)
+			if e.Componentcount == 0 {
+				e.Componentcount = 1
+			}
 
 			for _, returns := range recipe.FailureReturns {
 				if returns.ItemId == component.ItemId {

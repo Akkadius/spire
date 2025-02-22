@@ -41,10 +41,9 @@ func GetRecipeSignature(r Recipe) string {
 	}
 
 	return fmt.Sprintf(
-		"%v-%v-%v-%v",
+		"%v-%v-%v",
 		r.RecipeName,
 		r.Skill.SkillId,
-		r.ExpansionId,
 		itemSummation,
 	)
 }
@@ -59,10 +58,19 @@ func GetDbRecipeSignature(r models.TradeskillRecipe) string {
 	}
 
 	return fmt.Sprintf(
-		"%v-%v-%v-%v",
+		"%v-%v-%v",
 		r.Name,
 		r.Tradeskill,
-		r.MinExpansion,
 		itemSummation,
+	)
+}
+
+// GetDbRecipeSignatureDeep is for diffing the entire model
+func GetDbRecipeSignatureDeep(r models.TradeskillRecipe) string {
+	r.ID = 0
+
+	return fmt.Sprintf(
+		"%v",
+		r,
 	)
 }
