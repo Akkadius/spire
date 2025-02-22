@@ -97,8 +97,6 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		//pp.Println(recipe)
-
 		// ignore recipes that are not for the expansion we are importing
 		if recipe.ExpansionId != expansionNumber && expansion != "all" {
 			continue

@@ -1,5 +1,7 @@
 package eqtraders
 
+import "fmt"
+
 // Item is a struct that represents an item
 type Item struct {
 	ItemId   int    `json:"item_id"`
@@ -28,3 +30,18 @@ type Recipe struct {
 
 // recipes is a slice of Recipe
 var recipes []Recipe
+
+func GetRecipeSignature(r Recipe) string {
+	itemSummation := 0
+	for _, entry := range r.Components {
+		itemSummation += entry.ItemId
+	}
+
+	return fmt.Sprintf(
+		"%v-%v-%v-%v",
+		r.RecipeName,
+		r.Skill.SkillId,
+		r.ExpansionId,
+		itemSummation,
+	)
+}

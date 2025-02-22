@@ -66,28 +66,46 @@ func NewScrapeCommand(
 
 // Handle implementation of the Command interface
 func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
+
+	// make sure the data directory exists
 	err := os.MkdirAll("data/eqtraders", os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// make sure the site-cache directory exists
 	err = os.MkdirAll("data/eqtraders/site-cache/", os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// make sure the recipes json file exists
+	_, err = os.Stat("data/eqtraders/recipes.json")
+	if os.IsNotExist(err) {
+		_, err = os.Create("data/eqtraders/recipes.json")
+		if err != nil {
+			c.logger.Fatal().Err(err).Msg("Failed to create recipes.json")
+		}
+
+		// write an empty array to the file
+		err = os.WriteFile("data/eqtraders/recipes.json", []byte("[]"), 0644)
+		if err != nil {
+			c.logger.Fatal().Err(err).Msg("Failed to write to recipes.json")
+		}
+	}
+
+	// load the recipes.json file
+	file, err := os.ReadFile("./data/eqtraders/recipes.json")
+	if err != nil {
+		c.logger.Fatal().Err(err).Msg("Failed to read recipes.json")
+	}
+
+	err = json.Unmarshal(file, &recipes)
+	if err != nil {
+		c.logger.Fatal().Err(err).Msg("Failed to unmarshal recipes.json")
+	}
+
 	list := []ExpansionRecipe{
-		{ExpId: -1, ExpName: "All", PageTitle: "Smithing Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Smithing"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Tailoring Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Tailoring"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Tinkering Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Tinkering"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Pottery Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Pottery"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Bakery Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Baking"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Brewing Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Brewing"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Alchemy Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Alchemy"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Fletching Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Fletching"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Jewelcraft Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Jewelcraft"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Make Poison Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=make%20poison"},
-		{ExpId: -1, ExpName: "All", PageTitle: "Spell Research Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Spell%20Research"},
-		{ExpId: -1, ExpName: "All", PageTitle: "No Skill Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=No%20Skill"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=velluc&sb=item&menustr=080020040000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=SoV&menustr=080110120000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=SoV&sb=item&menustr=080070000000"},
@@ -450,6 +468,18 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 		{ExpId: 29, ExpName: "Night of Shadows", PageTitle: "Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1501&rsa=Tinkering&sb=item&sub=NoS"},
 		{ExpId: 29, ExpName: "Night of Shadows", PageTitle: "Type 18/19 Augment Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1616&rsa=Jewelcraft&sb=item&sub=NoSQuest"},
 		{ExpId: 29, ExpName: "Night of Shadows", PageTitle: "Weapon Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1510&rsa=No%20Skill&sb=item&sub=NoSWeapon"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Smithing Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Smithing"},
+		{ExpId: 99, ExpName: "All", PageTitle: "Tailoring Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Tailoring"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Tinkering Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Tinkering"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Pottery Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Pottery"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Bakery Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Baking"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Brewing Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Brewing"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Alchemy Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Alchemy"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Fletching Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Fletching"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Jewelcraft Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Jewelcraft"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Make Poison Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=make%20poison"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "Spell Research Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=Spell%20Research"},
+		//{ExpId: 99, ExpName: "All", PageTitle: "No Skill Recipes", Url: "https://eqtraders.com/recipes/recipe_page.php?article=338&rsa=No%20Skill"},
 	}
 
 	expansion := os.Args[2]
@@ -458,7 +488,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 
 	if expansion == "all" {
 		for _, r := range list {
-			if r.ExpId == -1 {
+			if r.ExpId == 99 {
 				c.parseRecipePage(r)
 				c.SaveItemCache()
 			}
@@ -989,7 +1019,52 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 			}
 
 			recipeWriteMutex.Lock()
-			recipes = append(recipes, r)
+
+			dontUpdate := false
+
+			// if we are parsing the "all" pages we want to make sure that we don't overwrite more specific information
+			if r.ExpansionId == 99 {
+				for _, recipe := range recipes {
+					newSig := GetRecipeSignature(r)
+					existingSig := GetRecipeSignature(recipe)
+					if newSig == existingSig {
+						if recipe.ExpansionId < 99 {
+							c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+							dontUpdate = true
+						}
+					}
+				}
+			}
+
+			// dedupe
+			for _, recipe := range recipes {
+				newSig := GetRecipeSignature(r)
+				existingSig := GetRecipeSignature(recipe)
+				if newSig == existingSig {
+					if recipe.ExpansionId == 99 {
+						c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+						dontUpdate = true
+					}
+				}
+			}
+
+			// if we find a more specific expansion id other than 99, we need to update our existing recipe with the more specific one
+			for i, recipe := range recipes {
+				newSig := GetRecipeSignature(r)
+				existingSig := GetRecipeSignature(recipe)
+				if newSig == existingSig {
+					if recipe.ExpansionId == 99 {
+						recipes[i] = r
+						c.logger.Info().Msgf("updating recipe [%v] with expansion [%v]", r.RecipeName, r.ExpansionId)
+						dontUpdate = false
+					}
+				}
+			}
+
+			if !dontUpdate {
+				recipes = append(recipes, r)
+			}
+
 			recipeWriteMutex.Unlock()
 		})
 	})
