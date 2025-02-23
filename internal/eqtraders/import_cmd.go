@@ -1,7 +1,6 @@
 package eqtraders
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/Akkadius/spire/internal/models"
@@ -18,6 +17,10 @@ type ImportCommand struct {
 	db      *gorm.DB
 	command *cobra.Command
 	logger  *logger.AppLogger
+
+	// storage
+	recipeLookup map[string]models.TradeskillRecipe // used to look up existing eqtradersRecipes by signature
+	itemLookup   map[string]models.Item             // used to look up learned by item etc.
 }
 
 func (c *ImportCommand) Command() *cobra.Command {
@@ -34,7 +37,9 @@ func NewImportCommand(
 			Use:   "eq-traders:import [expansion_number]",
 			Short: "Imports data from eqtraders.com using data scraped via eq-traders:scrape",
 		},
-		logger: logger,
+		logger:       logger,
+		recipeLookup: make(map[string]models.TradeskillRecipe),
+		itemLookup:   make(map[string]models.Item),
 	}
 
 	i.command.Args = cobra.MinimumNArgs(1)
@@ -45,134 +50,111 @@ func NewImportCommand(
 }
 
 func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
+
+	// inputs
 	expansion := os.Args[2]
-
-	itemLookupCache := make(map[string]models.Item)
-
 	expansionNumber, err := strconv.Atoi(expansion)
 	if err != nil {
 		expansionNumber = -1
 	}
 
-	file, err := os.ReadFile("./data/eqtraders/recipes.json")
+	// load data
+	err = LoadEqtradersRecipes()
 	if err != nil {
+		c.logger.Error().Err(err).Msg("Failed to load eqtraders recipes")
 		return
 	}
 
-	err = json.Unmarshal(file, &recipes)
-	if err != nil {
-		return
-	}
+	c.loadDatabaseRecipes()
 
-	// bulk query for all recipes
-	var existingRecipes []models.TradeskillRecipe
-	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&existingRecipes)
-
-	existingRecipeLookup := make(map[string]models.TradeskillRecipe)
-
-	// loop through all recipes
-	for _, recipe := range existingRecipes {
-		key := GetDbRecipeSignature(recipe)
-		if _, ok := existingRecipeLookup[key]; ok {
-			continue
-		}
-
-		existingRecipeLookup[key] = recipe
-	}
-
-	for _, recipe := range recipes {
-		if len(singleRecipe) > 0 && recipe.RecipeName != singleRecipe {
+	for _, eqtradersRecipe := range eqtradersRecipes {
+		if len(singleRecipe) > 0 && eqtradersRecipe.RecipeName != singleRecipe {
 			continue
 		}
 
 		// ignore recipes that are not for the expansion we are importing
-		if recipe.ExpansionId != expansionNumber && expansion != "all" {
+		if eqtradersRecipe.ExpansionId != expansionNumber && expansion != "all" {
 			continue
 		}
 
 		var r models.TradeskillRecipe
-		recipeKey := GetRecipeSignature(recipe)
+		recipeKey := GetRecipeSignature(eqtradersRecipe)
 
 		hasExistingRecipe := false
 		existingRecipeModel := models.TradeskillRecipe{}
 
-		if existingRecipe, ok := existingRecipeLookup[recipeKey]; ok {
+		if existingRecipe, ok := c.recipeLookup[recipeKey]; ok {
 			fmt.Printf("Found existing recipe: %v\n", existingRecipe.Name)
 			r = existingRecipe
 			existingRecipeModel = existingRecipe
 			hasExistingRecipe = true
 		}
 
-		//
-		//if recipe.RecipeName == "Eminent Boot Symbol of the Warmonger" {
-		//	pp.Println(recipe)
-		//	pp.Println("Traders")
-		//	pp.Println(key)
-		//	pp.Println("Database")
-		//	pp.Println(r)
-		//}
-
-		r.Name = recipe.RecipeName
-		r.Tradeskill = int16(recipe.Skill.SkillId)
-		r.Trivial = int16(recipe.Trivial)
+		r.Name = eqtradersRecipe.RecipeName
+		r.Tradeskill = int16(eqtradersRecipe.Skill.SkillId)
+		r.Trivial = int16(eqtradersRecipe.Trivial)
 		r.Nofail = int8(0)
-		r.MinExpansion = int8(recipe.ExpansionId)
+		r.MinExpansion = int8(eqtradersRecipe.ExpansionId)
 		r.MaxExpansion = 99
-		if recipe.Skill.SkillId == 75 {
+		r.Quest = int8(0)
+		if eqtradersRecipe.Skill.SkillId == 75 {
 			r.Quest = int8(1)
 		}
 
 		var nofail int8
-		if recipe.NoFail {
+		if eqtradersRecipe.NoFail {
 			nofail = 1
 		}
 
 		r.Nofail = nofail
 
+		// notes
 		var additionalNotes []string
-		if recipe.LearnedByItem.ItemName != "" {
+		if eqtradersRecipe.LearnedByItem.ItemName != "" {
 			additionalNotes = append(
 				additionalNotes,
-				fmt.Sprintf("Learned by item [%v]", recipe.LearnedByItem.ItemName),
+				fmt.Sprintf("Learned by item [%v]", eqtradersRecipe.LearnedByItem.ItemName),
 			)
 		}
 
 		r.Notes = null.StringFrom(
 			fmt.Sprintf("%v - %v (eqtraders import) %v",
-				recipe.ExpansionName,
-				recipe.Skill.SkillName,
+				eqtradersRecipe.ExpansionName,
+				eqtradersRecipe.Skill.SkillName,
 				strings.Join(additionalNotes, ", "),
 			),
 		)
+
+		// other fields
 		r.Enabled = int8(1)
 		r.MustLearn = int8(0)
-		r.Quest = int8(0)
 		// replace container appear to be mostly quest based recipes
 		// todo handle this with quest cases
 		r.ReplaceContainer = int8(0)
-		if recipe.ConsumeContainer {
+		if eqtradersRecipe.ConsumeContainer {
 			r.ReplaceContainer = int8(1)
 		}
 
 		r.ContentFlags = null.StringFrom("")
 		r.ContentFlagsDisabled = null.StringFrom("")
-		r.Skillneeded = int16(recipe.RequiredSkillLevel)
+		r.Skillneeded = int16(eqtradersRecipe.RequiredSkillLevel)
 
-		if len(recipe.LearnedByItem.ItemName) > 0 {
-			if i, ok := itemLookupCache[recipe.LearnedByItem.ItemName]; ok {
+		// learned by item lookups
+		if len(eqtradersRecipe.LearnedByItem.ItemName) > 0 {
+			if i, ok := c.itemLookup[eqtradersRecipe.LearnedByItem.ItemName]; ok {
 				r.LearnedByItemId = i.ID
 			} else {
 				var item models.Item
-				c.db.Where("Name = ?", recipe.LearnedByItem.ItemName).First(&item)
+				c.db.Where("Name = ?", eqtradersRecipe.LearnedByItem.ItemName).First(&item)
 
 				if item.ID > 0 {
-					itemLookupCache[recipe.LearnedByItem.ItemName] = item
+					c.itemLookup[eqtradersRecipe.LearnedByItem.ItemName] = item
 					r.LearnedByItemId = item.ID
 				}
 			}
 			if r.LearnedByItemId > 0 {
 				r.MustLearn = int8(1)
-				fmt.Printf("Learned by item: %v (%v)\n", recipe.LearnedByItem.ItemName, r.LearnedByItemId)
+				fmt.Printf("Learned by item: %v (%v)\n", eqtradersRecipe.LearnedByItem.ItemName, r.LearnedByItemId)
 			}
 		}
 
@@ -185,9 +167,6 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		// insert recipe into database
 		c.db.Save(&r)
 
-		// insert into cache
-		existingRecipes = append(existingRecipes, r)
-
 		if r.ID == 0 {
 			log.Fatalf("Error inserting recipe id: %v name: %v into database", r.ID, r.Name)
 		}
@@ -198,19 +177,19 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		}
 
 		fmt.Println(strings.Repeat("-", 80))
-		fmt.Printf("> Importing recipe: %v (%v)\n", recipe.RecipeName, existing)
+		fmt.Printf("> Importing recipe: %v (%v)\n", eqtradersRecipe.RecipeName, existing)
 		fmt.Println(strings.Repeat("-", 80))
 
 		fmt.Printf("> Skill %17v | Trivial (%v)\n",
-			fmt.Sprintf("%v (%v)", recipe.Skill.SkillName, recipe.Skill.SkillId),
-			recipe.Trivial,
+			fmt.Sprintf("%v (%v)", eqtradersRecipe.Skill.SkillName, eqtradersRecipe.Skill.SkillId),
+			eqtradersRecipe.Trivial,
 		)
 		fmt.Println(strings.Repeat("-", 80))
 
 		var components []models.TradeskillRecipeEntry
 
 		// insert components into database
-		for _, component := range recipe.Components {
+		for _, component := range eqtradersRecipe.Components {
 			var e models.TradeskillRecipeEntry
 			e.RecipeId = r.ID
 			e.ItemId = component.ItemId
@@ -219,21 +198,21 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 				e.Componentcount = 1
 			}
 
-			for _, returns := range recipe.FailureReturns {
+			for _, returns := range eqtradersRecipe.FailureReturns {
 				if returns.ItemId == component.ItemId {
 					e.Failcount = int8(returns.Count)
 					break
 				}
 			}
 
-			for _, returns := range recipe.Returns {
+			for _, returns := range eqtradersRecipe.Returns {
 				if returns.ItemId == component.ItemId {
 					e.Successcount = int8(returns.Count)
 					break
 				}
 			}
 
-			if e.Failcount == 0 && !recipe.NoFail {
+			if e.Failcount == 0 && !eqtradersRecipe.NoFail {
 				e.Salvagecount = int8(component.Count)
 			}
 
@@ -251,7 +230,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		}
 
 		// insert in into database
-		for _, in := range recipe.In {
+		for _, in := range eqtradersRecipe.In {
 			alreadyExists := false
 			for _, component := range components {
 				if component.ItemId == in.ItemId {
@@ -273,13 +252,13 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		}
 
 		// insert item result itself
-		if recipe.RecipeItemId > 0 {
+		if eqtradersRecipe.RecipeItemId > 0 {
 			var e models.TradeskillRecipeEntry
 			e.RecipeId = r.ID
-			e.ItemId = recipe.RecipeItemId
-			e.Successcount = int8(recipe.Yield)
+			e.ItemId = eqtradersRecipe.RecipeItemId
+			e.Successcount = int8(eqtradersRecipe.Yield)
 			components = append(components, e)
-			fmt.Printf("|--- Item Result %8v | %-40v | Count (%v)\n", recipe.RecipeItemId, recipe.RecipeName, recipe.Yield)
+			fmt.Printf("|--- Item Result %8v | %-40v | Count (%v)\n", eqtradersRecipe.RecipeItemId, eqtradersRecipe.RecipeName, eqtradersRecipe.Yield)
 		}
 
 		if hasExistingRecipe {
@@ -287,8 +266,21 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		}
 
 		c.db.CreateInBatches(components, 100)
+	}
+}
 
-		//if expansion
+func (c *ImportCommand) loadDatabaseRecipes() {
+	// bulk query for all recipes
+	var existingRecipes []models.TradeskillRecipe
+	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&existingRecipes)
 
+	// loop through all recipes
+	for _, recipe := range existingRecipes {
+		key := GetDbRecipeSignature(recipe)
+		if _, ok := c.recipeLookup[key]; ok {
+			continue
+		}
+
+		c.recipeLookup[key] = recipe
 	}
 }

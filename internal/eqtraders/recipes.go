@@ -1,8 +1,10 @@
 package eqtraders
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/models"
+	"os"
 )
 
 // Item is a struct that represents an item
@@ -31,8 +33,22 @@ type Recipe struct {
 	LearnedByItem      Item   `json:"learned_by_item"`
 }
 
-// recipes is a slice of Recipe
-var recipes []Recipe
+// eqtradersRecipes is a slice of Recipe
+var eqtradersRecipes []Recipe
+
+func LoadEqtradersRecipes() error {
+	file, err := os.ReadFile("./data/eqtraders/recipes.json")
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(file, &eqtradersRecipes)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func GetRecipeSignature(r Recipe) string {
 	itemSummation := 0
