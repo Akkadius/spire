@@ -59,7 +59,7 @@ func (c *ImportLinkedCommand) Handle(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	err = json.Unmarshal(file, &eqtradersRecipes)
+	err = json.Unmarshal(file, &recipes)
 	if err != nil {
 		return
 	}
@@ -97,7 +97,7 @@ func (c *ImportLinkedCommand) Handle(cmd *cobra.Command, args []string) {
 		existingRecipeModel := models.TradeskillRecipe{}
 		for _, e := range dbRecipe.TradeskillRecipeEntries {
 			// json (eqtraders)
-			for _, recipe := range eqtradersRecipes {
+			for _, recipe := range recipes {
 				if e.Componentcount > 0 && e.ItemId == recipe.RecipeItemId {
 					// from the recipe get the database object
 					lookupKey := GetRecipeSignature(recipe)

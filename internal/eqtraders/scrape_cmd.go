@@ -100,7 +100,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 		c.logger.Fatal().Err(err).Msg("Failed to read recipes.json")
 	}
 
-	err = json.Unmarshal(file, &eqtradersRecipes)
+	err = json.Unmarshal(file, &recipes)
 	if err != nil {
 		c.logger.Fatal().Err(err).Msg("Failed to unmarshal recipes.json")
 	}
@@ -508,7 +508,7 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	c.SaveItemCache()
 
 	// dump recipes to json file recipes.json
-	data, err := json.MarshalIndent(eqtradersRecipes, "", " ")
+	data, err := json.MarshalIndent(recipes, "", " ")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -1043,7 +1043,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		dontUpdate := false
 
 		// if we are parsing the "all" pages we want to make sure that we don't overwrite more specific information
-		for i, recipe := range eqtradersRecipes {
+		for i, recipe := range recipes {
 			newSig := GetRecipeSignature(r)
 			existingSig := GetRecipeSignature(recipe)
 			if newSig == existingSig {
@@ -1056,7 +1056,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 					dontUpdate = true
 				}
 				if recipe.ExpansionId == 99 && r.ExpansionId != 99 {
-					eqtradersRecipes[i] = r
+					recipes[i] = r
 					c.logger.Info().Msgf("updating recipe [%v] with expansion [%v]", r.RecipeName, r.ExpansionId)
 					dontUpdate = false
 				}
@@ -1064,7 +1064,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		}
 
 		if !dontUpdate {
-			eqtradersRecipes = append(eqtradersRecipes, r)
+			recipes = append(recipes, r)
 		}
 	}
 }

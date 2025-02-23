@@ -33,16 +33,16 @@ type Recipe struct {
 	LearnedByItem      Item   `json:"learned_by_item"`
 }
 
-// eqtradersRecipes is a slice of Recipe
-var eqtradersRecipes []Recipe
+// recipes is a slice of Recipe
+var recipes []Recipe
 
-func LoadEqtradersRecipes() error {
+func LoadRecipes() error {
 	file, err := os.ReadFile("./data/eqtraders/recipes.json")
 	if err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(file, &eqtradersRecipes)
+	err = json.Unmarshal(file, &recipes)
 	if err != nil {
 		return err
 	}
