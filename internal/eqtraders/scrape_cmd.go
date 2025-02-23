@@ -106,7 +106,13 @@ func (c *ScrapeCommand) Handle(cmd *cobra.Command, args []string) {
 	}
 
 	list := []ExpansionRecipe{
-		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=velluc&sb=item&menustr=080020040000"},
+		{ExpId: 0, ExpName: "Classic", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=oldworld&sb=item&menustr=080020040000"},
+		{ExpId: 0, ExpName: "Classic", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=oldworld&menustr=080110120000"},
+		{ExpId: 0, ExpName: "Classic", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=oldworld&sb=item&menustr=080070000000"},
+		{ExpId: 0, ExpName: "Classic", PageTitle: "Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1457&rsa=Smithing&sb=item&sub=oldworld&menustr=080100000000"},
+		{ExpId: 0, ExpName: "Classic", PageTitle: "Tailoring Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=134&rsa=Tailoring&sb=item&sub=oldworld&menustr=080110100000"},
+		{ExpId: 0, ExpName: "Classic", PageTitle: "Tinkering Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=136&rsa=Tinkering&sb=item&sub=oldworld&menustr=080110140000"},
+		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Baking Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=148&rsa=Baking&sub=SoV&sb=item&menustr=080020040000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Brewing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=135&rsa=Brewing&sb=item&sub=SoV&menustr=080110120000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Jewelcraft Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1463&rsa=Jewelcraft&sub=SoV&sb=item&menustr=080070000000"},
 		{ExpId: 2, ExpName: "Scars of Velious", PageTitle: "Smithing Recipes", Url: "https://www.eqtraders.com/recipes/recipe_page.php?article=1457&rsa=Smithing&sb=item&sub=SoV&menustr=080100000000"},
@@ -1050,15 +1056,13 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 				if recipe.ExpansionId < 99 {
 					c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
 					dontUpdate = true
-				}
-				if recipe.ExpansionId == 99 {
-					c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+				} else if recipe.ExpansionId == 99 {
 					dontUpdate = true
 				}
 				if recipe.ExpansionId == 99 && r.ExpansionId != 99 {
 					recipes[i] = r
 					c.logger.Info().Msgf("updating recipe [%v] with expansion [%v]", r.RecipeName, r.ExpansionId)
-					dontUpdate = false
+					dontUpdate = true
 				}
 			}
 		}
