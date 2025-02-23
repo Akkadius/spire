@@ -28,6 +28,8 @@ func (c *ImportCommand) Command() *cobra.Command {
 	return c.command
 }
 
+var skipLinked bool
+
 // NewImportCommand returns a new ImportCommand
 func NewImportCommand(
 	db *gorm.DB,
@@ -47,9 +49,12 @@ func NewImportCommand(
 	i.command.Args = cobra.MinimumNArgs(1)
 	i.command.Run = i.Handle
 	i.command.Flags().StringVarP(&singleRecipe, "single-recipe", "r", "", "Scrape a single recipe by name")
+	i.command.Flags().BoolVarP(&skipLinked, "skip-linked", "s", false, "Skip linked recipes")
 
 	return i
 }
+
+const insertBatchSize = 500
 
 func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
@@ -61,18 +66,20 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	}
 
 	// load data
-	err = LoadRecipes()
+	err = loadRecipes()
 	if err != nil {
 		c.logger.Error().Err(err).Msg("Failed to load eqtraders recipes")
 		return
 	}
 
-	c.LoadItemNameLookup()
+	// preload
+	c.loadItemNameLookup()
 	c.loadDatabaseRecipes()
 
 	var recipesToCreate []models.TradeskillRecipe
 
-	recipesExistCount := 0
+	// top level recipe import
+	recipesExistCount := make(map[string]bool)
 	for _, recipe := range recipes {
 		if len(singleRecipe) > 0 && recipe.RecipeName != singleRecipe {
 			continue
@@ -83,13 +90,15 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 			continue
 		}
 
+		sig := GetRecipeSignature(recipe)
+
 		existing := c.GetDbRecipeFromEqTradersSignature(recipe)
 		if existing.ID > 0 {
 			c.logger.Info().
 				Any("recipe", recipe.RecipeName).
 				Any("id", existing.ID).
 				Msg("Recipe already exists in database")
-			recipesExistCount++
+			recipesExistCount[sig] = true
 			continue
 		}
 
@@ -99,66 +108,109 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
 		recipesToCreate = append(recipesToCreate, r)
 
+		// fake caching the recipe so we don't create it twice
+		c.recipeLookup[sig] = r
+		recipesExistCount[sig] = true
+
 		// print the recipe
 		c.PrintEqtradersRecipeFromDbRecipe(r)
 	}
 
 	if len(recipesToCreate) > 0 {
-		c.db.CreateInBatches(recipesToCreate, 1000)
+		err := c.db.CreateInBatches(recipesToCreate, insertBatchSize).Error
+		if err != nil {
+			c.logger.Fatal().Err(err).Msg("Failed to create recipes")
+		}
 	}
 
-	c.logger.Info().
-		Any("recipes created", len(recipesToCreate)).
-		Any("recipes already created", recipesExistCount).
-		Msg("Imported recipes")
+	// linked recipes (pre-reqs to other recipes in the same era)
+	linkedRecipesExistCount := make(map[string]bool)
+	linkedToBeCreatedCount := 0
+	if !skipLinked {
+		// reset
+		recipesToCreate = []models.TradeskillRecipe{}
 
-	// this is for creating recipes that may not be tagged within an era but are a recipe that
-	// is pre-requisites for another recipe within the era
-	alreadyCreatedCount := 0
-	toBeCreatedCount := 0
-	for _, r := range c.existingRecipes {
-		if expansionNumber != -1 && r.MinExpansion != int8(expansionNumber) {
-			continue
-		}
-		for _, e := range r.TradeskillRecipeEntries {
-			for _, recipe := range recipes {
-				if e.Componentcount > 0 && e.ItemId == recipe.RecipeItemId {
-					lookupKey := GetRecipeSignature(recipe)
-					if existingRecipe, ok := c.recipeLookup[lookupKey]; ok {
-						if existingRecipe.ID > 0 {
-							c.logger.Info().
+		c.logger.Info().
+			Any("expansion", expansionNumber).
+			Msg("Importing linked recipes")
+
+		c.loadDatabaseRecipes()
+
+		// linked recipes
+		// this is for creating recipes that may not be tagged within an era but are a recipe that
+		// is pre-requisites for another recipe within the era
+		for _, r := range c.existingRecipes {
+			if expansionNumber != -1 && r.MinExpansion != int8(expansionNumber) {
+				continue
+			}
+
+			for _, e := range r.TradeskillRecipeEntries {
+				for _, recipe := range recipes {
+					if e.Componentcount > 0 && e.ItemId == recipe.RecipeItemId {
+						lookupKey := GetRecipeSignature(recipe)
+						if existingRecipe, ok := c.recipeLookup[lookupKey]; ok {
+							c.logger.DebugVvv().
 								Any("parent_id", r.ID).
 								Any("parent", r.Name).
 								Any("id", existingRecipe.ID).
 								Any("recipe", recipe.RecipeName).
+								Any("expansion", recipe.ExpansionId).
 								Msg("Component is a pre-req recipe for another recipe (Already created)")
-							alreadyCreatedCount++
+							linkedRecipesExistCount[lookupKey] = true
 							continue
+						} else {
+							c.logger.DebugVvv().
+								Any("parent_id", r.ID).
+								Any("parent", r.Name).
+								Any("recipe", recipe.RecipeName).
+								Msg("Component is a pre-req recipe for another recipe (To be created)")
+
+							linkedToBeCreatedCount++
+
+							// fake caching the recipe so we don't create it twice
+							c.recipeLookup[GetRecipeSignature(recipe)] = r
+
+							// build the recipe
+							r := c.BuildDbRecipeFromEqtradersRecipe(recipe)
+							c.AssignRecipeId(&r)
+							r.Notes = null.StringFrom(
+								fmt.Sprintf("%v (Linked pre-req recipe to %v)",
+									r.Notes.String,
+									r.Name,
+								),
+							)
+
+							r.MinExpansion = int8(expansionNumber)
+
+							recipesToCreate = append(recipesToCreate, r)
 						}
-					} else {
-						c.logger.Info().
-							Any("parent_id", r.ID).
-							Any("parent", r.Name).
-							Any("recipe", recipe.RecipeName).
-							Msg("Component is a pre-req recipe for another recipe (To be created)")
-						toBeCreatedCount++
 					}
 				}
+			}
+		}
+
+		if len(recipesToCreate) > 0 {
+			err := c.db.CreateInBatches(recipesToCreate, insertBatchSize).Error
+			if err != nil {
+				c.logger.Fatal().Err(err).Msg("Failed to create linked recipes")
 			}
 		}
 	}
 
 	c.logger.Info().
 		Any("recipes created", len(recipesToCreate)).
-		Any("recipes already created", recipesExistCount).
-		Any("linked recipes already created", alreadyCreatedCount).
-		Any("linked recipes to be created", toBeCreatedCount).
-		Msg("Imported recipes")
+		Any("recipes already created", len(recipesExistCount)).
+		Any("linked recipes already created", len(linkedRecipesExistCount)).
+		Any("linked recipes to be created", linkedToBeCreatedCount).
+		Msg("Imported recipes summary")
 }
 
 // loadDatabaseRecipes loads all database recipes into a cache
 func (c *ImportCommand) loadDatabaseRecipes() {
+	c.existingRecipes = []models.TradeskillRecipe{}
 	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&c.existingRecipes)
+
+	c.recipeLookup = make(map[string]models.TradeskillRecipe)
 
 	// loop through all recipes
 	for _, recipe := range c.existingRecipes {
@@ -348,8 +400,8 @@ func (c *ImportCommand) PrintEqtradersRecipeFromDbRecipe(r models.TradeskillReci
 
 var itemLookupById map[int]string
 
-// LoadItemNameLookup loads all items into a cache
-func (c *ImportCommand) LoadItemNameLookup() {
+// loadItemNameLookup loads all items into a cache
+func (c *ImportCommand) loadItemNameLookup() {
 	if itemLookupById == nil {
 		itemLookupById = make(map[int]string)
 		var items []models.Item

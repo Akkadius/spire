@@ -36,7 +36,6 @@ var commandSet = wire.NewSet(
 	eqemuserver.NewLauncherShimCmd,
 	eqtraders.NewScrapeCommand,
 	eqtraders.NewImportCommand,
-	eqtraders.NewImportLinkedCommand,
 	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
@@ -64,7 +63,6 @@ func ProvideCommands(
 	eqEmuServerLauncherShimCommand *eqemuserver.LauncherShimCmd,
 	scrapeEqtradersCommand *eqtraders.ScrapeCommand,
 	importEqtradersCommand *eqtraders.ImportCommand,
-	importLinkedEqtradersCommand *eqtraders.ImportLinkedCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		helloWorldCommand.Command(),
@@ -86,7 +84,6 @@ func ProvideCommands(
 		eqEmuServerUpdateCommand.Command(),
 		scrapeEqtradersCommand.Command(),
 		importEqtradersCommand.Command(),
-		importLinkedEqtradersCommand.Command(),
 		eqEmuServerLauncherCommand.Command(),
 		eqEmuServerLauncherShimCommand.Command(),
 	}

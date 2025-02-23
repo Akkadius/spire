@@ -36,7 +36,7 @@ type Recipe struct {
 // recipes is a slice of Recipe
 var recipes []Recipe
 
-func LoadRecipes() error {
+func loadRecipes() error {
 	file, err := os.ReadFile("./data/eqtraders/recipes.json")
 	if err != nil {
 		return err
