@@ -20,6 +20,7 @@ type ImportCommand struct {
 	// storage
 	recipeLookup     map[string]models.TradeskillRecipe // used to look up existing recipes by signature
 	itemLookup       map[string]models.Item             // used to look up learned by item etc.
+	existingRecipes  []models.TradeskillRecipe          // used to look up existing recipes
 	lastTradeskillId int                                // used to assign a new tradeskill id
 }
 
@@ -27,6 +28,7 @@ func (c *ImportCommand) Command() *cobra.Command {
 	return c.command
 }
 
+// NewImportCommand returns a new ImportCommand
 func NewImportCommand(
 	db *gorm.DB,
 	logger *logger.AppLogger,
@@ -101,21 +103,65 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		c.PrintEqtradersRecipeFromDbRecipe(r)
 	}
 
-	c.db.CreateInBatches(recipesToCreate, 1000)
+	if len(recipesToCreate) > 0 {
+		c.db.CreateInBatches(recipesToCreate, 1000)
+	}
 
 	c.logger.Info().
 		Any("recipes created", len(recipesToCreate)).
 		Any("recipes already created", recipesExistCount).
 		Msg("Imported recipes")
+
+	// this is for creating recipes that may not be tagged within an era but are a recipe that
+	// is pre-requisites for another recipe within the era
+	alreadyCreatedCount := 0
+	toBeCreatedCount := 0
+	for _, r := range c.existingRecipes {
+		if expansionNumber != -1 && r.MinExpansion != int8(expansionNumber) {
+			continue
+		}
+		for _, e := range r.TradeskillRecipeEntries {
+			for _, recipe := range recipes {
+				if e.Componentcount > 0 && e.ItemId == recipe.RecipeItemId {
+					lookupKey := GetRecipeSignature(recipe)
+					if existingRecipe, ok := c.recipeLookup[lookupKey]; ok {
+						if existingRecipe.ID > 0 {
+							c.logger.Info().
+								Any("parent_id", r.ID).
+								Any("parent", r.Name).
+								Any("id", existingRecipe.ID).
+								Any("recipe", recipe.RecipeName).
+								Msg("Component is a pre-req recipe for another recipe (Already created)")
+							alreadyCreatedCount++
+							continue
+						}
+					} else {
+						c.logger.Info().
+							Any("parent_id", r.ID).
+							Any("parent", r.Name).
+							Any("recipe", recipe.RecipeName).
+							Msg("Component is a pre-req recipe for another recipe (To be created)")
+						toBeCreatedCount++
+					}
+				}
+			}
+		}
+	}
+
+	c.logger.Info().
+		Any("recipes created", len(recipesToCreate)).
+		Any("recipes already created", recipesExistCount).
+		Any("linked recipes already created", alreadyCreatedCount).
+		Any("linked recipes to be created", toBeCreatedCount).
+		Msg("Imported recipes")
 }
 
+// loadDatabaseRecipes loads all database recipes into a cache
 func (c *ImportCommand) loadDatabaseRecipes() {
-	// bulk query for all recipes
-	var existingRecipes []models.TradeskillRecipe
-	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&existingRecipes)
+	c.db.Preload("TradeskillRecipeEntries.TradeskillRecipe").Find(&c.existingRecipes)
 
 	// loop through all recipes
-	for _, recipe := range existingRecipes {
+	for _, recipe := range c.existingRecipes {
 		key := GetDbRecipeSignature(recipe)
 		if _, ok := c.recipeLookup[key]; ok {
 			continue
