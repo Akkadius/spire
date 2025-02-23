@@ -1041,25 +1041,24 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 	for _, r := range parsedRecipes {
 		dontUpdate := false
+
 		// if we are parsing the "all" pages we want to make sure that we don't overwrite more specific information
-		if r.ExpansionId == 99 {
-			for i, recipe := range recipes {
-				newSig := GetRecipeSignature(r)
-				existingSig := GetRecipeSignature(recipe)
-				if newSig == existingSig {
-					if recipe.ExpansionId < 99 {
-						c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
-						dontUpdate = true
-					}
-					if recipe.ExpansionId == 99 {
-						c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
-						dontUpdate = true
-					}
-					if recipe.ExpansionId == 99 && r.ExpansionId != 99 {
-						recipes[i] = r
-						c.logger.Info().Msgf("updating recipe [%v] with expansion [%v]", r.RecipeName, r.ExpansionId)
-						dontUpdate = false
-					}
+		for i, recipe := range recipes {
+			newSig := GetRecipeSignature(r)
+			existingSig := GetRecipeSignature(recipe)
+			if newSig == existingSig {
+				if recipe.ExpansionId < 99 {
+					c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+					dontUpdate = true
+				}
+				if recipe.ExpansionId == 99 {
+					c.logger.Info().Msgf("recipe [%v] already exists in expansion [%v] skipping", r.RecipeName, recipe.ExpansionName)
+					dontUpdate = true
+				}
+				if recipe.ExpansionId == 99 && r.ExpansionId != 99 {
+					recipes[i] = r
+					c.logger.Info().Msgf("updating recipe [%v] with expansion [%v]", r.RecipeName, r.ExpansionId)
+					dontUpdate = false
 				}
 			}
 		}
