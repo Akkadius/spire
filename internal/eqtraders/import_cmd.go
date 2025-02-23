@@ -29,6 +29,8 @@ func (c *ImportCommand) Command() *cobra.Command {
 }
 
 var skipLinked bool
+var purgeExisting bool
+var printRecipes bool
 
 // NewImportCommand returns a new ImportCommand
 func NewImportCommand(
@@ -50,11 +52,14 @@ func NewImportCommand(
 	i.command.Run = i.Handle
 	i.command.Flags().StringVarP(&singleRecipe, "single-recipe", "r", "", "Scrape a single recipe by name")
 	i.command.Flags().BoolVarP(&skipLinked, "skip-linked", "s", false, "Skip linked recipes")
+	i.command.Flags().BoolVarP(&purgeExisting, "purge-existing", "d", false, "Purge existing")
+	i.command.Flags().BoolVarP(&printRecipes, "print-recipes", "p", false, "Print recipes")
 
 	return i
 }
 
 const insertBatchSize = 500
+const linkedMaxPasses = 10
 
 func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
@@ -63,6 +68,14 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	expansionNumber, err := strconv.Atoi(expansion)
 	if err != nil {
 		expansionNumber = -1
+	}
+
+	if purgeExisting {
+		err = c.deleteTradeskillRecipesByExpansion(expansionNumber)
+		if err != nil {
+			c.logger.Error().Err(err).Msg("Failed to delete tradeskill recipes")
+			return
+		}
 	}
 
 	// load data
@@ -113,7 +126,9 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 		recipesExistCount[sig] = true
 
 		// print the recipe
-		c.PrintEqtradersRecipeFromDbRecipe(r)
+		if printRecipes {
+			c.PrintEqtradersRecipeFromDbRecipe(r)
+		}
 	}
 
 	if len(recipesToCreate) > 0 {
@@ -126,73 +141,91 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	// linked recipes (pre-reqs to other recipes in the same era)
 	linkedRecipesExistCount := make(map[string]bool)
 	linkedToBeCreatedCount := 0
+	linkedPasses := 0
 	if !skipLinked {
-		// reset
-		recipesToCreate = []models.TradeskillRecipe{}
-
 		c.logger.Info().
 			Any("expansion", expansionNumber).
 			Msg("Importing linked recipes")
 
-		c.loadDatabaseRecipes()
+		for pass := 0; pass < linkedMaxPasses; pass++ {
+			toBeCreatedInPass := 0
+			c.loadDatabaseRecipes()
 
-		// linked recipes
-		// this is for creating recipes that may not be tagged within an era but are a recipe that
-		// is pre-requisites for another recipe within the era
-		for _, r := range c.existingRecipes {
-			if expansionNumber != -1 && r.MinExpansion != int8(expansionNumber) {
-				continue
-			}
+			// reset
+			recipesToCreate = []models.TradeskillRecipe{}
 
-			for _, e := range r.TradeskillRecipeEntries {
-				for _, recipe := range recipes {
-					if e.Componentcount > 0 && e.ItemId == recipe.RecipeItemId {
-						lookupKey := GetRecipeSignature(recipe)
-						if existingRecipe, ok := c.recipeLookup[lookupKey]; ok {
-							c.logger.DebugVvv().
-								Any("parent_id", r.ID).
-								Any("parent", r.Name).
-								Any("id", existingRecipe.ID).
-								Any("recipe", recipe.RecipeName).
-								Any("expansion", recipe.ExpansionId).
-								Msg("Component is a pre-req recipe for another recipe (Already created)")
-							linkedRecipesExistCount[lookupKey] = true
-							continue
-						} else {
-							c.logger.DebugVvv().
-								Any("parent_id", r.ID).
-								Any("parent", r.Name).
-								Any("recipe", recipe.RecipeName).
-								Msg("Component is a pre-req recipe for another recipe (To be created)")
+			// linked recipes
+			// this is for creating recipes that may not be tagged within an era but are a recipe that
+			// is pre-requisites for another recipe within the era
+			for _, r := range c.existingRecipes {
+				if expansionNumber != -1 && r.MinExpansion != int8(expansionNumber) {
+					continue
+				}
 
-							linkedToBeCreatedCount++
+				for _, e := range r.TradeskillRecipeEntries {
+					for _, recipe := range recipes {
+						if e.Componentcount > 0 && e.ItemId == recipe.RecipeItemId {
+							lookupKey := GetRecipeSignature(recipe)
+							if existingRecipe, ok := c.recipeLookup[lookupKey]; ok {
+								c.logger.DebugVvv().
+									Any("parent_id", r.ID).
+									Any("parent", r.Name).
+									Any("id", existingRecipe.ID).
+									Any("recipe", recipe.RecipeName).
+									Any("expansion", recipe.ExpansionId).
+									Msg("Component is a pre-req recipe for another recipe (Already created)")
+								linkedRecipesExistCount[lookupKey] = true
+								continue
+							} else {
+								c.logger.DebugVvv().
+									Any("parent_id", r.ID).
+									Any("parent", r.Name).
+									Any("recipe", recipe.RecipeName).
+									Msg("Component is a pre-req recipe for another recipe (To be created)")
 
-							// fake caching the recipe so we don't create it twice
-							c.recipeLookup[GetRecipeSignature(recipe)] = r
+								linkedToBeCreatedCount++
+								toBeCreatedInPass++
 
-							// build the recipe
-							r := c.BuildDbRecipeFromEqtradersRecipe(recipe)
-							c.AssignRecipeId(&r)
-							r.Notes = null.StringFrom(
-								fmt.Sprintf("%v (Linked pre-req recipe to %v)",
-									r.Notes.String,
-									r.Name,
-								),
-							)
+								// fake caching the recipe so we don't create it twice
+								c.recipeLookup[GetRecipeSignature(recipe)] = r
 
-							r.MinExpansion = int8(expansionNumber)
+								// build the recipe
+								nr := c.BuildDbRecipeFromEqtradersRecipe(recipe)
+								c.AssignRecipeId(&r)
+								nr.Notes = null.StringFrom(
+									fmt.Sprintf("%v (Linked pre-req recipe to %v)",
+										nr.Notes.String,
+										r.Name,
+									),
+								)
 
-							recipesToCreate = append(recipesToCreate, r)
+								nr.MinExpansion = int8(expansionNumber)
+
+								if printRecipes {
+									c.PrintEqtradersRecipeFromDbRecipe(nr)
+								}
+
+								recipesToCreate = append(recipesToCreate, nr)
+							}
 						}
 					}
 				}
 			}
-		}
 
-		if len(recipesToCreate) > 0 {
-			err := c.db.CreateInBatches(recipesToCreate, insertBatchSize).Error
-			if err != nil {
-				c.logger.Fatal().Err(err).Msg("Failed to create linked recipes")
+			if len(recipesToCreate) > 0 {
+				err := c.db.CreateInBatches(recipesToCreate, insertBatchSize).Error
+				if err != nil {
+					c.logger.Fatal().Err(err).Msg("Failed to create linked recipes")
+				}
+				c.logger.Info().
+					Any("recipes created", len(recipesToCreate)).
+					Any("pass", pass).
+					Msg("Linked recipes created")
+			}
+
+			if toBeCreatedInPass == 0 {
+				linkedPasses = pass
+				break
 			}
 		}
 	}
@@ -200,6 +233,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 	c.logger.Info().
 		Any("recipes created", len(recipesToCreate)).
 		Any("recipes already created", len(recipesExistCount)).
+		Any("linked passes", linkedPasses).
 		Any("linked recipes already created", len(linkedRecipesExistCount)).
 		Any("linked recipes to be created", linkedToBeCreatedCount).
 		Msg("Imported recipes summary")
@@ -463,4 +497,27 @@ func (c *ImportCommand) AssignRecipeId(m *models.TradeskillRecipe) {
 	for i, _ := range m.TradeskillRecipeEntries {
 		m.TradeskillRecipeEntries[i].RecipeId = m.ID
 	}
+}
+
+// deleteTradeskillRecipesByExpansion deletes all tradeskill recipes by expansion
+func (c *ImportCommand) deleteTradeskillRecipesByExpansion(expansionID int) error {
+	// Delete tradeskill_recipe_entries where recipe_id exists in tradeskill_recipe with the given min_expansion
+	err := c.db.Exec(`
+		DELETE FROM tradeskill_recipe_entries 
+		WHERE recipe_id IN (
+			SELECT id FROM tradeskill_recipe WHERE min_expansion = ?
+		)`, expansionID).Error
+	if err != nil {
+		return err
+	}
+
+	// Delete tradeskill_recipe where min_expansion matches the given expansionID
+	err = c.db.Where("min_expansion = ?", expansionID).Delete(&models.TradeskillRecipe{}).Error
+	if err != nil {
+		return err
+	}
+
+	c.logger.Info().Any("expansion", expansionID).Msg("Deleted tradeskill recipes by expansion")
+
+	return nil
 }
