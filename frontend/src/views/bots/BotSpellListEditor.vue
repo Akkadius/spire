@@ -598,7 +598,7 @@ export default {
           {
             botSpellsEntry: {
               "npc_spells_id": npcSpellsId,
-              "spellid": parseInt(spellId),
+              "spell_id": parseInt(spellId),
               "type": this.calculateBotSpellTypeFromSpell(spell),
               "minlevel": 0,
               "maxlevel": 0,
