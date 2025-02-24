@@ -109,6 +109,7 @@ type CharacterDatum struct {
 	AaPointsOld                  uint                         `json:"aa_points_old" gorm:"Column:aa_points_old"`
 	ELastInvsnapshot             uint                         `json:"e_last_invsnapshot" gorm:"Column:e_last_invsnapshot"`
 	DeletedAt                    null.Time                    `json:"deleted_at" gorm:"Column:deleted_at"`
+	IllusionBlock                uint8                        `json:"illusion_block" gorm:"Column:illusion_block"`
 	Guild                        *Guild                       `json:"guild,omitempty" gorm:"foreignKey:id;references:id"`
 	CharRecipeLists              []CharRecipeList             `json:"char_recipe_lists,omitempty" gorm:"foreignKey:char_id;references:id"`
 	CharacterAltCurrencies       []CharacterAltCurrency       `json:"character_alt_currencies,omitempty" gorm:"foreignKey:char_id;references:id"`
@@ -385,6 +386,7 @@ func (CharacterDatum) Relationships() []string {
 		"Inventories.Item.Objects.Zone",
 		"Inventories.Item.TradeskillRecipeEntries",
 		"Inventories.Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Inventories.Item.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"Inventories.Item.TributeLevels",
 		"Keyrings",
 		"Mail",

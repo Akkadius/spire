@@ -10,6 +10,7 @@ type PlayerEventLogSetting struct {
 	EventEnabled       null.Int8   `json:"event_enabled" gorm:"Column:event_enabled"`
 	RetentionDays      null.Int    `json:"retention_days" gorm:"Column:retention_days"`
 	DiscordWebhookId   null.Int    `json:"discord_webhook_id" gorm:"Column:discord_webhook_id"`
+	EtlEnabled         uint8       `json:"etl_enabled" gorm:"Column:etl_enabled"`
 }
 
 func (PlayerEventLogSetting) TableName() string {

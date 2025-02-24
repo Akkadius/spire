@@ -193,6 +193,7 @@ func (AlternateCurrency) Relationships() []string {
 		"Item.Objects.Zone",
 		"Item.TradeskillRecipeEntries",
 		"Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Item.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"Item.TributeLevels",
 	}
 }
