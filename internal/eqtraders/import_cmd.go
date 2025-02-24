@@ -107,7 +107,7 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 
 		existing := c.GetDbRecipeFromEqTradersSignature(recipe)
 		if existing.ID > 0 {
-			c.logger.Info().
+			c.logger.DebugVvv().
 				Any("recipe", recipe.RecipeName).
 				Any("id", existing.ID).
 				Msg("Recipe already exists in database")
@@ -199,7 +199,9 @@ func (c *ImportCommand) Handle(cmd *cobra.Command, args []string) {
 									),
 								)
 
-								nr.MinExpansion = int8(expansionNumber)
+								if nr.MinExpansion > int8(expansionNumber) {
+									nr.MinExpansion = int8(expansionNumber)
+								}
 
 								if printRecipes {
 									c.PrintEqtradersRecipeFromDbRecipe(nr)
