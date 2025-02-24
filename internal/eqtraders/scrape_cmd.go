@@ -41,6 +41,7 @@ func (c *ScrapeCommand) Command() *cobra.Command {
 
 var skipLookups bool
 var singleRecipe string
+var workerCount int
 
 func NewScrapeCommand(
 	db *gorm.DB,
@@ -60,6 +61,7 @@ func NewScrapeCommand(
 
 	i.command.Flags().BoolVarP(&skipLookups, "skip-lookups", "s", false, "Skip lookups for items that are not found in the database")
 	i.command.Flags().StringVarP(&singleRecipe, "single-recipe", "r", "", "Scrape a single recipe by name")
+	i.command.Flags().IntVarP(&workerCount, "worker-count", "w", 20, "Sets the worker count")
 
 	return i
 }
@@ -614,7 +616,6 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 		fmt.Println(err)
 	}
 
-	workerCount := 2000
 	wp := workerpool.New(workerCount)
 
 	var parsedRecipes []Recipe
