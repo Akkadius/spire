@@ -774,7 +774,12 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 						})
 						continue
 					}
-					fmt.Println("world container [%v] not found, attempting to resolve to object type for recipe [%v]", name, recipeName)
+
+					c.logger.Info().
+						Any("world container", name).
+						Any("recipeName", recipeName).
+						Msg("not found")
+
 					continue
 				}
 
@@ -1070,6 +1075,7 @@ func (c *ScrapeCommand) parseRecipePage(r ExpansionRecipe) {
 
 		if !dontUpdate {
 			recipes = append(recipes, r)
+			c.logger.Info().Any("recipe", r.RecipeName).Msg("adding recipe to recipes.json")
 		}
 	}
 }

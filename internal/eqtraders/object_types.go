@@ -24,7 +24,7 @@ var objectTypes = []ObjectType{
 	{Type: 27, Name: "Lexicon Enc", Skill: 58},
 	{Type: 29, Name: "Lexicon Practice", Skill: 58},
 	{Type: 30, Name: "Alchemy", Skill: 59},
-	{Type: 31, Name: "High Elf Forge", Skill: 63, TradersNames: []string{"Koada&#39;dal Forge"}},
+	{Type: 31, Name: "High Elf Forge", Skill: 63, TradersNames: []string{"Koada&#39;dal Forge", "Koada'dal Forge"}},
 	{Type: 32, Name: "Dark Elf Forge", Skill: 63, TradersNames: []string{"Teir`Dal Forge"}},
 	{Type: 33, Name: "Ogre Forge", Skill: 63, TradersNames: []string{"Ogre Forge"}},
 	{Type: 34, Name: "Dwarf Forge", Skill: 63, TradersNames: []string{"Stormguard Forge"}},

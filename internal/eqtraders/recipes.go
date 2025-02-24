@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/models"
 	"os"
+	"sort"
+	"strings"
 )
 
 // Item is a struct that represents an item
@@ -51,25 +53,39 @@ func loadRecipes() error {
 }
 
 func GetRecipeSignature(r Recipe) string {
-	itemSummation := 0
+	var items []string
+
+	// sort r.Components by ItemId
+	sort.Slice(r.Components, func(i, j int) bool {
+		return r.Components[i].ItemId < r.Components[j].ItemId
+	})
+
 	for _, entry := range r.Components {
-		itemSummation += entry.ItemId
+		if entry.Count == 0 {
+			entry.Count = 1
+		}
+		items = append(items, fmt.Sprintf("%v-%v", entry.ItemId, entry.Count))
 	}
 
 	return fmt.Sprintf(
 		"%v-%v-%v",
 		r.RecipeName,
 		r.Skill.SkillId,
-		itemSummation,
+		strings.Join(items, "-"),
 	)
 }
 
 func GetDbRecipeSignature(r models.TradeskillRecipe) string {
 	// create a unique key for each recipe
-	itemSummation := 0
+	var items []string
+
+	sort.Slice(r.TradeskillRecipeEntries, func(i, j int) bool {
+		return r.TradeskillRecipeEntries[i].ItemId < r.TradeskillRecipeEntries[j].ItemId
+	})
+
 	for _, entry := range r.TradeskillRecipeEntries {
 		if entry.Componentcount > 0 {
-			itemSummation += entry.ItemId
+			items = append(items, fmt.Sprintf("%v-%v", entry.ItemId, entry.Componentcount))
 		}
 	}
 
@@ -77,7 +93,7 @@ func GetDbRecipeSignature(r models.TradeskillRecipe) string {
 		"%v-%v-%v",
 		r.Name,
 		r.Tradeskill,
-		itemSummation,
+		strings.Join(items, "-"),
 	)
 }
 
