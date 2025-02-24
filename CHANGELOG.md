@@ -1,3 +1,8 @@
+## [4.16.0] 2/23/2025
+
+* **Bot Spells** (Mortimer) Update bot spells to support the [bot overhaul](https://github.com/EQEmu/Server/pull/4580)
+* **EQTraders Tradeskills Import** Many large import fixes and improvements to the EQTraders tradeskills importer. (Linked recipes, expansion filter, scraping etc.)
+
 ## [4.15.12] 2/18/2025
 
 * **Spire Admin** Adjustments to the crash analytics ingestion

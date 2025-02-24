@@ -359,7 +359,7 @@ func InitializeApplication() (App, error) {
 	launcherCmd := eqemuserver.NewLauncherCmd(appLogger, launcher)
 	launcherShimCmd := eqemuserver.NewLauncherShimCmd(launcher)
 	scrapeCommand := eqtraders.NewScrapeCommand(db, appLogger)
-	importCommand := eqtraders.NewImportCommand(db)
+	importCommand := eqtraders.NewImportCommand(db, appLogger)
 	v := ProvideCommands(helloWorldCommand, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, launcherShimCmd, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(appLogger, server, config)
 	bootApp := NewApplication(db, cache, v, resolver, connections, router, webBoot, init)

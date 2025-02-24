@@ -1,5 +1,12 @@
 package eqtraders
 
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/Akkadius/spire/internal/models"
+	"os"
+)
+
 // Item is a struct that represents an item
 type Item struct {
 	ItemId   int    `json:"item_id"`
@@ -28,3 +35,58 @@ type Recipe struct {
 
 // recipes is a slice of Recipe
 var recipes []Recipe
+
+func loadRecipes() error {
+	file, err := os.ReadFile("./data/eqtraders/recipes.json")
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(file, &recipes)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetRecipeSignature(r Recipe) string {
+	itemSummation := 0
+	for _, entry := range r.Components {
+		itemSummation += entry.ItemId
+	}
+
+	return fmt.Sprintf(
+		"%v-%v-%v",
+		r.RecipeName,
+		r.Skill.SkillId,
+		itemSummation,
+	)
+}
+
+func GetDbRecipeSignature(r models.TradeskillRecipe) string {
+	// create a unique key for each recipe
+	itemSummation := 0
+	for _, entry := range r.TradeskillRecipeEntries {
+		if entry.Componentcount > 0 {
+			itemSummation += entry.ItemId
+		}
+	}
+
+	return fmt.Sprintf(
+		"%v-%v-%v",
+		r.Name,
+		r.Tradeskill,
+		itemSummation,
+	)
+}
+
+// GetDbRecipeSignatureDeep is for diffing the entire model
+func GetDbRecipeSignatureDeep(r models.TradeskillRecipe) string {
+	r.ID = 0
+
+	return fmt.Sprintf(
+		"%v",
+		r,
+	)
+}
