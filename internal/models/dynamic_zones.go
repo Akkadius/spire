@@ -24,6 +24,8 @@ type DynamicZone struct {
 	ZoneInZ             float32 `json:"zone_in_z" gorm:"Column:zone_in_z"`
 	ZoneInHeading       float32 `json:"zone_in_heading" gorm:"Column:zone_in_heading"`
 	HasZoneIn           uint8   `json:"has_zone_in" gorm:"Column:has_zone_in"`
+	IsLocked            int8    `json:"is_locked" gorm:"Column:is_locked"`
+	AddReplay           int8    `json:"add_replay" gorm:"Column:add_replay"`
 }
 
 func (DynamicZone) TableName() string {

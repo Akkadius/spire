@@ -17,6 +17,7 @@ type PlayerEventLog struct {
 	EventTypeId     null.Int        `json:"event_type_id" gorm:"Column:event_type_id"`
 	EventTypeName   null.String     `json:"event_type_name" gorm:"Column:event_type_name"`
 	EventData       null.String     `json:"event_data" gorm:"Column:event_data"`
+	EtlTableId      int64           `json:"etl_table_id" gorm:"Column:etl_table_id"`
 	CreatedAt       null.Time       `json:"created_at" gorm:"Column:created_at"`
 	Account         *Account        `json:"account,omitempty" gorm:"foreignKey:account_id;references:id"`
 	CharacterDatum  *CharacterDatum `json:"character_datum,omitempty" gorm:"foreignKey:character_id;references:id"`
@@ -260,6 +261,7 @@ func (PlayerEventLog) Relationships() []string {
 		"CharacterDatum.Inventories.Item.Objects.Zone",
 		"CharacterDatum.Inventories.Item.TradeskillRecipeEntries",
 		"CharacterDatum.Inventories.Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"CharacterDatum.Inventories.Item.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"CharacterDatum.Inventories.Item.TributeLevels",
 		"CharacterDatum.Keyrings",
 		"CharacterDatum.Mail",

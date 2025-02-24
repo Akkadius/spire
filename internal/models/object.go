@@ -228,6 +228,7 @@ func (Object) Relationships() []string {
 		"Item.Objects",
 		"Item.TradeskillRecipeEntries",
 		"Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Item.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"Item.TributeLevels",
 		"Zone",
 	}

@@ -160,6 +160,7 @@ func (NpcSpellsEntry) Relationships() []string {
 		"SpellsNew.Items.Objects.Zone",
 		"SpellsNew.Items.TradeskillRecipeEntries",
 		"SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
+		"SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"SpellsNew.Items.TributeLevels",
 		"SpellsNew.NpcSpellsEntries",
 		"SpellsNew.SpellBuckets",

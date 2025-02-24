@@ -227,6 +227,7 @@ func (Task) Relationships() []string {
 		"AlternateCurrency.Item.Objects.Zone",
 		"AlternateCurrency.Item.TradeskillRecipeEntries",
 		"AlternateCurrency.Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"AlternateCurrency.Item.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"AlternateCurrency.Item.TributeLevels",
 		"TaskActivities",
 		"Tasksets",

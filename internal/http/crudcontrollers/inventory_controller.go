@@ -31,12 +31,12 @@ func NewInventoryController(
 
 func (e *InventoryController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "inventory/:charid", e.getInventory, nil),
+		routes.RegisterRoute(http.MethodGet, "inventory/:characterId", e.getInventory, nil),
 		routes.RegisterRoute(http.MethodGet, "inventories", e.listInventories, nil),
 		routes.RegisterRoute(http.MethodGet, "inventories/count", e.getInventoriesCount, nil),
 		routes.RegisterRoute(http.MethodPut, "inventory", e.createInventory, nil),
-		routes.RegisterRoute(http.MethodDelete, "inventory/:charid", e.deleteInventory, nil),
-		routes.RegisterRoute(http.MethodPatch, "inventory/:charid", e.updateInventory, nil),
+		routes.RegisterRoute(http.MethodDelete, "inventory/:characterId", e.deleteInventory, nil),
+		routes.RegisterRoute(http.MethodPatch, "inventory/:characterId", e.updateInventory, nil),
 		routes.RegisterRoute(http.MethodPost, "inventories/bulk", e.getInventoriesBulk, nil),
 	}
 }
@@ -88,22 +88,22 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charid, err := strconv.Atoi(c.Param("charid"))
+	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Charid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
 	}
-	params = append(params, charid)
-	keys = append(keys, "charid = ?")
+	params = append(params, characterId)
+	keys = append(keys, "character_id = ?")
 
-	// key param [slotid] position [2] type [mediumint]
-	if len(c.QueryParam("slotid")) > 0 {
-		slotidParam, err := strconv.Atoi(c.QueryParam("slotid"))
+	// key param [slot_id] position [2] type [mediumint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slotid] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, slotidParam)
-		keys = append(keys, "slotid = ?")
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
 	// query builder
@@ -120,7 +120,7 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.Charid == 0 {
+	if result.CharacterId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
@@ -153,22 +153,22 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charid, err := strconv.Atoi(c.Param("charid"))
+	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Charid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
 	}
-	params = append(params, charid)
-	keys = append(keys, "charid = ?")
+	params = append(params, characterId)
+	keys = append(keys, "character_id = ?")
 
-	// key param [slotid] position [2] type [mediumint]
-	if len(c.QueryParam("slotid")) > 0 {
-		slotidParam, err := strconv.Atoi(c.QueryParam("slotid"))
+	// key param [slot_id] position [2] type [mediumint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slotid] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, slotidParam)
-		keys = append(keys, "slotid = ?")
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
 	// query builder
@@ -257,7 +257,7 @@ func (e *InventoryController) createInventory(c echo.Context) error {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [Inventory] [%v] data [%v]", inventory.Charid, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [Inventory] [%v] data [%v]", inventory.CharacterId, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
@@ -270,7 +270,7 @@ func (e *InventoryController) createInventory(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Inventory
-// @Param id path int true "charid"
+// @Param id path int true "characterId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
@@ -281,22 +281,22 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	charid, err := strconv.Atoi(c.Param("charid"))
+	characterId, err := strconv.Atoi(c.Param("characterId"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, charid)
-	keys = append(keys, "charid = ?")
+	params = append(params, characterId)
+	keys = append(keys, "character_id = ?")
 
-	// key param [slotid] position [2] type [mediumint]
-	if len(c.QueryParam("slotid")) > 0 {
-		slotidParam, err := strconv.Atoi(c.QueryParam("slotid"))
+	// key param [slot_id] position [2] type [mediumint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slotid] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, slotidParam)
-		keys = append(keys, "slotid = ?")
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
 	// query builder
@@ -326,7 +326,7 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [Inventory] [%v] keys [%v]", result.Charid, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [Inventory] [%v] keys [%v]", result.CharacterId, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 

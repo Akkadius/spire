@@ -207,6 +207,21 @@ books:
     is_nullable: "NO"
     column_type: int(20)
     column_default: ""
+bot_blocked_buffs:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+  - column: spell_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
 bot_buffs:
   - column: buffs_index
     data_type: int
@@ -318,6 +333,42 @@ bot_pets:
     is_nullable: "NO"
     column_type: int(10) unsigned
     column_default: ""
+bot_settings:
+  - column: character_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+  - column: stance
+    data_type: tinyint
+    column_key: PRI
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "0"
+  - column: setting_id
+    data_type: smallint
+    column_key: PRI
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: smallint(5) unsigned
+    column_default: "0"
+  - column: setting_type
+    data_type: tinyint
+    column_key: PRI
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "0"
 bot_spell_casting_chances:
   - column: id
     data_type: int
@@ -643,6 +694,14 @@ character_enabledtasks:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+character_evolving_items:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
 character_exp_modifiers:
   - column: character_id
     data_type: int
@@ -851,6 +910,14 @@ character_pet_inventory:
     data_type: int
     column_key: PRI
     ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+character_pet_name:
+  - column: character_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
@@ -1100,6 +1167,14 @@ doors:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+dynamic_zone_lockouts:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 dynamic_zone_members:
   - column: id
     data_type: int
@@ -1117,22 +1192,6 @@ dynamic_zone_templates:
     column_type: int(10) unsigned
     column_default: ""
 dynamic_zones:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-expedition_lockouts:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-expeditions:
   - column: id
     data_type: int
     column_key: PRI
@@ -1424,14 +1483,14 @@ instance_list_player:
     column_type: int(11) unsigned
     column_default: "0"
 inventory:
-  - column: charid
+  - column: character_id
     data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
-  - column: slotid
+  - column: slot_id
     data_type: mediumint
     column_key: PRI
     ordinal_position: "2"
@@ -1476,6 +1535,14 @@ items:
     is_nullable: "NO"
     column_type: int(11)
     column_default: "0"
+items_evolving_details:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 keyring:
   - column: id
     data_type: int
@@ -1838,22 +1905,6 @@ object_contents:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
-parcel_merchants:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-parcels:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
 perl_event_export_settings:
   - column: event_id
     data_type: int
@@ -1909,6 +1960,38 @@ pets_equipmentset_entries:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+player_event_aa_purchase:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_killed_named_npc:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_killed_npc:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_killed_raid_npc:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
 player_event_log_settings:
   - column: id
     data_type: bigint
@@ -1924,6 +2007,70 @@ player_event_logs:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: bigint(20)
+    column_default: ""
+player_event_loot_items:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_merchant_purchase:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_merchant_sell:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_npc_handin:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_npc_handin_entries:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_speech:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
+    column_default: ""
+player_event_trade:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+player_event_trade_entries:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20) unsigned
     column_default: ""
 player_titlesets:
   - column: id
@@ -2093,6 +2240,21 @@ shared_tasks:
     is_nullable: "NO"
     column_type: bigint(20)
     column_default: ""
+sharedbank:
+  - column: account_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+  - column: slot_id
+    data_type: mediumint
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: mediumint(7) unsigned
+    column_default: "0"
 skill_caps:
   - column: id
     data_type: int
@@ -2388,7 +2550,7 @@ zone:
   - column: id
     data_type: int
     column_key: PRI
-    ordinal_position: "2"
+    ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(10)
     column_default: ""
@@ -2414,4 +2576,12 @@ zone_points:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11)
+    column_default: ""
+zone_state_spawns:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
     column_default: ""

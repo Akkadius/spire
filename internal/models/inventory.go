@@ -5,21 +5,21 @@ import (
 )
 
 type Inventory struct {
-	Charid              uint        `json:"charid" gorm:"Column:charid"`
-	Slotid              uint32      `json:"slotid" gorm:"Column:slotid"`
-	Itemid              null.Uint   `json:"itemid" gorm:"Column:itemid"`
+	CharacterId         uint        `json:"character_id" gorm:"Column:character_id"`
+	SlotId              uint32      `json:"slot_id" gorm:"Column:slot_id"`
+	ItemId              null.Uint   `json:"item_id" gorm:"Column:item_id"`
 	Charges             null.Uint16 `json:"charges" gorm:"Column:charges"`
 	Color               uint        `json:"color" gorm:"Column:color"`
-	Augslot1            uint32      `json:"augslot_1" gorm:"Column:augslot1"`
-	Augslot2            uint32      `json:"augslot_2" gorm:"Column:augslot2"`
-	Augslot3            uint32      `json:"augslot_3" gorm:"Column:augslot3"`
-	Augslot4            uint32      `json:"augslot_4" gorm:"Column:augslot4"`
-	Augslot5            null.Uint32 `json:"augslot_5" gorm:"Column:augslot5"`
-	Augslot6            int32       `json:"augslot_6" gorm:"Column:augslot6"`
+	AugmentOne          uint32      `json:"augment_one" gorm:"Column:augment_one"`
+	AugmentTwo          uint32      `json:"augment_two" gorm:"Column:augment_two"`
+	AugmentThree        uint32      `json:"augment_three" gorm:"Column:augment_three"`
+	AugmentFour         uint32      `json:"augment_four" gorm:"Column:augment_four"`
+	AugmentFive         uint32      `json:"augment_five" gorm:"Column:augment_five"`
+	AugmentSix          uint32      `json:"augment_six" gorm:"Column:augment_six"`
 	Instnodrop          uint8       `json:"instnodrop" gorm:"Column:instnodrop"`
 	CustomData          null.String `json:"custom_data" gorm:"Column:custom_data"`
-	Ornamenticon        uint        `json:"ornamenticon" gorm:"Column:ornamenticon"`
-	Ornamentidfile      uint        `json:"ornamentidfile" gorm:"Column:ornamentidfile"`
+	OrnamentIcon        uint        `json:"ornament_icon" gorm:"Column:ornament_icon"`
+	OrnamentIdfile      uint        `json:"ornament_idfile" gorm:"Column:ornament_idfile"`
 	OrnamentHeroModel   int         `json:"ornament_hero_model" gorm:"Column:ornament_hero_model"`
 	Guid                null.Uint64 `json:"guid" gorm:"Column:guid"`
 	Item                *Item       `json:"item,omitempty" gorm:"foreignKey:itemid;references:id"`
@@ -216,6 +216,7 @@ func (Inventory) Relationships() []string {
 		"Item.Objects.Zone",
 		"Item.TradeskillRecipeEntries",
 		"Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Item.TradeskillRecipeEntries.TradeskillRecipe.TradeskillRecipeEntries",
 		"Item.TributeLevels",
 	}
 }
