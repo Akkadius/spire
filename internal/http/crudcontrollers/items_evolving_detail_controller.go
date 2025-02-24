@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type InventoryController struct {
+type ItemsEvolvingDetailController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewInventoryController(
+func NewItemsEvolvingDetailController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *InventoryController {
-	return &InventoryController{
+) *ItemsEvolvingDetailController {
+	return &ItemsEvolvingDetailController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *InventoryController) Routes() []*routes.Route {
+func (e *ItemsEvolvingDetailController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "inventory/:characterId", e.getInventory, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories", e.listInventories, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories/count", e.getInventoriesCount, nil),
-		routes.RegisterRoute(http.MethodPut, "inventory", e.createInventory, nil),
-		routes.RegisterRoute(http.MethodDelete, "inventory/:characterId", e.deleteInventory, nil),
-		routes.RegisterRoute(http.MethodPatch, "inventory/:characterId", e.updateInventory, nil),
-		routes.RegisterRoute(http.MethodPost, "inventories/bulk", e.getInventoriesBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "items_evolving_detail/:id", e.getItemsEvolvingDetail, nil),
+		routes.RegisterRoute(http.MethodGet, "items_evolving_details", e.listItemsEvolvingDetails, nil),
+		routes.RegisterRoute(http.MethodGet, "items_evolving_details/count", e.getItemsEvolvingDetailsCount, nil),
+		routes.RegisterRoute(http.MethodPut, "items_evolving_detail", e.createItemsEvolvingDetail, nil),
+		routes.RegisterRoute(http.MethodDelete, "items_evolving_detail/:id", e.deleteItemsEvolvingDetail, nil),
+		routes.RegisterRoute(http.MethodPatch, "items_evolving_detail/:id", e.updateItemsEvolvingDetail, nil),
+		routes.RegisterRoute(http.MethodPost, "items_evolving_details/bulk", e.getItemsEvolvingDetailsBulk, nil),
 	}
 }
 
-// listInventories godoc
-// @Id listInventories
-// @Summary Lists Inventories
+// listItemsEvolvingDetails godoc
+// @Id listItemsEvolvingDetails
+// @Summary Lists ItemsEvolvingDetails
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags ItemsEvolvingDetail
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *InventoryController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.ItemsEvolvingDetail
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories [get]
-func (e *InventoryController) listInventories(c echo.Context) error {
-	var results []models.Inventory
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results).Error
+// @Router /items_evolving_details [get]
+func (e *ItemsEvolvingDetailController) listItemsEvolvingDetails(c echo.Context) error {
+	var results []models.ItemsEvolvingDetail
+	err := e.db.QueryContext(models.ItemsEvolvingDetail{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,46 +69,35 @@ func (e *InventoryController) listInventories(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventory godoc
-// @Id getInventory
-// @Summary Gets Inventory
+// getItemsEvolvingDetail godoc
+// @Id getItemsEvolvingDetail
+// @Summary Gets ItemsEvolvingDetail
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags ItemsEvolvingDetail
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.ItemsEvolvingDetail
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventory/{id} [get]
-func (e *InventoryController) getInventory(c echo.Context) error {
+// @Router /items_evolving_detail/{id} [get]
+func (e *ItemsEvolvingDetailController) getItemsEvolvingDetail(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
-
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.ItemsEvolvingDetail
+	query := e.db.QueryContext(models.ItemsEvolvingDetail{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -120,28 +109,28 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.CharacterId == 0 {
+	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateInventory godoc
-// @Id updateInventory
-// @Summary Updates Inventory
+// updateItemsEvolvingDetail godoc
+// @Id updateItemsEvolvingDetail
+// @Summary Updates ItemsEvolvingDetail
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags ItemsEvolvingDetail
 // @Param id path int true "Id"
-// @Param inventory body models.Inventory true "Inventory"
-// @Success 200 {array} models.Inventory
+// @Param items_evolving_detail body models.ItemsEvolvingDetail true "ItemsEvolvingDetail"
+// @Success 200 {array} models.ItemsEvolvingDetail
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /inventory/{id} [patch]
-func (e *InventoryController) updateInventory(c echo.Context) error {
-	request := new(models.Inventory)
+// @Router /items_evolving_detail/{id} [patch]
+func (e *ItemsEvolvingDetailController) updateItemsEvolvingDetail(c echo.Context) error {
+	request := new(models.ItemsEvolvingDetail)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -153,27 +142,16 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
-
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.ItemsEvolvingDetail
+	query := e.db.QueryContext(models.ItemsEvolvingDetail{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -205,41 +183,41 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [Inventory] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [ItemsEvolvingDetail] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createInventory godoc
-// @Id createInventory
-// @Summary Creates Inventory
+// createItemsEvolvingDetail godoc
+// @Id createItemsEvolvingDetail
+// @Summary Creates ItemsEvolvingDetail
 // @Accept json
 // @Produce json
-// @Param inventory body models.Inventory true "Inventory"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Param items_evolving_detail body models.ItemsEvolvingDetail true "ItemsEvolvingDetail"
+// @Tags ItemsEvolvingDetail
+// @Success 200 {array} models.ItemsEvolvingDetail
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /inventory [put]
-func (e *InventoryController) createInventory(c echo.Context) error {
-	inventory := new(models.Inventory)
-	if err := c.Bind(inventory); err != nil {
+// @Router /items_evolving_detail [put]
+func (e *ItemsEvolvingDetailController) createItemsEvolvingDetail(c echo.Context) error {
+	itemsEvolvingDetail := new(models.ItemsEvolvingDetail)
+	if err := c.Bind(itemsEvolvingDetail); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.Inventory{}, c).Model(&models.Inventory{})
+	db := e.db.Get(models.ItemsEvolvingDetail{}, c).Model(&models.ItemsEvolvingDetail{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&inventory).Error
+	err := db.Create(&itemsEvolvingDetail).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -250,58 +228,47 @@ func (e *InventoryController) createInventory(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.Inventory{}, inventory)
+		diff := database.ResultDifference(models.ItemsEvolvingDetail{}, itemsEvolvingDetail)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [Inventory] [%v] data [%v]", inventory.CharacterId, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [ItemsEvolvingDetail] [%v] data [%v]", itemsEvolvingDetail.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, inventory)
+	return c.JSON(http.StatusOK, itemsEvolvingDetail)
 }
 
-// deleteInventory godoc
-// @Id deleteInventory
-// @Summary Deletes Inventory
+// deleteItemsEvolvingDetail godoc
+// @Id deleteItemsEvolvingDetail
+// @Summary Deletes ItemsEvolvingDetail
 // @Accept json
 // @Produce json
-// @Tags Inventory
-// @Param id path int true "characterId"
+// @Tags ItemsEvolvingDetail
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /inventory/{id} [delete]
-func (e *InventoryController) deleteInventory(c echo.Context) error {
+// @Router /items_evolving_detail/{id} [delete]
+func (e *ItemsEvolvingDetailController) deleteItemsEvolvingDetail(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
-
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.ItemsEvolvingDetail
+	query := e.db.QueryContext(models.ItemsEvolvingDetail{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -326,25 +293,25 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [Inventory] [%v] keys [%v]", result.CharacterId, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [ItemsEvolvingDetail] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getInventoriesBulk godoc
-// @Id getInventoriesBulk
-// @Summary Gets Inventories in bulk
+// getItemsEvolvingDetailsBulk godoc
+// @Id getItemsEvolvingDetailsBulk
+// @Summary Gets ItemsEvolvingDetails in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Tags ItemsEvolvingDetail
+// @Success 200 {array} models.ItemsEvolvingDetail
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/bulk [post]
-func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
-	var results []models.Inventory
+// @Router /items_evolving_details/bulk [post]
+func (e *ItemsEvolvingDetailController) getItemsEvolvingDetailsBulk(c echo.Context) error {
+	var results []models.ItemsEvolvingDetail
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -361,7 +328,7 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.ItemsEvolvingDetail{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -369,12 +336,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventoriesCount godoc
-// @Id getInventoriesCount
-// @Summary Counts Inventories
+// getItemsEvolvingDetailsCount godoc
+// @Id getItemsEvolvingDetailsCount
+// @Summary Counts ItemsEvolvingDetails
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags ItemsEvolvingDetail
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -384,12 +351,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.ItemsEvolvingDetail
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/count [get]
-func (e *InventoryController) getInventoriesCount(c echo.Context) error {
+// @Router /items_evolving_details/count [get]
+func (e *ItemsEvolvingDetailController) getItemsEvolvingDetailsCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.Inventory{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.ItemsEvolvingDetail{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

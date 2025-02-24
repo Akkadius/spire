@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type InventoryController struct {
+type BotBlockedBuffController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewInventoryController(
+func NewBotBlockedBuffController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *InventoryController {
-	return &InventoryController{
+) *BotBlockedBuffController {
+	return &BotBlockedBuffController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *InventoryController) Routes() []*routes.Route {
+func (e *BotBlockedBuffController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "inventory/:characterId", e.getInventory, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories", e.listInventories, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories/count", e.getInventoriesCount, nil),
-		routes.RegisterRoute(http.MethodPut, "inventory", e.createInventory, nil),
-		routes.RegisterRoute(http.MethodDelete, "inventory/:characterId", e.deleteInventory, nil),
-		routes.RegisterRoute(http.MethodPatch, "inventory/:characterId", e.updateInventory, nil),
-		routes.RegisterRoute(http.MethodPost, "inventories/bulk", e.getInventoriesBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_blocked_buff/:botId", e.getBotBlockedBuff, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_blocked_buffs", e.listBotBlockedBuffs, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_blocked_buffs/count", e.getBotBlockedBuffsCount, nil),
+		routes.RegisterRoute(http.MethodPut, "bot_blocked_buff", e.createBotBlockedBuff, nil),
+		routes.RegisterRoute(http.MethodDelete, "bot_blocked_buff/:botId", e.deleteBotBlockedBuff, nil),
+		routes.RegisterRoute(http.MethodPatch, "bot_blocked_buff/:botId", e.updateBotBlockedBuff, nil),
+		routes.RegisterRoute(http.MethodPost, "bot_blocked_buffs/bulk", e.getBotBlockedBuffsBulk, nil),
 	}
 }
 
-// listInventories godoc
-// @Id listInventories
-// @Summary Lists Inventories
+// listBotBlockedBuffs godoc
+// @Id listBotBlockedBuffs
+// @Summary Lists BotBlockedBuffs
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags BotBlockedBuff
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *InventoryController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.BotBlockedBuff
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories [get]
-func (e *InventoryController) listInventories(c echo.Context) error {
-	var results []models.Inventory
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results).Error
+// @Router /bot_blocked_buffs [get]
+func (e *BotBlockedBuffController) listBotBlockedBuffs(c echo.Context) error {
+	var results []models.BotBlockedBuff
+	err := e.db.QueryContext(models.BotBlockedBuff{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,46 +69,46 @@ func (e *InventoryController) listInventories(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventory godoc
-// @Id getInventory
-// @Summary Gets Inventory
+// getBotBlockedBuff godoc
+// @Id getBotBlockedBuff
+// @Summary Gets BotBlockedBuff
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags BotBlockedBuff
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.BotBlockedBuff
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventory/{id} [get]
-func (e *InventoryController) getInventory(c echo.Context) error {
+// @Router /bot_blocked_buff/{id} [get]
+func (e *BotBlockedBuffController) getBotBlockedBuff(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [BotId]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
+	params = append(params, botId)
+	keys = append(keys, "bot_id = ?")
 
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+	// key param [spell_id] position [2] type [int]
+	if len(c.QueryParam("spell_id")) > 0 {
+		spellIdParam, err := strconv.Atoi(c.QueryParam("spell_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [spell_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
+		params = append(params, spellIdParam)
+		keys = append(keys, "spell_id = ?")
 	}
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.BotBlockedBuff
+	query := e.db.QueryContext(models.BotBlockedBuff{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -120,28 +120,28 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.CharacterId == 0 {
+	if result.BotId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateInventory godoc
-// @Id updateInventory
-// @Summary Updates Inventory
+// updateBotBlockedBuff godoc
+// @Id updateBotBlockedBuff
+// @Summary Updates BotBlockedBuff
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags BotBlockedBuff
 // @Param id path int true "Id"
-// @Param inventory body models.Inventory true "Inventory"
-// @Success 200 {array} models.Inventory
+// @Param bot_blocked_buff body models.BotBlockedBuff true "BotBlockedBuff"
+// @Success 200 {array} models.BotBlockedBuff
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /inventory/{id} [patch]
-func (e *InventoryController) updateInventory(c echo.Context) error {
-	request := new(models.Inventory)
+// @Router /bot_blocked_buff/{id} [patch]
+func (e *BotBlockedBuffController) updateBotBlockedBuff(c echo.Context) error {
+	request := new(models.BotBlockedBuff)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -153,27 +153,27 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [BotId]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
+	params = append(params, botId)
+	keys = append(keys, "bot_id = ?")
 
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+	// key param [spell_id] position [2] type [int]
+	if len(c.QueryParam("spell_id")) > 0 {
+		spellIdParam, err := strconv.Atoi(c.QueryParam("spell_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [spell_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
+		params = append(params, spellIdParam)
+		keys = append(keys, "spell_id = ?")
 	}
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.BotBlockedBuff
+	query := e.db.QueryContext(models.BotBlockedBuff{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -205,41 +205,41 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [Inventory] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [BotBlockedBuff] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createInventory godoc
-// @Id createInventory
-// @Summary Creates Inventory
+// createBotBlockedBuff godoc
+// @Id createBotBlockedBuff
+// @Summary Creates BotBlockedBuff
 // @Accept json
 // @Produce json
-// @Param inventory body models.Inventory true "Inventory"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Param bot_blocked_buff body models.BotBlockedBuff true "BotBlockedBuff"
+// @Tags BotBlockedBuff
+// @Success 200 {array} models.BotBlockedBuff
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /inventory [put]
-func (e *InventoryController) createInventory(c echo.Context) error {
-	inventory := new(models.Inventory)
-	if err := c.Bind(inventory); err != nil {
+// @Router /bot_blocked_buff [put]
+func (e *BotBlockedBuffController) createBotBlockedBuff(c echo.Context) error {
+	botBlockedBuff := new(models.BotBlockedBuff)
+	if err := c.Bind(botBlockedBuff); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.Inventory{}, c).Model(&models.Inventory{})
+	db := e.db.Get(models.BotBlockedBuff{}, c).Model(&models.BotBlockedBuff{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&inventory).Error
+	err := db.Create(&botBlockedBuff).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -250,58 +250,58 @@ func (e *InventoryController) createInventory(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.Inventory{}, inventory)
+		diff := database.ResultDifference(models.BotBlockedBuff{}, botBlockedBuff)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [Inventory] [%v] data [%v]", inventory.CharacterId, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [BotBlockedBuff] [%v] data [%v]", botBlockedBuff.BotId, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, inventory)
+	return c.JSON(http.StatusOK, botBlockedBuff)
 }
 
-// deleteInventory godoc
-// @Id deleteInventory
-// @Summary Deletes Inventory
+// deleteBotBlockedBuff godoc
+// @Id deleteBotBlockedBuff
+// @Summary Deletes BotBlockedBuff
 // @Accept json
 // @Produce json
-// @Tags Inventory
-// @Param id path int true "characterId"
+// @Tags BotBlockedBuff
+// @Param id path int true "botId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /inventory/{id} [delete]
-func (e *InventoryController) deleteInventory(c echo.Context) error {
+// @Router /bot_blocked_buff/{id} [delete]
+func (e *BotBlockedBuffController) deleteBotBlockedBuff(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
+	params = append(params, botId)
+	keys = append(keys, "bot_id = ?")
 
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+	// key param [spell_id] position [2] type [int]
+	if len(c.QueryParam("spell_id")) > 0 {
+		spellIdParam, err := strconv.Atoi(c.QueryParam("spell_id"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [spell_id] err [%s]", err.Error())})
 		}
 
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
+		params = append(params, spellIdParam)
+		keys = append(keys, "spell_id = ?")
 	}
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.BotBlockedBuff
+	query := e.db.QueryContext(models.BotBlockedBuff{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -326,25 +326,25 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [Inventory] [%v] keys [%v]", result.CharacterId, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [BotBlockedBuff] [%v] keys [%v]", result.BotId, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getInventoriesBulk godoc
-// @Id getInventoriesBulk
-// @Summary Gets Inventories in bulk
+// getBotBlockedBuffsBulk godoc
+// @Id getBotBlockedBuffsBulk
+// @Summary Gets BotBlockedBuffs in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Tags BotBlockedBuff
+// @Success 200 {array} models.BotBlockedBuff
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/bulk [post]
-func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
-	var results []models.Inventory
+// @Router /bot_blocked_buffs/bulk [post]
+func (e *BotBlockedBuffController) getBotBlockedBuffsBulk(c echo.Context) error {
+	var results []models.BotBlockedBuff
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -361,7 +361,7 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.BotBlockedBuff{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -369,12 +369,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventoriesCount godoc
-// @Id getInventoriesCount
-// @Summary Counts Inventories
+// getBotBlockedBuffsCount godoc
+// @Id getBotBlockedBuffsCount
+// @Summary Counts BotBlockedBuffs
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags BotBlockedBuff
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -384,12 +384,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.BotBlockedBuff
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/count [get]
-func (e *InventoryController) getInventoriesCount(c echo.Context) error {
+// @Router /bot_blocked_buffs/count [get]
+func (e *BotBlockedBuffController) getBotBlockedBuffsCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.Inventory{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.BotBlockedBuff{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

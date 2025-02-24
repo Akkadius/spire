@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type InventoryController struct {
+type PlayerEventSpeechController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewInventoryController(
+func NewPlayerEventSpeechController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *InventoryController {
-	return &InventoryController{
+) *PlayerEventSpeechController {
+	return &PlayerEventSpeechController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *InventoryController) Routes() []*routes.Route {
+func (e *PlayerEventSpeechController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "inventory/:characterId", e.getInventory, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories", e.listInventories, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories/count", e.getInventoriesCount, nil),
-		routes.RegisterRoute(http.MethodPut, "inventory", e.createInventory, nil),
-		routes.RegisterRoute(http.MethodDelete, "inventory/:characterId", e.deleteInventory, nil),
-		routes.RegisterRoute(http.MethodPatch, "inventory/:characterId", e.updateInventory, nil),
-		routes.RegisterRoute(http.MethodPost, "inventories/bulk", e.getInventoriesBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "player_event_speech/:id", e.getPlayerEventSpeech, nil),
+		routes.RegisterRoute(http.MethodGet, "player_event_speeches", e.listPlayerEventSpeeches, nil),
+		routes.RegisterRoute(http.MethodGet, "player_event_speeches/count", e.getPlayerEventSpeechesCount, nil),
+		routes.RegisterRoute(http.MethodPut, "player_event_speech", e.createPlayerEventSpeech, nil),
+		routes.RegisterRoute(http.MethodDelete, "player_event_speech/:id", e.deletePlayerEventSpeech, nil),
+		routes.RegisterRoute(http.MethodPatch, "player_event_speech/:id", e.updatePlayerEventSpeech, nil),
+		routes.RegisterRoute(http.MethodPost, "player_event_speeches/bulk", e.getPlayerEventSpeechesBulk, nil),
 	}
 }
 
-// listInventories godoc
-// @Id listInventories
-// @Summary Lists Inventories
+// listPlayerEventSpeeches godoc
+// @Id listPlayerEventSpeeches
+// @Summary Lists PlayerEventSpeeches
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags PlayerEventSpeech
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *InventoryController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.PlayerEventSpeech
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories [get]
-func (e *InventoryController) listInventories(c echo.Context) error {
-	var results []models.Inventory
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results).Error
+// @Router /player_event_speeches [get]
+func (e *PlayerEventSpeechController) listPlayerEventSpeeches(c echo.Context) error {
+	var results []models.PlayerEventSpeech
+	err := e.db.QueryContext(models.PlayerEventSpeech{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,46 +69,35 @@ func (e *InventoryController) listInventories(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventory godoc
-// @Id getInventory
-// @Summary Gets Inventory
+// getPlayerEventSpeech godoc
+// @Id getPlayerEventSpeech
+// @Summary Gets PlayerEventSpeech
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags PlayerEventSpeech
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.PlayerEventSpeech
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventory/{id} [get]
-func (e *InventoryController) getInventory(c echo.Context) error {
+// @Router /player_event_speech/{id} [get]
+func (e *PlayerEventSpeechController) getPlayerEventSpeech(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
-
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.PlayerEventSpeech
+	query := e.db.QueryContext(models.PlayerEventSpeech{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -120,28 +109,28 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.CharacterId == 0 {
+	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateInventory godoc
-// @Id updateInventory
-// @Summary Updates Inventory
+// updatePlayerEventSpeech godoc
+// @Id updatePlayerEventSpeech
+// @Summary Updates PlayerEventSpeech
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags PlayerEventSpeech
 // @Param id path int true "Id"
-// @Param inventory body models.Inventory true "Inventory"
-// @Success 200 {array} models.Inventory
+// @Param player_event_speech body models.PlayerEventSpeech true "PlayerEventSpeech"
+// @Success 200 {array} models.PlayerEventSpeech
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /inventory/{id} [patch]
-func (e *InventoryController) updateInventory(c echo.Context) error {
-	request := new(models.Inventory)
+// @Router /player_event_speech/{id} [patch]
+func (e *PlayerEventSpeechController) updatePlayerEventSpeech(c echo.Context) error {
+	request := new(models.PlayerEventSpeech)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -153,27 +142,16 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
-
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.PlayerEventSpeech
+	query := e.db.QueryContext(models.PlayerEventSpeech{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -205,41 +183,41 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [Inventory] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [PlayerEventSpeech] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createInventory godoc
-// @Id createInventory
-// @Summary Creates Inventory
+// createPlayerEventSpeech godoc
+// @Id createPlayerEventSpeech
+// @Summary Creates PlayerEventSpeech
 // @Accept json
 // @Produce json
-// @Param inventory body models.Inventory true "Inventory"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Param player_event_speech body models.PlayerEventSpeech true "PlayerEventSpeech"
+// @Tags PlayerEventSpeech
+// @Success 200 {array} models.PlayerEventSpeech
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /inventory [put]
-func (e *InventoryController) createInventory(c echo.Context) error {
-	inventory := new(models.Inventory)
-	if err := c.Bind(inventory); err != nil {
+// @Router /player_event_speech [put]
+func (e *PlayerEventSpeechController) createPlayerEventSpeech(c echo.Context) error {
+	playerEventSpeech := new(models.PlayerEventSpeech)
+	if err := c.Bind(playerEventSpeech); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.Inventory{}, c).Model(&models.Inventory{})
+	db := e.db.Get(models.PlayerEventSpeech{}, c).Model(&models.PlayerEventSpeech{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&inventory).Error
+	err := db.Create(&playerEventSpeech).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -250,58 +228,47 @@ func (e *InventoryController) createInventory(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.Inventory{}, inventory)
+		diff := database.ResultDifference(models.PlayerEventSpeech{}, playerEventSpeech)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [Inventory] [%v] data [%v]", inventory.CharacterId, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [PlayerEventSpeech] [%v] data [%v]", playerEventSpeech.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, inventory)
+	return c.JSON(http.StatusOK, playerEventSpeech)
 }
 
-// deleteInventory godoc
-// @Id deleteInventory
-// @Summary Deletes Inventory
+// deletePlayerEventSpeech godoc
+// @Id deletePlayerEventSpeech
+// @Summary Deletes PlayerEventSpeech
 // @Accept json
 // @Produce json
-// @Tags Inventory
-// @Param id path int true "characterId"
+// @Tags PlayerEventSpeech
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /inventory/{id} [delete]
-func (e *InventoryController) deleteInventory(c echo.Context) error {
+// @Router /player_event_speech/{id} [delete]
+func (e *PlayerEventSpeechController) deletePlayerEventSpeech(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
-
-	// key param [slot_id] position [2] type [mediumint]
-	if len(c.QueryParam("slot_id")) > 0 {
-		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
-		}
-
-		params = append(params, slotIdParam)
-		keys = append(keys, "slot_id = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.PlayerEventSpeech
+	query := e.db.QueryContext(models.PlayerEventSpeech{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -326,25 +293,25 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [Inventory] [%v] keys [%v]", result.CharacterId, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [PlayerEventSpeech] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getInventoriesBulk godoc
-// @Id getInventoriesBulk
-// @Summary Gets Inventories in bulk
+// getPlayerEventSpeechesBulk godoc
+// @Id getPlayerEventSpeechesBulk
+// @Summary Gets PlayerEventSpeeches in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Tags PlayerEventSpeech
+// @Success 200 {array} models.PlayerEventSpeech
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/bulk [post]
-func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
-	var results []models.Inventory
+// @Router /player_event_speeches/bulk [post]
+func (e *PlayerEventSpeechController) getPlayerEventSpeechesBulk(c echo.Context) error {
+	var results []models.PlayerEventSpeech
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -361,7 +328,7 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.PlayerEventSpeech{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -369,12 +336,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventoriesCount godoc
-// @Id getInventoriesCount
-// @Summary Counts Inventories
+// getPlayerEventSpeechesCount godoc
+// @Id getPlayerEventSpeechesCount
+// @Summary Counts PlayerEventSpeeches
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags PlayerEventSpeech
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -384,12 +351,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.PlayerEventSpeech
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/count [get]
-func (e *InventoryController) getInventoriesCount(c echo.Context) error {
+// @Router /player_event_speeches/count [get]
+func (e *PlayerEventSpeechController) getPlayerEventSpeechesCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.Inventory{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.PlayerEventSpeech{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

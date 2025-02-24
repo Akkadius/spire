@@ -14,39 +14,39 @@ import (
 	"strings"
 )
 
-type InventoryController struct {
+type SharedbankController struct {
 	db       *database.Resolver
 	auditLog *auditlog.UserEvent
 }
 
-func NewInventoryController(
+func NewSharedbankController(
 	db *database.Resolver,
 	auditLog *auditlog.UserEvent,
-) *InventoryController {
-	return &InventoryController{
+) *SharedbankController {
+	return &SharedbankController{
 		db:       db,
 		auditLog: auditLog,
 	}
 }
 
-func (e *InventoryController) Routes() []*routes.Route {
+func (e *SharedbankController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "inventory/:characterId", e.getInventory, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories", e.listInventories, nil),
-		routes.RegisterRoute(http.MethodGet, "inventories/count", e.getInventoriesCount, nil),
-		routes.RegisterRoute(http.MethodPut, "inventory", e.createInventory, nil),
-		routes.RegisterRoute(http.MethodDelete, "inventory/:characterId", e.deleteInventory, nil),
-		routes.RegisterRoute(http.MethodPatch, "inventory/:characterId", e.updateInventory, nil),
-		routes.RegisterRoute(http.MethodPost, "inventories/bulk", e.getInventoriesBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "sharedbank/:accountId", e.getSharedbank, nil),
+		routes.RegisterRoute(http.MethodGet, "sharedbanks", e.listSharedbanks, nil),
+		routes.RegisterRoute(http.MethodGet, "sharedbanks/count", e.getSharedbanksCount, nil),
+		routes.RegisterRoute(http.MethodPut, "sharedbank", e.createSharedbank, nil),
+		routes.RegisterRoute(http.MethodDelete, "sharedbank/:accountId", e.deleteSharedbank, nil),
+		routes.RegisterRoute(http.MethodPatch, "sharedbank/:accountId", e.updateSharedbank, nil),
+		routes.RegisterRoute(http.MethodPost, "sharedbanks/bulk", e.getSharedbanksBulk, nil),
 	}
 }
 
-// listInventories godoc
-// @Id listInventories
-// @Summary Lists Inventories
+// listSharedbanks godoc
+// @Id listSharedbanks
+// @Summary Lists Sharedbanks
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags Sharedbank
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -56,12 +56,12 @@ func (e *InventoryController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.Sharedbank
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories [get]
-func (e *InventoryController) listInventories(c echo.Context) error {
-	var results []models.Inventory
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results).Error
+// @Router /sharedbanks [get]
+func (e *SharedbankController) listSharedbanks(c echo.Context) error {
+	var results []models.Sharedbank
+	err := e.db.QueryContext(models.Sharedbank{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -69,31 +69,31 @@ func (e *InventoryController) listInventories(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventory godoc
-// @Id getInventory
-// @Summary Gets Inventory
+// getSharedbank godoc
+// @Id getSharedbank
+// @Summary Gets Sharedbank
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags Sharedbank
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.Sharedbank
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventory/{id} [get]
-func (e *InventoryController) getInventory(c echo.Context) error {
+// @Router /sharedbank/{id} [get]
+func (e *SharedbankController) getSharedbank(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	accountId, err := strconv.Atoi(c.Param("accountId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [AccountId]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
+	params = append(params, accountId)
+	keys = append(keys, "account_id = ?")
 
 	// key param [slot_id] position [2] type [mediumint]
 	if len(c.QueryParam("slot_id")) > 0 {
@@ -107,8 +107,8 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	}
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.Sharedbank
+	query := e.db.QueryContext(models.Sharedbank{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -120,28 +120,28 @@ func (e *InventoryController) getInventory(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.CharacterId == 0 {
+	if result.AccountId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateInventory godoc
-// @Id updateInventory
-// @Summary Updates Inventory
+// updateSharedbank godoc
+// @Id updateSharedbank
+// @Summary Updates Sharedbank
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags Sharedbank
 // @Param id path int true "Id"
-// @Param inventory body models.Inventory true "Inventory"
-// @Success 200 {array} models.Inventory
+// @Param sharedbank body models.Sharedbank true "Sharedbank"
+// @Success 200 {array} models.Sharedbank
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /inventory/{id} [patch]
-func (e *InventoryController) updateInventory(c echo.Context) error {
-	request := new(models.Inventory)
+// @Router /sharedbank/{id} [patch]
+func (e *SharedbankController) updateSharedbank(c echo.Context) error {
+	request := new(models.Sharedbank)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -153,12 +153,12 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	accountId, err := strconv.Atoi(c.Param("accountId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [CharacterId]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [AccountId]"})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
+	params = append(params, accountId)
+	keys = append(keys, "account_id = ?")
 
 	// key param [slot_id] position [2] type [mediumint]
 	if len(c.QueryParam("slot_id")) > 0 {
@@ -172,8 +172,8 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 	}
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.Sharedbank
+	query := e.db.QueryContext(models.Sharedbank{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -205,41 +205,41 @@ func (e *InventoryController) updateInventory(c echo.Context) error {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Updated [Inventory] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		event := fmt.Sprintf("Updated [Sharedbank] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
 }
 
-// createInventory godoc
-// @Id createInventory
-// @Summary Creates Inventory
+// createSharedbank godoc
+// @Id createSharedbank
+// @Summary Creates Sharedbank
 // @Accept json
 // @Produce json
-// @Param inventory body models.Inventory true "Inventory"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Param sharedbank body models.Sharedbank true "Sharedbank"
+// @Tags Sharedbank
+// @Success 200 {array} models.Sharedbank
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /inventory [put]
-func (e *InventoryController) createInventory(c echo.Context) error {
-	inventory := new(models.Inventory)
-	if err := c.Bind(inventory); err != nil {
+// @Router /sharedbank [put]
+func (e *SharedbankController) createSharedbank(c echo.Context) error {
+	sharedbank := new(models.Sharedbank)
+	if err := c.Bind(sharedbank); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	db := e.db.Get(models.Inventory{}, c).Model(&models.Inventory{})
+	db := e.db.Get(models.Sharedbank{}, c).Model(&models.Sharedbank{})
 
 	// save associations
 	if c.QueryParam("save_associations") != "true" {
 		db = db.Omit(clause.Associations)
 	}
 
-	err := db.Create(&inventory).Error
+	err := db.Create(&sharedbank).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -250,43 +250,43 @@ func (e *InventoryController) createInventory(c echo.Context) error {
 	// log create event
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
-		diff := database.ResultDifference(models.Inventory{}, inventory)
+		diff := database.ResultDifference(models.Sharedbank{}, sharedbank)
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
 		// record event
-		event := fmt.Sprintf("Created [Inventory] [%v] data [%v]", inventory.CharacterId, strings.Join(fields, ", "))
+		event := fmt.Sprintf("Created [Sharedbank] [%v] data [%v]", sharedbank.AccountId, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
-	return c.JSON(http.StatusOK, inventory)
+	return c.JSON(http.StatusOK, sharedbank)
 }
 
-// deleteInventory godoc
-// @Id deleteInventory
-// @Summary Deletes Inventory
+// deleteSharedbank godoc
+// @Id deleteSharedbank
+// @Summary Deletes Sharedbank
 // @Accept json
 // @Produce json
-// @Tags Inventory
-// @Param id path int true "characterId"
+// @Tags Sharedbank
+// @Param id path int true "accountId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /inventory/{id} [delete]
-func (e *InventoryController) deleteInventory(c echo.Context) error {
+// @Router /sharedbank/{id} [delete]
+func (e *SharedbankController) deleteSharedbank(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	characterId, err := strconv.Atoi(c.Param("characterId"))
+	accountId, err := strconv.Atoi(c.Param("accountId"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
-	params = append(params, characterId)
-	keys = append(keys, "character_id = ?")
+	params = append(params, accountId)
+	keys = append(keys, "account_id = ?")
 
 	// key param [slot_id] position [2] type [mediumint]
 	if len(c.QueryParam("slot_id")) > 0 {
@@ -300,8 +300,8 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 	}
 
 	// query builder
-	var result models.Inventory
-	query := e.db.QueryContext(models.Inventory{}, c)
+	var result models.Sharedbank
+	query := e.db.QueryContext(models.Sharedbank{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -326,25 +326,25 @@ func (e *InventoryController) deleteInventory(c echo.Context) error {
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
 		// record event
-		event := fmt.Sprintf("Deleted [Inventory] [%v] keys [%v]", result.CharacterId, strings.Join(ids, ", "))
+		event := fmt.Sprintf("Deleted [Sharedbank] [%v] keys [%v]", result.AccountId, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getInventoriesBulk godoc
-// @Id getInventoriesBulk
-// @Summary Gets Inventories in bulk
+// getSharedbanksBulk godoc
+// @Id getSharedbanksBulk
+// @Summary Gets Sharedbanks in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags Inventory
-// @Success 200 {array} models.Inventory
+// @Tags Sharedbank
+// @Success 200 {array} models.Sharedbank
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/bulk [post]
-func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
-	var results []models.Inventory
+// @Router /sharedbanks/bulk [post]
+func (e *SharedbankController) getSharedbanksBulk(c echo.Context) error {
+	var results []models.Sharedbank
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -361,7 +361,7 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.Inventory{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.Sharedbank{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -369,12 +369,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getInventoriesCount godoc
-// @Id getInventoriesCount
-// @Summary Counts Inventories
+// getSharedbanksCount godoc
+// @Id getSharedbanksCount
+// @Summary Counts Sharedbanks
 // @Accept json
 // @Produce json
-// @Tags Inventory
+// @Tags Sharedbank
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -384,12 +384,12 @@ func (e *InventoryController) getInventoriesBulk(c echo.Context) error {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.Inventory
+// @Success 200 {array} models.Sharedbank
 // @Failure 500 {string} string "Bad query request"
-// @Router /inventories/count [get]
-func (e *InventoryController) getInventoriesCount(c echo.Context) error {
+// @Router /sharedbanks/count [get]
+func (e *SharedbankController) getSharedbanksCount(c echo.Context) error {
 	var count int64
-	err := e.db.QueryContext(models.Inventory{}, c).Count(&count).Error
+	err := e.db.QueryContext(models.Sharedbank{}, c).Count(&count).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
