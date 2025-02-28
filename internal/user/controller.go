@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
@@ -39,6 +40,10 @@ func (a *Controller) Routes() []*routes.Route {
 }
 
 func (a *Controller) list(c echo.Context) error {
+	if env.IsAppEnvProduction() {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Not allowed in production"})
+	}
+
 	var results []models.User
 	if a.db.GetSpireDb() != nil {
 		query := a.db.GetSpireDb().Model(&models.User{})
