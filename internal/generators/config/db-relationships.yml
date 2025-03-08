@@ -1,7 +1,6 @@
 account:
   - 1-* id->account_flags:p_accid
   - 1-* id->account_rewards:account_id
-  - 1-* id->sharedbank:acctid
   - 1-* id->bug_reports:account_id
   - 1-* id->account_ip:accid
 alternate_currency:
@@ -32,7 +31,7 @@ character_data:
   - 1-* id->character_tasks:charid
   - 1-* id->completed_tasks:charid
   - 1-* id->friends:charid
-  - 1-* id->inventory:charid
+  - 1-* id->inventory:character_id
   - 1-* id->mail:charid
   - 1-* id->quest_globals:charid
   - 1-* id->zone_flags:charID
@@ -82,7 +81,7 @@ instance_list:
   - 1-* id->instance_list_player:id
   - 1-* zone->zone:zoneidunumber
 inventory:
-  - 1-1 itemid->items:id
+  - 1-1 item_id->items:id
 items:
   - 1-* id->alternate_currency:item_id
   - 1-* id->character_corpse_items:item_id

@@ -32,7 +32,6 @@ type Account struct {
 	CrcBasedata         null.String     `json:"crc_basedata" gorm:"Column:crc_basedata"`
 	AccountFlags        []AccountFlag   `json:"account_flags,omitempty" gorm:"foreignKey:p_accid;references:id"`
 	AccountRewards      []AccountReward `json:"account_rewards,omitempty" gorm:"foreignKey:account_id;references:id"`
-	Sharedbanks         []Sharedbank    `json:"sharedbanks,omitempty" gorm:"foreignKey:acctid;references:id"`
 	BugReports          []BugReport     `json:"bug_reports,omitempty" gorm:"foreignKey:account_id;references:id"`
 	AccountIps          []AccountIp     `json:"account_ips,omitempty" gorm:"foreignKey:accid;references:id"`
 }
@@ -47,7 +46,6 @@ func (Account) Relationships() []string {
 		"AccountIps",
 		"AccountRewards",
 		"BugReports",
-		"Sharedbanks",
 	}
 }
 

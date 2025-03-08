@@ -1,3 +1,7 @@
+## [4.16.4] 3/08/2025
+
+* **Spire Admin** Fix player event log viewer to be compliant with recent changes.
+
 ## [4.16.3] 2/23/2025
 
 * **Bot Spells** (Mortimer) Update bot spells to support the [bot overhaul](https://github.com/EQEmu/Server/pull/4580)

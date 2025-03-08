@@ -129,7 +129,7 @@ type CharacterDatum struct {
 	CharacterTasks               []CharacterTask              `json:"character_tasks,omitempty" gorm:"foreignKey:charid;references:id"`
 	CompletedTasks               []CompletedTask              `json:"completed_tasks,omitempty" gorm:"foreignKey:charid;references:id"`
 	Friends                      []Friend                     `json:"friends,omitempty" gorm:"foreignKey:charid;references:id"`
-	Inventories                  []Inventory                  `json:"inventories,omitempty" gorm:"foreignKey:charid;references:id"`
+	Inventories                  []Inventory                  `json:"inventories,omitempty" gorm:"foreignKey:character_id;references:id"`
 	Mail                         []Mail                       `json:"mail,omitempty" gorm:"foreignKey:charid;references:id"`
 	QuestGlobals                 []QuestGlobal                `json:"quest_globals,omitempty" gorm:"foreignKey:charid;references:id"`
 	ZoneFlags                    []ZoneFlag                   `json:"zone_flags,omitempty" gorm:"foreignKey:charID;references:id"`

@@ -35,7 +35,6 @@ func (PlayerEventLog) Relationships() []string {
 		"Account.AccountIps",
 		"Account.AccountRewards",
 		"Account.BugReports",
-		"Account.Sharedbanks",
 		"CharacterDatum",
 		"CharacterDatum.AdventureStats",
 		"CharacterDatum.Buyers",

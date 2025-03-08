@@ -22,7 +22,7 @@ type Inventory struct {
 	OrnamentIdfile      uint        `json:"ornament_idfile" gorm:"Column:ornament_idfile"`
 	OrnamentHeroModel   int         `json:"ornament_hero_model" gorm:"Column:ornament_hero_model"`
 	Guid                null.Uint64 `json:"guid" gorm:"Column:guid"`
-	Item                *Item       `json:"item,omitempty" gorm:"foreignKey:itemid;references:id"`
+	Item                *Item       `json:"item,omitempty" gorm:"foreignKey:item_id;references:id"`
 }
 
 func (Inventory) TableName() string {

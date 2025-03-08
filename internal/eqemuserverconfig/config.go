@@ -100,6 +100,11 @@ type EQEmuConfigJson struct {
 			Host string `json:"host"`
 			Port string `json:"port"`
 		} `json:"mailserver,omitempty"`
+		// queryserver connection
+		Queryserver *struct {
+			Host string `json:"host"`
+			Port string `json:"port"`
+		} `json:"queryserver,omitempty"`
 		// replaces chatserver and mailserver
 		Ucs *struct {
 			Host string `json:"host"`
