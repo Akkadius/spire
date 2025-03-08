@@ -147,7 +147,7 @@ export default {
   methods: {
 
     async loadRules() {
-      let r = await (new RuleValueApi(...SpireApi.cfg())).listRuleValues()
+      let r = await (new RuleValueApi(...SpireApi.cfg())).listRuleValues({limit: 10000})
       if (r.status === 200) {
         this.rules = r.data
       }

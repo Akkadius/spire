@@ -1,6 +1,7 @@
-## [4.16.4] 3/08/2025
+## [4.16.5] 3/08/2025
 
 * **Spire Admin** Fix player event log viewer to be compliant with recent changes.
+* **Spire Admin** Fix issue where the rules page was capped at (1,000) entries loaded from the backend because we recently went over 1,000 rules in EQEmulator. This has been increased to 10,000.
 
 ## [4.16.3] 2/23/2025
 
