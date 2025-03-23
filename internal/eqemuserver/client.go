@@ -17,7 +17,7 @@ type Client struct {
 }
 
 func NewClient(t *telnet.Client, logger *logger.AppLogger) *Client {
-	poolSize := 10
+	poolSize := 50
 	var pool []*telnet.Client
 	for i := 0; i < poolSize; i++ {
 		pool = append(pool, telnet.NewClient(logger))
@@ -36,6 +36,8 @@ func (c *Client) GetTelnetClient() *telnet.Client {
 	if c.lastUsedClientIndex >= len(c.pool) {
 		c.lastUsedClientIndex = 0
 	}
+
+	c.logger.DebugVvv().Any("lastUsedClientIndex", c.lastUsedClientIndex).Msg("GetTelnetClient")
 
 	return c.pool[c.lastUsedClientIndex]
 }

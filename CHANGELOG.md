@@ -1,3 +1,7 @@
+## [4.16.6] 3/23/2025
+
+* **Spire Admin** Increase telnet client connection pool (10 to 50) to alleviate Spire admin connection exhaustion when many people are using the admin panel at the same time
+
 ## [4.16.5] 3/08/2025
 
 * **Spire Admin** Fix player event log viewer to be compliant with recent changes.
