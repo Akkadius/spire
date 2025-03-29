@@ -1309,6 +1309,9 @@ func (a *Controller) getZoneServerList(c echo.Context) error {
 					r[i].ZoneID = zone.ZoneID
 					r[i].ID = zone.ID
 					r[i].ZoneOsPid = zone.ZoneOsPid
+					r[i].CompileDate = zone.CompileDate
+					r[i].CompileTime = zone.CompileTime
+					r[i].CompileVersion = zone.CompileVersion
 				}
 			}
 		}

@@ -48,7 +48,9 @@ type WorldZoneList struct {
 		ClientAddress      string `json:"client_address"`
 		ClientLocalAddress string `json:"client_local_address"`
 		ClientPort         int    `json:"client_port"`
+		CompileDate        string `json:"compile_date"`
 		CompileTime        string `json:"compile_time"`
+		CompileVersion     string `json:"compile_version"`
 		ID                 int    `json:"id"`
 		InstanceID         int    `json:"instance_id"`
 		IP                 string `json:"ip"`

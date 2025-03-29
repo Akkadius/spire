@@ -1,3 +1,7 @@
+## [4.17.0] 3/29/2025
+
+* **Spire Admin** Add "Version" field to zoneservers page. (Requires EQEmu server update)
+
 ## [4.16.6] 3/23/2025
 
 * **Spire Admin** Increase telnet client connection pool (10 to 50) to alleviate Spire admin connection exhaustion when many people are using the admin panel at the same time

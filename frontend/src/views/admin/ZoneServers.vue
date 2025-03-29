@@ -126,6 +126,7 @@
             <th style="width: 85px">Zone ID</th>
             <th>Instance ID</th>
             <th style="text-align: center"><i class="fe fe-cloud"></i> IP</th>
+            <th style="text-align: center"><i class="fe fe-git-branch"></i> Version</th>
             <th style="text-align: center"><i class="fe fe-cpu"></i> CPU</th>
             <th style="text-align: center"><i class="fe fe-hard-drive"></i> Memory</th>
             <th style="text-align: center"><i class="fe fe-clock"></i> Uptime</th>
@@ -175,6 +176,9 @@
             <td>{{ zone.zone_id }}</td>
             <td>{{ zone.instance_id ? zone.instance_id : 0 }}</td>
             <td style="text-align: center">{{ zone.zone_server_address }}:{{ zone.client_port }}</td>
+            <td style="text-align: center">
+              <span v-if="zone && zone.compile_date">{{ zone.compile_date }} {{zone.compile_time}} ({{zone.compile_version}})</span>
+            </td>
             <td :style="'min-width: 70px; text-align: center'">
               <span :style="'color: ' + getCpuUsageColor(zone) + ' !important'">
                 {{ zone.cpu ? parseFloat(zone.cpu).toFixed(0) : "N/A" }} %
