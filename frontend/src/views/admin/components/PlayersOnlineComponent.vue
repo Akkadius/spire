@@ -227,10 +227,11 @@ export default {
           this.filterPlayers()
 
           const clientCount = this.clientList.length
-          if (clientCount > 1000) {
-            this.updateIntervalSeconds = 30
-          }
-          if (clientCount > 500) {
+          if (clientCount > 2000) {
+            this.updateIntervalSeconds = 300
+          } else if (clientCount > 1000) {
+            this.updateIntervalSeconds = 60
+          } else if (clientCount > 500) {
             this.updateIntervalSeconds = 10
           } else if (clientCount > 100) {
             this.updateIntervalSeconds = 5

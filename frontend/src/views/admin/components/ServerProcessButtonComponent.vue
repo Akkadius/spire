@@ -164,7 +164,7 @@
     >
       <template v-slot:body>
 
-        <div style="width: 800px">
+        <div style="width: 500px">
           <p class="pt-3 pb-3">Are you sure you want to restart your server?</p>
 
           <LauncherOptions :launcherConfig="launcher"/>
