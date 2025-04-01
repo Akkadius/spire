@@ -38,10 +38,10 @@
             <td class="p-0 text-center">
 
               <b-button
-                variant="primary"
+                variant="outline-danger"
                 size="sm"
                 style="width: 28px; height: 28px"
-                class="btn-dark btn-outline-danger mr-2"
+                class="btn-dark mr-2"
                 title="Delete"
                 @click="deleteSpell(spell)"
               >

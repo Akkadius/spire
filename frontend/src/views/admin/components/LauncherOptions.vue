@@ -1,104 +1,132 @@
 <template>
-  <div class="card">
-    <div class="p-0 card-body p-3">
-      <div class="mb-3">
-        <div class="mb-3">
-          <b-form-checkbox
+  <div>
+
+
+    <table
+      class="eq-table bordered mb-0"
+    >
+      <thead class="eq-table-floating-header">
+      <tr>
+        <td class="font-weight-bold p-3">Options</td>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+        <td>
+          <eq-checkbox
+            :fade-when-not-true="true"
+            class="d-inline-block mr-3"
+            :true-value="true"
+            :false-value="false"
             v-model="launcher.updateOpcodesOnStart"
-            name="check-button"
-            switch
             @change="saveLauncherOptions()"
-          >
-            Update Server Patches (Opcodes) on Start <div class="text-muted d-inline-block">(Recommended)</div>
-          </b-form-checkbox>
-        </div>
-        <b-form-checkbox
-          v-model="launcher.runSharedMemory"
-          name="check-button"
-          switch
-          @change="saveLauncherOptions()"
-        >
-          Run Shared Memory <div class="text-muted d-inline-block">(Recommended)</div>
-        </b-form-checkbox>
-      </div>
-      <div class="mb-3">
-        <b-form-checkbox
-          v-model="launcher.runUcs"
-          name="check-button"
-          switch
-          @change="saveLauncherOptions()"
-        >
-          Run UCS <div class="text-muted d-inline-block">(Optional)</div>
-        </b-form-checkbox>
-      </div>
-      <div class="mb-3">
-        <b-form-checkbox
-          v-model="launcher.runLoginserver"
-          name="check-button"
-          switch
-          class="custom-control custom-switch"
-          @change="saveLauncherOptions()"
-        >
-          Run Loginserver <div class="text-muted d-inline-block">(Optional)</div>
-        </b-form-checkbox>
-      </div>
-      <div class="mb-3">
-        <b-form-checkbox
-          v-model="launcher.runQueryServ"
-          name="check-button"
-          switch
-          @change="saveLauncherOptions()"
-        >
-          Run QueryServ <div class="text-muted d-inline-block">(Optional)</div>
-        </b-form-checkbox>
-      </div>
-      <div class="mb-3 mt-4">
-        Static Zones
+          />
+          Update Server Patches (Opcodes) On Start)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <eq-checkbox
+            :fade-when-not-true="true"
+            class="d-inline-block mr-3"
+            :true-value="true"
+            :false-value="false"
+            v-model="launcher.runSharedMemory"
+            @change="saveLauncherOptions()"
+          />
+          Run Shared Memory (Recommended)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <eq-checkbox
+            :fade-when-not-true="true"
+            class="d-inline-block mr-3"
+            :true-value="true"
+            :false-value="false"
+            v-model="launcher.runUcs"
+            @change="saveLauncherOptions()"
+          />
+          Run UCS (Optional)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <eq-checkbox
+            :fade-when-not-true="true"
+            class="d-inline-block mr-3"
+            :true-value="true"
+            :false-value="false"
+            v-model="launcher.runLoginserver"
+            @change="saveLauncherOptions()"
+          />
+          Run Loginserver (Optional)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <eq-checkbox
+            :fade-when-not-true="true"
+            class="d-inline-block mr-3"
+            :true-value="true"
+            :false-value="false"
+            v-model="launcher.runQueryServ"
+            @change="saveLauncherOptions()"
+          />
+          Run QueryServ (Optional)
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-        <b-form-group class="mt-3">
-          <!-- Prop `add-on-change` is needed to enable adding tags vie the `change` event -->
-          <b-form-tags
-            id="tags-component-select"
-            v-model="staticZones"
-            size="lg"
-            tag-pills
-            variant="success"
-            class="mb-2"
-            add-on-change
-            no-outer-focus
-          >
-            <template v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }">
-              <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
-                <li v-for="tag in tags" :key="tag" class="list-inline-item">
-                  <b-form-tag
-                    @remove="removeTag(tag); saveLauncherOptions()"
-                    :title="tag"
-                    :disabled="disabled"
-                    variant="info"
-                  >{{ tag }}
-                  </b-form-tag>
-                </li>
-              </ul>
-              <b-form-select
-                v-bind="inputAttrs"
-                v-on="inputHandlers"
-                @change="saveLauncherOptions()"
-                :disabled="disabled || availableOptions.length === 0"
-                :options="availableOptions"
-                class="mr-3"
+
+    <div class="mb-3 mt-4">
+      Static Zones
+
+      <b-form-group class="mt-3">
+        <!-- Prop `add-on-change` is needed to enable adding tags vie the `change` event -->
+        <b-form-tags
+          id="tags-component-select"
+          v-model="staticZones"
+          size="lg"
+          tag-pills
+          variant="success"
+          class="mb-2"
+          add-on-change
+          no-outer-focus
+        >
+          <template v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }">
+            <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
+              <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                <b-form-tag
+                  @remove="removeTag(tag); saveLauncherOptions()"
+                  :title="tag"
+                  :disabled="disabled"
+                  variant="success"
+                >{{ tag }}
+                </b-form-tag>
+              </li>
+            </ul>
+            <b-form-select
+              v-bind="inputAttrs"
+              v-on="inputHandlers"
+              @change="saveLauncherOptions()"
+              :disabled="disabled || availableOptions.length === 0"
+              :options="availableOptions"
+              class="mr-3"
+            >
+              <template
+                #first
               >
-                <template
-                  #first
-                >
-                  <!-- This is required to prevent bugs with Safari -->
-                  <option disabled value="">Choose a zone...</option>
-                </template>
-              </b-form-select>
-            </template>
-          </b-form-tags>
-        </b-form-group>
+                <!-- This is required to prevent bugs with Safari -->
+                <option disabled value="">Choose a zone...</option>
+              </template>
+            </b-form-select>
+          </template>
+        </b-form-tags>
+      </b-form-group>
 
-      </div>
 
       <div class="mt-3">
         <div>
@@ -143,9 +171,11 @@
 <script>
 import {Zones}    from "@/app/zones";
 import {SpireApi} from "@/app/api/spire-api";
+import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 
 export default {
   name: 'LauncherOptions',
+  components: { EqCheckbox },
   props: ['launcherConfig'],
   data() {
     return {

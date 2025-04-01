@@ -14,7 +14,7 @@
 
       <div class="mt-3">
         <button
-          class='btn btn-sm btn-outline-warning btn-dark mb-1 mr-2'
+          class='btn btn-sm btn-dark btn-dark mb-1 mr-2'
           @click="setUnusedId()"
         >
           <i class="fa fa-arrow-left"></i>
@@ -47,7 +47,7 @@
         >
           <td>
             <b-button
-              class="btn-dark btn-sm btn-outline-warning"
+              class="btn-dark btn-sm btn-dark"
               title="Select"
               @click="selectRow(e)"
             >

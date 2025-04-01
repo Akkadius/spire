@@ -113,7 +113,7 @@
                 >
                   <b-button
                     v-if="isSelector"
-                    class="btn-dark btn-sm btn-outline-warning mr-3"
+                    class="btn-dark btn-sm btn-dark mr-3"
                     title="Select Merchant List"
                     @click="selectMerchantList(n.merchant_id);"
                   >
@@ -183,7 +183,7 @@
                 >
                   <b-button
                     v-if="isSelector"
-                    class="btn-dark btn-sm btn-outline-warning mr-3"
+                    class="btn-dark btn-sm btn-dark mr-3"
                     title="Select Merchant List"
                     @click="selectMerchantList(m.merchantid);"
                   >
@@ -199,7 +199,7 @@
                   </b-button>
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning"
+                    class="btn-dark btn-sm btn-dark"
                     @click="editMerchantList(m.merchantid)"
                     title="Edit Merchant List"
                   >
@@ -317,9 +317,9 @@ import {Items}               from "../../app/items";
 import EqCheckbox            from "../../components/eq-ui/EQCheckbox";
 import EqDebug               from "../../components/eq-ui/EQDebug";
 import ItemSelector          from "../../components/selectors/ItemSelector";
-import {MerchantlistApi}   from "../../app/api";
-import {SpireApi}          from "../../app/api/spire-api";
-import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import {MerchantlistApi}     from "../../app/api";
+import {SpireApi}            from "../../app/api/spire-api";
+import {SpireQueryBuilder}   from "../../app/api/spire-query-builder";
 import {chunk}               from "../../app/utility/chunk";
 import {Npcs}                from "../../app/npcs";
 import MerchantlistEntryEdit from "./components/MerchantlistEntryEdit";
@@ -329,7 +329,7 @@ import util                  from "util";
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
-  name: "MerchantSubEditor",
+  name: "Merchants",
   components: {
     MerchantEdit,
     MerchantlistEntryEdit,
@@ -348,7 +348,7 @@ export default {
     this.loadQueryState()
     this.ml             = []
     this.editList       = []
-    this.itemData      = {}
+    this.itemData       = {}
     this.merchantLists  = []
     this.associatedNpcs = {}
 
@@ -432,7 +432,7 @@ export default {
       if (confirm(`Are you sure you want to delete this Merchant? (${m.merchantid}) with (${m.slot}) items?`)) {
         await Merchants.deleteMerchant(m.merchantid)
         this.activeMerchantList = {}
-        this.loading = true
+        this.loading            = true
         await this.showAllMerchants()
         this.$forceUpdate()
         this.loading = false

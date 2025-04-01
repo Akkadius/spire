@@ -52,7 +52,7 @@
                 <b-button
                   v-for="f in filterTypes"
                   :key="`${f.label}-${countLogs(f.search)}`"
-                  class="btn-sm mr-2 btn-outline-warning btn-dark fade-in"
+                  class="btn-sm mr-2 btn-dark btn-dark fade-in"
                   @click="filterOn(f)"
                   :style="`opacity: ${(filterType.length > 0 && filterType !== f.search ? '.2' : '1')}`"
                 >
@@ -70,7 +70,7 @@
                 </b-button>
 
                 <b-button
-                  class="btn-sm mr-2 btn-outline-white btn-dark"
+                  class="btn-sm mr-2 btn-dark"
                   @click="resetAll()"
                   title="Reset"
                 >

@@ -32,7 +32,7 @@
               <tr>
                 <th class="text-center" style="vertical-align: middle !important">
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning"
+                    class="btn-dark btn-sm btn-dark"
                     title="NPC Grid Editor"
                     @click="npcGridEditor()"
                   >
@@ -52,7 +52,7 @@
               >
                 <td class="text-center" style="width: 150px">
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning"
+                    class="btn-dark btn-sm btn-dark"
                     @click="showNpcOnMap(n.npc)"
                     title="Show on Map"
                   >
@@ -60,7 +60,7 @@
                   </b-button>
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning ml-3"
+                    class="btn-dark btn-sm btn-dark ml-3"
                     @click="showNpcCard(n.npc)"
                     title="Show NPC card"
                   >
@@ -68,7 +68,7 @@
                   </b-button>
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning ml-3"
+                    class="btn-dark btn-sm btn-dark ml-3"
                     @click="editNpc(n.npc)"
                     title="Edit NPC"
                   >

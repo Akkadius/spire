@@ -94,7 +94,7 @@
           <div class="col-1">
             <button
               title="Reset"
-              class="eq-button m-0"
+              class="btn m-0"
               style="margin-top: 20px !important"
               @click="reset(); updateQueryState()"
             ><i class="fa fa-refresh"></i> Reset
@@ -252,7 +252,7 @@
                 title="View raw"
                 @click="showRawEvent(e)"
                 v-if="!showRaw[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
-                class="ml-3 btn btn-sm btn-warning"
+                :class="'btn btn-sm btn-dark d-inline-block ' + (e.event_type_id === 43 ? '' : 'ml-3')"
                 style="font-size: 10px; min-width: 50px"
               >
                 <i class="fa fa-search"></i> ({{ Object.keys(JSON.parse(e.event_data)).length }})

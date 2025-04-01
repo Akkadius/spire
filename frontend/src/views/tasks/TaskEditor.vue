@@ -412,7 +412,7 @@
                           size="sm"
                           v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
                           style="height: 29px; padding-right: 5px; margin-top: 3px;"
-                          variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
+                          variant="btn btn-outline-success btn-sm"
                         >
                           <i class="fa fa-pencil-square mr-1"></i>
                         </b-button>
@@ -471,7 +471,7 @@
                         @click="cloneActivity()"
                         :disabled="saveFreeze"
                         size="sm"
-                        variant="outline-white btn-dark"
+                        variant="outline-white"
                         class="ml-2"
                       >
                         <i class="ra ra-double-team"></i>
@@ -830,7 +830,7 @@
                                     :title="'$client->UpdateTaskActivity(int task_id, int activity_id, int count);'"
                                   >
                                     <button
-                                      class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                                      class='btn btn-sm btn-dark mb-1 mr-2'
                                       @click="copyToClip(`$client->UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
                                       style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
                                     >
@@ -850,7 +850,7 @@
                                     :title="'client:UpdateTaskActivity(int task, int activity, int count);'"
                                   >
                                     <button
-                                      class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                                      class='btn btn-sm btn-dark mb-1 mr-2'
                                       @click="copyToClip(`client:UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
                                       style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
                                     >
@@ -1371,12 +1371,7 @@ export default {
 
     copyToClip(s) {
       ClipBoard.copyFromText(s)
-
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied [" + s + "] to clipboard");
     },
 
     getZoneNames() {

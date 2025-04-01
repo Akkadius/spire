@@ -1,13 +1,11 @@
 <template>
   <div>
 
-    <div class="card" v-if="logCategories.length === 0">
-      <div class="card-body">
+    <eq-window v-if="logCategories.length === 0">
         Zone not loaded
-      </div>
-    </div>
+    </eq-window>
 
-    <div class="row">
+    <div class="row" v-if="logCategories.length > 0">
       <div class="col-lg-2 order-lg-0 mb-4 pr-0">
         <eq-window-simple
           class="pt-0 pb-0 mt-0 pl-3 pr-3"
@@ -138,11 +136,13 @@ import EqCheckbox             from "@/components/eq-ui/EQCheckbox.vue";
 import {Navbar}               from "@/app/navbar";
 import {ROUTE}                from "@/routes";
 import ClipBoard              from "@/app/clipboard/clipboard";
+import EqWindow               from "@/components/eq-ui/EQWindow.vue";
+import {Notify}               from "@/app/Notify";
 
 const LOG_STREAM_TRUNCATE_CHARACTER_LENGTH = 300000;
 
 export default {
-  components: { EqCheckbox, EqWindowSimple },
+  components: { EqWindow, EqCheckbox, EqWindowSimple },
   data() {
     return {
       logCategories: [],
@@ -334,11 +334,7 @@ export default {
 
     copyFileContentsToClipboard() {
       ClipBoard.copyFromElement("log-contents");
-      this.$bvToast.toast("Copied logs to clipboard", {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied logs to clipboard");
     },
   }
 }

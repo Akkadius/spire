@@ -1,37 +1,32 @@
 <template>
-  <div>
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          System Info
-        </h4>
-      </div>
-      <div class="card-body" style="padding: 0px; overflow-y:scroll">
-        <table class="table card-table sysinfo">
-          <tbody>
+  <eq-window
+    title="System Info"
+    class="p-0 pt-3 mb-3"
+  >
+    <table class="eq-table bordered eq-highlight-rows mb-0">
+      <tbody>
+      <tr v-for="i in items">
+        <td class="text-right font-weight-bold">{{ i.key }}</td>
+        <td class="text-left">
+          <small class="text-muted">
+            {{ i.value }}
+          </small>
+        </td>
+      </tr>
 
-          <tr v-for="i in items">
-            <td style="vertical-align: middle">{{ i.key }}</td>
-            <td class="text-right">
-              <small class="text-muted">
-                {{ i.value }}
-              </small>
-            </td>
-          </tr>
-
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+      </tbody>
+    </table>
+  </eq-window>
 </template>
 
 <script>
 import {SpireApi} from "@/app/api/spire-api";
 import Time       from "@/app/time/time";
+import EqWindow   from "@/components/eq-ui/EQWindow.vue";
 
 export default {
   name: 'DashboardSystemInfoV2',
+  components: { EqWindow },
   data() {
     return {
       host: {},
@@ -53,7 +48,7 @@ export default {
       v.push({ key: "Platform", value: `${d.platform} (${d.platformVersion})` })
       v.push({ key: "Version", value: d.kernelVersion })
       v.push({ key: "Virtualization", value: `${d.virtualizationSystem} ${d.virtualizationRole}` })
-      v.push({ key: "Uptime", value: Time.fromNowUnix(d.uptime) })
+      v.push({ key: "Uptime", value: Time.humanizeUnix((Date.now() / 1000) + d.uptime) })
       v.push({ key: "Processes", value: d.procs })
     }
 

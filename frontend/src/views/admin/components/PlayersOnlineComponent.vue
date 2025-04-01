@@ -1,117 +1,72 @@
 <template>
-  <div class="row" :style="loaded ? 'opacity:1' : 'opacity:.3'">
-    <div class="col-12">
-      <div class="card mb-3" v-if="hasClients && hasFilteredClients">
-        <div class="card-body pt-0 pb-0 pl-3 pr-3">
-          <div class="input-group input-group-flush">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fe fe-search"></i></span>
-            </div>
-            <input
-              class="list-search form-control"
-              type="search"
-              placeholder="Search for player(s) or zone..."
-              @keyup="filterPlayers"
-              v-model="playerSearchFilter"
-            >
-          </div>
-        </div>
-
-      </div>
-
-      <div class="card">
-        <div
-          style="max-height: 78vh; overflow-y: scroll"
-          class="table-responsive mb-0"
-        >
-          <div
-            v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
-            class="m-3"
-          >
-            Too many online ({{ clientList ? clientList.length : 0 }}) to display, for full list see
-            <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
-              <i class="fe fe-user"></i> Players
-              Online
-            </router-link>
-          </div>
-
-          <div
-            v-if="(Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList"
-            class="card-header"
-          >
-            <h4 class="card-header-title" v-if="loaded">Players Online ({{ clientList ? clientList.length : 0 }})</h4>
-            <h4 class="card-header-title" v-if="!loaded">Loading...</span></h4>
-          </div>
-
-          <table
-            v-if="clientList && clientList.length > 0 && loaded && Object.keys(filteredClientList).length > 0"
-            class="table table-sm table-nowrap players-online sticky"
-          >
-            <thead class="sticky">
-            <tr>
-              <th style="width: 100px"></th>
-              <th>Player</th>
-              <th style="width: 75px">Level</th>
-              <th style="min-width: 100px">Zone</th>
-              <th style="width: 150px">Client</th>
-              <th v-if="fullList">IP</th>
-            </tr>
-            </thead>
-
-            <tbody
-              style="padding: 30px; overflow-y: scroll !important"
-            >
-
-            <tr
-              v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)"
-              :key="client && client.name && client.name.length > 0 ? client.name : index"
-            >
-              <td style="text-align:center">
-                <div class="avatar-list avatar-list-stacked">
-                  <img class="avatar-img rounded-circle" style="width:25px" :src="getClassImage(client.class)">
-                  <img class="avatar-img rounded-circle" style="width:25px" :src="getRaceImage(client.race)">
-                </div>
-              </td>
-              <td style="align-content: center">{{ client.name }}</td>
-              <td>{{ client.level }}</td>
-              <td>
-                <span v-if="client.server && client.server.zone_name">
-                  {{ client.server.zone_name }}
-                  <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{
-                      client.server.instance_id
-                    }})</span>
-                </span>
-                    <span v-if="!client.server && client.online === 1">
-                  Character Select
-                </span>
-                    <span v-if="!client.server && client.online > 0">
-                  Zoning
-                </span>
-              </td>
-              <td>
-                <span v-if="client.client_version">
-                  {{ eqClientVersionConstants[client.client_version] }}
-                </span>
-              </td>
-              <td v-if="fullList">
-                <span v-if="client.ip">
-                  {{ intToIP(client.ip) }}
-                </span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-
-        </div>
-
-        <div class="card-body" v-if="clientList && clientList.length === 0 && loaded">
-          There are currently no players online...
-        </div>
-
-      </div>
+  <eq-window
+    :title="'Players Online (' + (clientList ? clientList.length : 0).toLocaleString() + ')'"
+    class="p-0 mb-3"
+  >
+    <div
+      v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
+      class="m-3"
+    >
+      Too many online ({{ clientList ? clientList.length : 0 }}) to display, for full list see
+      <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
+        <i class="fe fe-user"></i> Players
+        Online
+      </router-link>
     </div>
-  </div>
 
+    <table
+      v-if="clientList && clientList.length > 0 && loaded && Object.keys(filteredClientList).length > 0"
+      class="eq-table bordered eq-highlight-rows mb-0"
+    >
+      <thead class="eq-table-floating-header">
+      <tr>
+        <th style="width: 100px"></th>
+        <th>Player</th>
+        <th style="width: 75px">Level</th>
+        <th style="min-width: 100px">Zone</th>
+        <th style="width: 150px">Client</th>
+        <th v-if="fullList">IP</th>
+      </tr>
+      </thead>
+
+      <tbody
+        style="padding: 30px; overflow-y: scroll !important"
+      >
+
+      <tr
+        v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)"
+        :key="client && client.name && client.name.length > 0 ? client.name : index"
+      >
+        <td style="text-align:center">
+          <div class="avatar-list avatar-list-stacked">
+            <img class="avatar-img rounded-circle" style="width:25px" :src="getClassImage(client.class)">
+            <img class="avatar-img rounded-circle" style="width:25px" :src="getRaceImage(client.race)">
+          </div>
+        </td>
+        <td style="align-content: center">{{ client.name }}</td>
+        <td>{{ client.level }}</td>
+        <td>
+            <span v-if="client.server && client.server.zone_name">{{ client.server.zone_name }}
+              <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{client.server.instance_id }})</span>
+            </span>
+          <span v-if="!client.server && client.online === 1">Character Select</span>
+          <span v-if="!client.server && client.online > 0">Zoning</span>
+        </td>
+        <td>
+          <span v-if="client.client_version">{{ eqClientVersionConstants[client.client_version] }}</span>
+        </td>
+        <td v-if="fullList">
+          <span v-if="client.ip">{{ intToIP(client.ip) }}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="card-body" v-if="clientList && clientList.length === 0 && loaded">
+      There are currently no players online...
+    </div>
+
+  </eq-window>
 </template>
 
 <script>
@@ -122,9 +77,11 @@ import eqClientVersionConstants    from "@/app/constants/eq-client-version-const
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import {ROUTE}                     from "@/routes";
 import {SpireApi}                  from "@/app/api/spire-api";
+import EqWindow                    from "@/components/eq-ui/EQWindow.vue";
 
 export default {
   name: 'PlayersOnlineComponent',
+  components: { EqWindow },
   computed: {
     ROUTE() {
       return ROUTE
@@ -270,10 +227,11 @@ export default {
           this.filterPlayers()
 
           const clientCount = this.clientList.length
-          if (clientCount > 1000) {
-            this.updateIntervalSeconds = 30
-          }
-          if (clientCount > 500) {
+          if (clientCount > 2000) {
+            this.updateIntervalSeconds = 300
+          } else if (clientCount > 1000) {
+            this.updateIntervalSeconds = 60
+          } else if (clientCount > 500) {
             this.updateIntervalSeconds = 10
           } else if (clientCount > 100) {
             this.updateIntervalSeconds = 5

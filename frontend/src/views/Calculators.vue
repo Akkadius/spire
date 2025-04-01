@@ -2,8 +2,8 @@
   <div class="container-fluid">
 
     <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-10 content-pop">
-        <div class="container-fluid">
+      <div class="col-12 col-lg-10 col-xl-10 card">
+        <div class="container-fluid mb-5">
 
           <!-- Race Bitmask Calculator -->
           <header-component
@@ -12,14 +12,14 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
                 <race-bitmask-calculator
                   :inputData.sync="racesBitmask"
                   :mask="racesBitmask"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Race Bitmask</h4>
 
                     The input is two-way bound with the race selector
@@ -40,14 +40,14 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
                 <class-bitmask-calculator
                   :inputData.sync="classesBitmask"
                   :mask="classesBitmask"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Class Bitmask</h4>
                     The input is two-way bound with the class selector
                     <input
@@ -67,14 +67,14 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
                 <deity-bitmask-calculator
                   :inputData.sync="deityBitmask"
                   :mask="deityBitmask"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Deity Bitmask</h4>
                     The input is two-way bound with the deity selector
                     <input
@@ -94,14 +94,14 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
                 <client-version-calculator
                   :inputData.sync="clientVersionBitmask"
                   :mask="clientVersionBitmask"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Client Version Bitmask</h4>
                     The input is two-way bound with the client version selector
                     <input
@@ -121,14 +121,14 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
                 <expansion-bitmask-calculator
                   :inputData.sync="expansionBitmask"
                   :mask="expansionBitmask"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Expansion Bitmask</h4>
                     The input is two-way bound with the expansion selector
                     <input
@@ -148,14 +148,14 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
                 <aug-bitmask-calculator
                   :inputData.sync="augBitmask"
                   :mask="augBitmask"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Aug Bitmask</h4>
                     The input is two-way bound with the aug selector
                     <input
@@ -175,7 +175,7 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 500px">
 
                 <inventory-slot-calculator
@@ -184,7 +184,7 @@
                 />
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Inventory Slot Bitmask</h4>
                     The input is two-way bound with above
                     <input
@@ -204,7 +204,7 @@
           />
 
           <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-0">
               <eq-window style="width: 100%">
 
                 <npc-special-abilities
@@ -212,7 +212,7 @@
                   :abilities="specialAbilityInput"/>
 
                 <div class="row">
-                  <div class="col-12">
+                  <div class="col-12 p-0">
                     <h4 class="eq-header mt-2">Special Abilities Code</h4>
                     The input is two-way bound with above
                     <input

@@ -11,6 +11,15 @@ export default class Time {
   public static fromNowUnix(unix: number): string {
     return dayjs.unix(unix).fromNow();
   }
+  public static toNowUnix(unix: number): string {
+    return dayjs.unix(unix).toNow();
+  }
+  public static humanizeUnix(unix: number): string {
+    let now = Date.now() / 1000;
+    let diffInHours = Math.abs(unix - now) / 3600;
+
+    return dayjs.duration(diffInHours, "hours").humanize()
+  }
 
   static format(time, format: string) {
     return dayjs(time).format(format);
@@ -28,7 +37,7 @@ export default class Time {
     const minutes = duration.minutes();
     const seconds = duration.seconds();
 
-    return `${minutes} minutes, ${seconds} seconds`;
+    return `${minutes}m, ${seconds}s`;
   }
 
   static formatUnix(unix, format: string) {

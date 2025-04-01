@@ -25,6 +25,7 @@ import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.
 import semver                   from "semver";
 import AppUpdateModal           from "@/components/modals/AppUpdateModal.vue";
 import {SpireWebsocket}         from "@/app/api/spire-websocket";
+import {Notify}                 from "@/app/Notify";
 
 export default {
   name: "App",
@@ -287,12 +288,7 @@ export default {
             }
           } else if (force) {
             console.log("no update available")
-            this.$bvToast.toast("Already up to date", {
-              title: "Spire Update",
-              autoHideDelay: 2000,
-              solid: true,
-              toaster: 'b-toaster-bottom-right',
-            })
+            Notify.toast("Already up to date!");
           }
 
           LocalSettings.setLastCheckedUpdateTime(new Date().getTime() / 1000)
@@ -307,11 +303,7 @@ export default {
       if (e && e.data) {
         const data = JSON.parse(e.data)
         if (data.type === "notification") {
-          this.$bvToast.toast(data.message, {
-            title: "Notification",
-            solid: true,
-            toaster: 'b-toaster-bottom-right',
-          })
+          Notify.toast(data.message);
         }
       }
     },

@@ -1,106 +1,161 @@
 <template>
-  <div class="card" v-if="stats" style="min-height: 90px">
-    <div class="card-body pl-4 pr-4 pt-3 pb-3">
+  <eq-window-simple
+    v-if="stats"
+    class="admin-header-window mb-4 pb-0"
+    style="font-family: 'Cerebri Sans', sans-serif; color: white; padding: 10px; z-index: 1;"
+    :title="stats.server_name"
+  >
 
-      <div class="row align-items-center">
+    <div class="row align-items-center">
 
-        <!-- Server Name -->
-        <div class="col-lg-auto">
-          <h3 class="d-inline-block mr-3">
-            <a
-              href="javascript:void(0)"
-              @click="toggleServerLock()"
-              class="truncate-server-name"
-            >
-              <i
-                :class="'fe ' + (serverLocked ? 'fe-lock' : 'fe-unlock')  + ' pr-2'"
-                :title="serverLocked ? 'Server is locked' : 'Server is unlocked'"
-                :style="`color: ${serverLocked ? 'red' : 'gray'}`"
-              />
-
-              <span v-if="stats.server_name">{{ stats.server_name }}</span>
-            </a>
-          </h3>
-
-          <div>
-            <server-process-button-component class="d-inline-block mr-3"/>
-            <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
-          </div>
-
-        </div>
-
-        <!-- Server Metrics -->
-        <div class="col-lg-8 col-sm-12 pr-0 ml-0 text-center">
-          <div
-            class="row align-items-center admin-header"
-            style="flex-wrap: nowrap; overflow-x: scroll; overflow-y: hidden; padding-bottom: 5px;"
-          >
+      <!-- Server Metrics -->
+      <div class="col-lg-12 col-sm-12 pl-0 pr-0 ml-0 text-center">
+        <div
+          class="row align-items-center admin-header"
+        >
 
           <!-- Server Metrics -->
-            <div class="col-lg-3 col-sm-12 mt-3-mobile">
-              <div class="row" v-for="(metric, index) in serverStats" :key="index">
-                <!-- Left Label -->
-                <div class="col-lg-6 col-3 p-0 m-0 text-right" style="line-height: 1 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 12px;">
+          <div class="col-lg-2 col-sm-12 mt-3-mobile pl-0 pr-0">
+            <div class="row" v-for="(metric, index) in serverStats.filter((e) => e.value !== '')" :key="index" style="height: 15px;">
+              <!-- Left Label -->
+              <div class="col-lg-6 col-3 p-0 m-0 text-right">
+                  <span class="small font-weight-bold" style="font-size: 12px; ">
                     {{ metric.label }}
                   </span>
-                </div>
+              </div>
 
-                <!-- Right Value -->
-                <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
-                  <span class="small font-weight-bold" style="font-size: 12px;">
+              <!-- Right Value -->
+              <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left">
+
+                <span
+                  v-if="metric.label !== 'Locked' && metric.label !== 'World'"
+                  class="small" :style="'font-size: 12px;' + (metric.color ? 'color: ' + metric.color : '')"
+                >
                     {{ metric.value.toLocaleString() }}
                   </span>
-                </div>
-              </div>
-            </div>
 
-
-            <!-- Resource Metrics -->
-            <div
-              class="col-lg-3 col-sm-12 pl-0 pr-0 mt-3-mobile"
-              v-for="(host, index) in hostMetrics"
-              style="display: inline-block"
-            >
-              <!-- Render Metrics Dynamically -->
-              <div class="row" v-for="(metric, index) in host" :key="index">
-                <!-- Left Label -->
-                <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    {{ metric.label }}
+                <!-- Server Lock -->
+                <a
+                  href="javascript:void(0)"
+                  v-if="metric.label === 'Locked'"
+                  class="small font-weight-bold text-muted"
+                  style="font-size: 12px;"
+                  @click="toggleServerLock"
+                >
+                  <span v-if="serverLocked" class="text-danger">
+                    <i class="fa fa-lock mr-1"></i> Locked
                   </span>
-                </div>
+                  <span v-else class="text-success">
+                    <i class="fa fa-unlock mr-1"></i> Unlocked
+                  </span>
+                </a>
 
-                <!-- Progress Bar -->
-                <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px" v-if="typeof metric.percent !== 'undefined'">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="metric.percent"
-                    :show-percent="false"
-                    :color="metric.color"
+                <!-- Server Process Button -->
+                <div class="d-none d-lg-block" v-if="metric.label === 'World'">
+                  <server-process-button-component
+                    style="z-index:1000"
+                    :server-status="metric.value"
+                    class="d-inline-block mr-3"
                   />
                 </div>
 
-                <!-- Right Value -->
-                <div
-                  :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')"
-                  style="line-height: .8 !important"
+              </div>
+            </div>
+          </div>
+
+          <!-- Dash Stats -->
+          <div class="col-lg-1 col-sm-12 mt-3-mobile pl-0 pr-0">
+            <div class="row" v-for="(metric, index) in dashStats" :key="index" style="height: 15px;">
+              <!-- Left Label -->
+              <div class="col-lg-6 col-3 p-0 m-0 text-right">
+                  <span class="small font-weight-bold" style="font-size: 12px; ">
+                    {{ metric.label }}
+                  </span>
+              </div>
+
+              <!-- Right Value -->
+              <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left">
+
+                <span
+                  v-if="metric.label !== 'Locked' && metric.label !== 'World'"
+                  class="small" style="font-size: 12px;"
                 >
+                    {{ metric.value.toLocaleString() }}
+                  </span>
+
+                <!-- Server Lock -->
+                <a
+                  href="javascript:void(0)"
+                  v-if="metric.label === 'Locked'"
+                  class="small font-weight-bold text-muted"
+                  style="font-size: 12px;"
+                  @click="toggleServerLock"
+                >
+                  <span v-if="serverLocked" class="text-danger">
+                    <i class="fa fa-lock mr-1"></i> Locked
+                  </span>
+                  <span v-else class="text-success">
+                    <i class="fa fa-unlock mr-1"></i> Unlocked
+                  </span>
+                </a>
+
+                <!-- Server Process Button -->
+                <div class="d-none d-lg-block" v-if="metric.label === 'World'">
+                  <server-process-button-component
+                    style="z-index:1000"
+                    :server-status="metric.value"
+                    class="d-inline-block mr-3"
+                  />
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Resource Metrics -->
+          <div
+            class="col-lg-2 col-sm-12 pl-0 pr-0 mt-3-mobile"
+            v-for="(host, index) in hostMetrics"
+            style="display: inline-block"
+          >
+            <!-- Render Metrics Dynamically -->
+            <div class="row" v-for="(metric, index) in host" :key="index">
+              <!-- Left Label -->
+              <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold" style="font-size: 10px; opacity: .9">
+                    {{ metric.label }}
+                  </span>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px" v-if="typeof metric.percent !== 'undefined'">
+                <eq-progress-bar
+                  style="opacity: .95"
+                  :percent="metric.percent"
+                  :show-percent="false"
+                  :color="metric.color"
+                />
+              </div>
+
+              <!-- Right Value -->
+              <div
+                :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')"
+                style="line-height: .8 !important"
+              >
                   <span
                     :class="' font-weight-bold' + (typeof metric.percent === 'undefined' ? '' : 'small text-muted')"
                     style="font-size: 10px;"
                   >
                     {{ metric.value }}
                   </span>
-                </div>
               </div>
             </div>
-
           </div>
+
         </div>
       </div>
     </div>
-  </div>
+  </eq-window-simple>
 </template>
 
 <script>
@@ -110,10 +165,15 @@ import {SpireApi}                   from "@/app/api/spire-api";
 import {SpireWebsocket}             from "@/app/api/spire-websocket";
 import EqProgressBar                from "@/components/eq-ui/EQProgressBar.vue";
 import Time                         from "@/app/time/time";
+import EqWindow                     from "@/components/eq-ui/EQWindow.vue";
+import EqWindowSimple               from "@/components/eq-ui/EQWindowSimple.vue";
+import {Notify}                     from "@/app/Notify";
 
 export default {
   name: "AdminHeader",
   components: {
+    EqWindowSimple,
+    EqWindow,
     EqProgressBar,
     ServerProcessButtonComponent,
   },
@@ -121,6 +181,7 @@ export default {
     return {
       pageName: "",
 
+      dashstats: {},
       stats: {},
 
       updateIntervalSeconds: 1,
@@ -137,6 +198,7 @@ export default {
       serverLocked: false,
 
       stopMessage: "",
+      shutdownTime: "",
 
       timer: null,
     }
@@ -155,7 +217,7 @@ export default {
           value: this.stats && this.stats.zone_list && this.stats.zone_list.data ? this.stats.zone_list.data.length : 0,
         },
         {
-          label: "Players",
+          label: "Players Online",
           value: this.stats && this.stats.client_list && this.stats.client_list.data ? this.stats.client_list.data.length : 0,
         },
         {
@@ -163,8 +225,38 @@ export default {
           value: this.stats && this.stats.uptime ? this.formatUptime(this.stats.uptime) : "N/A",
         },
         {
+          label: "Shutdown Timer",
+          value: this.shutdownTime,
+          color: 'red',
+        },
+        {
           label: "Locked",
           value: this.serverLocked ? "Yes" : "No",
+        },
+      ]
+    },
+
+    dashStats() {
+      return [
+        {
+          label: "Accounts",
+          value: this.dashstats && this.dashstats.accounts ? this.dashstats.accounts.toLocaleString() : 0,
+        },
+        {
+          label: "Characters",
+          value: this.dashstats && this.dashstats.characters ? this.dashstats.characters.toLocaleString() : 0,
+        },
+        {
+          label: "Guilds",
+          value: this.dashstats && this.dashstats.guilds ? this.dashstats.guilds.toLocaleString() : 0,
+        },
+        {
+          label: "Items",
+          value: this.dashstats && this.dashstats.items ? this.dashstats.items.toLocaleString() : 0,
+        },
+        {
+          label: "NPCs",
+          value: this.dashstats && this.dashstats.npcs ? this.dashstats.npcs.toLocaleString() : 0,
         },
       ]
     },
@@ -238,8 +330,6 @@ export default {
   beforeDestroy() {
     clearInterval(this.timer)
 
-    window.removeEventListener('keypress', this.keypressHandler)
-
     EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
     EventBus.$off('process-change')
 
@@ -249,8 +339,6 @@ export default {
     EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
 
     SpireWebsocket.addEventListener('message', this.handleWebsocketMessage);
-
-    window.addEventListener('keypress', this.keypressHandler)
 
     this.loadServerStats()
 
@@ -270,6 +358,12 @@ export default {
     if (this.$route.meta && this.$route.meta.title) {
       this.pageName = this.$route.meta.title
     }
+
+    SpireApi.v1().get("eqemuserver/dashboard-stats").then((r) => {
+      if (r.status === 200) {
+        this.dashstats = r.data
+      }
+    })
   },
   methods: {
 
@@ -315,17 +409,15 @@ export default {
     },
 
     toggleServerLock() {
-      SpireApi.v1().post("eqemuserver/toggle-server-lock").then((r) => {
-        if (r.status === 200) {
-          this.serverLocked = r.data.locked
-          this.$bvToast.toast(r.data.message, {
-            title: "Server Lock",
-            autoHideDelay: 2000,
-            solid: true,
-            toaster: 'b-toaster-bottom-right',
-          })
-        }
-      })
+      if (confirm("Are you sure you want to toggle the server lock?")) {
+        SpireApi.v1().post("eqemuserver/toggle-server-lock").then((r) => {
+          if (r.status === 200) {
+            this.serverLocked = r.data.locked
+
+            Notify.toast(r.data.message);
+          }
+        })
+      }
     },
 
     async loadServerStats() {
@@ -445,30 +537,7 @@ export default {
       }
     },
 
-    keypressHandler(e) {
-      if (e.srcElement.tagName !== 'BODY' && e.srcElement.tagName !== 'A') {
-        return
-      }
 
-      if (window.location.pathname === '/login') {
-        return
-      }
-
-      switch (String.fromCharCode(e.keyCode)) {
-        case 'p':
-          this.$root.$emit('bv::show::modal', 'start-server-modal')
-          break
-        case 'r':
-          this.$root.$emit('bv::show::modal', 'restart-server-modal')
-          break
-        case 'c':
-          this.$root.$emit('bv::show::modal', 'cancel-restart-server-modal')
-          break
-        case 's':
-          this.$root.$emit('bv::show::modal', 'stop-server-modal')
-          break
-      }
-    },
     handleWebsocketMessage(e) {
       if (e && e.data) {
         const data = JSON.parse(e.data)
@@ -480,9 +549,11 @@ export default {
 
           if (remaining === "") {
             this.stopMessage = ""
+            this.shutdownTime = ""
             return
           }
           this.stopMessage = `${type.charAt(0).toUpperCase() + type.slice(1)} in ${remaining}`
+          this.shutdownTime = remaining
         }
       }
     },
@@ -497,14 +568,8 @@ export default {
 }
 </script>
 
-<style>
-.truncate-server-name {
-  margin-top: 10px;
-  display: inline-flex;
-  -webkit-line-clamp: 8; /* Number of lines to show */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 450px; /* Set the max-width to the desired length */
+<style scoped>
+.admin-header-window .text-muted {
+
 }
 </style>

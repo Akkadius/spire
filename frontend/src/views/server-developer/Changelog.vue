@@ -29,7 +29,7 @@
       style="height: 83vh; "
       class="fade-in text-center p-3" v-if="changelog && !loading">
       <button
-        class='btn btn-sm btn-outline-warning mb-3'
+        class='btn btn-sm btn-dark mb-3'
         @click="copyToClip(changelog)"
       >
         <i class="fa fa-clipboard"></i>
@@ -46,6 +46,7 @@
 import EqWindow   from "@/components/eq-ui/EQWindow.vue";
 import {SpireApi} from "@/app/api/spire-api";
 import ClipBoard  from "@/app/clipboard/clipboard";
+import {Notify}   from "@/app/Notify";
 
 export default {
   name: "Changelog",
@@ -70,11 +71,7 @@ export default {
       ClipBoard.copyFromText(s)
       console.log(s)
 
-      this.$bvToast.toast("Copied to clipboard!", {
-        title: "Copy",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied to clipboard!");
     },
   }
 

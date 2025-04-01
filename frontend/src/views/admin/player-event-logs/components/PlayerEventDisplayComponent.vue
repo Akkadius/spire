@@ -7,11 +7,11 @@
       <span class="font-weight-bold">done_count</span> {{ event(e).done_count }}
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.TASK_COMPLETE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.TASK_COMPLETE">
       Completed task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{ event(e).task_id }})
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.ITEM_CREATION">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.ITEM_CREATION">
       Server created item
       <item-popover
         :item="itemData[event(e).item_id]"
@@ -20,7 +20,7 @@
       ({{ event(e).charges }})
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.TRADER_PURCHASE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.TRADER_PURCHASE">
       Purchased item
       <item-popover
         :item="itemData[event(e).item_id]"
@@ -40,7 +40,7 @@
       />
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.TRADER_SELL">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.TRADER_SELL">
       Sold item
       <item-popover
         :item="itemData[event(e).item_id]"
@@ -63,7 +63,7 @@
       />
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.SPLIT_MONEY">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.SPLIT_MONEY">
       Split
       <eq-cash-display
         class="font-weight-bold"
@@ -76,51 +76,51 @@
       />
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.GM_COMMAND">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.GM_COMMAND">
       Used GM command <span class="font-weight-bold">{{ event(e).message }}</span>
       <span v-if="event(e).target && event(e).target !== 'NONE'">
         using target [<span class="font-weight-bold">{{ event(e).target }}</span>]
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.SAY">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.SAY">
       Said <span class="font-weight-bold">{{ event(e).message }}</span>
       <span v-if="event(e).target && event(e).target !== 'NONE'">
         using target [<span class="font-weight-bold">{{ event(e).target }}</span>]</span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.WENT_OFFLINE">Went offline</div>
-    <div v-if="e.event_type_id === PLAYER_EVENT.WENT_ONLINE">Went online</div>
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.WENT_OFFLINE">Went offline</div>
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.WENT_ONLINE">Went online</div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.ITEM_DESTROY">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.ITEM_DESTROY">
       Destroyed item
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
       ({{ event(e).charges }}) ({{ event(e).reason }})
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.SKILL_UP">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.SKILL_UP">
       Increased Skill <span class="font-weight-bold">{{ DB_SKILLS[event(e).skill_id] }}</span>
       ({{ event(e).value }}/{{ event(e).max_skill }})
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.FISH_FAILURE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.FISH_FAILURE">
       Failed to <span class="item-749-sm"></span> fish!
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.FISH_SUCCESS">We caught a lunker!
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.FISH_SUCCESS">We caught a lunker!
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 d-inline-block"/>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.FORAGE_FAILURE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.FORAGE_FAILURE">
       Failed to forage!
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.FORAGE_SUCCESS">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.FORAGE_SUCCESS">
       We found something!
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 d-inline-block"/>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.COMBINE_FAILURE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.COMBINE_FAILURE">
       Failed to combine recipe <span class="font-weight-bold">{{ event(e).recipe_name }}</span>
       ({{ event(e).recipe_id }})
       <span v-if="TRADESKILLS[event(e).tradeskill_id]">
@@ -129,7 +129,7 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.COMBINE_SUCCESS">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.COMBINE_SUCCESS">
       Successfully combined recipe <span class="font-weight-bold">{{ event(e).recipe_name }}</span>
       ({{ event(e).recipe_id }})
       <span v-if="TRADESKILLS[event(e).tradeskill_id]">
@@ -138,7 +138,7 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.DROPPED_ITEM">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.DROPPED_ITEM">
       Dropped item
       <item-popover
         :item="itemData[event(e).item_id]"
@@ -147,7 +147,7 @@
       ({{ event(e).charges }})
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.DISCOVER_ITEM">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.DISCOVER_ITEM">
       Discover item
       <item-popover
         :item="itemData[event(e).item_id]"
@@ -155,12 +155,12 @@
       />
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.REZ_ACCEPTED">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.REZ_ACCEPTED">
       Accepted resurrection
     </div>
 
     <div
-      v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL"
+      v-else-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL"
     >
       Sold
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
@@ -181,20 +181,21 @@
     </div>
 
     <div
-      v-if="e.event_type_id === PLAYER_EVENT.POSSIBLE_HACK"
+      v-else-if="e.event_type_id === PLAYER_EVENT.POSSIBLE_HACK"
+      class="d-inline-block"
     >
-      {{ event(e).message }}
+      {{ event(e).message.replace(/^\s+|\s+$/g, '') }}
     </div>
 
     <div
-      v-if="[PLAYER_EVENT.KILLED_NPC, PLAYER_EVENT.KILLED_NAMED_NPC, PLAYER_EVENT.KILLED_RAID_NPC].includes(e.event_type_id)"
+      v-else-if="[PLAYER_EVENT.KILLED_NPC, PLAYER_EVENT.KILLED_NAMED_NPC, PLAYER_EVENT.KILLED_RAID_NPC].includes(e.event_type_id)"
     >
       Killed
       <npc-popover :npc="npcData[event(e).npc_id]" :show-image="false" class="d-inline-block font-weight-bold"/>
     </div>
 
     <div
-      v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_PURCHASE"
+      v-else-if="e.event_type_id === PLAYER_EVENT.MERCHANT_PURCHASE"
     >
       Bought
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
@@ -214,7 +215,7 @@
       />
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.ZONING">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.ZONING">
       Zoned from
       <span class="font-weight-bold" v-if="zoneData[event(e).from_zone_id]">
       {{ zoneData[event(e).from_zone_id].long_name }}
@@ -225,7 +226,7 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.LEVEL_GAIN">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.LEVEL_GAIN">
       Leveled up (+{{ event(e).levels_gained }}) to
       <span class="font-weight-bold">
       {{ event(e).to_level }}
@@ -236,7 +237,7 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.LEVEL_LOSS">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.LEVEL_LOSS">
       Leveled down (-{{ event(e).levels_lost }}) to
       <span class="font-weight-bold">
       {{ event(e).to_level }}
@@ -247,11 +248,11 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.AA_GAIN">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.AA_GAIN">
       Gained <span class="font-weight-bold">{{ event(e).aa_gained }}</span> AA point(s)
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.AA_PURCHASE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.AA_PURCHASE">
       Purchased AA <span class="font-weight-bold">{{ getAADescription(event(e).aa_id) }}</span>
 
       <span v-if="aaData[event(e).aa_id] && aaData[event(e).aa_id].spells_new">
@@ -266,7 +267,7 @@
       <span class="font-weight-bold">{{ event(e).aa_cost }}</span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.LOOT_ITEM">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.LOOT_ITEM">
       Looted
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
       ({{ event(e).charges }})
@@ -274,14 +275,14 @@
       <npc-popover :npc="npcData[event(e).npc_id]" :show-image="false" class="d-inline-block font-weight-bold"/>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.GROUNDSPAWN_PICKUP">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.GROUNDSPAWN_PICKUP">
       Picked up
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
       ({{ event(e).charges }})
       from the ground!
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.TASK_ACCEPT">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.TASK_ACCEPT">
       Accepted task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{ event(e).task_id }})
       <span v-if="event(e).npc_id">
       from
@@ -294,7 +295,7 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.DEATH">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.DEATH">
       Died
       <span v-if="event(e).killer_id">
       by
@@ -306,7 +307,7 @@
       </span>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.NPC_HANDIN">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.NPC_HANDIN">
 
       <div v-if="!expandedEvent[e.id]" class="d-inline-block">
         Handed in ({{ event(e).handin_items.length }}) items
@@ -384,7 +385,7 @@
       </button>
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.TRADE">
+    <div v-else-if="e.event_type_id === PLAYER_EVENT.TRADE">
 
       <div v-if="!expandedEvent[e.id]" class="d-inline-block">
         <span class="font-weight-bold" v-if="characterData[event(e).character_2_id]">
@@ -467,6 +468,10 @@
         <i class="fa fa-plus"></i>
       </button>
 
+    </div>
+
+    <div v-else>
+      Event {{ e.event_type_id }} unimplemented
     </div>
   </div>
 </template>

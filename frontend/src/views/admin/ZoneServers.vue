@@ -51,7 +51,7 @@
           <div class="col-lg-1 col-sm-12 mt-1">
             <button
               title="Reset"
-              class="eq-button m-0 ml-3"
+              class="btn m-0 ml-3"
               @click="search = ''; updateQueryState()"
             ><i class="fa fa-refresh"></i> Reset
             </button>
@@ -95,7 +95,7 @@
     </eq-window>
 
     <eq-window
-      class="p-0"
+      class="p-0 mt-2"
     >
       <app-loader
         style="opacity: .3; top: 300px; left: 20%; position: absolute;"
@@ -259,6 +259,7 @@ import EqWindow                    from "@/components/eq-ui/EQWindow.vue";
 import EqCheckbox                  from "@/components/eq-ui/EQCheckbox.vue";
 import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
 import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
+import {Navbar}                    from "@/app/navbar";
 
 // Simple debounce function
 function debounce(func, delay) {
@@ -363,6 +364,7 @@ export default {
   async created() {
     this.loadQueryState()
     this.init()
+    // Navbar.collapse();
   },
   methods: {
 
@@ -695,6 +697,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.zoneServerLoop)
+    // Navbar.expand();
   }
 }
 </script>

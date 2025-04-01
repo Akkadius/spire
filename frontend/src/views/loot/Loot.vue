@@ -14,7 +14,7 @@
               >
             </div>
             <div class="col-6">
-              <b-button title="Reset" @click="reset()" size="sm" variant="outline-warning btn-dark">
+              <b-button title="Reset" @click="reset()" size="sm" variant="btn-dark">
                 <i class="fa fa-refresh mr-1"/>
                 Reset
               </b-button>

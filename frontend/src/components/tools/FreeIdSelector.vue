@@ -12,7 +12,7 @@
           <div v-for="range in freeIds" :key="range.start_id" class="mt-2 row">
             <div class="col-5 text-right pr-0">
               <b-button
-                class="btn-dark btn-sm btn-outline-warning"
+                class="btn-dark btn-sm btn-dark"
                 @click="selectId(range.start_id)"
               >
                 Use {{ range.start_id }}
@@ -23,7 +23,7 @@
             </div>
             <div class="col-5 text-left pl-0">
               <b-button
-                class="btn-dark btn-sm btn-outline-warning"
+                class="btn-dark btn-sm btn-dark"
                 @click="selectId(range.end_id)"
               >
                 Use {{ range.end_id }}
@@ -42,7 +42,7 @@
           <div v-for="id in freeIdsReserved" :key="id.start_id" class="mt-2 row">
             <div class="col-12 text-center pr-0">
               <b-button
-                class="btn-dark btn-sm btn-outline-warning"
+                class="btn-dark btn-sm btn-dark"
                 @click="selectId(id.id)"
               >
                 Use {{ id.id }} ({{id.name}})

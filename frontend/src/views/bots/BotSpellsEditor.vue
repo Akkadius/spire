@@ -80,7 +80,7 @@
                 <td class="text-center pl-0 pr-0">
                   <b-button
                     variant="primary"
-                    class="btn-dark btn-sm btn-outline-success"
+                    class="btn-dark btn-sm"
                     style="padding: 0px 6px;"
                     title="Edit Spell Set"
                     @click="editBotSpellSet(e.id)"
@@ -90,7 +90,7 @@
 
                   <b-button
                     variant="primary"
-                    class="btn-dark btn-sm btn-outline-white ml-1"
+                    class="btn-dark btn-sm ml-1"
                     style="padding: 0px 6px;"
                     title="View Spell Set"
                     @click="selectSpellSet(e)"

@@ -10,7 +10,7 @@
 
       <div class="d-inline-block">
         <button
-          class='btn btn-sm btn-outline-warning mb-1 mr-2'
+          class='btn btn-sm btn-dark mb-1 mr-2'
           @click="copyToClip(buildFullMethod(method))"
           style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
         >
@@ -76,6 +76,7 @@ import util      from "util";
 import ClipBoard from "@/app/clipboard/clipboard";
 import Analytics from "@/app/analytics/analytics";
 import {ROUTE}   from "@/routes";
+import {Notify}  from "@/app/Notify";
 
 export default {
   name: "QuestApiDisplayMethods",
@@ -116,11 +117,7 @@ export default {
 
       Analytics.trackCountsEvent("clipboard_copy_method", s)
 
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied [" + s + "] to clipboard!");
     },
     buildFullMethod(method) {
       return util.format(

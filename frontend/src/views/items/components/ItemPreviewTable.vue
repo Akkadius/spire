@@ -41,7 +41,7 @@
                   variant="primary"
                   size="sm"
                   style="width: 28px; height: 28px"
-                  class="btn-dark btn-outline-danger mr-2"
+                  class="btn-outline-danger mr-2"
                   title="Delete"
                   @click="deleteItem(item)"
                 >
@@ -51,9 +51,10 @@
                 <router-link
                   :to="ROUTE.ITEM_EDIT.replace('%s', item.id)"
                   size="sm"
+                  tag="button"
                   style="width: 28px; height: 28px"
                   title="Edit"
-                  class="btn btn-dark btn-sm btn-outline-success mr-2"
+                  class="btn btn-sm btn-outline-success mr-2"
                 >
                   <i class="fa fa-pencil-square"></i>
                 </router-link>
@@ -61,9 +62,10 @@
                 <router-link
                   :to="ROUTE.ITEM_EDIT.replace('%s', item.id) + '?clone=true'"
                   size="sm"
+                  tag="button"
                   style="width: 30px; height: 28px"
                   title="Clone"
-                  class="btn btn-dark btn-sm btn-outline-light mr-2"
+                  class="btn btn-sm btn-outline-light mr-2"
                 >
                   <i class="ra ra-double-team"></i>
                 </router-link>

@@ -1,25 +1,25 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper" @click.self="dismiss()">
-        <eq-window class="modal-container" style="width: 1000px">
+    <div class="eq-modal-mask">
+      <div class="eq-modal-wrapper" @click.self="dismiss()">
+        <eq-window
+          :title="title"
+          class="eq-modal-container" >
 
-          <div class="modal-header">
+          <div class="eq-modal-header">
             <slot name="header">
-              default header
+
             </slot>
           </div>
 
-          <div class="modal-body">
+          <div class="eq-modal-body">
             <slot name="body">
-              default body
+
             </slot>
           </div>
 
-          <div class="modal-footer">
+          <div class="eq-modal-footer">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
+              <button class="eq-modal-default-button" @click="$emit('close')">
                 OK
               </button>
             </slot>
@@ -27,7 +27,6 @@
         </eq-window>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>
@@ -37,77 +36,78 @@ export default {
   name: 'EqModal',
   components: { EqWindow },
   props: {
+    title: {
+      type: String,
+      default: '',
+      required: false
+    },
   },
   methods: {
     dismiss() {
       this.$emit('close');
+    },
+    keyPress(e) {
+      if (e.key === 'Escape') {
+        this.dismiss();
+      }
     }
-  }
+  },
+  beforeDestroy() {
+    // remove keypress listener
+    document.removeEventListener('keydown', this.keyPress);
+  },
+  mounted() {
+    // listen keypress for escape key
+    document.addEventListener('keydown', this.keyPress);
+  },
 }
 </script>
 
 <style>
-.modal-mask {
+.eq-modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 9999999999 !important;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: table;
-  transition: opacity 0.3s ease;
 }
 
-.modal-wrapper {
+.eq-modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  text-align: center; /* Ensures the modal is centered horizontally */
 }
 
-.modal-container {
-  width: 300px;
-  margin: 0px auto;
+.eq-modal-container {
+  display: inline-block; /* Adapts the width to content size */
   padding: 20px 30px;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
   z-index: 99999999999 !important;
+
+  /* Constraints */
+  max-width: 90%; /* Prevents the modal from becoming too wide */
+  max-height: 100%; /* Ensures the modal doesn't exceed screen height */
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+.eq-modal-body {
 }
 
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-default-button {
+.eq-modal-default-button {
   float: right;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter {
-  opacity: 0;
+.eq-modal-footer {
+  min-height: 25px;
 }
 
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
+.eq-modal-enter .eq-modal-container,
+.eq-modal-leave-active .eq-modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }

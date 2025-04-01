@@ -392,15 +392,6 @@ th[role=columnheader]:hover:not(.no-sort):after {
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    /*.map-tiles {*/
-    /*    filter: invert(100%);*/
-    /*}*/
-    /*.map-tiles img, .map-tiles .eq-window-simple {*/
-    /*    filter: invert(100%);*/
-    /*}*/
-}
-
 .leaflet-zoom-anim .leaflet-zoom-animated {
     transition: .5s !important;
 }
@@ -590,8 +581,7 @@ html, body{
 .changelog code {
     padding: 0.2em 0.4em;
     margin: 0;
-    color: red;
-    background-color: rgba(110, 118, 129, .4);
+    background-color: rgba(110, 118, 129, .1);
     border-radius: 6px;
 }
 
@@ -639,14 +629,19 @@ html, body{
     .dropdown-menu,
     .modal-content,
     .vue-back-to-top btn,
-    .form-control,
     .custom-select,
     .table thead th,
     .toast-body,
     .toast-header,
+    .b-form-tags,
+    .form-control,
     .vue-back-to-top .btn {
         background-color: #000000 !important;
         color: #d3dae6;
+    }
+
+    .text-dark {
+        color: #d3dae6 !important;
     }
 
     .badge {

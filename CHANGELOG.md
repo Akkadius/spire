@@ -1,3 +1,26 @@
+## [4.18.0] 4/1/2025
+
+### ✨ UI Improvements
+
+- **Buttons**: Re-skinned to align with Spire's EQ UI. More refinements to come.
+- **Changelog**: Redesigned for consistency with EQ UI components.
+- **Notifications**: Now use a unified EQ UI-themed component.
+- **Spire Admin**:
+  - Header fixed for mobile view.
+  - Supports up to 4 servers in 1080p without scrolling.
+  - Dashboard UI consolidated and migrated to EQ UI.
+  - Modals updated for consistency with EQ UI.
+  - Overall dashboard layout refined to match EQ UI.
+
+#### Preview Screenshots
+
+![image](https://media.discordapp.net/attachments/673782296398266391/1356722289772728360/429200358-c87a8a6b-22c5-4d95-bd15-52b3ba7889a0.png?ex=67ed9998&is=67ec4818&hm=a3d4db956fa6138adbcb29ba13e77963466c670b2deac5d31db9de0fb56212c4&=&format=webp&quality=lossless&width=1564&height=875)
+![image](https://cdn.discordapp.com/attachments/673782296398266391/1356722584133042186/429200433-67be055c-4008-4b4c-b897-085703bd0fc0.png?ex=67ed99de&is=67ec485e&hm=657285faf08bb80d4103a9eb8b096022a6d88039022c3fc8f8241590b53211d8&)
+![image](https://cdn.discordapp.com/attachments/673782296398266391/1356722602353102900/429200467-804a19ef-bbdf-4d94-a0d5-53f3d1588a17.png?ex=67ed99e3&is=67ec4863&hm=3b12b54fb43d2d4f9cc06085cb3d6bb9155e4169783dbbf08decedd5e8554c53&)
+![image](https://cdn.discordapp.com/attachments/673782296398266391/1356722627724710170/429200544-e16650a7-538c-4098-8c72-fdd1accce5a4.png?ex=67ed99e9&is=67ec4869&hm=06d28560b2d4ff5032d9a8c4e6a995d8c2d54f186df92f657e59ae1fab318ebf&)
+![image](https://cdn.discordapp.com/attachments/673782296398266391/1356722673509466324/429200772-f34ddffe-8d41-49cb-b755-525893d6a5ac.png?ex=67ed99f4&is=67ec4874&hm=97e830e37a0f8aa9d77fab4d3f6dbf631e39a385e94cd540ed97aca897a6bfae&)
+![image](https://cdn.discordapp.com/attachments/673782296398266391/1356722695265587464/429200883-cafcf95f-019a-480f-a688-370a0bb0b0ea.png?ex=67ed99f9&is=67ec4879&hm=85fb13b3ff77b77496409d8ed1d146f3c24d0d3a2f2858006f0f31bcdc0f6542&)
+
 ## [4.17.0] 3/29/2025
 
 * **Spire Admin** Add "Version" field to zoneservers page. (Requires EQEmu server update)

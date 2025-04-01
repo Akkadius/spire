@@ -1,42 +1,39 @@
 <template>
-  <div>
-    <div class="card" v-if="addresses && addresses.length > 0">
-      <div class="card-header">
-        <h4 class="card-header-title">
-          Server Addresses
-        </h4>
-      </div>
-      <div class="card-body" style="padding: 0px; overflow-y:scroll">
-        <table class="table card-table sysinfo">
-          <tbody>
+  <eq-window
+    title="Server Addresses"
+    v-if="addresses && addresses.length > 0"
+    class="p-0 pt-3 mb-4"
+  >
+      <table class="eq-table bordered eq-highlight-rows mb-0">
+        <tbody>
 
-          <tr v-for="i in addresses">
-            <td style="vertical-align: middle">{{ i.key }}</td>
-            <td class="text-right" style="min-width: 150px">
-              <a
-                href="javascript:"
-                @click="copyToClip(i.value)"
-                class="text-muted d-inline-block"
-              >
-                {{ i.value }}
-                <i class="ml-2 fe fe-copy d-inline-block"></i>
-              </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
+        <tr v-for="i in addresses">
+          <td class="text-right font-weight-bold">{{ i.key }}</td>
+          <td class="text-left" style="min-width: 160px">
+            <a
+              href="javascript:"
+              @click="copyToClip(i.value)"
+              class="text-muted d-inline-block"
+            >
+              {{ i.value }}
+              <i class="ml-2 fe fe-copy d-inline-block"></i>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+  </eq-window>
 </template>
 
 <script>
 import {SpireApi} from "@/app/api/spire-api";
 import ClipBoard  from "@/app/clipboard/clipboard";
+import EqWindow   from "@/components/eq-ui/EQWindow.vue";
+import {Notify}   from "@/app/Notify";
 
 export default {
   name: 'DashboardNetworkingInfo',
+  components: { EqWindow },
   data() {
     return {
       addresses: [],
@@ -67,12 +64,7 @@ export default {
   methods: {
     copyToClip(s) {
       ClipBoard.copyFromText(s)
-
-      this.$bvToast.toast("Copied to clipboard!", {
-        title: "Copy",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied to clipboard!");
     },
   }
 }

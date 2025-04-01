@@ -37,7 +37,7 @@
         >
           <td>
             <b-button
-              class="btn-dark btn-sm btn-outline-warning"
+              class="btn-dark btn-sm btn-dark"
               title="Select"
               @click="selectRow(e)"
             >

@@ -518,7 +518,7 @@ A.eq-progress-bar DIV:before {
 ------------------------------------------------- */
 
 .eq-window-title-bar {
-    z-index: 99999;
+    z-index: 999;
     position: absolute;
     overflow: hidden;
     top: -11px;
@@ -974,7 +974,7 @@ h6.eq-header {
     position: sticky;
     top: 0;
     border-collapse: separate;
-    z-index: 9999;
+    z-index: 998;
     border-bottom: 1px solid #ffffff1c;
 
     filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, .2));
@@ -1015,7 +1015,7 @@ h6.eq-header {
 .eq-window-simple a:visited {
     text-decoration: none;
     font-weight: none;
-    color: #6b614a;
+    color: #c3bbab;
 }
 
 .eq-window-simple a:hover {
@@ -1040,4 +1040,53 @@ h6.eq-header {
 
 .eq-list li {
     list-style-type: circle !important;
+}
+
+.eq-window-simple {
+    border-radius: 10px;
+}
+
+[class|="eq-window"] .b-form-tags {
+    background-color: transparent !important;
+}
+
+/* EQ-styled Toastify */
+.toastify.eq-toast {
+    background-image: url(../images/super_fancy_bg.png) !important;
+    color: #ffffff !important;
+    font-family: arial, serif !important;
+    font-size: 13px;
+    border: 2px solid rgba(218, 218, 218, 0.3);
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.2);
+    background-repeat: repeat !important;
+    background-position: top left !important;
+    /*text-shadow: 0px 0px 1px #000, 0px 0px 0px #000, 1px 2px 1px #000;*/
+    font-weight: bold;
+}
+
+/* Optional: make it resemble .eq-alert more closely */
+.toastify.eq-toast.eq-alert {
+    outline-offset: -20px;
+    border: 2px #40434e solid;
+    padding: 15px;
+    background-image: url(../images/super_fancy_bg.png) !important;
+}
+
+/* Optional Toastify-specific tweaks */
+.toastify.eq-toast.toastify-rounded {
+    border-radius: 10px;
+}
+
+.eq-toast-success {
+    border-color: #7b714a;
+    background-color: rgba(123, 113, 74, 0.2);
+    color: #fcc721;
+}
+
+.eq-toast-error {
+    border-color: #8b0000;
+    background-color: rgba(139, 0, 0, 0.2);
+    color: #ff4444;
 }

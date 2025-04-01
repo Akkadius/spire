@@ -15,6 +15,7 @@ import './assets/fonts/feather/feather.min.css'
 
 // EQ Assets - These should be moved into the assets themselves
 import '@/components/eq-ui/styles/eq-ui.css'
+import '@/components/eq-ui/styles/eq-ui-buttons.css'
 
 // global custom
 import './assets/css/global.css'
@@ -30,6 +31,8 @@ import 'highlight.js/styles/tomorrow-night-bright.css';
 import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json.js';
 hljs.registerLanguage('json', json);
+
+import "toastify-js/src/toastify.css"
 
 /* spritesheet assets */
 // import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";

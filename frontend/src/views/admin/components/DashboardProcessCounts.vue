@@ -1,56 +1,69 @@
 <template>
-  <div v-if="processCounts" :style="loaded ? 'opacity:1' : 'opacity:.3'">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title">Server Processes</h4>
-      </div>
+  <eq-window
+    title="Server Processes"
+    v-if="processCounts"
+    class="p-0 mb-4"
+  >
+    <div class="p-3 text-center" v-if="processCounts && processCounts.length === 0">
+      Server offline
+    </div>
 
-      <div class="p-3 text-center" v-if="processCounts && processCounts.length === 0">
-        Server offline
-      </div>
+    <table
+      class="eq-table bordered eq-highlight-rows mb-0"
+      v-if="processCounts && processCounts.length > 0"
+    >
+      <thead class="eq-table-floating-header">
+      <tr>
+        <th class="text-right">
+          Process
+        </th>
+        <th class="text-left" style="width: 130px">
+          Status
+        </th>
+      </tr>
+      </thead>
 
-      <table class="table card-table process-counts" v-if="processCounts && processCounts.length > 0">
-        <tbody>
+      <tbody>
 
-        <!-- List Counts -->
-        <tr
-          v-b-tooltip.hover.v-dark.left
-          :title="p.optional ? 'This is an optional service and not required to be running' : ''"
-          v-for="p in processCounts"
-          :key="p.name"
+      <!-- List Counts -->
+      <tr
+        v-b-tooltip.hover.v-dark.left
+        :title="p.optional ? 'This is an optional service and not required to be running' : ''"
+        v-for="p in processCounts"
+        :key="p.name"
+      >
+        <td class="text-right font-weight-bold">
+          {{ p.name }}
+        </td>
+        <td
+          class="text-left"
         >
-          <td>
-            {{ p.name }}
-          </td>
-          <td
-
-            class="text-right"
-          >
             <span
               class="badge badge-danger"
               style="font-size: 12px"
               v-if="p.count === 0"
             >Offline</span>
-            <span
-              class="badge badge-success"
-              style="font-size: 12px"
-              v-if="p.count > 0"
-            >Online ({{ p.count }})</span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+          <span
+            class="badge badge-success"
+            style="font-size: 12px"
+            v-if="p.count > 0"
+          >Online ({{ p.count }})</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </eq-window>
 </template>
 
 <script>
 
 import {EventBus} from "@/app/event-bus/event-bus";
 import {SpireApi} from "@/app/api/spire-api";
+import EqWindow   from "@/components/eq-ui/EQWindow.vue";
 
 export default {
   name: 'DashboardProcessCounts',
+  components: { EqWindow },
   data() {
     return {
       processCounts: [],

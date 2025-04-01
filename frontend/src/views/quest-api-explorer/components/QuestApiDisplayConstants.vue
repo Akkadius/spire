@@ -13,7 +13,7 @@
 
       <div class="d-inline-block">
         <button
-          class='btn btn-sm btn-outline-warning mb-1 mr-3'
+          class='btn btn-sm btn-dark mb-1 mr-3'
           @click="copyToClip(formatConstant(constant))"
           style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6">
           <i class="fa fa-clipboard"></i>
@@ -42,6 +42,7 @@
 import ClipBoard from "@/app/clipboard/clipboard";
 import Analytics from "@/app/analytics/analytics";
 import {ROUTE}   from "@/routes";
+import {Notify}  from "@/app/Notify";
 
 export default {
   name: "QuestApiDisplayConstants",
@@ -89,11 +90,7 @@ export default {
 
       Analytics.trackCountsEvent("clipboard_copy_constant", s)
 
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied to clipboard!");
     },
     formatConstant(constant) {
       return this.languageSelection === "lua" ? this.constantSelection + "." + constant.constant : constant.constant;
