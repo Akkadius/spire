@@ -29,6 +29,7 @@
 import {SpireApi} from "@/app/api/spire-api";
 import ClipBoard  from "@/app/clipboard/clipboard";
 import EqWindow   from "@/components/eq-ui/EQWindow.vue";
+import {Notify}   from "@/app/Notify";
 
 export default {
   name: 'DashboardNetworkingInfo',
@@ -63,12 +64,7 @@ export default {
   methods: {
     copyToClip(s) {
       ClipBoard.copyFromText(s)
-
-      this.$bvToast.toast("Copied to clipboard!", {
-        title: "Copy",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied to clipboard!");
     },
   }
 }

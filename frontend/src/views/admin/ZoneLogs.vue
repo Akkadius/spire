@@ -137,6 +137,7 @@ import {Navbar}               from "@/app/navbar";
 import {ROUTE}                from "@/routes";
 import ClipBoard              from "@/app/clipboard/clipboard";
 import EqWindow               from "@/components/eq-ui/EQWindow.vue";
+import {Notify}               from "@/app/Notify";
 
 const LOG_STREAM_TRUNCATE_CHARACTER_LENGTH = 300000;
 
@@ -333,11 +334,7 @@ export default {
 
     copyFileContentsToClipboard() {
       ClipBoard.copyFromElement("log-contents");
-      this.$bvToast.toast("Copied logs to clipboard", {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied logs to clipboard");
     },
   }
 }

@@ -42,6 +42,7 @@
 import ClipBoard from "@/app/clipboard/clipboard";
 import Analytics from "@/app/analytics/analytics";
 import {ROUTE}   from "@/routes";
+import {Notify}  from "@/app/Notify";
 
 export default {
   name: "QuestApiDisplayConstants",
@@ -89,11 +90,7 @@ export default {
 
       Analytics.trackCountsEvent("clipboard_copy_constant", s)
 
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied to clipboard!");
     },
     formatConstant(constant) {
       return this.languageSelection === "lua" ? this.constantSelection + "." + constant.constant : constant.constant;

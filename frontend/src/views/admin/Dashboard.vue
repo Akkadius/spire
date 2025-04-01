@@ -85,28 +85,6 @@ export default {
       })
     },
 
-    formatUptime(t) {
-      // reformat
-      t = t.replace("Worldserver Uptime |", "")
-      t = t.replace(new RegExp(',', 'g'), '');
-      t = t.replace("and", "")
-      t = t.replace(" Days", "d")
-      t = t.replace(" Day", "d")
-      t = t.replace(" Weeks", "w")
-      t = t.replace(" Week", "w")
-      t = t.replace(" Months", "m")
-      t = t.replace(" Month", "m")
-      t = t.replace(" Hours", "h")
-      t = t.replace(" Hour", "h")
-      t = t.replace(" Minutes", "m")
-      t = t.replace(" Minute", "m")
-      t = t.replace(" Seconds", "s")
-      t = t.replace(" Second", "s")
-      t = t.replace(/^\s+|\s+$/g, "")
-
-      return t.trim();
-    },
-
     checkLoaded() {
       this.loaded = (
         Object.keys(this.stats).length >= 0 &&
@@ -114,9 +92,6 @@ export default {
       )
     },
 
-    kFormatter: function (number) {
-      return number > 999 ? (number / 1000).toFixed(1) + 'k' : number
-    }
   }
 }
 </script>

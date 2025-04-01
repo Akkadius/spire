@@ -1371,12 +1371,7 @@ export default {
 
     copyToClip(s) {
       ClipBoard.copyFromText(s)
-
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied [" + s + "] to clipboard");
     },
 
     getZoneNames() {

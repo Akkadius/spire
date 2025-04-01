@@ -66,6 +66,7 @@
 <script>
 import {SpireApi}      from "../../app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner";
+import {Notify}        from "@/app/Notify";
 
 export default {
   name: "AddDeveloperModal",
@@ -116,11 +117,9 @@ export default {
           this.$emit("reload-connections", true);
 
           // modal success
-          this.$bvToast.toast(`User [${user.user_name}] added to [${this.connection.database_connection.name}]`, {
-            title: `User added to connection`,
-            autoHideDelay: 2000,
-            solid: true
-          })
+          Notify.toast(`User [${user.user_name}] added to [${this.connection.database_connection.name}]`);
+
+
         }
       } catch (err) {
         // error notify

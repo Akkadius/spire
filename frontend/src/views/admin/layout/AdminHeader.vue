@@ -118,6 +118,7 @@ import EqProgressBar                from "@/components/eq-ui/EQProgressBar.vue";
 import Time                         from "@/app/time/time";
 import EqWindow                     from "@/components/eq-ui/EQWindow.vue";
 import EqWindowSimple               from "@/components/eq-ui/EQWindowSimple.vue";
+import {Notify}                     from "@/app/Notify";
 
 export default {
   name: "AdminHeader",
@@ -333,12 +334,8 @@ export default {
         SpireApi.v1().post("eqemuserver/toggle-server-lock").then((r) => {
           if (r.status === 200) {
             this.serverLocked = r.data.locked
-            this.$bvToast.toast(r.data.message, {
-              title: "Server Lock",
-              autoHideDelay: 2000,
-              solid: true,
-              toaster: 'b-toaster-bottom-right',
-            })
+
+            Notify.toast(r.data.message);
           }
         })
       }

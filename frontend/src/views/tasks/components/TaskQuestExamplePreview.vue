@@ -88,6 +88,7 @@ import EqWindowSimple from "../../../components/eq-ui/EQWindowSimple";
 import EqTabs         from "../../../components/eq-ui/EQTabs";
 import EqTab          from "../../../components/eq-ui/EQTab";
 import ClipBoard      from "@/app/clipboard/clipboard";
+import {Notify}       from "@/app/Notify";
 export default {
   name: "TaskQuestExamplePreview",
   components: { EqTab, EqTabs, EqWindowSimple },
@@ -106,11 +107,7 @@ export default {
     copyToClip(s) {
       ClipBoard.copyFromText(s)
 
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied [" + s + "] to clipboard!");
     },
   }
 }

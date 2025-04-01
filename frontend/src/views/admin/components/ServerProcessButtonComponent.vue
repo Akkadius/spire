@@ -192,6 +192,7 @@ import EqTabs            from "@/components/eq-ui/EQTabs.vue";
 import EqTab             from "@/components/eq-ui/EQTab.vue";
 import ErrorMarkAnimated from "@/components/ErrorMarkAnimated.vue";
 import {SpireApi}        from "@/app/api/spire-api";
+import {Notify}          from "@/app/Notify";
 
 const Convert = require('ansi-to-html');
 const convert = new Convert();
@@ -426,11 +427,7 @@ export default {
     },
 
     notify(title, message) {
-      this.$bvToast.toast(message, {
-        title: title,
-        solid: true,
-        toaster: 'b-toaster-bottom-right',
-      })
+      Notify.toast(message);
     },
 
     notifyProcessChange() {

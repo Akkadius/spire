@@ -33,6 +33,7 @@
     "semver": "^5.7.0",
     "slugify": "^1.6.3",
     "superagent": "^6.1.0",
+    "toastify-js": "^1.12.0",
     "v-runtime-template": "^1.10.0",
     "vue": "^2.7.16",
     "vue-backtotop": "^1.6.1",

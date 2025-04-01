@@ -32,6 +32,8 @@ import hljs from 'highlight.js/lib/highlight';
 import json from 'highlight.js/lib/languages/json.js';
 hljs.registerLanguage('json', json);
 
+import "toastify-js/src/toastify.css"
+
 /* spritesheet assets */
 // import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
 // import "../public/eq-asset-preview-master/assets/sprites/objects.css";

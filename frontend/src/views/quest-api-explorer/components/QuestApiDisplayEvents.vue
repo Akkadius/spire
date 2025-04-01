@@ -32,6 +32,7 @@
 import util from "util";
 import ClipBoard from "@/app/clipboard/clipboard";
 import Analytics from "@/app/analytics/analytics";
+import {Notify} from "@/app/Notify";
 
 export default {
   name: "QuestApiDisplayEvents",
@@ -59,11 +60,7 @@ export default {
       const event = e.split("-")[1]
       Analytics.trackCountsEvent("clipboard_copy_content", event)
 
-      this.$bvToast.toast(event, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied [" + event + "] to clipboard!");
     },
     getSelectedEvent(ev) {
       const entity = ev.split("-")[0]

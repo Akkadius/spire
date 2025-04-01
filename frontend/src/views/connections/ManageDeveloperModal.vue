@@ -143,6 +143,7 @@
 import {SpireApi}      from "../../app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner";
 import UserContext     from "@/app/user/UserContext";
+import {Notify}        from "@/app/Notify";
 
 export default {
   name: "ManageDeveloperModal",
@@ -274,11 +275,7 @@ export default {
           if (r.status === 200) {
 
             // modal success
-            this.$bvToast.toast(`User [${this.user.user_name}] removed from [${this.connection.database_connection.name}]`, {
-              title: `User removed from connection`,
-              autoHideDelay: 2000,
-              solid: true
-            })
+            Notify.toast(`User [${this.user.user_name}] removed from [${this.connection.database_connection.name}]`);
 
             this.$emit("reload-connections", true);
             this.$bvModal.hide('manage-developer-modal')

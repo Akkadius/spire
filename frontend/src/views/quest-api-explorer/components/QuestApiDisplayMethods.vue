@@ -76,6 +76,7 @@ import util      from "util";
 import ClipBoard from "@/app/clipboard/clipboard";
 import Analytics from "@/app/analytics/analytics";
 import {ROUTE}   from "@/routes";
+import {Notify}  from "@/app/Notify";
 
 export default {
   name: "QuestApiDisplayMethods",
@@ -116,11 +117,7 @@ export default {
 
       Analytics.trackCountsEvent("clipboard_copy_method", s)
 
-      this.$bvToast.toast(s, {
-        title: "Copied to Clipboard!",
-        autoHideDelay: 2000,
-        solid: true
-      })
+      Notify.toast("Copied [" + s + "] to clipboard!");
     },
     buildFullMethod(method) {
       return util.format(
