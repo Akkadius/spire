@@ -19,7 +19,7 @@
             <div class="row" v-for="(metric, index) in serverStats.filter((e) => e.value !== '')" :key="index" style="height: 15px;">
               <!-- Left Label -->
               <div class="col-lg-6 col-3 p-0 m-0 text-right">
-                  <span class="small font-weight-bold text-muted" style="font-size: 12px; ">
+                  <span class="small font-weight-bold" style="font-size: 12px; ">
                     {{ metric.label }}
                   </span>
               </div>
@@ -29,7 +29,7 @@
 
                 <span
                   v-if="metric.label !== 'Locked' && metric.label !== 'World'"
-                  class="small font-weight-bold" :style="'font-size: 12px;' + (metric.color ? 'color: ' + metric.color : '')"
+                  class="small" :style="'font-size: 12px;' + (metric.color ? 'color: ' + metric.color : '')"
                 >
                     {{ metric.value.toLocaleString() }}
                   </span>
@@ -68,7 +68,7 @@
             <div class="row" v-for="(metric, index) in dashStats" :key="index" style="height: 15px;">
               <!-- Left Label -->
               <div class="col-lg-6 col-3 p-0 m-0 text-right">
-                  <span class="small font-weight-bold text-muted" style="font-size: 12px; ">
+                  <span class="small font-weight-bold" style="font-size: 12px; ">
                     {{ metric.label }}
                   </span>
               </div>
@@ -78,7 +78,7 @@
 
                 <span
                   v-if="metric.label !== 'Locked' && metric.label !== 'World'"
-                  class="small font-weight-bold" style="font-size: 12px;"
+                  class="small" style="font-size: 12px;"
                 >
                     {{ metric.value.toLocaleString() }}
                   </span>
@@ -122,7 +122,7 @@
             <div class="row" v-for="(metric, index) in host" :key="index">
               <!-- Left Label -->
               <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
+                  <span class="small font-weight-bold" style="font-size: 10px; opacity: .9">
                     {{ metric.label }}
                   </span>
               </div>
@@ -309,10 +309,6 @@ export default {
         ]
 
         metrics.push(metric)
-        // metrics.push(metric)
-        // metrics.push(metric)
-        // metrics.push(metric)
-        // metrics.push(metric)
       }
 
       // sort by hostname value

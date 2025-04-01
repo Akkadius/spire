@@ -1,6 +1,7 @@
 <template>
   <eq-window
-    class="p-0 m-0"
+    title="Spire Changelog"
+    class="p-0 m-0 mt-3"
     style="padding-left: 15px !important; padding-right: 15px !important;"
   >
     <div style="min-height: 100vh">
@@ -156,6 +157,9 @@ export default {
 <style>
 .changelog ul li {
   list-style-type: disc;
+}
+.changelog {
+  font-family: "Cerebri Sans", sans-serif !important;
 }
 
 </style>

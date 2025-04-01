@@ -581,8 +581,7 @@ html, body{
 .changelog code {
     padding: 0.2em 0.4em;
     margin: 0;
-    color: red;
-    background-color: rgba(110, 118, 129, .4);
+    background-color: rgba(110, 118, 129, .1);
     border-radius: 6px;
 }
 
