@@ -220,6 +220,7 @@ import UserContext        from "@/app/user/UserContext";
 import {debounce}         from "@/app/utility/debounce";
 import LoaderFakeProgress from "@/components/LoaderFakeProgress.vue";
 import EqProgressBar      from "@/components/eq-ui/EQProgressBar.vue";
+import {Navbar}           from "@/app/navbar";
 
 const Convert = require('ansi-to-html');
 const convert = new Convert();
@@ -272,6 +273,9 @@ export default {
 
     }
   },
+  beforeDestroy() {
+    Navbar.expand();
+  },
   beforeRouteLeave(to, from, next) {
     if (this.buildRunning) {
       if (!window.confirm("You have a build running, are you sure you want to leave?")) {
@@ -304,6 +308,8 @@ export default {
     ].join('|');
 
     this.ansiRegex = new RegExp(pattern);
+
+    Navbar.collapse();
   },
   methods: {
     updateSourceLocation() {
