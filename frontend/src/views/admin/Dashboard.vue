@@ -1,45 +1,25 @@
 <template>
-  <div>
-    <div style="max-height: 85vh; overflow-y: scroll; overflow-x: hidden">
-      <div class="row row-cards" :style="loaded ? 'opacity:1' : 'opacity:.3'">
-        <dashboard-counter name="Accounts" icon="user" :counter="kFormatter(stats.accounts)"/>
-        <dashboard-counter name="Characters" icon="user" :counter="kFormatter(stats.characters)"/>
-        <dashboard-counter name="Guilds" icon="shield" :counter="kFormatter(stats.guilds)"/>
-      </div>
+  <div class="row" style="max-height: 85vh; overflow-y: scroll; top: -15px; position: inherit">
+    <div class="col-lg-6">
 
-      <div class="row row-cards" :style="loaded ? 'opacity:1' : 'opacity:.3'">
-        <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
-        <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
-        <dashboard-counter
-          name="Server Uptime"
-          :counter="stats && stats.uptime && stats.uptime.includes('{') ? '' : formatUptime(stats && stats.uptime ? stats.uptime : '')"
-        />
-      </div>
+      <div class="row">
+        <div class="col-sm-6 col-lg-6">
+          <dashboard-process-counts/>
 
-      <div class="row row-cards">
-        <div class="col-lg-6">
-
-          <div class="row">
-            <div class="col-sm-6 col-lg-6">
-              <dashboard-process-counts/>
-
-              <dashboard-networking-info/>
-              <dashboard-system-info-v2/>
-            </div>
-            <div class="col-sm-6 col-lg-6">
-              <dashboard-cpu-info/>
-            </div>
-          </div>
-
+          <dashboard-networking-info/>
+          <dashboard-system-info-v2/>
         </div>
-
-        <!-- Right side -->
-        <div class="col-lg-6">
-          <players-online-component/>
+        <div class="col-sm-6 col-lg-6">
+          <dashboard-cpu-info/>
         </div>
       </div>
+
     </div>
 
+    <!-- Right side -->
+    <div class="col-lg-6">
+      <players-online-component/>
+    </div>
   </div>
 </template>
 

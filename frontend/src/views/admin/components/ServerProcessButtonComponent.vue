@@ -2,34 +2,32 @@
   <div class="dropdown">
     <a
       href="#"
-      style="color: white"
-      class="dropdown-toggle btn btn-primary lift btn-sm"
-      role="button"
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
+      :class="serverStatus === 'Online' ? 'text-success' : 'text-danger'"
     >
-      <i class="fe fe-power"></i> Power
+      <i class="fe fe-power"></i> {{serverStatus}}
     </a>
 
-    <div class="dropdown-menu dropdown-menu-left">
-      <a href="#" @click="startServerModal" class="dropdown-item">
+    <eq-window class="dropdown-menu dropdown-menu-left p-0">
+      <a href="#" @click="startServerModal" class="dropdown-item pl-3">
         <i class="fa fa-keyboard-o" aria-hidden="true"></i> (p)
         Power On
       </a>
-      <a href="#" @click="stopServerModal" class="dropdown-item">
+      <a href="#" @click="stopServerModal" class="dropdown-item pl-3">
         <i class="fa fa-keyboard-o" aria-hidden="true"></i> (s)
         Power Off
       </a>
-      <a href="#" @click="restartServerModal" class="dropdown-item">
+      <a href="#" @click="restartServerModal" class="dropdown-item pl-3">
         <i class="fa fa-keyboard-o" aria-hidden="true"></i> (r)
         Restart [r]
       </a>
-      <a href="#" @click="cancelServerRestartModal" class="dropdown-item">
+      <a href="#" @click="cancelServerRestartModal" class="dropdown-item pl-3">
         <i class="fa fa-keyboard-o" aria-hidden="true"></i> (c)
         Cancel Restart [c]
       </a>
-    </div>
+    </eq-window>
 
     <!-- Start Server -->
     <b-modal
@@ -228,6 +226,14 @@ export default {
       ],
     }
   },
+
+  props: {
+    serverStatus: {
+      default: 'Online',
+      required: false
+    },
+  },
+
   created() {
     const pattern = [
       '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',

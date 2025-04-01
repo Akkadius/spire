@@ -1,74 +1,64 @@
 <template>
-  <div>
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-header-title" v-if="cpu && cpu.cpu_percents">CPU (s) ({{ cpu.cpu_percents.length }})
-        </h4>
-      </div>
-      <div class="card-body" style="padding: 15px; overflow-y:scroll">
-        <ul class="list-unstyled list-separated">
-          <li class="list-separated-item">
+  <eq-window
+    :title="'CPU (s) (' + (cpu && cpu.cpu_percents ? cpu.cpu_percents.length : 0) + ') ' + (cpu && cpu.info ? cpu.info[0].modelName : '')"
+    class="p-0 mb-4"
+  >
+    <table
+      class="eq-table bordered eq-highlight-rows mb-0 eq-window-cpu"
+    >
+      <thead class="eq-table-floating-header">
+      <tr>
+        <th class="text-right">
+          CPU
+        </th>
+        <th class="text-left">
+          Percent
+        </th>
+        <th class="text-left">
 
-            <div class="row align-content-center">
-              <div class="col-12 text-center">
-                <small class="text-muted" v-if="cpu && cpu.info && cpu.info[0]">
-                  {{cpu.info[0].modelName}} ({{(cpu.info[0].mhz / 1000).toFixed(1)}} Ghz)
-                </small>
+        </th>
+      </tr>
+      </thead>
 
-              </div>
-            </div>
+      <tbody>
 
-            <div class="row align-items-center mt-3">
+      <!-- List Counts -->
+      <tr
+        v-for="(l, index) in cpu.cpu_percents"
+        :key="index"
+      >
+        <td style="width: 100px" class="text-right font-weight-bold">
+          #{{ index + 1 }}
+        </td>
+        <td style="width: 50px" class="text-right font-weight-bold text-muted">
+          {{ (Math.round(l)) }}%
+        </td>
+        <td
+          class="text-left"
+        >
+          <eq-progress-bar
+            style="opacity: .7"
+            :percent="(Math.round(l * 100) / 100)"
+            :show-percent="false"
+            :color="getCpuLoadColor(parseInt(l))"
+          />
+        </td>
+      </tr>
 
-              <div
-                class="col"
-                v-for="(l, index) in cpu.cpu_percents"
-                :key="index"
-                style="flex-basis:unset;"
-              >
-                <div class="d-block">
+      </tbody>
+    </table>
 
-                  <div class="clearfix">
-                    <div class="float-left">
-                      <small class="text-muted">
-                        #{{ index + 1 }}
-                      </small>
-                    </div>
-                    <div class="float-right">
-                      <small
-                        :style="'color: ' + getCpuLoadColor(parseInt(l))"
-                      >{{ (Math.round(l * 100) / 100) }}%</small>
-                    </div>
-                  </div>
-
-                  <div class="progress progress-sm">
-                    <div
-                      class="progress-bar bg-green"
-                      role="progressbar"
-                      v-bind:style="{ width: (Math.round(l * 100) / 100) + '%'}"
-                      :aria-valuenow="(Math.round(l * 100) / 100)"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    >
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  </eq-window>
 </template>
 
 <script>
-import * as util  from 'util'
-import {SpireApi} from "@/app/api/spire-api";
+import {SpireApi}    from "@/app/api/spire-api";
+import EqWindow      from "@/components/eq-ui/EQWindow.vue";
+import EqProgressBar from "@/components/eq-ui/EQProgressBar.vue";
 
 export default {
   name: 'DashboardCpuInfo',
+  components: { EqProgressBar, EqWindow },
   data() {
     return {
       cpu: {},
@@ -119,3 +109,14 @@ export default {
   },
 }
 </script>
+
+<style>
+.eq-window-cpu td {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.eq-window-cpu .eq-progress-bar {
+  margin: 0 !important;
+}
+</style>

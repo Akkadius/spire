@@ -1,106 +1,112 @@
 <template>
-  <div class="card" v-if="stats" style="min-height: 90px">
-    <div class="card-body pl-4 pr-4 pt-3 pb-3">
+  <eq-window-simple
+    v-if="stats"
+    class="admin-header-window mb-4 pb-0"
+    style="font-family: 'Cerebri Sans', sans-serif; color: white; padding: 10px; z-index: 1;"
+    :title="stats.server_name"
+  >
 
-      <div class="row align-items-center">
+    <div class="row align-items-center">
 
-        <!-- Server Name -->
-        <div class="col-lg-auto">
-          <h3 class="d-inline-block mr-3">
-            <a
-              href="javascript:void(0)"
-              @click="toggleServerLock()"
-              class="truncate-server-name"
-            >
-              <i
-                :class="'fe ' + (serverLocked ? 'fe-lock' : 'fe-unlock')  + ' pr-2'"
-                :title="serverLocked ? 'Server is locked' : 'Server is unlocked'"
-                :style="`color: ${serverLocked ? 'red' : 'gray'}`"
-              />
-
-              <span v-if="stats.server_name">{{ stats.server_name }}</span>
-            </a>
-          </h3>
-
-          <div>
-            <server-process-button-component class="d-inline-block mr-3"/>
-            <small style="color: red" v-if="stopMessage !== ''">{{ stopMessage }}</small>
-          </div>
-
-        </div>
-
-        <!-- Server Metrics -->
-        <div class="col-lg-8 col-sm-12 pr-0 ml-0 text-center">
-          <div
-            class="row align-items-center admin-header"
-            style="flex-wrap: nowrap; overflow-x: scroll; overflow-y: hidden; padding-bottom: 5px;"
-          >
+      <!-- Server Metrics -->
+      <div class="col-lg-12 col-sm-12 pl-0 pr-0 ml-0 text-center">
+        <div
+          class="row align-items-center admin-header"
+        >
 
           <!-- Server Metrics -->
-            <div class="col-lg-3 col-sm-12 mt-3-mobile">
-              <div class="row" v-for="(metric, index) in serverStats" :key="index">
-                <!-- Left Label -->
-                <div class="col-lg-6 col-3 p-0 m-0 text-right" style="line-height: 1 !important">
+          <div class="col-lg-2 col-sm-12 mt-3-mobile pl-0 pr-0">
+            <div class="row" v-for="(metric, index) in serverStats" :key="index">
+              <!-- Left Label -->
+              <div class="col-lg-6 col-3 p-0 m-0 text-right" style="line-height: 1 !important">
                   <span class="small font-weight-bold text-muted" style="font-size: 12px;">
                     {{ metric.label }}
                   </span>
-                </div>
+              </div>
 
-                <!-- Right Value -->
-                <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
-                  <span class="small font-weight-bold" style="font-size: 12px;">
+              <!-- Right Value -->
+              <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
+
+                <span
+                  v-if="metric.label !== 'Locked' && metric.label !== 'World'"
+                  class="small font-weight-bold" style="font-size: 12px;"
+                >
                     {{ metric.value.toLocaleString() }}
                   </span>
-                </div>
-              </div>
-            </div>
 
-
-            <!-- Resource Metrics -->
-            <div
-              class="col-lg-3 col-sm-12 pl-0 pr-0 mt-3-mobile"
-              v-for="(host, index) in hostMetrics"
-              style="display: inline-block"
-            >
-              <!-- Render Metrics Dynamically -->
-              <div class="row" v-for="(metric, index) in host" :key="index">
-                <!-- Left Label -->
-                <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
-                    {{ metric.label }}
+                <!-- Server Lock -->
+                <a
+                  href="javascript:void(0)"
+                  v-if="metric.label === 'Locked'"
+                  class="small font-weight-bold text-muted"
+                  style="font-size: 12px;"
+                  @click="toggleServerLock"
+                >
+                  <span v-if="serverLocked" class="text-danger">
+                    <i class="fa fa-lock mr-1"></i> Locked
                   </span>
-                </div>
+                  <span v-else class="text-success">
+                    <i class="fa fa-unlock mr-1"></i> Unlocked
+                  </span>
+                </a>
 
-                <!-- Progress Bar -->
-                <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px" v-if="typeof metric.percent !== 'undefined'">
-                  <eq-progress-bar
-                    style="opacity: .95"
-                    :percent="metric.percent"
-                    :show-percent="false"
-                    :color="metric.color"
+                <!-- Server Process Button -->
+                <div class="d-none d-lg-block" v-if="metric.label === 'World'">
+                  <server-process-button-component
+                    style="z-index:1000"
+                    :server-status="metric.value"
+                    class="d-inline-block mr-3"
                   />
                 </div>
 
-                <!-- Right Value -->
-                <div
-                  :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')"
-                  style="line-height: .8 !important"
-                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Resource Metrics -->
+          <div
+            class="col-lg-2 col-sm-12 pl-0 pr-0 mt-3-mobile"
+            v-for="(host, index) in hostMetrics"
+            style="display: inline-block"
+          >
+            <!-- Render Metrics Dynamically -->
+            <div class="row" v-for="(metric, index) in host" :key="index">
+              <!-- Left Label -->
+              <div class="col-3 p-0 m-0 text-right" style="line-height: .8 !important">
+                  <span class="small font-weight-bold text-muted" style="font-size: 10px;">
+                    {{ metric.label }}
+                  </span>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="col-6 p-0 m-0 mt-1" style="max-width: 120px" v-if="typeof metric.percent !== 'undefined'">
+                <eq-progress-bar
+                  style="opacity: .95"
+                  :percent="metric.percent"
+                  :show-percent="false"
+                  :color="metric.color"
+                />
+              </div>
+
+              <!-- Right Value -->
+              <div
+                :class="'p-0 m-0 text-left' + (typeof metric.percent === 'undefined' ? 'col-9 ml-4 mb-1' : 'col-3')"
+                style="line-height: .8 !important"
+              >
                   <span
                     :class="' font-weight-bold' + (typeof metric.percent === 'undefined' ? '' : 'small text-muted')"
                     style="font-size: 10px;"
                   >
                     {{ metric.value }}
                   </span>
-                </div>
               </div>
             </div>
-
           </div>
+
         </div>
       </div>
     </div>
-  </div>
+  </eq-window-simple>
 </template>
 
 <script>
@@ -110,10 +116,14 @@ import {SpireApi}                   from "@/app/api/spire-api";
 import {SpireWebsocket}             from "@/app/api/spire-websocket";
 import EqProgressBar                from "@/components/eq-ui/EQProgressBar.vue";
 import Time                         from "@/app/time/time";
+import EqWindow                     from "@/components/eq-ui/EQWindow.vue";
+import EqWindowSimple               from "@/components/eq-ui/EQWindowSimple.vue";
 
 export default {
   name: "AdminHeader",
   components: {
+    EqWindowSimple,
+    EqWindow,
     EqProgressBar,
     ServerProcessButtonComponent,
   },
@@ -217,6 +227,10 @@ export default {
         ]
 
         metrics.push(metric)
+        // metrics.push(metric)
+        // metrics.push(metric)
+        // metrics.push(metric)
+        // metrics.push(metric)
       }
 
       // sort by hostname value
@@ -315,17 +329,19 @@ export default {
     },
 
     toggleServerLock() {
-      SpireApi.v1().post("eqemuserver/toggle-server-lock").then((r) => {
-        if (r.status === 200) {
-          this.serverLocked = r.data.locked
-          this.$bvToast.toast(r.data.message, {
-            title: "Server Lock",
-            autoHideDelay: 2000,
-            solid: true,
-            toaster: 'b-toaster-bottom-right',
-          })
-        }
-      })
+      if (confirm("Are you sure you want to toggle the server lock?")) {
+        SpireApi.v1().post("eqemuserver/toggle-server-lock").then((r) => {
+          if (r.status === 200) {
+            this.serverLocked = r.data.locked
+            this.$bvToast.toast(r.data.message, {
+              title: "Server Lock",
+              autoHideDelay: 2000,
+              solid: true,
+              toaster: 'b-toaster-bottom-right',
+            })
+          }
+        })
+      }
     },
 
     async loadServerStats() {
@@ -497,14 +513,8 @@ export default {
 }
 </script>
 
-<style>
-.truncate-server-name {
-  margin-top: 10px;
-  display: inline-flex;
-  -webkit-line-clamp: 8; /* Number of lines to show */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 450px; /* Set the max-width to the desired length */
+<style scoped>
+.admin-header-window .text-muted {
+
 }
 </style>

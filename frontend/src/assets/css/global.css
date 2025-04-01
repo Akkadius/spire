@@ -641,6 +641,10 @@ html, body{
         color: #d3dae6;
     }
 
+    .text-dark {
+        color: #d3dae6 !important;
+    }
+
     .badge {
         color: black;
     }
