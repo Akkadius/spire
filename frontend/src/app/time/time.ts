@@ -37,7 +37,7 @@ export default class Time {
     const minutes = duration.minutes();
     const seconds = duration.seconds();
 
-    return `${minutes} minutes, ${seconds} seconds`;
+    return `${minutes}m, ${seconds}s`;
   }
 
   static formatUnix(unix, format: string) {

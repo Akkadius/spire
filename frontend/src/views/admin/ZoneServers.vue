@@ -364,7 +364,7 @@ export default {
   async created() {
     this.loadQueryState()
     this.init()
-    Navbar.collapse();
+    // Navbar.collapse();
   },
   methods: {
 
@@ -697,7 +697,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.zoneServerLoop)
-    Navbar.expand();
+    // Navbar.expand();
   }
 }
 </script>

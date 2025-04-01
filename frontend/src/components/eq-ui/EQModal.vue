@@ -1,7 +1,9 @@
 <template>
     <div class="eq-modal-mask">
       <div class="eq-modal-wrapper" @click.self="dismiss()">
-        <eq-window class="eq-modal-container" >
+        <eq-window
+          :title="title"
+          class="eq-modal-container" >
 
           <div class="eq-modal-header">
             <slot name="header">
@@ -34,6 +36,11 @@ export default {
   name: 'EqModal',
   components: { EqWindow },
   props: {
+    title: {
+      type: String,
+      default: '',
+      required: false
+    },
   },
   methods: {
     dismiss() {
@@ -59,7 +66,7 @@ export default {
 <style>
 .eq-modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 9999999999 !important;
   top: 0;
   left: 0;
   width: 100%;
@@ -81,17 +88,14 @@ export default {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
   z-index: 99999999999 !important;
 
   /* Constraints */
   max-width: 90%; /* Prevents the modal from becoming too wide */
-  max-height: 90%; /* Ensures the modal doesn't exceed screen height */
-  overflow: auto; /* Adds scrollbars if content overflows */
+  max-height: 100%; /* Ensures the modal doesn't exceed screen height */
 }
 
 .eq-modal-body {
-  margin: 20px 0;
 }
 
 .eq-modal-default-button {

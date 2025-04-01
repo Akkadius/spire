@@ -2,7 +2,7 @@
 /*Buttons*/
 /**/
 
-[class|="eq-window"] button {
+[class|="eq-window"] button:not(.close) {
     display: inline-block;
     text-align: center;
 
@@ -14,7 +14,7 @@
     cursor: pointer;
 }
 
-[class|="eq-window"] button:not(.btn) {
+[class|="eq-window"] button:not(.btn):not(.close) {
     padding: .5rem .75rem;
     font-size: .9375rem;
     line-height: 1.5;

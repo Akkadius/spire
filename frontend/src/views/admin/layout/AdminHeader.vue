@@ -16,16 +16,65 @@
 
           <!-- Server Metrics -->
           <div class="col-lg-2 col-sm-12 mt-3-mobile pl-0 pr-0">
-            <div class="row" v-for="(metric, index) in serverStats" :key="index">
+            <div class="row" v-for="(metric, index) in serverStats.filter((e) => e.value !== '')" :key="index" style="height: 15px;">
               <!-- Left Label -->
-              <div class="col-lg-6 col-3 p-0 m-0 text-right" style="line-height: 1 !important">
-                  <span class="small font-weight-bold text-muted" style="font-size: 12px;">
+              <div class="col-lg-6 col-3 p-0 m-0 text-right">
+                  <span class="small font-weight-bold text-muted" style="font-size: 12px; ">
                     {{ metric.label }}
                   </span>
               </div>
 
               <!-- Right Value -->
-              <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left" style="line-height: 1 !important">
+              <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left">
+
+                <span
+                  v-if="metric.label !== 'Locked' && metric.label !== 'World'"
+                  class="small font-weight-bold" :style="'font-size: 12px;' + (metric.color ? 'color: ' + metric.color : '')"
+                >
+                    {{ metric.value.toLocaleString() }}
+                  </span>
+
+                <!-- Server Lock -->
+                <a
+                  href="javascript:void(0)"
+                  v-if="metric.label === 'Locked'"
+                  class="small font-weight-bold text-muted"
+                  style="font-size: 12px;"
+                  @click="toggleServerLock"
+                >
+                  <span v-if="serverLocked" class="text-danger">
+                    <i class="fa fa-lock mr-1"></i> Locked
+                  </span>
+                  <span v-else class="text-success">
+                    <i class="fa fa-unlock mr-1"></i> Unlocked
+                  </span>
+                </a>
+
+                <!-- Server Process Button -->
+                <div class="d-none d-lg-block" v-if="metric.label === 'World'">
+                  <server-process-button-component
+                    style="z-index:1000"
+                    :server-status="metric.value"
+                    class="d-inline-block mr-3"
+                  />
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Dash Stats -->
+          <div class="col-lg-1 col-sm-12 mt-3-mobile pl-0 pr-0">
+            <div class="row" v-for="(metric, index) in dashStats" :key="index" style="height: 15px;">
+              <!-- Left Label -->
+              <div class="col-lg-6 col-3 p-0 m-0 text-right">
+                  <span class="small font-weight-bold text-muted" style="font-size: 12px; ">
+                    {{ metric.label }}
+                  </span>
+              </div>
+
+              <!-- Right Value -->
+              <div class="col-lg-6 col-3 p-0 m-0 pl-3 text-left">
 
                 <span
                   v-if="metric.label !== 'Locked' && metric.label !== 'World'"
@@ -132,6 +181,7 @@ export default {
     return {
       pageName: "",
 
+      dashstats: {},
       stats: {},
 
       updateIntervalSeconds: 1,
@@ -148,6 +198,7 @@ export default {
       serverLocked: false,
 
       stopMessage: "",
+      shutdownTime: "",
 
       timer: null,
     }
@@ -166,7 +217,7 @@ export default {
           value: this.stats && this.stats.zone_list && this.stats.zone_list.data ? this.stats.zone_list.data.length : 0,
         },
         {
-          label: "Players",
+          label: "Players Online",
           value: this.stats && this.stats.client_list && this.stats.client_list.data ? this.stats.client_list.data.length : 0,
         },
         {
@@ -174,8 +225,38 @@ export default {
           value: this.stats && this.stats.uptime ? this.formatUptime(this.stats.uptime) : "N/A",
         },
         {
+          label: "Shutdown Timer",
+          value: this.shutdownTime,
+          color: 'red',
+        },
+        {
           label: "Locked",
           value: this.serverLocked ? "Yes" : "No",
+        },
+      ]
+    },
+
+    dashStats() {
+      return [
+        {
+          label: "Accounts",
+          value: this.dashstats && this.dashstats.accounts ? this.dashstats.accounts.toLocaleString() : 0,
+        },
+        {
+          label: "Characters",
+          value: this.dashstats && this.dashstats.characters ? this.dashstats.characters.toLocaleString() : 0,
+        },
+        {
+          label: "Guilds",
+          value: this.dashstats && this.dashstats.guilds ? this.dashstats.guilds.toLocaleString() : 0,
+        },
+        {
+          label: "Items",
+          value: this.dashstats && this.dashstats.items ? this.dashstats.items.toLocaleString() : 0,
+        },
+        {
+          label: "NPCs",
+          value: this.dashstats && this.dashstats.npcs ? this.dashstats.npcs.toLocaleString() : 0,
         },
       ]
     },
@@ -253,8 +334,6 @@ export default {
   beforeDestroy() {
     clearInterval(this.timer)
 
-    window.removeEventListener('keypress', this.keypressHandler)
-
     EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
     EventBus.$off('process-change')
 
@@ -264,8 +343,6 @@ export default {
     EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
 
     SpireWebsocket.addEventListener('message', this.handleWebsocketMessage);
-
-    window.addEventListener('keypress', this.keypressHandler)
 
     this.loadServerStats()
 
@@ -285,6 +362,12 @@ export default {
     if (this.$route.meta && this.$route.meta.title) {
       this.pageName = this.$route.meta.title
     }
+
+    SpireApi.v1().get("eqemuserver/dashboard-stats").then((r) => {
+      if (r.status === 200) {
+        this.dashstats = r.data
+      }
+    })
   },
   methods: {
 
@@ -458,30 +541,7 @@ export default {
       }
     },
 
-    keypressHandler(e) {
-      if (e.srcElement.tagName !== 'BODY' && e.srcElement.tagName !== 'A') {
-        return
-      }
 
-      if (window.location.pathname === '/login') {
-        return
-      }
-
-      switch (String.fromCharCode(e.keyCode)) {
-        case 'p':
-          this.$root.$emit('bv::show::modal', 'start-server-modal')
-          break
-        case 'r':
-          this.$root.$emit('bv::show::modal', 'restart-server-modal')
-          break
-        case 'c':
-          this.$root.$emit('bv::show::modal', 'cancel-restart-server-modal')
-          break
-        case 's':
-          this.$root.$emit('bv::show::modal', 'stop-server-modal')
-          break
-      }
-    },
     handleWebsocketMessage(e) {
       if (e && e.data) {
         const data = JSON.parse(e.data)
@@ -493,9 +553,11 @@ export default {
 
           if (remaining === "") {
             this.stopMessage = ""
+            this.shutdownTime = ""
             return
           }
           this.stopMessage = `${type.charAt(0).toUpperCase() + type.slice(1)} in ${remaining}`
+          this.shutdownTime = remaining
         }
       }
     },

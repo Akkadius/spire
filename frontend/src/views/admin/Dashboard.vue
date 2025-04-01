@@ -30,7 +30,6 @@ import DashboardCpuInfo             from "@/views/admin/components/DashboardCpuI
 import DashboardSystemInfo          from "@/views/admin/components/DashboardSystemInfo";
 import DashboardCounter             from "@/views/admin/components/DashboardCounter.vue";
 import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
-import {SpireApi}                   from "@/app/api/spire-api";
 import DashboardSystemInfoV2        from "@/views/admin/components/DashboardSystemInfoV2.vue";
 import DashboardNetworkingInfo      from "@/views/admin/components/DashboardNetworkingInfo.vue";
 
@@ -45,53 +44,5 @@ export default {
     DashboardProcessCounts,
     ServerProcessButtonComponent
   },
-  data() {
-    return {
-      loaded: false,
-      stats: {},
-      sysinfo: {},
-      statLoop: null,
-      circleProgressInitialized: null,
-
-      timer: null,
-      statsTimer: null,
-    }
-  },
-  beforeDestroy() {
-    clearInterval(this.timer)
-    clearInterval(this.statsTimer)
-  },
-  created: async function () {
-    this.fetchDashboardStats()
-
-    if (this.timer) {
-      clearInterval(this.timer)
-    }
-
-    this.statsTimer = setInterval(() => {
-      if (!document.hidden) {
-        this.fetchDashboardStats()
-      }
-    }, 60 * 1000)
-
-  },
-  methods: {
-    fetchDashboardStats() {
-      SpireApi.v1().get("eqemuserver/dashboard-stats").then((r) => {
-        if (r.status === 200) {
-          this.stats = r.data
-          this.checkLoaded()
-        }
-      })
-    },
-
-    checkLoaded() {
-      this.loaded = (
-        Object.keys(this.stats).length >= 0 &&
-        Object.keys(this.sysinfo).length >= 0
-      )
-    },
-
-  }
 }
 </script>

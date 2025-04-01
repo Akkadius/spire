@@ -1,7 +1,7 @@
 <template>
   <eq-window
     title="Server Processes"
-    v-if="processCounts" :style="loaded ? 'opacity:1' : 'opacity:.3'"
+    v-if="processCounts"
     class="p-0 mb-4"
   >
     <div class="p-3 text-center" v-if="processCounts && processCounts.length === 0">
