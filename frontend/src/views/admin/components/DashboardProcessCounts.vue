@@ -17,7 +17,7 @@
         <th class="text-right">
           Process
         </th>
-        <th class="text-left" style="width: 130px">
+        <th class="text-left">
           Status
         </th>
       </tr>

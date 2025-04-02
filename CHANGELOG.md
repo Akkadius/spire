@@ -1,3 +1,7 @@
+## [4.18.1] 4/2/2025
+
+* **Spire Admin** Minor fix to the Spire Admin header to show the server power on/off/reboot dropdown in mobile view.
+
 ## [4.18.0] 4/1/2025
 
 ### ✨ UI Improvements

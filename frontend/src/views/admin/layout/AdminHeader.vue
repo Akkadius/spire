@@ -51,7 +51,7 @@
                 </a>
 
                 <!-- Server Process Button -->
-                <div class="d-none d-lg-block" v-if="metric.label === 'World'">
+                <div v-if="metric.label === 'World'">
                   <server-process-button-component
                     style="z-index:1000"
                     :server-status="metric.value"
@@ -82,31 +82,6 @@
                 >
                     {{ metric.value.toLocaleString() }}
                   </span>
-
-                <!-- Server Lock -->
-                <a
-                  href="javascript:void(0)"
-                  v-if="metric.label === 'Locked'"
-                  class="small font-weight-bold text-muted"
-                  style="font-size: 12px;"
-                  @click="toggleServerLock"
-                >
-                  <span v-if="serverLocked" class="text-danger">
-                    <i class="fa fa-lock mr-1"></i> Locked
-                  </span>
-                  <span v-else class="text-success">
-                    <i class="fa fa-unlock mr-1"></i> Unlocked
-                  </span>
-                </a>
-
-                <!-- Server Process Button -->
-                <div class="d-none d-lg-block" v-if="metric.label === 'World'">
-                  <server-process-button-component
-                    style="z-index:1000"
-                    :server-status="metric.value"
-                    class="d-inline-block mr-3"
-                  />
-                </div>
 
               </div>
             </div>
