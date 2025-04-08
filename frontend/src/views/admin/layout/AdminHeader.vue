@@ -188,7 +188,7 @@ export default {
       }
 
       const world = this.stats.main_process_stats
-        .find((e) => e.name === "world")
+        .find((e) => e.name === "world" || e.name === "world.exe")
 
       if (world && world.elapsed > 0) {
         return true

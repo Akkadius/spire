@@ -1,3 +1,7 @@
+## [4.19.1] 4/8/2025
+
+* **Spire Admin** Fix Online/Offline status for Windows servers in the admin header.
+
 ## [4.19.0] 4/8/2025
 
 * **Spire Admin** Add top level server processes "Show Stats" toggle.
