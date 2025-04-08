@@ -5,7 +5,7 @@
   >
     <div
       v-if="tooManyOnline"
-      class="m-3 p-4"
+      class="p-4"
     >
       Too many online to display, for full list see
       <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
