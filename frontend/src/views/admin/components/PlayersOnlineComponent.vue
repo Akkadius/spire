@@ -270,9 +270,10 @@ export default {
     await this.buildPlayersOnlineList()
 
     if (Object.keys(this.filteredClientList).length > this.listLimitSize && !this.fullList) {
-      clearInterval(Timer.timer['players-online'])
       this.filteredClientList = []
       this.tooManyOnline      = true
+      this.loaded = true
+      return
     }
 
     this.loaded = true
