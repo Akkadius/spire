@@ -32,7 +32,7 @@
                   v-if="metric.label !== 'Locked' && metric.label !== 'World'"
                   class="small" :style="'font-size: 12px;' + (metric.color ? 'color: ' + metric.color : '')"
                 >
-                    {{ metric.value ? metric.value.toLocaleString() : "" }}
+                    {{ metric.value ? metric.value.toLocaleString() : 0 }}
                   </span>
 
                 <!-- Server Lock -->
