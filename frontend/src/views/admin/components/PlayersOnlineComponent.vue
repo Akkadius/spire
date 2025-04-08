@@ -4,10 +4,10 @@
     class="p-0 mb-3"
   >
     <div
-      v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
+      v-if="tooManyOnlinet"
       class="m-3"
     >
-      Too many online ({{ clientList ? clientList.length : 0 }}) to display, for full list see
+      Too many online to display, for full list see
       <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
         <i class="fe fe-user"></i> Players
         Online
@@ -105,6 +105,7 @@ export default {
     return {
       lastUpdateTime: 0,
       updateIntervalSeconds: 1,
+      tooManyOnline: false,
 
       listLimitSize: 10000,
       loaded: false,
@@ -279,6 +280,9 @@ export default {
 
       if (Object.keys(this.filteredClientList).length > this.listLimitSize && !this.fullList) {
         clearInterval(Timer.timer['players-online'])
+        this.filteredClientList = []
+        this.clientList         = []
+        this.tooManyOnline = true
       }
     }, 1000)
 
