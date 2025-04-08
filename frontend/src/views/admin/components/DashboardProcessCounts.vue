@@ -62,23 +62,22 @@
               v-for="(metric, index) in getMetrics(p)"
               :key="metric.percent"
             >
-              <div class="col-3 p-0 pr-2 m-0 text-right">
+              <div class="col-3 p-0 pr-3 m-0 text-right">
                 <div class="small font-weight-bold" style="font-size: 10px;">
                   {{ metric.label }}
                 </div>
               </div>
-              <div class="col-4 p-0 m-0">
+              <div class="col-6 p-0 m-0">
                 <eq-progress-bar
-                  style="opacity: .95"
+                  style="opacity: .95; margin-top: 4px"
                   :percent="metric.percent"
                   :show-percent="false"
                   :color="metric.color"
-                  class="mt-1"
                 />
 
               </div>
 
-              <div class="col-3 p-0 m-0">
+              <div class="col-3 p-0 pl-2 m-0">
                 <div class="small font-weight-bold" style="font-size: 10px; opacity: .8">
                   {{ metric.percent }} %
                 </div>

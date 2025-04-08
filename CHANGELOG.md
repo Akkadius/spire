@@ -5,7 +5,7 @@
 * **Spire Admin** When there are more than 50 players online, stop updating the player list on the main page.
 * **Spire Admin** Improve admin header performance by utilizing newer EQEmu Server API endpoints.
 
-[![image.png](https://i.postimg.cc/FHxXrPkt/image.png)](https://postimg.cc/BjtVNBCN)
+[![image.png](https://i.postimg.cc/rmX1f9gm/image.png)](https://postimg.cc/NyD2Mm3q)
 
 ## [4.18.2] 4/2/2025
 
