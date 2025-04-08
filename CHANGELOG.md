@@ -1,3 +1,12 @@
+## [4.19.0] 4/8/2025
+
+* **Spire Admin** Add top level server processes "Show Stats" toggle.
+* **Spire Admin** Improve zoneserver page updating and performance.
+* **Spire Admin** When there are more than 50 players online, stop updating the player list on the main page.
+* **Spire Admin** Improve admin header performance by utilizing newer EQEmu Server API endpoints.
+
+[![image.png](https://i.postimg.cc/rmX1f9gm/image.png)](https://postimg.cc/NyD2Mm3q)
+
 ## [4.18.2] 4/2/2025
 
 * **Spire Admin** Minor fix to the Spire Admin header to show the server power on/off/reboot dropdown in mobile view.

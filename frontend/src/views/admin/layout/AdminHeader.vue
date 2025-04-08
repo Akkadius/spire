@@ -4,6 +4,7 @@
     class="admin-header-window mb-4 pb-0"
     style="font-family: 'Cerebri Sans', sans-serif; color: white; padding: 10px; z-index: 1;"
     :title="stats.server_name"
+    :bold-title="true"
   >
 
     <div class="row align-items-center">
@@ -31,7 +32,7 @@
                   v-if="metric.label !== 'Locked' && metric.label !== 'World'"
                   class="small" :style="'font-size: 12px;' + (metric.color ? 'color: ' + metric.color : '')"
                 >
-                    {{ metric.value.toLocaleString() }}
+                    {{ metric.value ? metric.value.toLocaleString() : 0 }}
                   </span>
 
                 <!-- Server Lock -->
@@ -80,7 +81,7 @@
                   v-if="metric.label !== 'Locked' && metric.label !== 'World'"
                   class="small" style="font-size: 12px;"
                 >
-                    {{ metric.value.toLocaleString() }}
+                    {{ metric.value ? metric.value.toLocaleString() : "" }}
                   </span>
 
               </div>
@@ -181,19 +182,34 @@ export default {
 
   computed: {
 
+    isWorldOnline() {
+      if (!this.stats || !this.stats.main_process_stats) {
+        return false
+      }
+
+      const world = this.stats.main_process_stats
+        .find((e) => e.name === "world")
+
+      if (world && world.elapsed > 0) {
+        return true
+      }
+
+      return false
+    },
+
     serverStats() {
       return [
         {
           label: "World",
-          value: this.stats && this.stats.world_online ? "Online" : "Offline",
+          value: this.stats && this.isWorldOnline ? "Online" : "Offline",
         },
         {
           label: "Zoneservers",
-          value: this.stats && this.stats.zone_list && this.stats.zone_list.data ? this.stats.zone_list.data.length : 0,
+          value: this.stats ? this.stats.zone_count : 0,
         },
         {
           label: "Players Online",
-          value: this.stats && this.stats.client_list && this.stats.client_list.data ? this.stats.client_list.data.length : 0,
+          value: this.stats ? this.stats.players_online : 0,
         },
         {
           label: "Uptime",

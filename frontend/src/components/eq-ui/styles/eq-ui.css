@@ -1000,10 +1000,10 @@ h6.eq-header {
     transition: all .05s ease;
 }
 
-.eq-window-simple  a:link{
+.eq-window-simple a:link{
     text-decoration: none;
     font-weight: none;
-    color: #7b714a;
+    color: #c7be9a;
 }
 
 .eq-window-simple a:active {

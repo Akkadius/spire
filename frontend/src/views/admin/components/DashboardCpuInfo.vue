@@ -37,7 +37,7 @@
           class="text-left"
         >
           <eq-progress-bar
-            style="opacity: .7"
+            style="opacity: .9"
             :percent="(Math.round(l * 100) / 100)"
             :show-percent="false"
             :color="getCpuLoadColor(parseInt(l))"
@@ -92,7 +92,7 @@ export default {
         return 'orange'
       }
 
-      return '#95aac9'
+      return '#2c7be5'
     },
 
     /**

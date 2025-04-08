@@ -276,6 +276,10 @@ export default {
       if (!document.hidden && this.readyToPoll()) {
         this.buildPlayersOnlineList()
       }
+
+      if (Object.keys(this.filteredClientList).length > this.listLimitSize && !this.fullList) {
+        clearInterval(Timer.timer['players-online'])
+      }
     }, 1000)
 
     /**

@@ -18,6 +18,7 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/mholt/archiver/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/shirou/gopsutil/v3/process"
@@ -76,8 +77,8 @@ func NewController(
 func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/zone-list", a.getZoneList, nil),
-		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, nil),
-		routes.RegisterRoute(http.MethodGet, "eqemuserver/zoneserver-list", a.getZoneServerList, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, []echo.MiddlewareFunc{middleware.Gzip()}),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/zoneserver-list", a.getZoneServerList, []echo.MiddlewareFunc{middleware.Gzip()}),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/server-stats", a.getServerStats, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-lock-status", a.getServerLockedStatus, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/toggle-server-lock", a.toggleServerLock, nil),
@@ -138,16 +139,24 @@ func (a *Controller) reload(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
+type ServerProcessStat struct {
+	Description  string  `json:"description"`
+	Pid          int32   `json:"pid"`
+	Name         string  `json:"name"`
+	Cpu          float64 `json:"cpu"`
+	Memory       float32 `json:"memory"`
+	Elapsed      int64   `json:"elapsed"` // uptime
+	Optional     bool    `json:"optional"`
+	Count        int64   `json:"count"`
+	ProcessMatch string  `json:"-"`
+}
+
 type ServerStatsResponse struct {
-	ServerName      string          `json:"server_name"`
-	LauncherOnline  bool            `json:"launcher_online"`
-	UcsOnline       bool            `json:"ucs_online"`
-	LoginOnline     bool            `json:"login_online"`
-	WorldOnline     bool            `json:"world_online"`
-	QueryServOnline bool            `json:"query_serv_online"`
-	ZoneList        WorldZoneList   `json:"zone_list"`
-	PlayersOnline   WorldClientList `json:"client_list"`
-	Uptime          string          `json:"uptime"`
+	ServerName       string              `json:"server_name"`
+	MainProcessStats []ServerProcessStat `json:"main_process_stats"`
+	ZoneCount        int64               `json:"zone_count"`
+	PlayersOnline    int64               `json:"players_online"`
+	Uptime           string              `json:"uptime"`
 }
 
 func (a *Controller) getServerStats(c echo.Context) error {
@@ -158,39 +167,93 @@ func (a *Controller) getServerStats(c echo.Context) error {
 		return c.JSON(http.StatusOK, cachedList)
 	}
 
+	mainProcesses := []ServerProcessStat{
+		{
+			Description:  "Spire Launcher",
+			ProcessMatch: "eqemu-server:launcher",
+		},
+		{
+			Description:  "World Server",
+			ProcessMatch: "world",
+		},
+		{
+			Description:  "Zones",
+			ProcessMatch: "zone",
+		},
+		{
+			Description:  "UCS",
+			ProcessMatch: "ucs",
+			Optional:     true,
+		},
+		{
+			Description:  "Login Server",
+			ProcessMatch: "loginserver",
+			Optional:     true,
+		},
+		{
+			Description:  "Query Server",
+			ProcessMatch: "queryserv",
+			Optional:     true,
+		},
+	}
+
 	var r ServerStatsResponse
 	processes, _ := process.Processes()
 	for _, p := range processes {
-		cmdline, err := p.Cmdline()
-		if err != nil {
-			return err
-		}
+		cmdline, _ := p.Cmdline()
+		name, _ := p.Name()
+		cpuPercent, _ := p.CPUPercent()
+		memPercent, _ := p.MemoryPercent()
+		elapsed, _ := p.CreateTime()
 
-		if strings.Contains(cmdline, "eqemu-server:launcher") {
-			r.LauncherOnline = true
-		}
-		if strings.Contains(cmdline, "world") {
-			r.WorldOnline = true
-		}
-		if strings.Contains(cmdline, "ucs") {
-			r.UcsOnline = true
-		}
-		if strings.Contains(cmdline, "loginserver") {
-			r.LoginOnline = true
-		}
-		if strings.Contains(cmdline, "queryserv") {
-			r.QueryServOnline = true
+		for i, proc := range mainProcesses {
+			if strings.Contains(cmdline, proc.ProcessMatch) {
+				// round to two decimal places
+				cpuPercent = float64(int(cpuPercent*100)) / 100
+				memPercent = float32(int(memPercent*100)) / 100
+
+				mainProcesses[i].Cpu = cpuPercent
+				mainProcesses[i].Memory = memPercent
+				mainProcesses[i].Elapsed = elapsed / 1000
+				mainProcesses[i].Pid = p.Pid
+				mainProcesses[i].Name = name
+				mainProcesses[i].Count++
+			}
 		}
 	}
 
-	zoneList, _ := a.eqemuserverapi.GetZoneList()
-	if len(zoneList.Data) > 0 {
-		r.ZoneList = zoneList
+	// server counts
+	serverCounts, _ := a.eqemuserverapi.GetServerCounts()
+	if serverCounts.Data.ZoneCount != nil {
+		r.ZoneCount = int64(*serverCounts.Data.ZoneCount)
+	} else if serverCounts.Data.ZoneCount == nil { // old fallback, remove eventually
+		zoneList, _ := a.eqemuserverapi.GetZoneList()
+		if len(zoneList.Data) > 0 {
+			r.ZoneCount = int64(len(zoneList.Data))
+		}
 	}
-	clientList, _ := a.eqemuserverapi.GetWorldClientList()
-	if len(clientList.Data) > 0 {
-		r.PlayersOnline = clientList
+	if serverCounts.Data.ClientCount != nil {
+		r.PlayersOnline = int64(*serverCounts.Data.ClientCount)
+	} else if serverCounts.Data.ClientCount == nil { // old fallback, remove eventually
+		clientList, _ := a.eqemuserverapi.GetWorldClientList()
+		if len(clientList.Data) > 0 {
+			r.PlayersOnline = int64(len(clientList.Data))
+		}
 	}
+
+	// zone
+	for i, proc := range mainProcesses {
+		if proc.Name == "zone" {
+			mainProcesses[i].Description = "Zone Servers"
+			mainProcesses[i].Count = r.ZoneCount
+			mainProcesses[i].Cpu = 0
+			mainProcesses[i].Memory = 0
+			mainProcesses[i].Elapsed = 0
+			mainProcesses[i].Pid = 0
+		}
+	}
+
+	r.MainProcessStats = mainProcesses
 
 	uptime, _ := a.eqemuserverapi.GetWorldUptime()
 	r.Uptime = uptime
@@ -199,7 +262,7 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	r.ServerName = cfg.Server.World.Longname
 
 	// cache when server is under higher load
-	if len(zoneList.Data) > 100 || len(clientList.Data) > 100 {
+	if r.ZoneCount > 100 || r.PlayersOnline > 100 {
 		a.cache.Set(cacheKey, r, 10*time.Second)
 	}
 

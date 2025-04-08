@@ -44,27 +44,27 @@ func (c *Client) GetTelnetClient() *telnet.Client {
 
 type WorldZoneList struct {
 	Data []struct {
-		BootingUp          bool   `json:"booting_up"`
-		ClientAddress      string `json:"client_address"`
-		ClientLocalAddress string `json:"client_local_address"`
-		ClientPort         int    `json:"client_port"`
-		CompileDate        string `json:"compile_date"`
-		CompileTime        string `json:"compile_time"`
-		CompileVersion     string `json:"compile_version"`
-		ID                 int    `json:"id"`
-		InstanceID         int    `json:"instance_id"`
-		IP                 string `json:"ip"`
-		IsStaticZone       bool   `json:"is_static_zone"`
-		LaunchName         string `json:"launch_name"`
-		LaunchedName       string `json:"launched_name"`
-		NumberPlayers      int    `json:"number_players"`
-		Port               int    `json:"port"`
-		PreviousZoneID     int    `json:"previous_zone_id"`
-		UUID               string `json:"uuid"`
-		ZoneID             int    `json:"zone_id"`
-		ZoneLongName       string `json:"zone_long_name"`
-		ZoneName           string `json:"zone_name"`
-		ZoneOsPid          int    `json:"zone_os_pid"`
+		BootingUp          bool   `json:"booting_up,omitempty"`
+		ClientAddress      string `json:"client_address,omitempty"`
+		ClientLocalAddress string `json:"client_local_address,omitempty"`
+		ClientPort         int    `json:"client_port,omitempty"`
+		CompileDate        string `json:"compile_date,omitempty"`
+		CompileTime        string `json:"compile_time,omitempty"`
+		CompileVersion     string `json:"compile_version,omitempty"`
+		ID                 int    `json:"id,omitempty"`
+		InstanceID         int    `json:"instance_id,omitempty"`
+		IP                 string `json:"ip,omitempty"`
+		IsStaticZone       bool   `json:"is_static_zone,omitempty"`
+		LaunchName         string `json:"launch_name,omitempty"`
+		LaunchedName       string `json:"launched_name,omitempty"`
+		NumberPlayers      int    `json:"number_players,omitempty"`
+		Port               int    `json:"port,omitempty"`
+		PreviousZoneID     int    `json:"previous_zone_id,omitempty"`
+		UUID               string `json:"uuid,omitempty"`
+		ZoneID             int    `json:"zone_id,omitempty"`
+		ZoneLongName       string `json:"zone_long_name,omitempty"`
+		ZoneName           string `json:"zone_name,omitempty"`
+		ZoneOsPid          int    `json:"zone_os_pid,omitempty"`
 	} `json:"data"`
 	ExecutionTime string `json:"execution_time"`
 	Method        string `json:"method"`
@@ -82,6 +82,32 @@ func (c *Client) GetZoneList() (WorldZoneList, error) {
 	err = json.Unmarshal([]byte(o), &zoneList)
 	if err != nil {
 		return WorldZoneList{}, err
+	}
+
+	return zoneList, nil
+}
+
+type ServerCountsResponse struct {
+	Data struct {
+		ClientCount *int `json:"client_count,omitempty"`
+		ZoneCount   *int `json:"zone_count,omitempty"`
+	} `json:"data"`
+	ExecutionTime string `json:"execution_time"`
+	Method        string `json:"method"`
+}
+
+func (c *Client) GetServerCounts() (ServerCountsResponse, error) {
+	o, err := c.GetTelnetClient().Command(
+		telnet.CommandConfig{Command: "api get_server_counts", EnforceJson: true},
+	)
+	if err != nil {
+		return ServerCountsResponse{}, err
+	}
+
+	var zoneList ServerCountsResponse
+	err = json.Unmarshal([]byte(o), &zoneList)
+	if err != nil {
+		return ServerCountsResponse{}, err
 	}
 
 	return zoneList, nil
@@ -136,54 +162,54 @@ func (c *Client) SetLockStatus(locked bool) error {
 type WorldClientList struct {
 	Data []struct {
 		AccountID            int    `json:"account_id"`
-		AccountName          string `json:"account_name"`
-		Admin                int    `json:"admin"`
-		Anon                 int    `json:"anon"`
-		CharacterID          int    `json:"character_id"`
-		Class                int    `json:"class"`
-		ClientVersion        int    `json:"client_version"`
-		Gm                   int    `json:"gm"`
-		GuildID              int    `json:"guild_id"`
-		ID                   int    `json:"id"`
-		Instance             int    `json:"instance"`
-		IP                   int    `json:"ip"`
-		IsLocalClient        bool   `json:"is_local_client"`
-		Level                int    `json:"level"`
-		Lfg                  bool   `json:"lfg"`
-		LfgComments          string `json:"lfg_comments"`
-		LfgFromLevel         int    `json:"lfg_from_level"`
-		LfgMatchFilter       bool   `json:"lfg_match_filter"`
-		LfgToLevel           int    `json:"lfg_to_level"`
-		LoginserverAccountID int    `json:"loginserver_account_id"`
-		LoginserverID        int    `json:"loginserver_id"`
-		LoginserverName      string `json:"loginserver_name"`
+		AccountName          string `json:"account_name,omitempty"`
+		Admin                int    `json:"admin,omitempty"`
+		Anon                 int    `json:"anon,omitempty"`
+		CharacterID          int    `json:"character_id,omitempty"`
+		Class                int    `json:"class,omitempty"`
+		ClientVersion        int    `json:"client_version,omitempty"`
+		Gm                   int    `json:"gm,omitempty"`
+		GuildID              int    `json:"guild_id,omitempty"`
+		ID                   int    `json:"id,omitempty"`
+		Instance             int    `json:"instance,omitempty"`
+		IP                   int    `json:"ip,omitempty"`
+		IsLocalClient        bool   `json:"is_local_client,omitempty"`
+		Level                int    `json:"level,omitempty"`
+		Lfg                  bool   `json:"lfg,omitempty"`
+		LfgComments          string `json:"lfg_comments,omitempty"`
+		LfgFromLevel         int    `json:"lfg_from_level,omitempty"`
+		LfgMatchFilter       bool   `json:"lfg_match_filter,omitempty"`
+		LfgToLevel           int    `json:"lfg_to_level,omitempty"`
+		LoginserverAccountID int    `json:"loginserver_account_id,omitempty"`
+		LoginserverID        int    `json:"loginserver_id,omitempty"`
+		LoginserverName      string `json:"loginserver_name,omitempty"`
 		Name                 string `json:"name"`
 		Online               int    `json:"online"`
-		Race                 int    `json:"race"`
+		Race                 int    `json:"race,omitempty"`
 		Server               struct {
-			ClientAddress      string `json:"client_address"`
-			ClientLocalAddress string `json:"client_local_address"`
-			ClientPort         int    `json:"client_port"`
-			CompileTime        string `json:"compile_time"`
-			ID                 int    `json:"id"`
-			InstanceID         int    `json:"instance_id"`
-			IP                 string `json:"ip"`
-			IsBooting          bool   `json:"is_booting"`
-			LaunchName         string `json:"launch_name"`
-			LaunchedName       string `json:"launched_name"`
-			NumberPlayers      int    `json:"number_players"`
-			Port               int    `json:"port"`
-			PreviousZoneID     int    `json:"previous_zone_id"`
-			StaticZone         bool   `json:"static_zone"`
-			Uui                string `json:"uui"`
-			ZoneID             int    `json:"zone_id"`
-			ZoneLongName       string `json:"zone_long_name"`
-			ZoneName           string `json:"zone_name"`
-			ZoneOsPid          int    `json:"zone_os_pid"`
-		} `json:"server"`
-		TellsOff   int `json:"tells_off"`
-		WorldAdmin int `json:"world_admin"`
-		Zone       int `json:"zone"`
+			ClientAddress      string `json:"client_address,omitempty"`
+			ClientLocalAddress string `json:"client_local_address,omitempty"`
+			ClientPort         int    `json:"client_port,omitempty"`
+			CompileTime        string `json:"compile_time,omitempty"`
+			ID                 int    `json:"id,omitempty"`
+			InstanceID         int    `json:"instance_id,omitempty"`
+			IP                 string `json:"ip,omitempty"`
+			IsBooting          bool   `json:"is_booting,omitempty"`
+			LaunchName         string `json:"launch_name,omitempty"`
+			LaunchedName       string `json:"launched_name,omitempty"`
+			NumberPlayers      int    `json:"number_players,omitempty"`
+			Port               int    `json:"port,omitempty"`
+			PreviousZoneID     int    `json:"previous_zone_id,omitempty"`
+			StaticZone         bool   `json:"static_zone,omitempty"`
+			Uui                string `json:"uui,omitempty"`
+			ZoneID             int    `json:"zone_id,omitempty"`
+			ZoneLongName       string `json:"zone_long_name,omitempty"`
+			ZoneName           string `json:"zone_name,omitempty"`
+			ZoneOsPid          int    `json:"zone_os_pid,omitempty"`
+		} `json:"server,omitempty"`
+		TellsOff   int `json:"tells_off,omitempty"`
+		WorldAdmin int `json:"world_admin,omitempty"`
+		Zone       int `json:"zone,omitempty"`
 	} `json:"data"`
 	ExecutionTime string `json:"execution_time"`
 	Method        string `json:"method"`

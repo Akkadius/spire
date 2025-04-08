@@ -134,7 +134,7 @@
           </thead>
           <tbody
             v-for="zone in filterZoneList(zoneList)"
-            :key="zone.zone_id + '_' + zone.zone_os_pid + '_' + zone.zone_name + '_' + parseFloat(zone.cpu).toFixed(2) + '_' + zone.number_players + '_' + showPlayersForZone[zone.id]"
+            :key="zone.id"
           >
           <tr
             :style="formatZoneRow(zone)"
@@ -203,7 +203,7 @@
             v-if="(showPlayers || showPlayersForZone[zone.id]) && zone.number_players > 0"
           >
             <td
-              colspan="11"
+              colspan="12"
               style="box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px -3px 30px rgba(0,0,0,0.7), 3px 3px 6px rgba(0, 0, 0, 0.1);"
             >
               <div class="d-flex flex-wrap p-3">
@@ -608,35 +608,38 @@ export default {
           // sort by number of players first
           // then zones with id of 0 always on bottom of list
           // then sort by zone name
-          this.zoneList = r.data.sort(
-            (a, b) => {
-              if (a.number_players > b.number_players) {
-                return -1
-              }
+          const newZoneMap = new Map();
+          r.data.forEach(z => newZoneMap.set(z.id, z));
 
-              if (a.number_players < b.number_players) {
-                return 1
-              }
+          const updatedZoneList = [];
 
-              if (a.zone_id === 0) {
-                return 1
-              }
-
-              if (b.zone_id === 0) {
-                return -1
-              }
-
-              if (a.zone_name < b.zone_name) {
-                return -1
-              }
-
-              if (a.zone_name > b.zone_name) {
-                return 1
-              }
-
-              return 0
+// Update or reuse existing zones in-place
+          for (const [id, newZone] of newZoneMap.entries()) {
+            const existing = this.zoneList.find(z => z.id === id);
+            if (existing) {
+              Object.keys(newZone).forEach(key => {
+                this.$set(existing, key, newZone[key]);
+              });
+              updatedZoneList.push(existing); // Keep reference
+            } else {
+              updatedZoneList.push(newZone); // New zone
             }
-          )
+          }
+
+          // Sort final array
+          updatedZoneList.sort((a, b) => {
+            if (a.number_players > b.number_players) return -1;
+            if (a.number_players < b.number_players) return 1;
+            if (a.zone_id === 0) return 1;
+            if (b.zone_id === 0) return -1;
+            if (a.zone_name < b.zone_name) return -1;
+            if (a.zone_name > b.zone_name) return 1;
+            return 0;
+          });
+
+          // Assign it in one go
+          this.zoneList = updatedZoneList;
+
 
           if (typeof this.zoneList === "undefined") {
             this.zoneList = []
