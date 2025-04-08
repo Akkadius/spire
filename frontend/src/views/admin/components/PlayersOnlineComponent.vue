@@ -4,8 +4,8 @@
     class="p-0 mb-3"
   >
     <div
-      v-if="tooManyOnlinet"
-      class="m-3"
+      v-if="tooManyOnline"
+      class="m-3 p-4"
     >
       Too many online to display, for full list see
       <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
@@ -15,7 +15,7 @@
     </div>
 
     <table
-      v-if="clientList && clientList.length > 0 && loaded && Object.keys(filteredClientList).length > 0"
+      v-if="!tooManyOnline && clientList && clientList.length > 0 && loaded && Object.keys(filteredClientList).length > 0"
       class="eq-table bordered eq-highlight-rows mb-0"
     >
       <thead class="eq-table-floating-header">
@@ -47,7 +47,9 @@
         <td>{{ client.level }}</td>
         <td>
             <span v-if="client.server && client.server.zone_name">{{ client.server.zone_name }}
-              <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{client.server.instance_id }})</span>
+              <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{
+                  client.server.instance_id
+                }})</span>
             </span>
           <span v-if="!client.server && client.online === 1">Character Select</span>
           <span v-if="!client.server && client.online > 0">Zoning</span>
@@ -62,7 +64,7 @@
       </tbody>
     </table>
 
-    <div class="card-body" v-if="clientList && clientList.length === 0 && loaded">
+    <div class="p-4" v-if="clientList && clientList.length === 0 && loaded">
       There are currently no players online...
     </div>
 
@@ -281,8 +283,7 @@ export default {
       if (Object.keys(this.filteredClientList).length > this.listLimitSize && !this.fullList) {
         clearInterval(Timer.timer['players-online'])
         this.filteredClientList = []
-        this.clientList         = []
-        this.tooManyOnline = true
+        this.tooManyOnline      = true
       }
     }, 1000)
 
