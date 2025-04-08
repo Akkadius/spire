@@ -60,7 +60,7 @@
             <div
               class="row"
               v-for="(metric, index) in getMetrics(p)"
-              :key="index"
+              :key="metric.percent"
             >
               <div class="col-3 p-0 pr-2 m-0 text-right">
                 <div class="small font-weight-bold" style="font-size: 10px;">
@@ -85,6 +85,9 @@
               </div>
             </div>
 
+            <span class="text-muted small">
+              Uptime ({{formatProcessUptime(p.elapsed)}})
+            </span>
           </div>
         </td>
       </tr>
@@ -99,6 +102,7 @@ import {EventBus}    from "@/app/event-bus/event-bus";
 import {SpireApi}    from "@/app/api/spire-api";
 import EqWindow      from "@/components/eq-ui/EQWindow.vue";
 import EqProgressBar from "@/components/eq-ui/EQProgressBar.vue";
+import Time          from "@/app/time/time";
 
 export default {
   name: 'DashboardProcessCounts',
@@ -112,6 +116,10 @@ export default {
   },
 
   methods: {
+    formatProcessUptime(time) {
+      return Time.humanizeUnix(time)
+    },
+
     getCpuLoadColor(load) {
       if (load > 80) {
         return 'red'
@@ -157,7 +165,22 @@ export default {
     })
 
     EventBus.$on('server-stats', async (e) => {
-      this.processCounts = e.main_process_stats
+      const newStats = e.main_process_stats || []
+
+      newStats.forEach((newItem) => {
+        const existing = this.processCounts.find(p => p.description === newItem.description)
+
+        if (existing) {
+          Object.assign(existing, newItem)
+        } else {
+          this.processCounts.push(newItem)
+        }
+      })
+
+      // Remove any old items no longer in the new stats
+      this.processCounts = this.processCounts.filter(p =>
+        newStats.find(n => n.description === p.description)
+      )
 
       this.loaded = true
     })
