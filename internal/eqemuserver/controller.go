@@ -200,30 +200,11 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	var r ServerStatsResponse
 	processes, _ := process.Processes()
 	for _, p := range processes {
-		cmdline, err := p.Cmdline()
-		if err != nil {
-			return err
-		}
-
-		name, err := p.Name()
-		if err != nil {
-			return err
-		}
-
-		cpuPercent, err := p.CPUPercent()
-		if err != nil {
-			return err
-		}
-
-		memPercent, err := p.MemoryPercent()
-		if err != nil {
-			return err
-		}
-
-		elapsed, err := p.CreateTime()
-		if err != nil {
-			return err
-		}
+		cmdline, _ := p.Cmdline()
+		name, _ := p.Name()
+		cpuPercent, _ := p.CPUPercent()
+		memPercent, _ := p.MemoryPercent()
+		elapsed, _ := p.CreateTime()
 
 		for i, proc := range mainProcesses {
 			if strings.Contains(cmdline, proc.ProcessMatch) {
@@ -246,9 +227,9 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	if serverCounts.Data.ZoneCount != nil {
 		r.ZoneCount = int64(*serverCounts.Data.ZoneCount)
 	} else if serverCounts.Data.ZoneCount == nil { // old fallback, remove eventually
-		clientList, _ := a.eqemuserverapi.GetWorldClientList()
-		if len(clientList.Data) > 0 {
-			r.PlayersOnline = int64(len(clientList.Data))
+		zoneList, _ := a.eqemuserverapi.GetZoneList()
+		if len(zoneList.Data) > 0 {
+			r.ZoneCount = int64(len(zoneList.Data))
 		}
 	}
 	if serverCounts.Data.ClientCount != nil {
