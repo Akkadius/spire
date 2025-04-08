@@ -18,6 +18,7 @@ import (
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/system"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/mholt/archiver/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/shirou/gopsutil/v3/process"
@@ -76,8 +77,8 @@ func NewController(
 func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/zone-list", a.getZoneList, nil),
-		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, nil),
-		routes.RegisterRoute(http.MethodGet, "eqemuserver/zoneserver-list", a.getZoneServerList, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, []echo.MiddlewareFunc{middleware.Gzip()}),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/zoneserver-list", a.getZoneServerList, []echo.MiddlewareFunc{middleware.Gzip()}),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/server-stats", a.getServerStats, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-lock-status", a.getServerLockedStatus, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/toggle-server-lock", a.toggleServerLock, nil),
