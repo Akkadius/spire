@@ -87,6 +87,32 @@ func (c *Client) GetZoneList() (WorldZoneList, error) {
 	return zoneList, nil
 }
 
+type ServerCountsResponse struct {
+	Data struct {
+		ClientCount *int `json:"client_count,omitempty"`
+		ZoneCount   *int `json:"zone_count,omitempty"`
+	} `json:"data"`
+	ExecutionTime string `json:"execution_time"`
+	Method        string `json:"method"`
+}
+
+func (c *Client) GetServerCounts() (ServerCountsResponse, error) {
+	o, err := c.GetTelnetClient().Command(
+		telnet.CommandConfig{Command: "api get_server_counts", EnforceJson: true},
+	)
+	if err != nil {
+		return ServerCountsResponse{}, err
+	}
+
+	var zoneList ServerCountsResponse
+	err = json.Unmarshal([]byte(o), &zoneList)
+	if err != nil {
+		return ServerCountsResponse{}, err
+	}
+
+	return zoneList, nil
+}
+
 type LockStatusResponse struct {
 	Data struct {
 		Locked bool `json:"locked"`
@@ -136,30 +162,30 @@ func (c *Client) SetLockStatus(locked bool) error {
 type WorldClientList struct {
 	Data []struct {
 		AccountID            int    `json:"account_id"`
-		AccountName          string `json:"account_name"`
-		Admin                int    `json:"admin"`
-		Anon                 int    `json:"anon"`
+		AccountName          string `json:"account_name,omitempty"`
+		Admin                int    `json:"admin,omitempty"`
+		Anon                 int    `json:"anon,omitempty"`
 		CharacterID          int    `json:"character_id"`
 		Class                int    `json:"class"`
 		ClientVersion        int    `json:"client_version"`
 		Gm                   int    `json:"gm"`
 		GuildID              int    `json:"guild_id"`
-		ID                   int    `json:"id"`
+		ID                   int    `json:"id,omitempty"`
 		Instance             int    `json:"instance"`
-		IP                   int    `json:"ip"`
-		IsLocalClient        bool   `json:"is_local_client"`
+		IP                   int    `json:"ip,omitempty"`
+		IsLocalClient        bool   `json:"is_local_client,omitempty"`
 		Level                int    `json:"level"`
-		Lfg                  bool   `json:"lfg"`
-		LfgComments          string `json:"lfg_comments"`
-		LfgFromLevel         int    `json:"lfg_from_level"`
-		LfgMatchFilter       bool   `json:"lfg_match_filter"`
-		LfgToLevel           int    `json:"lfg_to_level"`
-		LoginserverAccountID int    `json:"loginserver_account_id"`
-		LoginserverID        int    `json:"loginserver_id"`
-		LoginserverName      string `json:"loginserver_name"`
+		Lfg                  bool   `json:"lfg,omitempty"`
+		LfgComments          string `json:"lfg_comments,omitempty"`
+		LfgFromLevel         int    `json:"lfg_from_level,omitempty"`
+		LfgMatchFilter       bool   `json:"lfg_match_filter,omitempty"`
+		LfgToLevel           int    `json:"lfg_to_level,omitempty"`
+		LoginserverAccountID int    `json:"loginserver_account_id,omitempty"`
+		LoginserverID        int    `json:"loginserver_id,omitempty"`
+		LoginserverName      string `json:"loginserver_name,omitempty"`
 		Name                 string `json:"name"`
 		Online               int    `json:"online"`
-		Race                 int    `json:"race"`
+		Race                 int    `json:"race,omitempty"`
 		Server               struct {
 			ClientAddress      string `json:"client_address"`
 			ClientLocalAddress string `json:"client_local_address"`

@@ -1,6 +1,11 @@
 <template>
   <div class='eq-window-simple'>
-    <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
+    <div
+      class='eq-window-title-bar'
+      v-if="title"
+      :style="'font-weight: ' + (boldTitle ? 'bold' : 'normal') + ';'"
+    >{{ title }}
+    </div>
     <div
       :style="'padding: ' + (typeof padding !== 'undefined' ? padding : 10) + 'px'"
       :class="classes"
@@ -27,6 +32,11 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    boldTitle: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   }
 }
