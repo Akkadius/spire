@@ -298,7 +298,7 @@
       </tr>
       <tr v-else>
         <td class="spell-field-label">Resist Type</td>
-        <td> Unresistable</td>
+        <td>Unresistable</td>
       </tr>
       <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
         <td class="spell-field-label">Resist Chance Limits</td>
