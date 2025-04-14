@@ -296,7 +296,7 @@ export default {
         { desc: "Maximum Level", field: "maxlevel", fType: "number" },
         { desc: "Min HP", field: "min_hp", fType: "number" },
         { desc: "Max HP", field: "max_hp", fType: "number" },
-        { desc: "Resist Adjust", field: "resist_adjust", fType: "text" },
+        { desc: "Resist Adjust", field: "resist_adjust", fType: "number" },
       ],
     }
   },
