@@ -1213,11 +1213,6 @@
                 class="row" v-for="field in
                      [
                        {
-                         description: 'Unresistable',
-                         field: 'field_209',
-                         bool: true
-                       },
-                       {
                          description: 'No Partial Resists',
                          field: 'no_partial_resist',
                          bool: true
