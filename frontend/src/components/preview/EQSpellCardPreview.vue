@@ -197,12 +197,12 @@
 
       <!-- Duration / Buffs -->
 
-      <tr v-if="getBuffDuration(spellData)">
+      <tr v-if="spellData['buffduration']">
         <td class="spell-field-label">Duration</td>
         <td> {{ humanTime(getBuffDuration(spellData) * 6) }} - {{ getBuffDuration(spellData) }} tic(s)</td>
       </tr>
 
-      <tr v-if="getBuffDuration(spellData)">
+      <tr>
         <td class="spell-field-label">Dispelable</td>
         <td>
           <span v-if="spellData['dispel_flag'] !== 0">No</span>
@@ -294,8 +294,11 @@
           > &nbsp;({{
               spellData["resist_diff"]
             }}) &nbsp; (No Partial Resist)</span>
-          <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
+      </tr>
+      <tr v-else>
+        <td class="spell-field-label">Resist Type</td>
+        <td>Unresistable</td>
       </tr>
       <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
         <td class="spell-field-label">Resist Chance Limits</td>

@@ -107,7 +107,8 @@
             <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
             <td> {{ (spell["cast_time"] / 1000) }} sec</td>
             <td> {{ (spell["recast_time"] / 1000) }} sec</td>
-            <td> {{ humanTime(getBuffDuration(spell) * 6) }} {{ getBuffDuration(spell) }} tic(s)</td>
+            <td v-if="spell['buffduration']"> {{ humanTime(getBuffDuration(spell) * 6) }} {{ getBuffDuration(spell) }} tic(s)</td>
+            <td v-else>N/A</td>
             <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
 
 

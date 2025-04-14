@@ -764,7 +764,7 @@ export const DB_SPELL_TYPES = {
 }
 
 export const DB_SPELL_RESISTS = {
-  "0": "None",
+  "0": "Unresistable",
   "1": "Magic",
   "2": "Fire",
   "3": "Cold",
@@ -956,7 +956,7 @@ export const DB_SPELL_TARGET_RESTRICTION = {
   "815": "Is Treant",
   "816": "Is Bixie2",
   "817": "Is Scarecrow",
-  "": "Is Vampire Or Undead Or Undeadpet",
+  "818": "Is Vampire Or Undead Or Undeadpet",
   "819": "Is Not Vampire Or Undead",
   "820": "Is Class Knight Hybrid Melee",
   "821": "Is Class Warrior Caster Priest",
@@ -1415,8 +1415,8 @@ export const BUFF_DURATION_FORMULAS = {
   13: 'Unknown',
   14: 'Unknown',
   15: 'Unknown',
-  50: '5 Days',
-  51: 'Permanent',
+  50: 'Permanent',
+  51: 'Aura',
   3600: 'Duration if not 0, else 3600',
 };
 
