@@ -54,6 +54,7 @@ export class Spells {
     let base        = spell["effect_base_value_" + effectIndex]
     let limit       = spell["effect_limit_value_" + effectIndex]
     let max         = spell["max_" + effectIndex]
+    let formula     = spell["formula_" + effectIndex]
 
 
     if (spell["effectid_" + effectIndex] !== 254) {
