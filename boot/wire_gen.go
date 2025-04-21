@@ -33,6 +33,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/logger"
+	"github.com/Akkadius/spire/internal/model"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
@@ -69,8 +70,7 @@ func InitializeApplication() (App, error) {
 	resolver := database.NewResolver(connections, appLogger, encrypter, cache)
 	userUser := user.NewUser(resolver, encrypter, cache)
 	createCommand := user.NewCreateCommand(resolver, appLogger, encrypter, userUser)
-	modelGeneratorCommand := generators.NewModelGeneratorCommand(db, appLogger)
-	controllerGeneratorCmd := generators.NewControllerGeneratorCommand(db, appLogger)
+	generatorCommand := model.NewGeneratorCommand(db, appLogger)
 	helloWorldController := controllers.NewHelloWorldController(db)
 	controller := auth.NewController(resolver, userUser, cache)
 	meController := user.NewMeController()
@@ -367,7 +367,6 @@ func InitializeApplication() (App, error) {
 	server := http.NewServer(appLogger, router, questHotReloadWatcher, launcher, clientManager)
 	httpServeCommand := cmd.NewHttpServeCommand(appLogger, server)
 	routesListCommand := cmd.NewRoutesListCommand(router)
-	configurationCommand := generators.NewGenerateConfigurationCommand(resolver, appLogger)
 	migrateCommand := spire.NewMigrateCommand(connections)
 	parseCommand := questapi.NewParseCommand(parseService)
 	exampleTestCommand := questapi.NewExampleTestCommand(examplesGithubSourcer)
@@ -382,7 +381,7 @@ func InitializeApplication() (App, error) {
 	launcherShimCmd := eqemuserver.NewLauncherShimCmd(launcher)
 	scrapeCommand := eqtraders.NewScrapeCommand(db, appLogger)
 	importCommand := eqtraders.NewImportCommand(db, appLogger)
-	v := ProvideCommands(helloWorldCommand, createCommand, modelGeneratorCommand, controllerGeneratorCmd, httpServeCommand, routesListCommand, configurationCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, launcherShimCmd, scrapeCommand, importCommand)
+	v := ProvideCommands(helloWorldCommand, createCommand, generatorCommand, httpServeCommand, routesListCommand, migrateCommand, parseCommand, exampleTestCommand, raceModelMapsCommand, changelogCommand, testFilesystemCommand, initCommand, changePasswordCommand, crashAnalyticsFingerprintBackfillCommand, updateCommand, launcherCmd, launcherShimCmd, scrapeCommand, importCommand)
 	webBoot := desktop.NewWebBoot(appLogger, server, config)
 	bootApp := NewApplication(db, cache, v, resolver, connections, router, webBoot, init)
 	return bootApp, nil

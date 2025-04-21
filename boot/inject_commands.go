@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuserver"
 	"github.com/Akkadius/spire/internal/eqtraders"
 	"github.com/Akkadius/spire/internal/generators"
+	"github.com/Akkadius/spire/internal/model"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/user"
@@ -18,12 +19,10 @@ import (
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
 	user.NewCreateCommand,
-	generators.NewModelGeneratorCommand,
-	generators.NewControllerGeneratorCommand,
+	model.NewGeneratorCommand,
 	cmd.NewHttpServeCommand,
 	questapi.NewParseCommand,
 	cmd.NewRoutesListCommand,
-	generators.NewGenerateConfigurationCommand,
 	spire.NewMigrateCommand,
 	questapi.NewExampleTestCommand,
 	generators.NewRaceModelMapsCommand,
@@ -44,11 +43,9 @@ var commandSet = wire.NewSet(
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
 	userCreateCommand *user.CreateCommand,
-	generateModelsCommand *generators.ModelGeneratorCommand,
-	generateControllersCommand *generators.ControllerGeneratorCmd,
+	generateModelsCommand *model.GeneratorCommand,
 	httpServeCommand *cmd.HttpServeCommand,
 	routesListCommand *cmd.RoutesListCommand,
-	generateConfigurationCommand *generators.ConfigurationCommand,
 	spireMigrateCommand *spire.MigrateCommand,
 	questApiParseCommand *questapi.ParseCommand,
 	questExampleTestCommand *questapi.ExampleTestCommand,
@@ -68,10 +65,8 @@ func ProvideCommands(
 		helloWorldCommand.Command(),
 		userCreateCommand.Command(),
 		generateModelsCommand.Command(),
-		generateControllersCommand.Command(),
 		httpServeCommand.Command(),
 		routesListCommand.Command(),
-		generateConfigurationCommand.Command(),
 		spireMigrateCommand.Command(),
 		questApiParseCommand.Command(),
 		questExampleTestCommand.Command(),

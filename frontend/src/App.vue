@@ -42,6 +42,14 @@ export default {
   },
 
   async mounted() {
+    let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+    if (vw < 1500) {
+      // add zoom 80% to body
+      document.body.style.setProperty("zoom", "80%")
+    }
+
     this.loadCssFiles();
     this.loadKeypressBindings();
     this.loadWallpaper();

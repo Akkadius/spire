@@ -1,24 +1,26 @@
-package generators
+package model
 
 import (
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
-type GenerateConfig struct {
+// GenerateModelConfig represents the configuration for generating models
+type GenerateModelConfig struct {
 	Database struct {
 		IgnoreTables     []string            `yaml:"ignore_tables"`
 		TableConnections map[string][]string `yaml:"table_connections"`
 	} `yaml:"database"`
 }
 
-const generateConfig = "./internal/generators/config/generate-config.yml"
+const generateConfig = "./.generate-model-config.yml"
 
-func GetGenerateConfig() GenerateConfig {
-	m := GenerateConfig{}
+// GetGenerateModelConfig loads the generate config from yaml file
+func GetGenerateModelConfig() GenerateModelConfig {
+	m := GenerateModelConfig{}
 
-	config, err := ioutil.ReadFile(generateConfig)
+	config, err := os.ReadFile(generateConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,9 +34,9 @@ func GetGenerateConfig() GenerateConfig {
 	return m
 }
 
-// gets connection from config by table name
+// GetConnectionByTableName gets connection from config by table name
 func GetConnectionByTableName(tableName string) string {
-	m := GetGenerateConfig()
+	m := GetGenerateModelConfig()
 
 	for connection := range m.Database.TableConnections {
 		for _, table := range m.Database.TableConnections[connection] {

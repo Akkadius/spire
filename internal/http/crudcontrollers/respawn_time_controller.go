@@ -95,7 +95,7 @@ func (e *RespawnTimeController) getRespawnTime(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [instance_id] position [4] type [smallint]
+	// key param [instance_id] position [5] type [smallint]
 	if len(c.QueryParam("instance_id")) > 0 {
 		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
 		if err != nil {
@@ -160,7 +160,7 @@ func (e *RespawnTimeController) updateRespawnTime(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [instance_id] position [4] type [smallint]
+	// key param [instance_id] position [5] type [smallint]
 	if len(c.QueryParam("instance_id")) > 0 {
 		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
 		if err != nil {
@@ -288,7 +288,7 @@ func (e *RespawnTimeController) deleteRespawnTime(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [instance_id] position [4] type [smallint]
+	// key param [instance_id] position [5] type [smallint]
 	if len(c.QueryParam("instance_id")) > 0 {
 		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
 		if err != nil {

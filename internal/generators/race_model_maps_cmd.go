@@ -67,7 +67,7 @@ type RaceData struct {
 func NewRaceModelMapsCommand() *RaceModelMapsCommand {
 	i := &RaceModelMapsCommand{
 		command: &cobra.Command{
-			Use:   "generate:race-model-maps",
+			Use:   "make:race-model-maps",
 			Short: "Generates race model maps from Shendares data export",
 		},
 	}
