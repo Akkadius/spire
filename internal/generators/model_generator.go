@@ -122,41 +122,7 @@ func (g *ModelGenerator) Generate(tables []string) {
 			g.models = append(g.models, g.pluralize.Singular(strcase.ToCamel(table)))
 
 			// calculate field and type length for formatting
-			maxColumnLengthInTable := 0
-			maxDataTypeLengthInTable := 0
-			for _, def := range g.getColumnDefinitions(table) {
-				if len(def.Field) >= maxColumnLengthInTable {
-					maxColumnLengthInTable = len(def.Field)
-				}
-
-				translatedType := translateDataType(def)
-				if len(translatedType) >= maxDataTypeLengthInTable {
-					maxDataTypeLengthInTable = len(translatedType)
-				}
-			}
-
-			// calculate relationship field and type lengths
-			for _, relation := range g.relationships {
-				if table != relation.Table {
-					continue
-				}
-
-				col := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
-				colType := g.getRelationshipTypeModelAttributePrefix(relation) + strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
-
-				if len(col) >= maxColumnLengthInTable {
-					maxColumnLengthInTable = len(col)
-				}
-
-				if len(colType) >= maxDataTypeLengthInTable {
-					maxDataTypeLengthInTable = len(colType)
-				}
-
-				g.debug(fmt.Sprintf("-- col [%v] colType [%v]", col, colType))
-			}
-
-			g.debug(fmt.Sprintf("-- maxDataTypeLengthInTable [%v]", maxDataTypeLengthInTable))
-			g.debug(fmt.Sprintf("-- maxColumnLengthInTable [%v]", maxColumnLengthInTable))
+			maxColumnLengthInTable, maxDataTypeLengthInTable := g.getMaxFieldAndTypeLengths(table)
 
 			// gen model fields
 			modelFields := ""
@@ -591,21 +557,7 @@ func GetModelNames() []string {
 	return nil
 }
 
-func (g *ModelGenerator) getMaxFieldLengths(defs []ShowColumns) (int, int) {
-	var maxFieldLen, maxTypeLen int
-	for _, def := range defs {
-		fieldLen := len(def.Field)
-		typeLen := len(translateDataType(def))
-		if fieldLen > maxFieldLen {
-			maxFieldLen = fieldLen
-		}
-		if typeLen > maxTypeLen {
-			maxTypeLen = typeLen
-		}
-	}
-	return maxFieldLen, maxTypeLen
-}
-
+// writeToFile is a helper function to write content to a file
 func (g *ModelGenerator) writeToFile(path, content string) error {
 	f, err := os.Create(path)
 	if err != nil {
@@ -614,4 +566,43 @@ func (g *ModelGenerator) writeToFile(path, content string) error {
 	defer f.Close()
 	_, err = f.WriteString(content)
 	return err
+}
+
+// getMaxFieldAndTypeLengths returns the max field and type lengths for a table
+func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string) (int, int) {
+	maxFieldLen := 0
+	maxTypeLen := 0
+
+	columns := g.getColumnDefinitions(table)
+
+	for _, col := range columns {
+		if len(col.Field) > maxFieldLen {
+			maxFieldLen = len(col.Field)
+		}
+		translated := translateDataType(col)
+		if len(translated) > maxTypeLen {
+			maxTypeLen = len(translated)
+		}
+	}
+
+	for _, relation := range g.relationships {
+		if relation.Table != table {
+			continue
+		}
+
+		col := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
+		colType := g.getRelationshipTypeModelAttributePrefix(relation) +
+			strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
+
+		if len(col) > maxFieldLen {
+			maxFieldLen = len(col)
+		}
+		if len(colType) > maxTypeLen {
+			maxTypeLen = len(colType)
+		}
+
+		g.debug(fmt.Sprintf("-- col [%v] colType [%v]", col, colType))
+	}
+
+	return maxFieldLen, maxTypeLen
 }
