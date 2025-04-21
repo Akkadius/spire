@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
-	"github.com/k0kubun/pp/v3"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
 	"os"
@@ -602,7 +601,6 @@ func (g *Generator) resolveTablesToGenerate(tables []string) ([]string, error) {
 	}
 
 	cfg := GetGenerateModelConfig()
-	pp.Println(cfg) // you can optionally remove this for production
 
 	finalTables := make([]string, 0, len(schemaTables))
 	for _, table := range schemaTables {
