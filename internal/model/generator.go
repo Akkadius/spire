@@ -582,7 +582,8 @@ func (g *Generator) generateModel(table string) error {
 		return fmt.Errorf("writing model file for %s failed: %w", table, err)
 	}
 
-	fmt.Printf("Generated [%s]\n", fileName)
+	g.logger.Info().Any("fileName", fileName).Msg("Generated model")
+
 	g.models = append(g.models, modelName)
 
 	return nil
@@ -656,9 +657,9 @@ func (g *Generator) MakeController(table string) {
 		return
 	}
 
-	if len(os.Getenv("DEBUG")) > 0 {
-		pp.Println("# Keys")
-		pp.Println(keys)
+	if len(keys) == 0 {
+		g.logger.Info().Msgf("no keys found for table %s", table)
+		return
 	}
 
 	priKey := DbSchemaRowResult{}
@@ -700,12 +701,6 @@ func (g *Generator) MakeController(table string) {
 		newKeyName = "TypeId"
 	}
 
-	if len(os.Getenv("DEBUG")) > 0 {
-		pp.Println("keyName")
-		pp.Println(keyName)
-		pp.Println(priKey)
-	}
-
 	// build primary key param line
 	paramLine := ""
 	if strings.Contains(priKey.DataType, "int") {
@@ -724,9 +719,9 @@ func (g *Generator) MakeController(table string) {
 				key.Column = "typeId"
 			}
 
-			if len(os.Getenv("DEBUG")) > 0 {
-				pp.Println("key.Column")
-				pp.Println(key.Column)
+			dataType := key.DataType
+			if strings.Contains(dataType, "(") {
+				dataType = strings.Split(dataType, "(")[0]
 			}
 
 			// add type lines (uint / int etc.)
@@ -744,7 +739,7 @@ func (g *Generator) MakeController(table string) {
 `,
 				key.Column,
 				key.OrdinalPosition,
-				key.DataType,
+				dataType,
 				key.Column,
 				strcase.ToLowerCamel(key.Column),
 				key.Column,
@@ -754,9 +749,6 @@ func (g *Generator) MakeController(table string) {
 			)
 
 			queryParams += param
-			if len(os.Getenv("DEBUG")) > 0 {
-				fmt.Println(param)
-			}
 		}
 	}
 

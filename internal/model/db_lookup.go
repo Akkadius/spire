@@ -49,7 +49,7 @@ func (c *DbLookup) GetSchemas() (map[string][]DbSchemaRowResult, error) {
 		SELECT
 		  TABLE_NAME,
 		  COLUMN_NAME,
-		  DATA_TYPE,
+		  COLUMN_TYPE,
 		  COLUMN_KEY,
 		  ORDINAL_POSITION,
 		  IS_NULLABLE,
@@ -138,7 +138,7 @@ func (c *DbLookup) GetTableKeys(tableName string) ([]DbSchemaRowResult, error) {
 
 	var keys []DbSchemaRowResult
 	for _, schema := range schemas[tableName] {
-		if schema.ColumnKey.String != "" {
+		if schema.ColumnKey.String == "PRI" {
 			keys = append(keys, schema)
 		}
 	}

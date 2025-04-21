@@ -4,12 +4,17 @@ database:
   ignore_tables:
     - qs_
     - proximities
+    - command_settings
     - task_activities_backup_
+    - db_version
+    - eqtime
     - backup
     - vw_
     - peq_admin
     - spire_
     - tool_
+    - banned_ip
+    - launcher
     - goallists
     - mercbuffs
     - merc_
