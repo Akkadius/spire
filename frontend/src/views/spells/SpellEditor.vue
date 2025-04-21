@@ -1200,7 +1200,7 @@
                   @click="processClickInputTrigger(field.field)"
                 >
                   <!-- Modifier description -->
-                  <div v-if="['buffduration'].includes(field.field)" style="margin-top: 8px">
+                  <div v-if="['buffduration'].includes(field.field) && buffduration > 0" style="margin-top: 8px">
                     {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)
                   </div>
                 </div>
@@ -1212,11 +1212,6 @@
               <div
                 class="row" v-for="field in
                      [
-                       {
-                         description: 'Unresistable',
-                         field: 'field_209',
-                         bool: true
-                       },
                        {
                          description: 'No Partial Resists',
                          field: 'no_partial_resist',
