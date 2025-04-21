@@ -39,14 +39,7 @@ func (c *ModelGeneratorCommand) Handle(cmd *cobra.Command, args []string) {
 		tablesToGenerate = append(tablesToGenerate, args[0])
 	}
 
-	NewGenerateModel(
-		GenerateModelContext{
-			TablesToGenerate: tablesToGenerate,
-		},
-		c.logger,
-		c.db,
-	).Generate()
-
+	NewGenerateModels(c.logger, c.db).Generate(tablesToGenerate)
 }
 
 func (c *ModelGeneratorCommand) Validate(cmd *cobra.Command, _ []string) error {
