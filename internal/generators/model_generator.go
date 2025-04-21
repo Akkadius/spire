@@ -35,32 +35,6 @@ func NewGenerateModels(logger *logger.AppLogger, gorm *gorm.DB) *ModelGenerator 
 	}
 }
 
-// templates
-const (
-	BaseGormModelTemplate = `package models
-{{imports}}
-type {{model_name}} struct {
-{{model_fields}}}
-
-func ({{model_name}}) TableName() string {
-    return "{{table_name}}"
-}
-{{relationships}}
-{{connection}}
-`
-
-	BaseGormModelRelationshipTemplate = `
-func ({{model_name}}) Relationships() []string {
-    return []string{{{relationships}}}
-}`
-	BaseGormModelConnectionTemplate = `
-func ({{model_name}}) Connection() string {
-    return "{{connection_name}}"
-}`
-
-	BaseDependencyImportTemplate = `import ({{imports}})`
-)
-
 const (
 	RelationshipType1to1    = "1-1" // RelationshipType1to1 1 to 1
 	RelationshipType1toMany = "1-*" // RelationshipType1toMany 1 to many
@@ -90,23 +64,20 @@ type ModelRelationships struct {
 // and a list of model names
 func (g *ModelGenerator) Generate(tables []string) {
 	g.relationships = g.loadRelationships()
-	g.models = make([]string, 0)
-
-	tablesToGenerate := make([]string, 0)
+	tableNames := g.getTableNames()
 
 	// if no argument pull from relationships
 	if len(tables) == 0 {
-		tablesToGenerate = GetDatabaseTables()
+		tables = GetDatabaseTables()
 	}
 
-	// TablesToGenerate is just a list of tables table1,table2
-	for _, genModel := range tablesToGenerate {
-		for _, table := range g.getTableNames() {
+	for _, genModel := range tables {
+		for _, table := range tableNames {
 			if genModel != "all" && table != genModel {
 				continue
 			}
 
-			err := g.generateModelFileForTable(table)
+			err := g.generateModel(table)
 			if err != nil {
 				g.logger.Error().Err(err).Msgf("error generating model for table %s", table)
 				continue
@@ -142,17 +113,17 @@ func exists(a []string, element string) bool {
 	return false
 }
 
-// getNestedRelationshipsFromTable returns a list of relationships for a table
+// getNestedRelations returns a list of relationships for a table
 // it will recursively check for relationships in the table
 // it will skip relationships that are already in the parent tables
-func (g *ModelGenerator) getNestedRelationshipsFromTable(table string, prefix string, parentTables []string, level int) []string {
+func (g *ModelGenerator) getNestedRelations(table string, prefix string, parentTables []string, level int) []string {
 	relationshipNames := make([]string, 0)
 
 	if prefix != "" {
 		prefix = fmt.Sprintf("%v.", prefix)
 	}
 
-	g.logger.Debug().Msgf("-- [getNestedRelationshipsFromTable] [%v] table [%v]", level, table)
+	g.logger.Debug().Msgf("-- [%v] table [%v]", level, table)
 
 	if exists(parentTables, table) && level > 0 {
 		return relationshipNames
@@ -196,7 +167,7 @@ func (g *ModelGenerator) getNestedRelationshipsFromTable(table string, prefix st
 		passedDownPrefix := fmt.Sprintf("%v%v", prefix, relationshipAttributeName)
 		relationshipNames = append(
 			relationshipNames,
-			g.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix, parentTables, currentLevel)...,
+			g.getNestedRelations(relation.RemoteTable, passedDownPrefix, parentTables, currentLevel)...,
 		)
 	}
 
@@ -453,8 +424,13 @@ func (g *ModelGenerator) getStructFieldName(field string) string {
 	return name
 }
 
-// buildRelationshipFields builds the relationship fields for a table
-func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, maxTypeLen int) string {
+// buildRelationModelFields builds the relationship fields for a table
+// it takes the table name and the max field and type lengths
+// and returns a string with the model fields
+// example output:
+//
+//	*User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
+func (g *ModelGenerator) buildRelationModelFields(table string, maxColLen int, maxTypeLen int) string {
 	var b strings.Builder
 
 	for _, relation := range g.relationships {
@@ -509,8 +485,33 @@ func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, ma
 	return b.String()
 }
 
-// generateModelFileForTable generates the model file for a table
-func (g *ModelGenerator) generateModelFileForTable(table string) error {
+const (
+	BaseGormModelTemplate = `package models
+{{imports}}
+type {{model_name}} struct {
+{{model_fields}}}
+
+func ({{model_name}}) TableName() string {
+    return "{{table_name}}"
+}
+{{relationships}}
+{{connection}}
+`
+
+	BaseGormModelRelationshipTemplate = `
+func ({{model_name}}) Relationships() []string {
+    return []string{{{relationships}}}
+}`
+	BaseGormModelConnectionTemplate = `
+func ({{model_name}}) Connection() string {
+    return "{{connection_name}}"
+}`
+
+	BaseDependencyImportTemplate = `import ({{imports}})`
+)
+
+// generateModel generates the model file for a table
+func (g *ModelGenerator) generateModel(table string) error {
 	modelName := g.pluralize.Singular(strcase.ToCamel(table))
 	fileName := filepath.Join("./internal/models/", strcase.ToSnake(table)+".go")
 
@@ -526,7 +527,7 @@ func (g *ModelGenerator) generateModelFileForTable(table string) error {
 
 	// Build model content
 	modelFields := g.buildModelFields(defs, maxColLen, maxTypeLen)
-	modelFields += g.buildRelationshipFields(table, maxColLen, maxTypeLen)
+	modelFields += g.buildRelationModelFields(table, maxColLen, maxTypeLen)
 
 	// Replace model fields
 	t = strings.ReplaceAll(t, "{{model_fields}}", modelFields)
@@ -534,13 +535,13 @@ func (g *ModelGenerator) generateModelFileForTable(table string) error {
 	t = strings.ReplaceAll(t, "{{table_name}}", table)
 
 	// Generate nested relationships
-	nestedRelationships := g.getNestedRelationshipsFromTable(table, "", []string{table}, 0)
+	r := g.getNestedRelations(table, "", []string{table}, 0)
 
 	rt := BaseGormModelRelationshipTemplate
 	relationshipEntries := ""
-	if len(nestedRelationships) > 0 {
+	if len(r) > 0 {
 		relationshipEntries = "\n"
-		for _, nested := range nestedRelationships {
+		for _, nested := range r {
 			relationshipEntries += fmt.Sprintf("\t\t\"%v\",\n", nested)
 		}
 		relationshipEntries += "\t"
