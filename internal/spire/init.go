@@ -213,6 +213,11 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 	db := o.connections.SpireDbNoLog()
 	cfg, _ := o.serverconfig.Get()
 
+	if !o.serverconfig.Exists() {
+		o.logger.Info().Msg("eqemu_config.json does not exist, skipping database connection creation")
+		return nil
+	}
+
 	// connection already exists, let's just update it
 	var c models.ServerDatabaseConnection
 	db.First(&c)

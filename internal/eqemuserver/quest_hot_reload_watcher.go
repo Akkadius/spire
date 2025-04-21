@@ -80,7 +80,7 @@ func (l *QuestHotReloadWatcher) Process() {
 			Any("isRunning", l.isRunning).
 			Msg("Main QuestHotReloadWatcher process loop")
 
-		if stat.ModTime().After(l.configLastModified) {
+		if err == nil && stat.ModTime().After(l.configLastModified) {
 			l.configLastModified = stat.ModTime()
 			l.loadServerConfig()
 			l.logger.Info().Any("watching", l.pathmgmt.GetQuestsDir()).Msg("Detected server config change, reloading watcher")

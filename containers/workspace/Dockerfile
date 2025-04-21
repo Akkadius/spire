@@ -41,8 +41,9 @@ RUN apt-get update && apt-get install -y \
 #############################################
 # install go
 #############################################
-RUN cd /tmp && wget --quiet https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz \
-	&& tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && rm -rf /tmp/*
+ENV GO_VERSION 1.24.2
+RUN cd /tmp && wget --quiet https://golang.org/dl/go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz \
+	&& tar -C /usr/local -xzf go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz && rm -rf /tmp/*
 
 #######################################################################
 # setup

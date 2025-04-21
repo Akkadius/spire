@@ -16,6 +16,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"runtime"
 	"unicode"
 
 	"github.com/Akkadius/spire/docs"
@@ -154,7 +155,9 @@ func (c *Server) Serve(port uint) error {
 	e.HideBanner = true
 	e.HidePort = true
 
-	imgcat.Render(banner.GetLogo())
+	if runtime.GOOS != "darwin" {
+		imgcat.Render(banner.GetLogo())
+	}
 
 	go c.websocketClientManager.Start()
 
