@@ -751,7 +751,7 @@ func (g *Generator) MakeController(table string) {
 	}
 
 	entityName := g.pluralize.Singular(table)
-	tpl, err := template.ParseFiles("./internal/generators/templates/crud_controller.tmpl")
+	tpl, err := template.ParseFiles("./internal/model/templates/crud_controller.tmpl")
 	data := templateData{
 		EntityName:            strcase.ToCamel(entityName),
 		KeyNameModelField:     keyName,
