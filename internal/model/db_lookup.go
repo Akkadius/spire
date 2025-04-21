@@ -49,7 +49,7 @@ func (c *DbLookup) GetSchemas() (map[string][]DbSchemaRowResult, error) {
 		SELECT
 		  TABLE_NAME,
 		  COLUMN_NAME,
-		  COLUMN_TYPE,
+		  DATA_TYPE,
 		  COLUMN_KEY,
 		  ORDINAL_POSITION,
 		  IS_NULLABLE,
@@ -123,4 +123,25 @@ func (c *DbLookup) GetSchemasByTableName(tableName string) ([]DbSchemaRowResult,
 	}
 
 	return schemas[tableName], nil
+}
+
+// GetTableKeys retrieves the keys for a given table name
+func (c *DbLookup) GetTableKeys(tableName string) ([]DbSchemaRowResult, error) {
+	schemas, err := c.GetSchemas()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := schemas[tableName]; !ok {
+		return nil, fmt.Errorf("table %s not found", tableName)
+	}
+
+	var keys []DbSchemaRowResult
+	for _, schema := range schemas[tableName] {
+		if schema.ColumnKey.String != "" {
+			keys = append(keys, schema)
+		}
+	}
+
+	return keys, nil
 }

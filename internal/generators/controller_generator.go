@@ -34,27 +34,27 @@ func NewControllerGenerator(options GenerateControllerContext, logger *logger.Ap
 	}
 }
 
-type templateData struct {
-	RelationshipsComment  string
-	KeyNameModelField     string
-	KeyName               string
-	KeyColumn             string
-	KeyNameLowerCamel     string
-	EntityName            string
-	EntityNamePlural      string
-	EntityNameSnake       string
-	EntityNameSnakePlural string
-	EntityNameCamel       string
-	EntityNameCamelPlural string
-	ParamLine             string
-	QueryParams           string
-}
-
 const (
 	crudControllerPath = "./internal/http/crudcontrollers/"
 )
 
 func (gc *ControllerGenerator) Generate() {
+	type templateData struct {
+		RelationshipsComment  string
+		KeyNameModelField     string
+		KeyName               string
+		KeyColumn             string
+		KeyNameLowerCamel     string
+		EntityName            string
+		EntityNamePlural      string
+		EntityNameSnake       string
+		EntityNameSnakePlural string
+		EntityNameCamel       string
+		EntityNameCamelPlural string
+		ParamLine             string
+		QueryParams           string
+	}
+
 	keyName := ""
 	keys := GetDbSchemaKeysConfigTable(gc.options.EntityName)
 

@@ -17,18 +17,21 @@ import (
 )
 
 type Generator struct {
+	// deps
 	logger       *logger.AppLogger
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
-	debugEnabled bool
-
 	schemaLookup *DbLookup // schema lookup
 
-	// attributes
+	// options
+	withControllers bool // generate withControllers
+
+	// member variable
 	models        []string
 	relationships []ForeignKeyMappings
 }
 
+// NewGenerator creates a new generator
 func NewGenerator(logger *logger.AppLogger, gorm *gorm.DB) *Generator {
 	db, _ := gorm.DB()
 	return &Generator{
@@ -89,6 +92,10 @@ func (g *Generator) Generate(tables []string) {
 				g.logger.Error().Err(err).Msgf("error generating model for table %s", table)
 				continue
 			}
+
+			if g.withControllers {
+				g.MakeController(table)
+			}
 		}
 	}
 
@@ -112,6 +119,7 @@ func (g *Generator) getRelationshipTypeModelAttributePrefix(r ForeignKeyMappings
 	return ""
 }
 
+// check if element exists in slice
 func exists(a []string, element string) bool {
 	for _, e := range a {
 		if e == element {
@@ -611,4 +619,190 @@ func (g *Generator) resolveTablesToGenerate(tables []string) ([]string, error) {
 	}
 
 	return finalTables, nil
+}
+
+// SetWithControllers sets the withControllers option
+func (g *Generator) SetWithControllers(b bool) {
+	g.logger.Info().Msg("Setting withControllers option")
+	g.withControllers = b
+}
+
+const (
+	crudControllerPath = "./internal/http/crudcontrollers/"
+)
+
+// MakeController generates a controller for a table
+func (g *Generator) MakeController(table string) {
+	type templateData struct {
+		RelationshipsComment  string
+		KeyNameModelField     string
+		KeyName               string
+		KeyColumn             string
+		KeyNameLowerCamel     string
+		EntityName            string
+		EntityNamePlural      string
+		EntityNameSnake       string
+		EntityNameSnakePlural string
+		EntityNameCamel       string
+		EntityNameCamelPlural string
+		ParamLine             string
+		QueryParams           string
+	}
+
+	keyName := ""
+	keys, err := g.schemaLookup.GetTableKeys(table)
+	if err != nil {
+		g.logger.Error().Err(err).Msgf("error getting keys for table %s", table)
+		return
+	}
+
+	if len(os.Getenv("DEBUG")) > 0 {
+		pp.Println("# Keys")
+		pp.Println(keys)
+	}
+
+	priKey := DbSchemaRowResult{}
+
+	// first pass grab id if it exists
+	for _, key := range keys {
+		if key.Column == "id" {
+			keyName = strcase.ToCamel(key.Column)
+			priKey = key
+			break
+		}
+	}
+
+	// second pass if not found
+	if len(keyName) == 0 {
+		for _, key := range keys {
+			if key.ColumnKey.String == "PRI" {
+				keyName = strcase.ToCamel(key.Column)
+				priKey = key
+				break
+			}
+
+			if key.OrdinalPosition == "1" {
+				keyName = strcase.ToCamel(key.Column)
+				priKey = key
+				break
+			}
+		}
+	}
+
+	newKeyName := keyName
+	// gorm uses capital "ID"
+	if keyName == "Id" {
+		keyName = "ID"
+	}
+
+	// type is a reserved word
+	if keyName == "Type" {
+		newKeyName = "TypeId"
+	}
+
+	if len(os.Getenv("DEBUG")) > 0 {
+		pp.Println("keyName")
+		pp.Println(keyName)
+		pp.Println(priKey)
+	}
+
+	// build primary key param line
+	paramLine := ""
+	if strings.Contains(priKey.DataType, "int") {
+		paramLine = fmt.Sprintf(
+			"%s, err := strconv.Atoi(c.Param(\"%s\"))",
+			strcase.ToLowerCamel(newKeyName),
+			strcase.ToLowerCamel(newKeyName),
+		)
+	}
+
+	queryParams := ""
+	// loop through secondary keys (skip first)
+	for i, key := range keys {
+		if i != 0 {
+			if key.Column == "type" {
+				key.Column = "typeId"
+			}
+
+			if len(os.Getenv("DEBUG")) > 0 {
+				pp.Println("key.Column")
+				pp.Println(key.Column)
+			}
+
+			// add type lines (uint / int etc.)
+			param := fmt.Sprintf(`
+	// key param [%s] position [%s] type [%s]
+	if len(c.QueryParam("%s")) > 0 {
+		%sParam, err := strconv.Atoi(c.QueryParam("%s"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [%s] err [%%s]", err.Error())})
+		}
+
+		params = append(params, %sParam)
+		keys = append(keys, "%s = ?")
+	}
+`,
+				key.Column,
+				key.OrdinalPosition,
+				key.DataType,
+				key.Column,
+				strcase.ToLowerCamel(key.Column),
+				key.Column,
+				key.Column,
+				strcase.ToLowerCamel(key.Column),
+				key.Column,
+			)
+
+			queryParams += param
+			if len(os.Getenv("DEBUG")) > 0 {
+				fmt.Println(param)
+			}
+		}
+	}
+
+	entityName := g.pluralize.Singular(table)
+	tpl, err := template.ParseFiles("./internal/generators/templates/crud_controller.tmpl")
+	data := templateData{
+		EntityName:            strcase.ToCamel(entityName),
+		KeyNameModelField:     keyName,
+		KeyName:               newKeyName,
+		KeyNameLowerCamel:     strcase.ToLowerCamel(newKeyName),
+		KeyColumn:             priKey.Column,
+		EntityNamePlural:      g.pluralize.Plural(strcase.ToCamel(entityName)),
+		EntityNameSnake:       strcase.ToSnake(entityName),
+		EntityNameSnakePlural: g.pluralize.Plural(strcase.ToSnake(entityName)),
+		EntityNameCamel:       strcase.ToLowerCamel(entityName),
+		EntityNameCamelPlural: g.pluralize.Plural(strcase.ToLowerCamel(entityName)),
+		ParamLine:             paramLine,
+		QueryParams:           queryParams,
+	}
+
+	var out bytes.Buffer
+	err = tpl.ExecuteTemplate(&out, "crud_controller.tmpl", data)
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("Failed to execute template")
+	}
+
+	// write file
+	fileName := fmt.Sprintf("%v%v_controller.go", crudControllerPath, strcase.ToSnake(entityName))
+
+	// create file
+	file, err := os.Create(fileName)
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("Failed to create file")
+	}
+
+	defer file.Close()
+
+	// write contents
+	_, err = file.WriteString(out.String())
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("Failed to write file")
+	}
+
+	g.logger.Info().
+		Any("fileName", fileName).
+		Any("entityName", data.EntityName).
+		Msg("Generated controller")
+
 }
