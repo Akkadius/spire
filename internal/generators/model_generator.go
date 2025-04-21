@@ -15,7 +15,6 @@ import (
 
 type GenerateModelContext struct {
 	TablesToGenerate []string
-	Relationships    []ForeignKeyMappings
 }
 
 type GenerateModel struct {
@@ -25,7 +24,9 @@ type GenerateModel struct {
 	pluralize    *pluralize.Client
 	debugEnabled bool
 
-	models []string
+	// attributes
+	models        []string
+	relationships []ForeignKeyMappings
 }
 
 func NewGenerateModel(options GenerateModelContext, logger *logger.AppLogger, gorm *gorm.DB) *GenerateModel {
@@ -85,8 +86,7 @@ type ModelRelationships struct {
 }
 
 func (g *GenerateModel) Generate() {
-	g.options.Relationships = g.loadRelationships()
-	relationships := g.options.Relationships
+	g.relationships = g.loadRelationships()
 	tableNames := g.getTableNames()
 	g.models = make([]string, 0)
 
@@ -124,14 +124,14 @@ func (g *GenerateModel) Generate() {
 					maxColumnLengthInTable = len(def.Field)
 				}
 
-				translatedType := g.translateDataType(def)
+				translatedType := translateDataType(def)
 				if len(translatedType) >= maxDataTypeLengthInTable {
 					maxDataTypeLengthInTable = len(translatedType)
 				}
 			}
 
 			// calculate relationship field and type lengths
-			for _, relation := range relationships {
+			for _, relation := range g.relationships {
 				if table != relation.Table {
 					continue
 				}
@@ -178,7 +178,7 @@ func (g *GenerateModel) Generate() {
 					maxColumnLengthInTable+1,
 					structFieldName,
 					maxDataTypeLengthInTable,
-					g.translateDataType(def),
+					translateDataType(def),
 					jsonFieldName,
 					def.Field,
 				)
@@ -191,7 +191,7 @@ func (g *GenerateModel) Generate() {
 			}
 
 			// write relationships to model attributes
-			for _, relation := range relationships {
+			for _, relation := range g.relationships {
 				if table != relation.Table {
 					continue
 				}
@@ -367,7 +367,7 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 
 	parentTables = append(parentTables, table)
 	currentLevel := level + 1
-	for _, relation := range g.options.Relationships {
+	for _, relation := range g.relationships {
 		if table != relation.Table {
 			continue
 		}
@@ -440,118 +440,13 @@ func (g *GenerateModel) getColumnDefinitions(tableName string) []ShowColumns {
 	return columnDefs
 }
 
-func (g *GenerateModel) translateDataType(column ShowColumns) string {
-	unsigned := strings.Contains(column.Type, "unsigned")
-	nullable := strings.Contains(column.Null, "YES")
-	columnType := strings.Split(column.Type, "(")[0]
-
-	if nullable {
-		switch columnType {
-		case "tinyint":
-			if columnType == "tinyint(1)" {
-				return "null.Bool"
-			} else if unsigned {
-				return "null.Uint8"
-			} else {
-				return "null.Int8"
-			}
-		case "smallint":
-			if unsigned {
-				return "null.Uint16"
-			} else {
-				return "null.Int16"
-			}
-		case "mediumint":
-			if unsigned {
-				return "null.Uint32"
-			} else {
-				return "null.Int32"
-			}
-		case "int", "integer":
-			if unsigned {
-				return "null.Uint"
-			} else {
-				return "null.Int"
-			}
-		case "bigint":
-			if unsigned {
-				return "null.Uint64"
-			} else {
-				return "null.Int64"
-			}
-		case "float":
-			return "null.Float32"
-		case "double", "double precision", "real":
-			return "null.Float64"
-		case "boolean", "bool":
-			return "null.Bool"
-		case "date", "datetime", "timestamp":
-			return "null.Time"
-		case "binary", "varbinary", "tinyblob", "blob", "mediumblob", "longblob":
-			return "null.Bytes"
-		case "numeric", "decimal", "dec", "fixed":
-			return "types.NullDecimal"
-		case "json":
-			return "null.JSON"
-		default:
-			return "null.String"
-		}
-	} else {
-		switch columnType {
-		case "tinyint":
-			if columnType == "tinyint(1)" {
-				return "bool"
-			} else if unsigned {
-				return "uint8"
-			} else {
-				return "int8"
-			}
-		case "smallint":
-			if unsigned {
-				return "uint16"
-			} else {
-				return "int16"
-			}
-		case "mediumint":
-			if unsigned {
-				return "uint32"
-			} else {
-				return "int32"
-			}
-		case "int", "integer":
-			if unsigned {
-				return "uint"
-			} else {
-				return "int"
-			}
-		case "bigint":
-			if unsigned {
-				return "uint64"
-			} else {
-				return "int64"
-			}
-		case "float":
-			return "float32"
-		case "double", "double precision", "real":
-			return "float64"
-		case "boolean", "bool":
-			return "bool"
-		case "date", "datetime", "timestamp":
-			return "time.Time"
-		case "binary", "varbinary", "tinyblob", "blob", "mediumblob", "longblob":
-			return "[]byte"
-		case "numeric", "decimal", "dec", "fixed":
-			return "float32"
-		case "json":
-			return "types.JSON"
-		default:
-			return "string"
-		}
-	}
-}
-
 const dbRelationshipConfig = "./internal/generators/config/db-relationships.yml"
 
+// loadRelationships loads the relationships from the yaml file
+// and returns a list of ForeignKeyMappings
+// the yaml file should be in the format:
+// table_name:
+//   - relation_type local_key->remote_table:remote_key
 func (g *GenerateModel) loadRelationships() []ForeignKeyMappings {
 	// load yaml
 	databaseSchemaYaml, err := os.ReadFile(dbRelationshipConfig)
@@ -626,6 +521,10 @@ func (g *GenerateModel) debug(msg string) {
 	}
 }
 
+// generateModelsFile generates the models file
+// contains a list of models that implement the Modelable interface
+// and a list of model names
+// outputs a file in ./internal/models/models.go
 func (g *GenerateModel) generateModelsFile() {
 	// sort models
 	sort.Slice(g.models, func(i, j int) bool {
