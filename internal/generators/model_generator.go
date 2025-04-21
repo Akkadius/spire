@@ -104,104 +104,21 @@ func (g *ModelGenerator) Generate(tables []string) {
 
 	// TablesToGenerate is just a list of tables table1,table2
 	for _, genModel := range tablesToGenerate {
-		g.debug(fmt.Sprintf("Generating model for table [%v]", genModel))
-
 		for _, table := range tableNames {
 			if genModel != "all" && table != genModel {
 				continue
 			}
 
-			g.debug(fmt.Sprintf("-- Checking [%v]", table))
-
-			// base gorm template file that we will use to generate
-			t := BaseGormModelTemplate
-			// separate template for handling and injecting imports for models
-			importTemplate := BaseDependencyImportTemplate
-			t = strings.ReplaceAll(t, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
-
-			g.models = append(g.models, g.pluralize.Singular(strcase.ToCamel(table)))
-
-			// calculate field and type length for formatting
-			defs := g.getColumnDefinitions(table)
-			maxColumnLengthInTable, maxDataTypeLengthInTable := g.getMaxFieldAndTypeLengths(table, defs)
-
-			// base model fields
-			modelFields := g.buildModelFields(defs, maxColumnLengthInTable, maxDataTypeLengthInTable)
-
-			// add relationships to model fields
-			modelFields += g.buildRelationshipFields(table, maxColumnLengthInTable, maxDataTypeLengthInTable)
-
-			g.debug(fmt.Sprintf("-- writing model fields"))
-
-			// write model fields
-			t = strings.ReplaceAll(t, "{{model_fields}}", modelFields)
-
-			// nested relationships
-			rt := BaseGormModelRelationshipTemplate
-			relationshipEntries := ""
-			nestedRelationships := g.getNestedRelationshipsFromTable(table, "", []string{table}, 0)
-			if len(nestedRelationships) > 0 {
-				relationshipEntries = "\n"
-				for _, nested := range nestedRelationships {
-					relationshipEntries = fmt.Sprintf("%v\t\t\"%v\",\n", relationshipEntries, nested)
-				}
-				relationshipEntries += "\t"
-			}
-			rt = strings.ReplaceAll(rt, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
-			rt = strings.ReplaceAll(rt, "{{relationships}}", relationshipEntries)
-
-			// handle imports
-			imports := ""
-			if strings.Contains(t, "null") {
-				imports += fmt.Sprintf("\n\t%v", "\"github.com/volatiletech/null/v8\"")
-			}
-			if strings.Contains(t, "time.Time") {
-				imports += fmt.Sprintf("\n\t%v", "\"time\"")
-			}
-			if strings.Contains(t, "types.") {
-				imports += fmt.Sprintf("\n\t%v", "\"github.com/volatiletech/sqlboiler/v4/types\"")
-			}
-
-			if len(imports) > 0 {
-				imports += "\n"
-				importTemplate = strings.ReplaceAll(importTemplate, "{{imports}}", imports)
-				t = strings.ReplaceAll(t, "{{imports}}", "\n"+importTemplate+"\n")
-			} else {
-				t = strings.ReplaceAll(t, "{{imports}}", "")
-			}
-
-			// connection
-			ct := BaseGormModelConnectionTemplate
-			ct = strings.ReplaceAll(ct, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
-			ct = strings.ReplaceAll(ct, "{{connection_name}}", GetConnectionByTableName(table))
-
-			// final template
-			t = strings.ReplaceAll(t, "{{table_name}}", table)
-			t = strings.ReplaceAll(t, "{{relationships}}", rt)
-			t = strings.ReplaceAll(t, "{{connection}}", ct)
-
-			// write file
-			fileName := "./internal/models/" + strcase.ToSnake(table) + ".go"
-
-			// Create new cmd
-			file, err := os.Create(fileName)
+			nested, err := g.generateModelFileForTable(table)
 			if err != nil {
-				g.logger.Fatal().Err(err).Msg("error creating file")
+				g.logger.Error().Err(err).Msgf("error generating model for table %s", table)
+				continue
 			}
-
-			defer file.Close()
-
-			_, err = file.WriteString(t)
-			if err != nil {
-				g.logger.Fatal().Err(err).Msg("error writing to file")
-			}
-
-			fmt.Println(fmt.Sprintf("Generated [%v]", fileName))
 
 			modelRelationships = append(modelRelationships, ModelRelationships{
 				Table:         table,
 				ModelName:     g.pluralize.Singular(strcase.ToCamel(table)),
-				Relationships: nestedRelationships,
+				Relationships: nested,
 			})
 		}
 	}
@@ -562,6 +479,7 @@ func (g *ModelGenerator) getStructFieldName(field string) string {
 	return name
 }
 
+// buildRelationshipFields builds the relationship fields for a table
 func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, maxTypeLen int) string {
 	var b strings.Builder
 
@@ -615,4 +533,80 @@ func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, ma
 	}
 
 	return b.String()
+}
+
+// generateModelFileForTable generates the model file for a table
+func (g *ModelGenerator) generateModelFileForTable(table string) ([]string, error) {
+	modelName := g.pluralize.Singular(strcase.ToCamel(table))
+	fileName := "./internal/models/" + strcase.ToSnake(table) + ".go"
+
+	g.debug(fmt.Sprintf("-- Generating model for [%s] → [%s]", table, fileName))
+
+	// Template skeleton
+	t := BaseGormModelTemplate
+	importTemplate := BaseDependencyImportTemplate
+
+	// Get column data
+	defs := g.getColumnDefinitions(table)
+	maxColLen, maxTypeLen := g.getMaxFieldAndTypeLengths(table, defs)
+
+	// Build model content
+	modelFields := g.buildModelFields(defs, maxColLen, maxTypeLen)
+	modelFields += g.buildRelationshipFields(table, maxColLen, maxTypeLen)
+
+	// Replace model fields
+	t = strings.ReplaceAll(t, "{{model_fields}}", modelFields)
+	t = strings.ReplaceAll(t, "{{model_name}}", modelName)
+	t = strings.ReplaceAll(t, "{{table_name}}", table)
+
+	// Generate nested relationships
+	nestedRelationships := g.getNestedRelationshipsFromTable(table, "", []string{table}, 0)
+
+	rt := BaseGormModelRelationshipTemplate
+	relationshipEntries := ""
+	if len(nestedRelationships) > 0 {
+		relationshipEntries = "\n"
+		for _, nested := range nestedRelationships {
+			relationshipEntries += fmt.Sprintf("\t\t\"%v\",\n", nested)
+		}
+		relationshipEntries += "\t"
+	}
+	rt = strings.ReplaceAll(rt, "{{model_name}}", modelName)
+	rt = strings.ReplaceAll(rt, "{{relationships}}", relationshipEntries)
+	t = strings.ReplaceAll(t, "{{relationships}}", rt)
+
+	// Connection method
+	ct := BaseGormModelConnectionTemplate
+	ct = strings.ReplaceAll(ct, "{{model_name}}", modelName)
+	ct = strings.ReplaceAll(ct, "{{connection_name}}", GetConnectionByTableName(table))
+	t = strings.ReplaceAll(t, "{{connection}}", ct)
+
+	// Auto-import detection
+	imports := ""
+	if strings.Contains(t, "null.") {
+		imports += "\n\t\"github.com/volatiletech/null/v8\""
+	}
+	if strings.Contains(t, "time.Time") {
+		imports += "\n\t\"time\""
+	}
+	if strings.Contains(t, "types.") {
+		imports += "\n\t\"github.com/volatiletech/sqlboiler/v4/types\""
+	}
+	if imports != "" {
+		imports += "\n"
+		importTemplate = strings.ReplaceAll(importTemplate, "{{imports}}", imports)
+		t = strings.ReplaceAll(t, "{{imports}}", "\n"+importTemplate+"\n")
+	} else {
+		t = strings.ReplaceAll(t, "{{imports}}", "")
+	}
+
+	// Write to file
+	if err := g.writeToFile(fileName, t); err != nil {
+		return nil, fmt.Errorf("writing model file for %s failed: %w", table, err)
+	}
+
+	fmt.Printf("Generated [%s]\n", fileName)
+	g.models = append(g.models, modelName)
+
+	return nestedRelationships, nil
 }
