@@ -100,8 +100,6 @@ func (g *ModelGenerator) Generate(tables []string) {
 		tablesToGenerate = GetDatabaseTables()
 	}
 
-	var modelRelationships []ModelRelationships
-
 	// TablesToGenerate is just a list of tables table1,table2
 	for _, genModel := range tablesToGenerate {
 		for _, table := range tableNames {
@@ -109,17 +107,11 @@ func (g *ModelGenerator) Generate(tables []string) {
 				continue
 			}
 
-			nested, err := g.generateModelFileForTable(table)
+			err := g.generateModelFileForTable(table)
 			if err != nil {
 				g.logger.Error().Err(err).Msgf("error generating model for table %s", table)
 				continue
 			}
-
-			modelRelationships = append(modelRelationships, ModelRelationships{
-				Table:         table,
-				ModelName:     g.pluralize.Singular(strcase.ToCamel(table)),
-				Relationships: nested,
-			})
 		}
 	}
 
@@ -127,10 +119,6 @@ func (g *ModelGenerator) Generate(tables []string) {
 	if err != nil {
 		g.logger.Error().Err(err).Msg("error generating models file")
 	}
-
-	sort.Slice(modelRelationships, func(i, j int) bool {
-		return modelRelationships[i].Table < modelRelationships[j].Table
-	})
 }
 
 // return relationship type model prefix
@@ -536,7 +524,7 @@ func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, ma
 }
 
 // generateModelFileForTable generates the model file for a table
-func (g *ModelGenerator) generateModelFileForTable(table string) ([]string, error) {
+func (g *ModelGenerator) generateModelFileForTable(table string) error {
 	modelName := g.pluralize.Singular(strcase.ToCamel(table))
 	fileName := "./internal/models/" + strcase.ToSnake(table) + ".go"
 
@@ -602,11 +590,11 @@ func (g *ModelGenerator) generateModelFileForTable(table string) ([]string, erro
 
 	// Write to file
 	if err := g.writeToFile(fileName, t); err != nil {
-		return nil, fmt.Errorf("writing model file for %s failed: %w", table, err)
+		return fmt.Errorf("writing model file for %s failed: %w", table, err)
 	}
 
 	fmt.Printf("Generated [%s]\n", fileName)
 	g.models = append(g.models, modelName)
 
-	return nestedRelationships, nil
+	return nil
 }
