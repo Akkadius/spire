@@ -54,11 +54,17 @@ func (c *GeneratorCommand) Handle(cmd *cobra.Command, args []string) {
 
 	generator := NewGenerator(c.logger, c.db)
 
+	// generate http controller
 	if c.withControllers {
 		generator.SetWithControllers(true)
 	}
 
 	generator.Generate(tablesToGenerate)
+
+	// sync controllers to injector
+	if c.withControllers {
+		generator.SyncControllersToInjector()
+	}
 }
 
 // Validate validates the command arguments

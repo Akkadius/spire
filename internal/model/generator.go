@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"github.com/Akkadius/spire/internal/logger"
@@ -617,6 +618,9 @@ func (g *Generator) resolveTablesToGenerate(tables []string) ([]string, error) {
 		}
 	}
 
+	// sort the tables
+	sort.Strings(finalTables)
+
 	return finalTables, nil
 }
 
@@ -794,5 +798,96 @@ func (g *Generator) MakeController(table string) {
 		Any("fileName", fileName).
 		Any("entityName", data.EntityName).
 		Msg("Generated controller")
+}
 
+// SyncControllersToInjector syncs the controllers to the dependency injector
+func (g *Generator) SyncControllersToInjector() {
+	const crudInjectFile = "./boot/inject_http_crud_controllers.go"
+
+	type injectHttpCrudControllerTmpl struct {
+		NewControllers      string
+		ControllersParam    string
+		ControllersRegister string
+	}
+
+	// loop through existing controllers
+	// inject crud controllers into ./boot/inject_http_crud_controllers.go
+	files, err := os.ReadDir(crudControllerPath)
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("error reading crud controller path")
+	}
+
+	var controllerNames []string
+
+	// fetch struct names
+	for _, f := range files {
+		//fmt.Println(f.Name())
+		file, err := os.Open(fmt.Sprintf("%v%v", crudControllerPath, f.Name()))
+		if err != nil {
+			g.logger.Fatal().Err(err).Msg("error opening crud controller path")
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			l := scanner.Text()
+			if strings.Contains(l, "type") && strings.Contains(l, "struct") && strings.Contains(l, "Controller") {
+				l = strings.Replace(l, "type ", "", -1)
+				l = strings.Replace(l, "struct {", "", -1)
+				l = strings.TrimSpace(l)
+
+				controllerNames = append(controllerNames, l)
+			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			g.logger.Fatal().Err(err).Msg("error reading crud controller path")
+		}
+	}
+
+	newControllersString := ""
+	controllersParamString := ""
+	controllersRegisterString := ""
+	for _, name := range controllerNames {
+		newControllersString += fmt.Sprintf("\tcrudcontrollers.New%v,\n", name)
+		controllersParamString += fmt.Sprintf("\t%v *crudcontrollers.%v,\n", strcase.ToLowerCamel(name), name)
+		controllersRegisterString += fmt.Sprintf("\t\t\t%v,\n", strcase.ToLowerCamel(name))
+	}
+
+	tpl, err := template.ParseFiles("./internal/model/templates/inject_http_crud_controller.tmpl")
+	t := injectHttpCrudControllerTmpl{
+		NewControllers:      strings.TrimSuffix(newControllersString, "\n"),
+		ControllersParam:    strings.TrimSuffix(controllersParamString, "\n"),
+		ControllersRegister: strings.TrimSuffix(controllersRegisterString, "\n"),
+	}
+
+	var out bytes.Buffer
+	err = tpl.ExecuteTemplate(&out, "inject_http_crud_controller.tmpl", t)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// write file
+	fileName := fmt.Sprintf("%v", crudInjectFile)
+
+	// create file
+	file, err := os.Create(fileName)
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("error creating crud inject file")
+	}
+
+	// write contents
+	_, err = file.WriteString(out.String())
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("error writing crud inject file")
+	}
+
+	//fmt.Println(out.String())
+
+	g.logger.Info().
+		Any("crudInjectFile", crudInjectFile).
+		Any("count", len(controllerNames)).
+		Msg("Synced controllers to injector")
+
+	defer file.Close()
 }
