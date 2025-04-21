@@ -128,63 +128,8 @@ func (g *ModelGenerator) Generate(tables []string) {
 			// base model fields
 			modelFields := g.buildModelFields(defs, maxColumnLengthInTable, maxDataTypeLengthInTable)
 
-			// write relationships to model attributes
-			for _, relation := range g.relationships {
-				if table != relation.Table {
-					continue
-				}
-
-				g.debug(fmt.Sprintf("-- relationships [%v]", relation))
-
-				maxColInTable := maxColumnLengthInTable + 1
-				relationshipAttributeTypeName := fmt.Sprintf(
-					"%v%v",
-					g.getRelationshipTypeModelAttributePrefix(relation),
-					strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable)),
-				)
-				relationshipFieldNameSnakeCase := strcase.ToSnake(g.pluralize.Singular(relation.RemoteTable))
-
-				switch relation.RelationType {
-				case RelationshipType1to1:
-					relationshipAttributeName := strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
-					// TODO: Revisit later
-					//if _, ok := structFieldNames[relationshipAttributeName]; ok {
-					//	relationshipAttributeName = relationshipAttributeName + "Relation"
-					//	relationshipFieldNameSnakeCase = relationshipFieldNameSnakeCase + "_relation"
-					//}
-
-					modelFields += fmt.Sprintf(
-						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
-						maxColInTable,
-						relationshipAttributeName,
-						maxDataTypeLengthInTable,
-						relationshipAttributeTypeName,
-						relationshipFieldNameSnakeCase,
-						relation.Key,
-						relation.RemoteKey,
-					)
-				case RelationshipType1toMany:
-					relationshipAttributeName := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
-					// TODO: Revisit later
-					//if _, ok := structFieldNames[relationshipAttributeName]; ok {
-					//	relationshipAttributeName = relationshipAttributeName + "Relation"
-					//	relationshipFieldNameSnakeCase = relationshipFieldNameSnakeCase + "_relation"
-					//}
-
-					modelFields += fmt.Sprintf(
-						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
-						maxColInTable,
-						relationshipAttributeName,
-						maxDataTypeLengthInTable,
-						relationshipAttributeTypeName,
-						g.pluralize.Plural(relationshipFieldNameSnakeCase),
-						relation.RemoteKey,
-						relation.Key,
-					)
-				case RelationshipTypeManyTo1:
-					// todo: inverse
-				}
-			}
+			// add relationships to model fields
+			modelFields += g.buildRelationshipFields(table, maxColumnLengthInTable, maxDataTypeLengthInTable)
 
 			g.debug(fmt.Sprintf("-- writing model fields"))
 
@@ -615,4 +560,59 @@ func (g *ModelGenerator) getStructFieldName(field string) string {
 		name += "2"
 	}
 	return name
+}
+
+func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, maxTypeLen int) string {
+	var b strings.Builder
+
+	for _, relation := range g.relationships {
+		if relation.Table != table {
+			continue
+		}
+
+		g.debug(fmt.Sprintf("-- relationships [%v]", relation))
+
+		prefix := g.getRelationshipTypeModelAttributePrefix(relation)
+		remoteSingular := g.pluralize.Singular(relation.RemoteTable)
+		remotePlural := g.pluralize.Plural(relation.RemoteTable)
+
+		// Field name and type
+		var attributeName, jsonName, foreignKey, referenceKey string
+
+		switch relation.RelationType {
+		case RelationshipType1to1:
+			attributeName = strcase.ToCamel(remoteSingular)
+			jsonName = strcase.ToSnake(remoteSingular)
+			foreignKey = relation.Key
+			referenceKey = relation.RemoteKey
+		case RelationshipType1toMany:
+			attributeName = strcase.ToCamel(remotePlural)
+			jsonName = strcase.ToSnake(remotePlural)
+			foreignKey = relation.RemoteKey
+			referenceKey = relation.Key
+		default:
+			continue
+		}
+
+		// Suffix logic if name conflict (inactive but ready)
+		// if _, exists := structFieldNames[attributeName]; exists {
+		//     attributeName += "Relation"
+		//     jsonName += "_relation"
+		// }
+
+		fieldType := prefix + strcase.ToCamel(remoteSingular)
+
+		b.WriteString(fmt.Sprintf(
+			"\t%-*s%-*s `json:\"%s,omitempty\" gorm:\"foreignKey:%s;references:%s\"`\n",
+			maxColLen+1,
+			attributeName,
+			maxTypeLen,
+			fieldType,
+			jsonName,
+			foreignKey,
+			referenceKey,
+		))
+	}
+
+	return b.String()
 }
