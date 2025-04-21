@@ -2,10 +2,10 @@
   <div>
     <table class="mt-3 spell-preview-table">
       <tbody>
-	<tr>
-	  <td class="spell-field-label">Formula ID</td>
-	  <td>Description</td>
-	</tr>
+	      <tr>
+	        <td class="spell-field-label">Formula ID</td>
+	        <td>Description</td>
+	      </tr>
         <tr v-for="description, formula_id in SPA_EFFECT_FORMULAS">
           <td class="spell-field-label">{{ formula_id }}</td>
           <td>{{ description }}</td>
