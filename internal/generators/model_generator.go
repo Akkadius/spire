@@ -1,6 +1,7 @@
 package generators
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"text/template"
 )
 
 type ModelGenerator struct {
@@ -541,46 +543,51 @@ func (g *ModelGenerator) debug(msg string) {
 // and a list of model names
 // outputs a file in ./internal/models/models.go
 func (g *ModelGenerator) generateModelsFile() error {
-	// sort models
-	sort.Slice(g.models, func(i, j int) bool {
-		return g.models[i] < g.models[j]
-	})
+	sort.Strings(g.models)
 
-	modelData := `package models
+	const modelsFileTemplate = `package models
 
 func GetModels() []Modelable {
 	return []Modelable{
-		{{models}},
+		{{- range .Models }}
+		&{{ . }}{},
+		{{- end }}
 	}
 }
 
 func GetModelNames() []string {
 	return []string{
-		{{modelNames}},
+		{{- range .ModelNames }}
+		"{{ . }}",
+		{{- end }}
 	}
 }
 `
 
-	tempModels := make([]string, len(g.models))
-	for i, m := range g.models {
-		tempModels[i] = "\"" + m + "\""
+	tmpl, err := template.New("modelsFile").Parse(modelsFileTemplate)
+	if err != nil {
+		return err
 	}
 
-	modelData = strings.ReplaceAll(modelData, "{{modelNames}}", strings.Join(tempModels, ",\n\t\t"))
-
-	for i, m := range g.models {
-		g.models[i] = "&" + m + "{}"
+	data := struct {
+		Models     []string
+		ModelNames []string
+	}{
+		Models:     g.models,
+		ModelNames: g.models,
 	}
 
-	modelData = strings.ReplaceAll(modelData, "{{models}}", strings.Join(g.models, ",\n\t\t"))
+	var out bytes.Buffer
+	if err := tmpl.Execute(&out, data); err != nil {
+		return err
+	}
 
-	err := g.writeToFile("internal/models/models.go", modelData)
+	err = g.writeToFile("internal/models/models.go", out.String())
 	if err != nil {
 		return err
 	}
 
 	g.logger.Info().Msg("Generated models file")
-
 	return nil
 }
 
