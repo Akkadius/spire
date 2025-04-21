@@ -95,15 +95,15 @@ func (e *DbStrController) getDbStr(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [typeId] position [2] type [int]
-	if len(c.QueryParam("typeId")) > 0 {
-		typeIdParam, err := strconv.Atoi(c.QueryParam("typeId"))
+	// key param [type] position [2] type [int]
+	if len(c.QueryParam("type")) > 0 {
+		typeIdParam, err := strconv.Atoi(c.QueryParam("type"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [typeId] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [type] err [%s]", err.Error())})
 		}
 
 		params = append(params, typeIdParam)
-		keys = append(keys, "typeId = ?")
+		keys = append(keys, "type = ?")
 	}
 
 	// query builder
@@ -160,15 +160,15 @@ func (e *DbStrController) updateDbStr(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [typeId] position [2] type [int]
-	if len(c.QueryParam("typeId")) > 0 {
-		typeIdParam, err := strconv.Atoi(c.QueryParam("typeId"))
+	// key param [type] position [2] type [int]
+	if len(c.QueryParam("type")) > 0 {
+		typeIdParam, err := strconv.Atoi(c.QueryParam("type"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [typeId] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [type] err [%s]", err.Error())})
 		}
 
 		params = append(params, typeIdParam)
-		keys = append(keys, "typeId = ?")
+		keys = append(keys, "type = ?")
 	}
 
 	// query builder
@@ -288,15 +288,15 @@ func (e *DbStrController) deleteDbStr(c echo.Context) error {
 	params = append(params, id)
 	keys = append(keys, "id = ?")
 
-	// key param [typeId] position [2] type [int]
-	if len(c.QueryParam("typeId")) > 0 {
-		typeIdParam, err := strconv.Atoi(c.QueryParam("typeId"))
+	// key param [type] position [2] type [int]
+	if len(c.QueryParam("type")) > 0 {
+		typeIdParam, err := strconv.Atoi(c.QueryParam("type"))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [typeId] err [%s]", err.Error())})
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [type] err [%s]", err.Error())})
 		}
 
 		params = append(params, typeIdParam)
-		keys = append(keys, "typeId = ?")
+		keys = append(keys, "type = ?")
 	}
 
 	// query builder
