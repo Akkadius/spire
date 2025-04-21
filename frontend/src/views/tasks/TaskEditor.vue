@@ -282,21 +282,28 @@
                          field: 'exp_reward',
                          itemIcon: '2045',
                          fieldType: 'text',
-                         col: 'col-4'
+                         col: 'col-3'
                        },
                        {
                          description: 'Cash Reward',
                          field: 'cash_reward',
                          itemIcon: '646',
                          fieldType: 'text',
-                         col: 'col-4',
+                         col: 'col-3',
                        },
                        {
                          description: 'Faction Reward',
                          field: 'faction_reward',
                          itemIcon: '528',
                          fieldType: 'text',
-                         col: 'col-4',
+                         col: 'col-3',
+                       },
+                       {
+                         description: 'Faction Amount',
+                         field: 'faction_reward',
+                         itemIcon: '528',
+                         fieldType: 'text',
+                         col: 'col-3',
                        },
                        {
                          description: 'Reward Point Type',
