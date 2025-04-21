@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
+	"github.com/k0kubun/pp/v3"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
 	"os"
@@ -21,7 +22,7 @@ type Generator struct {
 	pluralize    *pluralize.Client
 	debugEnabled bool
 
-	schemaLookup *DbSchemaLookup // schema lookup
+	schemaLookup *DbLookup // schema lookup
 
 	// attributes
 	models        []string
@@ -33,7 +34,7 @@ func NewGenerator(logger *logger.AppLogger, gorm *gorm.DB) *Generator {
 	return &Generator{
 		logger:       logger,
 		gorm:         gorm,
-		schemaLookup: NewDbSchemaLookup(db, logger),
+		schemaLookup: NewDbLookup(db, logger),
 		pluralize:    pluralize.NewClient(),
 		models:       make([]string, 0),
 	}
@@ -70,14 +71,11 @@ func (g *Generator) Generate(tables []string) {
 	g.relationships = g.loadRelationships()
 	tableNames := g.getTableNames()
 
-	// if no argument pull from relationships
-	if len(tables) == 0 {
-		schemaTables, err := g.schemaLookup.GetTableNames()
-		if err != nil {
-			g.logger.Error().Err(err).Msg("error getting table names")
-			return
-		}
-		tables = schemaTables
+	allTables := len(tables) == 0
+
+	tables, err := g.resolveTablesToGenerate(tables)
+	if err != nil {
+		return // or handle accordingly
 	}
 
 	for _, genModel := range tables {
@@ -94,9 +92,11 @@ func (g *Generator) Generate(tables []string) {
 		}
 	}
 
-	err := g.generateModelsFile()
-	if err != nil {
-		g.logger.Error().Err(err).Msg("error generating models file")
+	if allTables {
+		err = g.generateModelsFile()
+		if err != nil {
+			g.logger.Error().Err(err).Msg("error generating models file")
+		}
 	}
 }
 
@@ -578,4 +578,37 @@ func (g *Generator) generateModel(table string) error {
 	g.models = append(g.models, modelName)
 
 	return nil
+}
+
+// resolveTablesToGenerate resolves the tables to generate
+func (g *Generator) resolveTablesToGenerate(tables []string) ([]string, error) {
+	if len(tables) > 0 {
+		return tables, nil
+	}
+
+	schemaTables, err := g.schemaLookup.GetTableNames()
+	if err != nil {
+		g.logger.Error().Err(err).Msg("error getting table names")
+		return nil, err
+	}
+
+	cfg := GetGenerateModelConfig()
+	pp.Println(cfg) // you can optionally remove this for production
+
+	finalTables := make([]string, 0, len(schemaTables))
+	for _, table := range schemaTables {
+		ignore := false
+		for _, iTable := range cfg.Database.IgnoreTables {
+			if strings.Contains(table, iTable) {
+				g.logger.Debug().Msgf("Ignoring table [%s] because it is in the ignore list", table)
+				ignore = true
+				break
+			}
+		}
+		if !ignore {
+			finalTables = append(finalTables, table)
+		}
+	}
+
+	return finalTables, nil
 }
