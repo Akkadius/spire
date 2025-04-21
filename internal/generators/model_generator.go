@@ -122,44 +122,11 @@ func (g *ModelGenerator) Generate(tables []string) {
 			g.models = append(g.models, g.pluralize.Singular(strcase.ToCamel(table)))
 
 			// calculate field and type length for formatting
-			maxColumnLengthInTable, maxDataTypeLengthInTable := g.getMaxFieldAndTypeLengths(table)
+			defs := g.getColumnDefinitions(table)
+			maxColumnLengthInTable, maxDataTypeLengthInTable := g.getMaxFieldAndTypeLengths(table, defs)
 
-			// gen model fields
-			modelFields := ""
-			structFieldNames := map[string]bool{}
-			for _, def := range g.getColumnDefinitions(table) {
-
-				g.debug(fmt.Sprintf("-- def [%v] table [%v]", def, table))
-
-				structFieldName := ""
-				jsonFieldName := strcase.ToSnake(def.Field)
-				if def.Field == "id" {
-					structFieldName = "ID"
-				} else {
-					structFieldName = strcase.ToCamel(def.Field)
-				}
-
-				lastCharacterColumn := def.Field[len(def.Field)-1:]
-				if lastCharacterColumn == "_" {
-					structFieldName += "2"
-				}
-
-				modelField := fmt.Sprintf(
-					"\t%-*s%-*s `json:\"%v\" gorm:\"Column:%v\"`\n",
-					maxColumnLengthInTable+1,
-					structFieldName,
-					maxDataTypeLengthInTable,
-					translateDataType(def),
-					jsonFieldName,
-					def.Field,
-				)
-
-				structFieldNames[structFieldName] = true
-
-				g.debug(fmt.Sprintf("-- modelField [%v]", strings.TrimSpace(modelField)))
-
-				modelFields += modelField
-			}
+			// base model fields
+			modelFields := g.buildModelFields(defs, maxColumnLengthInTable, maxDataTypeLengthInTable)
 
 			// write relationships to model attributes
 			for _, relation := range g.relationships {
@@ -569,13 +536,11 @@ func (g *ModelGenerator) writeToFile(path, content string) error {
 }
 
 // getMaxFieldAndTypeLengths returns the max field and type lengths for a table
-func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string) (int, int) {
+func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string, defs []ShowColumns) (int, int) {
 	maxFieldLen := 0
 	maxTypeLen := 0
 
-	columns := g.getColumnDefinitions(table)
-
-	for _, col := range columns {
+	for _, col := range defs {
 		if len(col.Field) > maxFieldLen {
 			maxFieldLen = len(col.Field)
 		}
@@ -605,4 +570,49 @@ func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string) (int, int) {
 	}
 
 	return maxFieldLen, maxTypeLen
+}
+
+// buildModelFields builds the model fields for a table
+// it takes the column definitions and the max field and type lengths
+// and returns a string with the model fields and a map of struct field names
+// example output:
+//
+//	ID   int    `json:"id" gorm:"Column:id"`
+//	Name string `json:"name" gorm:"Column:name"`
+func (g *ModelGenerator) buildModelFields(columns []ShowColumns, maxColLen, maxTypeLen int) string {
+	var b strings.Builder
+
+	for _, def := range columns {
+		g.debug(fmt.Sprintf("-- def [%v] table [%v]", def, def.Field))
+
+		structFieldName := g.getStructFieldName(def.Field)
+		jsonFieldName := strcase.ToSnake(def.Field)
+		goType := translateDataType(def)
+
+		b.WriteString(fmt.Sprintf(
+			"\t%-*s%-*s `json:\"%v\" gorm:\"Column:%v\"`\n",
+			maxColLen+1,
+			structFieldName,
+			maxTypeLen,
+			goType,
+			jsonFieldName,
+			def.Field,
+		))
+
+	}
+
+	return b.String()
+}
+
+// translateDataType translates the data type from the database to Go
+func (g *ModelGenerator) getStructFieldName(field string) string {
+	if field == "id" {
+		return "ID"
+	}
+
+	name := strcase.ToCamel(field)
+	if strings.HasSuffix(field, "_") {
+		name += "2"
+	}
+	return name
 }
