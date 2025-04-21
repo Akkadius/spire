@@ -46,8 +46,6 @@ var (
 	spellIconsMap []byte
 	//go:embed spell-icon-anim-name-map.json
 	spellIconAnimNameMap []byte
-	//go:embed model-relationships.json
-	modelRelationships []byte
 )
 
 func (q *StaticMapController) getStaticMapFileCompressed(c echo.Context) error {
@@ -73,8 +71,6 @@ func (q *StaticMapController) getStaticMapFileCompressed(c echo.Context) error {
 		file = raceInventoryMap
 	case "spell-icon-anim-name-map.json":
 		file = spellIconAnimNameMap
-	case "model-relationships.json":
-		file = modelRelationships
 	default:
 		return fmt.Errorf("Invalid file specified")
 	}

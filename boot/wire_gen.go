@@ -33,6 +33,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/logger"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/query"
@@ -116,7 +117,8 @@ func InitializeApplication() (App, error) {
 	handler := websocket.NewHandler(pathManagement)
 	websocketController := websocket.NewController(pathManagement, handler, clientManager, appLogger)
 	systemController := system.NewController()
-	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController)
+	modelsController := models.NewController()
+	bootAppControllerGroups := provideControllers(helloWorldController, controller, meController, analyticsController, connectionsController, questapiController, appController, queryController, clientfilesController, staticMapController, eqemuanalyticsController, authedController, eqemuchangelogController, assetsController, permissionsController, userController, settingsController, eqemuserverController, publicController, eqemuserverconfigController, backupController, websocketController, systemController, modelsController)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(resolver, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(resolver, userEvent)
 	aaRankEffectController := crudcontrollers.NewAaRankEffectController(resolver, userEvent)

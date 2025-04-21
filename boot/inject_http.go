@@ -61,6 +61,7 @@ var httpSet = wire.NewSet(
 	websocket.NewController,
 	backup.NewController,
 	system.NewController,
+	models.NewController,
 	provideControllers,
 	NewRouter,
 )
@@ -195,6 +196,7 @@ func provideControllers(
 	backupController *backup.Controller,
 	websocketController *websocket.Controller,
 	systemController *system.Controller,
+	modelController *models.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -226,6 +228,7 @@ func provideControllers(
 			assetsController,
 			changelogController,
 			eqemuserverPublicController,
+			modelController,
 		},
 		v1Analytics: []routes.Controller{
 			analyticsController,

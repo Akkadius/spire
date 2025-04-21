@@ -11,6 +11,7 @@ type InstanceList struct {
 	IsGlobal            uint8                `json:"is_global" gorm:"Column:is_global"`
 	StartTime           uint                 `json:"start_time" gorm:"Column:start_time"`
 	Duration            uint                 `json:"duration" gorm:"Column:duration"`
+	ExpireAt            uint64               `json:"expire_at" gorm:"Column:expire_at"`
 	NeverExpires        uint8                `json:"never_expires" gorm:"Column:never_expires"`
 	Notes               null.String          `json:"notes" gorm:"Column:notes"`
 	InstanceListPlayers []InstanceListPlayer `json:"instance_list_players,omitempty" gorm:"foreignKey:id;references:id"`

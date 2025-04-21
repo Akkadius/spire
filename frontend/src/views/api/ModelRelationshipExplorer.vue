@@ -52,7 +52,7 @@ export default {
     }
   },
   async mounted() {
-    const r = await SpireApi.v1().get('/static-map/model-relationships.json')
+    const r = await SpireApi.v1().get('/models')
     if (r.status === HttpStatus.OK) {
       this.models = r.data.sort((a, b) => a.model_name.localeCompare(b.model_name));
 

@@ -1,13 +1,11 @@
 package generators
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
-	"github.com/k0kubun/pp/v3"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
 	"os"
@@ -26,6 +24,8 @@ type GenerateModel struct {
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
 	debugEnabled bool
+
+	models []string
 }
 
 func NewGenerateModel(options GenerateModelContext, logger *logger.AppLogger, gorm *gorm.DB) *GenerateModel {
@@ -34,6 +34,7 @@ func NewGenerateModel(options GenerateModelContext, logger *logger.AppLogger, go
 		logger:    logger,
 		gorm:      gorm,
 		pluralize: pluralize.NewClient(),
+		models:    make([]string, 0),
 	}
 }
 
@@ -87,6 +88,7 @@ func (g *GenerateModel) Generate() {
 	g.options.Relationships = g.loadRelationships()
 	relationships := g.options.Relationships
 	tableNames := g.getTableNames()
+	g.models = make([]string, 0)
 
 	// if no argument pull from relationships
 	if len(g.options.TablesToGenerate) == 0 {
@@ -111,6 +113,8 @@ func (g *GenerateModel) Generate() {
 			// separate template for handling and injecting imports for models
 			importTemplate := BaseDependencyImportTemplate
 			t = strings.ReplaceAll(t, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
+
+			g.models = append(g.models, g.pluralize.Singular(strcase.ToCamel(table)))
 
 			// calculate field and type length for formatting
 			maxColumnLengthInTable := 0
@@ -319,29 +323,7 @@ func (g *GenerateModel) Generate() {
 		}
 	}
 
-	// when we've likely generated all
-	// write [internal/http/staticmaps/model-relationships.json]
-	// used for API documentation within Spire
-	if len(modelRelationships) > 1 {
-		pp.Println(modelRelationships)
-
-		// json
-		jsonData, _ := json.Marshal(modelRelationships)
-
-		// create file
-		f, err := os.Create("internal/http/staticmaps/model-relationships.json")
-		if err != nil {
-			g.logger.Fatal().Err(err).Msg("error creating file")
-		}
-
-		defer f.Close()
-
-		// write
-		_, err = f.Write(jsonData)
-		if err != nil {
-			g.logger.Fatal().Err(err).Msg("error writing to file")
-		}
-	}
+	g.generateModelsFile()
 
 	sort.Slice(modelRelationships, func(i, j int) bool {
 		return modelRelationships[i].Table < modelRelationships[j].Table
@@ -642,4 +624,54 @@ func (g *GenerateModel) debug(msg string) {
 	if g.debugEnabled || env.GetInt("DEBUG", "0") > 0 {
 		g.logger.Debug().Msg(msg)
 	}
+}
+
+func (g *GenerateModel) generateModelsFile() {
+	// sort models
+	sort.Slice(g.models, func(i, j int) bool {
+		return g.models[i] < g.models[j]
+	})
+
+	modelData := `package models
+
+func GetModels() []Modelable {
+	return []Modelable{
+		{{models}},
+	}
+}
+
+func GetModelNames() []string {
+	return []string{
+		{{modelNames}},
+	}
+}
+`
+
+	// write models in a func GetModels() .go file in ./models/models.go
+	f, err := os.Create("internal/models/models.go")
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("error creating file")
+	}
+
+	tempModels := make([]string, len(g.models))
+	for i, m := range g.models {
+		tempModels[i] = "\"" + m + "\""
+	}
+
+	modelData = strings.ReplaceAll(modelData, "{{modelNames}}", strings.Join(tempModels, ",\n\t\t"))
+
+	for i, m := range g.models {
+		g.models[i] = "&" + m + "{}"
+	}
+
+	modelData = strings.ReplaceAll(modelData, "{{models}}", strings.Join(g.models, ",\n\t\t"))
+
+	// write
+	_, err = f.Write([]byte(modelData))
+	if err != nil {
+		g.logger.Fatal().Err(err).Msg("error writing to file")
+	}
+
+	defer f.Close()
+
 }

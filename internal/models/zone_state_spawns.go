@@ -9,6 +9,7 @@ type ZoneStateSpawn struct {
 	ZoneId              null.Uint   `json:"zone_id" gorm:"Column:zone_id"`
 	InstanceId          null.Uint   `json:"instance_id" gorm:"Column:instance_id"`
 	IsCorpse            null.Int8   `json:"is_corpse" gorm:"Column:is_corpse"`
+	IsZone              null.Int8   `json:"is_zone" gorm:"Column:is_zone"`
 	DecayInSeconds      null.Int    `json:"decay_in_seconds" gorm:"Column:decay_in_seconds"`
 	NpcId               null.Uint   `json:"npc_id" gorm:"Column:npc_id"`
 	Spawn2Id            uint        `json:"spawn_2_id" gorm:"Column:spawn2_id"`
