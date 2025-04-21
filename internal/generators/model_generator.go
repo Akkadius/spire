@@ -3,13 +3,13 @@ package generators
 import (
 	"bytes"
 	"fmt"
-	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/logger"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"text/template"
@@ -90,7 +90,6 @@ type ModelRelationships struct {
 // and a list of model names
 func (g *ModelGenerator) Generate(tables []string) {
 	g.relationships = g.loadRelationships()
-	tableNames := g.getTableNames()
 	g.models = make([]string, 0)
 
 	tablesToGenerate := make([]string, 0)
@@ -102,7 +101,7 @@ func (g *ModelGenerator) Generate(tables []string) {
 
 	// TablesToGenerate is just a list of tables table1,table2
 	for _, genModel := range tablesToGenerate {
-		for _, table := range tableNames {
+		for _, table := range g.getTableNames() {
 			if genModel != "all" && table != genModel {
 				continue
 			}
@@ -153,7 +152,7 @@ func (g *ModelGenerator) getNestedRelationshipsFromTable(table string, prefix st
 		prefix = fmt.Sprintf("%v.", prefix)
 	}
 
-	g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] table [%v]", level, table))
+	g.logger.Debug().Msgf("-- [getNestedRelationshipsFromTable] [%v] table [%v]", level, table)
 
 	if exists(parentTables, table) && level > 0 {
 		return relationshipNames
@@ -166,18 +165,16 @@ func (g *ModelGenerator) getNestedRelationshipsFromTable(table string, prefix st
 			continue
 		}
 
-		g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] table [%v] relation [%v] remote [%v]", level, table, relation, relation.RemoteTable))
+		g.logger.Debug().Msgf("-- [%v] table [%v] relation [%v] remote [%v]", level, table, relation, relation.RemoteTable)
 
 		if len(parentTables) > 0 {
 			for _, parentTable := range parentTables {
 				if relation.RemoteTable == parentTable {
-					g.debug(
-						fmt.Sprintf(
-							"---- [getNestedRelationshipsFromTable] [%v] remote table [%v] is a parent table [%v] skipping",
-							level,
-							relation.RemoteTable,
-							parentTable,
-						),
+					g.logger.Debug().Msgf(
+						"---- [%v] remote table [%v] is a parent table [%v] skipping",
+						level,
+						relation.RemoteTable,
+						parentTable,
 					)
 					continue
 				}
@@ -204,8 +201,6 @@ func (g *ModelGenerator) getNestedRelationshipsFromTable(table string, prefix st
 	}
 
 	sort.Strings(relationshipNames)
-
-	//g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] relationshipNames [%v]", relationshipNames))
 
 	return relationshipNames
 }
@@ -312,15 +307,6 @@ func (g *ModelGenerator) isValidRelationshipType(relationshipType string) bool {
 	return false
 }
 
-// debug is a helper function to log debug messages
-// it checks if debug is enabled in the config or if the DEBUG environment variable is set to 1
-// and logs the message if so
-func (g *ModelGenerator) debug(msg string) {
-	if g.debugEnabled || env.GetInt("DEBUG", "0") > 0 {
-		g.logger.Debug().Msg(msg)
-	}
-}
-
 // generateModelsFile generates the models file
 // contains a list of models that implement the Modelable interface
 // and a list of model names
@@ -416,7 +402,7 @@ func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string, defs []ShowColu
 			maxTypeLen = len(colType)
 		}
 
-		g.debug(fmt.Sprintf("-- col [%v] colType [%v]", col, colType))
+		g.logger.Debug().Msgf("-- col [%v] colType [%v]", col, colType)
 	}
 
 	return maxFieldLen, maxTypeLen
@@ -433,7 +419,7 @@ func (g *ModelGenerator) buildModelFields(columns []ShowColumns, maxColLen, maxT
 	var b strings.Builder
 
 	for _, def := range columns {
-		g.debug(fmt.Sprintf("-- def [%v] table [%v]", def, def.Field))
+		g.logger.Debug().Msgf("-- def [%v] table [%v]", def, def.Field)
 
 		structFieldName := g.getStructFieldName(def.Field)
 		jsonFieldName := strcase.ToSnake(def.Field)
@@ -476,7 +462,7 @@ func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, ma
 			continue
 		}
 
-		g.debug(fmt.Sprintf("-- relationships [%v]", relation))
+		g.logger.Debug().Msgf("-- relationships [%v]", relation)
 
 		prefix := g.getRelationshipTypeModelAttributePrefix(relation)
 		remoteSingular := g.pluralize.Singular(relation.RemoteTable)
@@ -526,9 +512,9 @@ func (g *ModelGenerator) buildRelationshipFields(table string, maxColLen int, ma
 // generateModelFileForTable generates the model file for a table
 func (g *ModelGenerator) generateModelFileForTable(table string) error {
 	modelName := g.pluralize.Singular(strcase.ToCamel(table))
-	fileName := "./internal/models/" + strcase.ToSnake(table) + ".go"
+	fileName := filepath.Join("./internal/models/", strcase.ToSnake(table)+".go")
 
-	g.debug(fmt.Sprintf("-- Generating model for [%s] → [%s]", table, fileName))
+	g.logger.Debug().Msgf("-- Generating model for [%s] → [%s]", table, fileName)
 
 	// Template skeleton
 	t := BaseGormModelTemplate
