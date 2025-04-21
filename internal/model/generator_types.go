@@ -1,14 +1,16 @@
-package generators
+package model
 
-import "strings"
+import (
+	"strings"
+)
 
 // translateDataType translates a MySQL data type to a Go data type.
 // It handles both nullable and non-nullable types.
 // It also considers unsigned types for integer types.
-func translateDataType(column ShowColumns) string {
-	baseType := strings.ToLower(strings.Split(column.Type, "(")[0])
-	unsigned := strings.Contains(column.Type, "unsigned")
-	nullable := strings.Contains(column.Null, "YES")
+func translateDataType(column DbSchemaRowResult) string {
+	baseType := strings.ToLower(strings.Split(column.DataType, "(")[0])
+	unsigned := strings.Contains(column.DataType, "unsigned")
+	nullable := strings.Contains(column.IsNullable, "YES")
 
 	var goType string
 

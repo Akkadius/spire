@@ -206,7 +206,7 @@ func (e *Encrypter) ComparePassword(password, hash string) (bool, error) {
 func (e *Encrypter) GeneratePassword(password string) (string, error) {
 	c := e.passwordConfig
 
-	// Generate a Salt
+	// Get a Salt
 	salt := make([]byte, 16)
 	if _, err := rand.Read(salt); err != nil {
 		return "", err

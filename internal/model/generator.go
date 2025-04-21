@@ -1,4 +1,4 @@
-package generators
+package model
 
 import (
 	"bytes"
@@ -15,23 +15,27 @@ import (
 	"text/template"
 )
 
-type ModelGenerator struct {
+type Generator struct {
 	logger       *logger.AppLogger
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
 	debugEnabled bool
+
+	schemaLookup *DbSchemaLookup // schema lookup
 
 	// attributes
 	models        []string
 	relationships []ForeignKeyMappings
 }
 
-func NewGenerateModels(logger *logger.AppLogger, gorm *gorm.DB) *ModelGenerator {
-	return &ModelGenerator{
-		logger:    logger,
-		gorm:      gorm,
-		pluralize: pluralize.NewClient(),
-		models:    make([]string, 0),
+func NewGenerator(logger *logger.AppLogger, gorm *gorm.DB) *Generator {
+	db, _ := gorm.DB()
+	return &Generator{
+		logger:       logger,
+		gorm:         gorm,
+		schemaLookup: NewDbSchemaLookup(db, logger),
+		pluralize:    pluralize.NewClient(),
+		models:       make([]string, 0),
 	}
 }
 
@@ -50,8 +54,8 @@ type ForeignKeyMappings struct {
 	RelationType string `json:"relation_type"` // relationship type
 }
 
-// ModelRelationships is a struct that represents a model and its relationships
-type ModelRelationships struct {
+// Relationships is a struct that represents a model and its relationships
+type Relationships struct {
 	Table         string   `json:"table"`
 	ModelName     string   `json:"model_name"`
 	Relationships []string `json:"relationships"`
@@ -62,13 +66,18 @@ type ModelRelationships struct {
 // it will also generate a models.go file in the models directory
 // the models.go file will contain a list of models that implement the Modelable interface
 // and a list of model names
-func (g *ModelGenerator) Generate(tables []string) {
+func (g *Generator) Generate(tables []string) {
 	g.relationships = g.loadRelationships()
 	tableNames := g.getTableNames()
 
 	// if no argument pull from relationships
 	if len(tables) == 0 {
-		tables = GetDatabaseTables()
+		schemaTables, err := g.schemaLookup.GetTableNames()
+		if err != nil {
+			g.logger.Error().Err(err).Msg("error getting table names")
+			return
+		}
+		tables = schemaTables
 	}
 
 	for _, genModel := range tables {
@@ -92,7 +101,7 @@ func (g *ModelGenerator) Generate(tables []string) {
 }
 
 // return relationship type model prefix
-func (g *ModelGenerator) getRelationshipTypeModelAttributePrefix(r ForeignKeyMappings) string {
+func (g *Generator) getRelationshipTypeModelAttributePrefix(r ForeignKeyMappings) string {
 	if r.RelationType == RelationshipType1to1 {
 		return "*"
 	}
@@ -116,7 +125,7 @@ func exists(a []string, element string) bool {
 // getNestedRelations returns a list of relationships for a table
 // it will recursively check for relationships in the table
 // it will skip relationships that are already in the parent tables
-func (g *ModelGenerator) getNestedRelations(table string, prefix string, parentTables []string, level int) []string {
+func (g *Generator) getNestedRelations(table string, prefix string, parentTables []string, level int) []string {
 	relationshipNames := make([]string, 0)
 
 	if prefix != "" {
@@ -177,39 +186,21 @@ func (g *ModelGenerator) getNestedRelations(table string, prefix string, parentT
 }
 
 // return Table names from database
-func (g *ModelGenerator) getTableNames() []string {
+func (g *Generator) getTableNames() []string {
 	tableNames := make([]string, 0)
 	g.gorm.Raw("SHOW TABLES").Scan(&tableNames)
 
 	return tableNames
 }
 
-// ShowColumns is a struct that represents a row in the SHOW COLUMNS
-type ShowColumns struct {
-	Field   string
-	Type    string
-	Null    string
-	Key     string
-	Default string
-	Extra   string
-}
-
-// getColumnDefinitions returns the column definitions for a table
-func (g *ModelGenerator) getColumnDefinitions(tableName string) []ShowColumns {
-	columnDefs := make([]ShowColumns, 0)
-	g.gorm.Raw(fmt.Sprintf("SHOW COLUMNS FROM %v", tableName)).Scan(&columnDefs)
-
-	return columnDefs
-}
-
-const dbRelationshipConfig = "./internal/generators/config/db-relationships.yml"
+const dbRelationshipConfig = ".generate-db-relationships.yml"
 
 // loadRelationships loads the relationships from the yaml file
 // and returns a list of ForeignKeyMappings
 // the yaml file should be in the format:
 // table_name:
 //   - relation_type local_key->remote_table:remote_key
-func (g *ModelGenerator) loadRelationships() []ForeignKeyMappings {
+func (g *Generator) loadRelationships() []ForeignKeyMappings {
 	// load yaml
 	databaseSchemaYaml, err := os.ReadFile(dbRelationshipConfig)
 	if err != nil {
@@ -267,7 +258,7 @@ func (g *ModelGenerator) loadRelationships() []ForeignKeyMappings {
 }
 
 // isValidRelationshipType checks if the relationship type is valid
-func (g *ModelGenerator) isValidRelationshipType(relationshipType string) bool {
+func (g *Generator) isValidRelationshipType(relationshipType string) bool {
 	switch relationshipType {
 	case RelationshipType1to1:
 		return true
@@ -282,7 +273,7 @@ func (g *ModelGenerator) isValidRelationshipType(relationshipType string) bool {
 // contains a list of models that implement the Modelable interface
 // and a list of model names
 // outputs a file in ./internal/models/models.go
-func (g *ModelGenerator) generateModelsFile() error {
+func (g *Generator) generateModelsFile() error {
 	sort.Strings(g.models)
 
 	const modelsFileTemplate = `package models
@@ -332,7 +323,7 @@ func GetModelNames() []string {
 }
 
 // writeToFile is a helper function to write content to a file
-func (g *ModelGenerator) writeToFile(path, content string) error {
+func (g *Generator) writeToFile(path, content string) error {
 	f, err := os.Create(path)
 	if err != nil {
 		return err
@@ -343,13 +334,13 @@ func (g *ModelGenerator) writeToFile(path, content string) error {
 }
 
 // getMaxFieldAndTypeLengths returns the max field and type lengths for a table
-func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string, defs []ShowColumns) (int, int) {
+func (g *Generator) getMaxFieldAndTypeLengths(table string, defs []DbSchemaRowResult) (int, int) {
 	maxFieldLen := 0
 	maxTypeLen := 0
 
 	for _, col := range defs {
-		if len(col.Field) > maxFieldLen {
-			maxFieldLen = len(col.Field)
+		if len(col.Column) > maxFieldLen {
+			maxFieldLen = len(col.Column)
 		}
 		translated := translateDataType(col)
 		if len(translated) > maxTypeLen {
@@ -386,14 +377,14 @@ func (g *ModelGenerator) getMaxFieldAndTypeLengths(table string, defs []ShowColu
 //
 //	ID   int    `json:"id" gorm:"Column:id"`
 //	Name string `json:"name" gorm:"Column:name"`
-func (g *ModelGenerator) buildModelFields(columns []ShowColumns, maxColLen, maxTypeLen int) string {
+func (g *Generator) buildModelFields(columns []DbSchemaRowResult, maxColLen, maxTypeLen int) string {
 	var b strings.Builder
 
 	for _, def := range columns {
-		g.logger.Debug().Msgf("-- def [%v] table [%v]", def, def.Field)
+		g.logger.Debug().Msgf("-- def [%v] table [%v]", def, def.Column)
 
-		structFieldName := g.getStructFieldName(def.Field)
-		jsonFieldName := strcase.ToSnake(def.Field)
+		structFieldName := g.getStructFieldName(def.Column)
+		jsonFieldName := strcase.ToSnake(def.Column)
 		goType := translateDataType(def)
 
 		b.WriteString(fmt.Sprintf(
@@ -403,7 +394,7 @@ func (g *ModelGenerator) buildModelFields(columns []ShowColumns, maxColLen, maxT
 			maxTypeLen,
 			goType,
 			jsonFieldName,
-			def.Field,
+			def.Column,
 		))
 
 	}
@@ -412,7 +403,7 @@ func (g *ModelGenerator) buildModelFields(columns []ShowColumns, maxColLen, maxT
 }
 
 // translateDataType translates the data type from the database to Go
-func (g *ModelGenerator) getStructFieldName(field string) string {
+func (g *Generator) getStructFieldName(field string) string {
 	if field == "id" {
 		return "ID"
 	}
@@ -430,7 +421,7 @@ func (g *ModelGenerator) getStructFieldName(field string) string {
 // example output:
 //
 //	*User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
-func (g *ModelGenerator) buildRelationModelFields(table string, maxColLen int, maxTypeLen int) string {
+func (g *Generator) buildRelationModelFields(table string, maxColLen int, maxTypeLen int) string {
 	var b strings.Builder
 
 	for _, relation := range g.relationships {
@@ -511,7 +502,7 @@ func ({{model_name}}) Connection() string {
 )
 
 // generateModel generates the model file for a table
-func (g *ModelGenerator) generateModel(table string) error {
+func (g *Generator) generateModel(table string) error {
 	modelName := g.pluralize.Singular(strcase.ToCamel(table))
 	fileName := filepath.Join("./internal/models/", strcase.ToSnake(table)+".go")
 
@@ -522,7 +513,10 @@ func (g *ModelGenerator) generateModel(table string) error {
 	importTemplate := BaseDependencyImportTemplate
 
 	// Get column data
-	defs := g.getColumnDefinitions(table)
+	defs, err := g.schemaLookup.GetSchemasByTableName(table)
+	if err != nil {
+		g.logger.Error().Err(err).Msgf("error getting schema for table %s", table)
+	}
 	maxColLen, maxTypeLen := g.getMaxFieldAndTypeLengths(table, defs)
 
 	// Build model content
@@ -534,7 +528,7 @@ func (g *ModelGenerator) generateModel(table string) error {
 	t = strings.ReplaceAll(t, "{{model_name}}", modelName)
 	t = strings.ReplaceAll(t, "{{table_name}}", table)
 
-	// Generate nested relationships
+	// Get nested relationships
 	r := g.getNestedRelations(table, "", []string{table}, 0)
 
 	rt := BaseGormModelRelationshipTemplate
