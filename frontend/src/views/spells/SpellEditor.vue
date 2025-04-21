@@ -270,11 +270,11 @@
                   />
 
                   <b-form-input
-		    :id="'formula_' + i"
-		    @mouseover.native="drawSpaFormulasPane()"
+		                :id="'formula_' + i"
+		                @mouseover.native="drawSpaFormulasPane()"
                     v-model.number="spell['formula_' + i]"
-		    :class="getSpaSpellHighlights(spell['effectid_' + i], 'formula')"
-		    @click="processSpaFieldAction(i, spell['effectid_' + i], 'formula')"
+		                :class="getSpaSpellHighlights(spell['effectid_' + i], 'formula')"
+		                @click="processSpaFieldAction(i, spell['effectid_' + i], 'formula')"
                   />
 
                 </b-input-group>
@@ -1467,17 +1467,17 @@
 
         </eq-window>
 
-	<!-- SPA Formula Pane -->
-	<eq-window
-	  style=" martin-right: 10px; width: auto;"
-	  classs="fade-in"
-	  v-if="spaFormulasPaneActive"
-	  :title="'Spell Effect Formulas'"
-	>
+	      <!-- SPA Formula Pane -->
+	      <eq-window
+	        style=" martin-right: 10px; width: auto;"
+	        classs="fade-in"
+	        v-if="spaFormulasPaneActive"
+	        :title="'Spell Effect Formulas'"
+	      >
 
-	<spell-spa-formulas-pane/>
+	        <spell-spa-formulas-pane/>
 
-	</eq-window>
+	      </eq-window>
 
         <!-- preview spell -->
         <eq-window
@@ -2303,7 +2303,7 @@ export default {
       this.coneVisualizerActive          = false;
       this.rangeVisualizerActive         = false;
       this.teleportZoneSelectorActive    = false;
-      this.spaFormulasPaneActive          = false;
+      this.spaFormulasPaneActive         = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -2439,9 +2439,9 @@ export default {
     },
     drawSpaFormulasPane() {
       this.resetPreviewComponents()
-      this.lastResetTIme         = Date.now()
-      this.previewSpellActive    = false
-      this.spaFormulasPaneActive = true
+      this.lastResetTIme            = Date.now()
+      this.previewSpellActive       = false
+      this.spaFormulasPaneActive    = true
     },
   }
 }
