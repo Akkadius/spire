@@ -132,12 +132,8 @@ seed-spire-tables: ##@seed
 #----------------------
 
 generate-api-pipeline: ##@generate Runs entire API generation pipeline, backend models and controllers with frontend client (Run in workspace)
-	@./scripts/banner.sh "Generating generation config"
-	go run main.go generate:config
-	@./scripts/banner.sh "Generating backend models"
-	go run main.go generate:models
-	@./scripts/banner.sh "Generating backend controllers"
-	go run main.go generate:controllers
+	@./scripts/banner.sh "Generating backend models (with controllers"
+	go run main.go make:models --with-controllers
 	@./scripts/banner.sh "Generating Swagger spec"
 	make generate-swagger
 	@./scripts/banner.sh "Generating frontend Typescript axios client"
