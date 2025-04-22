@@ -51,7 +51,7 @@
 
     </eq-window>
 
-    <eq-window class="mt-5">
+    <eq-window class="mt-3 p-0 mb-0 pl-1 pr-3">
 
       <!-- loader -->
       <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
@@ -68,9 +68,9 @@
 
       <div
         v-if="loaded"
-        style="height: 75vh; overflow-y: scroll; "
+        style="overflow-y: scroll; "
         id="race-viewer-viewport"
-        class="row justify-content-center align-items-center text-center"
+        class="row justify-content-center align-items-center text-center fill-screen"
       >
         <div
           v-for="race in filteredRaces"
@@ -117,6 +117,7 @@ import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import EqProgressBar      from "../../components/eq-ui/EQProgressBar";
 import EqAssets           from "../../app/eq-assets/eq-assets";
 import ContentArea        from "../../components/layout/ContentArea";
+import {WindowManager} from "@/app/window";
 
 const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID       = 700;
@@ -243,6 +244,10 @@ export default {
           // set filtered races
           this.filteredRaces = races
           this.loaded        = true;
+
+          setTimeout(() => {
+            WindowManager.resizeFillScreenElements();
+          }, 100);
 
         }, 1);
       }

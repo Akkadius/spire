@@ -61,7 +61,7 @@
       </div>
     </eq-window-simple>
 
-    <eq-window class="mt-5 text-center" style="min-height: 500px">
+    <eq-window class="mt-3 text-center p-0 mb-0 pr-3" style="min-height: 500px">
 
       <!-- loader -->
       <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
@@ -78,9 +78,9 @@
 
       <div
         v-if="loaded"
-        style="height: 80vh; overflow-y: scroll; "
+        style="overflow-y: scroll;"
         id="item-viewer-viewport"
-        class="row justify-content-center"
+        class="row justify-content-center fill-screen"
       >
         <div
           v-for="item in filteredItemModels"
@@ -103,30 +103,31 @@
 </template>
 
 <script>
-import util                  from "util";
-import itemSlots             from "@/constants/item-slots.json"
+import util from "util";
+import itemSlots from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
-import itemTypes             from "@/constants/item-types.json"
+import itemTypes from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
-import slugify               from "slugify";
-import PageHeader            from "@/components/layout/PageHeader";
-import EqWindow              from "@/components/eq-ui/EQWindow";
-import {ROUTE}               from "../../routes";
-import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
-import LoaderFakeProgress    from "../../components/LoaderFakeProgress";
-import EqProgressBar         from "../../components/eq-ui/EQProgressBar";
-import EqAssets              from "../../app/eq-assets/eq-assets";
-import {debounce}            from "../../app/utility/debounce";
-import {Items}               from "../../app/items";
-import ContentArea           from "../../components/layout/ContentArea";
+import slugify from "slugify";
+import PageHeader from "@/components/layout/PageHeader";
+import EqWindow from "@/components/eq-ui/EQWindow";
+import {ROUTE} from "../../routes";
+import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
+import LoaderFakeProgress from "../../components/LoaderFakeProgress";
+import EqProgressBar from "../../components/eq-ui/EQProgressBar";
+import EqAssets from "../../app/eq-assets/eq-assets";
+import {debounce} from "../../app/utility/debounce";
+import {Items} from "../../app/items";
+import ContentArea from "../../components/layout/ContentArea";
+import {WindowManager} from "@/app/window";
 
 const MAX_ITEM_IDFILE = 100000;
-let itemModels        = [];
-let itemModelExists   = {};
-let modelFiles        = {};
+let itemModels = [];
+let itemModelExists = {};
+let modelFiles = {};
 
 export default {
-  components: { ContentArea, EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
+  components: {ContentArea, EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader},
   data() {
     return {
       search: "",
@@ -148,7 +149,7 @@ export default {
 
     // reset to zero state
     reset: function () {
-      this.reset          = "";
+      this.reset = "";
       this.itemSlotSearch = 0;
       this.itemTypeSearch = 0;
       this.loadModels()
@@ -212,8 +213,8 @@ export default {
         searchModels = await Items.getItemModelsByName(this.search)
       }
 
-      let curImg    = new Image();
-      curImg.src    = '/eq-asset-preview-master/assets/sprites/objects.png';
+      let curImg = new Image();
+      curImg.src = '/eq-asset-preview-master/assets/sprites/objects.png';
       curImg.onload = () => {
         this.renderingImages = true
 
@@ -230,7 +231,7 @@ export default {
             }
 
             this.filteredItemModels = idFiles
-            this.loaded             = true;
+            this.loaded = true;
             return
           }
 
@@ -251,7 +252,7 @@ export default {
             })
 
             this.filteredItemModels = idFiles
-            this.loaded             = true
+            this.loaded = true
             return
           }
 
@@ -273,13 +274,17 @@ export default {
             })
 
             this.filteredItemModels = idFiles
-            this.loaded             = true
+            this.loaded = true
             return;
           }
 
           // fallback - load everything
           this.filteredItemModels = itemModels;
-          this.loaded             = true;
+          this.loaded = true;
+
+          setTimeout(() => {
+            WindowManager.resizeFillScreenElements();
+          }, 100);
         }, 100)
       }
     }
@@ -308,7 +313,7 @@ export default {
     // slot
     for (let slot = 0; slot <= 19; slot++) {
       const slotDescription = itemSlots[slot][0];
-      const slotNumbers     = itemSlots[slot][1];
+      const slotNumbers = itemSlots[slot][1];
 
       let modelCountDescription = "";
       if (itemSlotIdFileMapping[slotNumbers] && itemSlotIdFileMapping[slotNumbers].length > 0) {

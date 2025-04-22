@@ -58,7 +58,7 @@
       </div>
     </eq-window-simple>
 
-    <eq-window class="mt-5 text-center">
+    <eq-window class="mt-3 text-center pb-0 mb-0">
 
       <!-- loader -->
       <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
@@ -75,8 +75,9 @@
 
       <div
         v-if="loaded"
-        style="height: 75vh; overflow-y: scroll; "
+        style="overflow-y: scroll; "
         id="icon-viewer-viewport"
+        class="fill-screen"
       >
         <span
           v-for="icon in filteredIcons"
@@ -111,6 +112,7 @@ import EqAssets             from "../../app/eq-assets/eq-assets";
 import {Items}              from "../../app/items";
 import {debounce}           from "../../app/utility/debounce";
 import ContentArea          from "../../components/layout/ContentArea";
+import {WindowManager} from "@/app/window";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -270,6 +272,10 @@ export default {
           // if no filters or searches were hit, we load them all
           this.filteredIcons = icons
           this.loaded        = true;
+
+          setTimeout(() => {
+            WindowManager.resizeFillScreenElements();
+          }, 100);
 
         }, 100);
       }
