@@ -153,9 +153,8 @@
     <app-loader :is-loading="!loaded" padding="4"/>
 
     <eq-window-simple
-      style="overflow-y: scroll; overflow-x: hidden; height: 60vh"
       id="spell-effect-selector-view-port"
-      class="p-0"
+      class="p-0 mb-0 mt-3"
       v-if="loaded && spells"
     >
       <div v-if="message">
@@ -228,10 +227,8 @@ export default {
   },
 
   mounted() {
-    if (Object.keys(this.$route.query).length === 0) {
-      Spells.preloadDbstr()
-      this.loaded = true;
-    }
+    Spells.preloadDbstr()
+    this.loaded = true;
   },
   methods: {
 

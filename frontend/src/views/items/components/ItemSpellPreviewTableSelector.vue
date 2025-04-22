@@ -4,11 +4,14 @@
       No spells were found
     </div>
 
-    <div class='spell-preview-table' v-if="spells.length > 0">
+    <div
+      class='spell-preview-table fill-screen'
+      v-if="spells.length > 0"
+    >
       <table
         id="spell-preview-table"
         class="eq-table bordered eq-highlight-rows p-0" style="display: table;">
-        <thead>
+        <thead class="eq-table-floating-header">
         <tr>
           <th></th>
           <th style="width: auto; min-width: 100px; text-align: center">Level</th>
@@ -22,19 +25,38 @@
           :key="spell.id"
         >
           <td style="vertical-align: middle">
-            <b-button-group variant="outline-warning">
-              <b-dropdown
-                block right variant="outline-warning" size="sm"
-                title="Select"
+            <div class="dropdown d-inline-block">
+              <a
+                href="#"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                class="btn btn-dark btn-sm dropdown-toggle"
               >
-                <b-dropdown-item @click="selectAsEffect('scrolleffect', spell)">As Scroll Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('clickeffect', spell)">As Click Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('proceffect', spell)">As Proc Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('focuseffect', spell)">As Focus Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('worneffect', spell)">As Worn Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('bardeffect', spell)">As Bard Effect</b-dropdown-item>
-              </b-dropdown>
-            </b-button-group>
+                <i class="ra ra-sapphire"></i> Select
+              </a>
+
+              <eq-window class="dropdown-menu dropdown-menu-left p-0">
+                <a href="#" @click="selectAsEffect('scrolleffect', spell)" class="dropdown-item pl-3">
+                  As Scroll Effect
+                </a>
+                <a href="#" @click="selectAsEffect('clickeffect', spell)" class="dropdown-item pl-3">
+                  As Click Effect
+                </a>
+                <a href="#" @click="selectAsEffect('proceffect', spell)" class="dropdown-item pl-3">
+                  As Proc Effect
+                </a>
+                <a href="#" @click="selectAsEffect('focuseffect', spell)" class="dropdown-item pl-3">
+                  As Focus Effect
+                </a>
+                <a href="#" @click="selectAsEffect('worneffect', spell)" class="dropdown-item pl-3">
+                  As Worn Effect
+                </a>
+                <a href="#" @click="selectAsEffect('bardeffect', spell)" class="dropdown-item pl-3">
+                  As Bard Effect
+                </a>
+              </eq-window>
+            </div>
           </td>
           <td
             style="text-align: center; padding: 5px; vertical-align: middle"
@@ -59,6 +81,8 @@
             <spell-popover
               :spell="spell"
               :size="30"
+              placement="auto"
+              :offset="-100"
               :spell-name-length="25"
               v-if="spell && Object.keys(spell).length > 0"
               class="mt-2"
@@ -72,18 +96,14 @@
 </template>
 
 <script>
-import {Spells}           from "@/app/spells";
-import EqWindow           from "@/components/eq-ui/EQWindow.vue";
-import EqSpellEffects     from "@/components/preview/EQSpellEffects";
-import EqSpellPreview     from "@/components/preview/EQSpellCardPreview.vue";
-import {App}              from "@/constants/app";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import EqSpellEffects from "@/components/preview/EQSpellEffects";
+import EqSpellPreview from "@/components/preview/EQSpellCardPreview.vue";
 import EqSpellDescription from "@/components/preview/EQSpellDescription";
-import {DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
-import {ROUTE}            from "@/routes";
-import * as util          from "util";
-import SpellPopover       from "@/components/SpellPopover";
+import SpellPopover from "@/components/SpellPopover";
+import {WindowManager} from "@/app/window";
 
 export default {
   name: "ItemSpellPreviewTableSelector",
@@ -104,6 +124,11 @@ export default {
   async created() {
     this.title = "Spells (" + this.spells.length + ")";
   },
+  mounted() {
+    setTimeout(() => {
+      WindowManager.resizeFillScreenElements()
+    }, 100);
+  },
   props: {
     spells: Array
   },
@@ -116,37 +141,6 @@ export default {
 
       this.$emit('input', event);
     },
-    getClasses: function (spell) {
-      return Spells.getClasses(spell)
-    },
-    getTargetTypeColor: function (targetType) {
-      return Spells.getTargetTypeColor(targetType)
-    },
-    humanTime: function (sec) {
-      let result = ""
-      if (sec === 0) {
-        result = "time";
-      } else {
-        let h  = Math.floor(sec / 3600);
-        let m  = Math.floor((sec - h * 3600) / 60);
-        let s  = sec - h * 3600 - m * 60;
-        result = (h > 1 ? h + " hours " : "") + (h === 1 ? "1 hour " : "") + (m > 0 ? m + " min " : "") + (s > 0 ? s + " sec" : "");
-      }
-
-      return result;
-    },
-    getBuffDuration: function (spell) {
-      return Spells.getBuffDuration(spell)
-    },
-    editSpell(spellId) {
-      this.$router.push(
-        {
-          path: util.format(ROUTE.SPELL_EDIT, spellId),
-          query: {}
-        }
-      ).catch(() => {
-      })
-    }
   }
 }
 </script>

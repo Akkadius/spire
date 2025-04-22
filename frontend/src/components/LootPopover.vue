@@ -1,42 +1,59 @@
 <template>
-  <div v-if="loot">
-    <div :id="loot.id + '-' + popoverId + '-popover'" style="display:inline-block; position: relative">
-      <span
-        v-if="showLabel"
-        class="d-inline-block"
-      >
-        {{ loot.name }}
-      </span>
-      <slot></slot>
-    </div>
-
-    <b-popover
-      :target="loot.id + '-' + popoverId + '-popover'"
-      custom-class="no-bg"
-      placement="right"
-      delay="0"
-      boundary="viewport"
-      :no-fade="true"
-      triggers="hover focus"
+  <div v-if="loot" class="d-inline-block">
+    <popper
+      :placement="placement"
+      :append-to-body="true"
+      trigger="hover"
+      offset="0,200"
+      :options="{
+        modifiers: {
+          computeStyle: {
+            gpuAcceleration: false
+          },
+          preventOverflow: {
+            boundariesElement: 'viewport'
+          },
+          customOffset: {
+            enabled: true,
+            order: 830,
+            fn: function(data) {
+              data.offsets.popper.top += 200;
+              data.offsets.popper.left -= 300;
+              return data;
+            }
+          }
+        }
+      }"
     >
-      <eq-loot-card-preview
-        style="width: 650px; height: 100%"
-        :loot="loot"
-      />
-    </b-popover>
+      <eq-window style="min-width: 600px; width: auto; height: auto; z-index: 99999" class="p-3">
+        <eq-loot-card-preview :loot="loot" />
+      </eq-window>
 
+      <div slot="reference" style="display: inline-block; position: relative;">
+        <span v-if="showLabel" class="d-inline-block">
+          {{ loot.name }}
+        </span>
+        <slot></slot>
+      </div>
+    </popper>
   </div>
 </template>
 
 <script>
-import EqWindow          from "./eq-ui/EQWindow";
+import EqWindow from "./eq-ui/EQWindow";
 import EqLootCardPreview from "./preview/EQLootCardPreview";
+import Popper from 'vue-popperjs';
 
 export default {
-  name: "lootPopover",
+  name: "LootPopover",
+  components: {
+    EqLootCardPreview,
+    EqWindow,
+    Popper
+  },
   props: {
     loot: Object,
-    size: { // options: regular,sm
+    size: {
       type: String,
       required: false,
       default: "sm"
@@ -50,25 +67,17 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    placement: {
+      type: String,
+      required: false,
+      default: "right"
     }
   },
-  watch: {
-    loot: {
-      deep: true,
-      handler() {
-      }
-    },
-  },
-  methods: {},
   data() {
     return {
-      popoverId: Math.random().toString(16).slice(2),
+      popoverId: Math.random().toString(16).slice(2)
     }
-  },
-  components: { EqLootCardPreview, EqWindow }
+  }
 }
 </script>
-
-<style scoped>
-
-</style>

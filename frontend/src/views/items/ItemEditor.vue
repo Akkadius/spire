@@ -1465,7 +1465,7 @@
 
           <div class="text-center mt-3" v-if="item">
 
-            <button @click="saveItem()" class="mb-3">
+            <button @click="saveItem()" class="mb-3 btn btn-dark">
               <i class="fe fe-save"></i>
               Save Item
             </button>

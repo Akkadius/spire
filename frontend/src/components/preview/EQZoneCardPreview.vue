@@ -78,6 +78,8 @@
                 <td style="position: relative">
                   <npc-popover
                     :npc="n.npc"
+                    placement="left"
+                    :offset="10"
                   />
                 </td>
 

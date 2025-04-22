@@ -1,46 +1,57 @@
 <template>
   <div v-if="spell" class="d-inline-block">
-    <div
-      :id="spell.id + '-' + popoverId + '-popover'"
+    <popper
+      placement="right"
+      :append-to-body="true"
+      trigger="hover"
+      :options="{
+        placement: placement,
+        modifiers: {
+          computeStyle: {
+            gpuAcceleration: false  // ← disables translate3d()
+          },
+          offset: { offset: '0,' + offset + 'px' }
+        }
+      }"
     >
+      <eq-window style="width: auto; height: auto; z-index: 99999" class="p-3">
+        <eq-spell-preview :spell-data="spell"/>
+      </eq-window>
+
+      <div
+        slot="reference"
+      >
       <span
         :class="'d-inline-block spell-' + spell.new_icon + getIconClassLabelFromSize()"
         :title="spell.icon"
         :style="getBorderStyling()"
       />
-      <span
-        :class="getLeftMargin()"
-        :style="'position:relative;' + getTextTopOffset()"
-      >{{ clampSpellName(spell.name) }} {{ annotation }}</span>
+        <span
+          :class="getLeftMargin()"
+          :style="'position:relative;' + getTextTopOffset()"
+        >{{ clampSpellName(spell.name) }} {{ annotation }}</span>
 
-    </div>
-
-    <b-popover
-      :target="spell.id + '-' + popoverId + '-popover'"
-      custom-class="no-bg"
-      placement="right"
-      delay="0"
-      boundary="viewport"
-      :no-fade="true"
-      triggers="hover focus"
-      style="width: 500px !important"
-    >
-      <eq-window style="width: auto; height: 100%">
-        <eq-spell-preview :spell-data="spell"/>
-      </eq-window>
-    </b-popover>
+      </div>
+    </popper>
 
   </div>
 </template>
 
 <script>
-import EqWindow           from "./eq-ui/EQWindow";
+import EqWindow from "./eq-ui/EQWindow";
 import EqSpellCardPreview from "./preview/EQSpellCardPreview";
-import EqSpellPreview     from "./preview/EQSpellCardPreview";
-import {Spells}           from "@/app/spells";
+import EqSpellPreview from "./preview/EQSpellCardPreview";
+import {Spells} from "@/app/spells";
+import Popper from 'vue-popperjs';
 
 export default {
   name: "SpellPopover",
+  components: {
+    EqSpellPreview,
+    EqSpellCardPreview,
+    EqWindow,
+    Popper
+  },
   props: {
     spell: Object,
     size: { // options: 12,20,30,40
@@ -56,6 +67,16 @@ export default {
       type: String,
       required: false,
       default: ""
+    },
+    offset : {
+      type: Number,
+      required: false,
+      default: 200
+    },
+    placement: {
+      type: String,
+      required: false,
+      default: "right"
     }
   },
   watch: {
@@ -90,11 +111,9 @@ export default {
     getLeftMargin() {
       if (this.size <= 12) {
         return 'ml-2'
-      }
-      else if (this.size <= 20) {
+      } else if (this.size <= 20) {
         return 'ml-2'
-      }
-      else if (this.size <= 30) {
+      } else if (this.size <= 30) {
         return 'ml-3'
       }
 
@@ -103,11 +122,9 @@ export default {
     getIconClassLabelFromSize() {
       if (this.size <= 12) {
         return '-12'
-      }
-      else if (this.size <= 20) {
+      } else if (this.size <= 20) {
         return '-20'
-      }
-      else if (this.size <= 30) {
+      } else if (this.size <= 30) {
         return '-30'
       }
 
@@ -116,11 +133,9 @@ export default {
     getBorderStyling() {
       if (this.size <= 12) {
         return ' border: 1px solid ' + this.getTargetTypeColor()
-      }
-      else if (this.size <= 20) {
+      } else if (this.size <= 20) {
         return 'position: relative; top: 5px; border-radius: 5px; border: .5px solid ' + this.getTargetTypeColor()
-      }
-      else if (this.size <= 30) {
+      } else if (this.size <= 30) {
         return 'border-radius: 5px; border: 1px solid ' + this.getTargetTypeColor()
       }
 
@@ -129,11 +144,9 @@ export default {
     getTextTopOffset() {
       if (this.size <= 12) {
         return 'top: -3px'
-      }
-      else if (this.size <= 20) {
+      } else if (this.size <= 20) {
         return 'top: 0px'
-      }
-      else if (this.size <= 30) {
+      } else if (this.size <= 30) {
         return 'top: -10px'
       }
 
@@ -147,6 +160,5 @@ export default {
   mounted() {
     this.sideLoadedSpellData = Spells.data
   },
-  components: { EqSpellPreview, EqSpellCardPreview, EqWindow }
 }
 </script>
