@@ -26,6 +26,7 @@ import semver                   from "semver";
 import AppUpdateModal           from "@/components/modals/AppUpdateModal.vue";
 import {SpireWebsocket}         from "@/app/api/spire-websocket";
 import {Notify}                 from "@/app/Notify";
+import {WindowManager} from "@/app/window";
 
 export default {
   name: "App",
@@ -45,10 +46,13 @@ export default {
     let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
-    if (vw < 1500) {
+    // 78vh
+    if (vw < 1500 && vw > 1000) {
       // add zoom 80% to body
-      document.body.style.setProperty("zoom", "80%")
+      WindowManager.applyZoom(.8);
     }
+
+    WindowManager.hookListeners();
 
     this.loadCssFiles();
     this.loadKeypressBindings();

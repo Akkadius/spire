@@ -1,6 +1,6 @@
 <template>
   <div
-    class='eq-window-simple p-0'
+    class='eq-window-simple p-0 mb-0'
     :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
   >
     <!--      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>-->
@@ -10,8 +10,8 @@
       </div>
 
       <div
-        class='spell-table'
-        style="height: 78vh; overflow-y: scroll; overflow-x: hidden; "
+        class='spell-table fill-screen'
+        style="overflow-y: scroll; overflow-x: hidden;"
         v-if="spells.length > 0"
       >
         <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
@@ -137,6 +137,7 @@ import {ROUTE}            from "@/routes";
 import * as util          from "util";
 import SpellPopover       from "@/components/SpellPopover";
 import {Items}            from "@/app/items";
+import {WindowManager} from "@/app/window";
 
 export default {
   name: "EqSpellPreviewTable",
@@ -158,8 +159,11 @@ export default {
   },
   async created() {
     this.title = "Spells (" + this.spells.length + ")";
-
-
+  },
+  mounted() {
+    setTimeout(() => {
+      WindowManager.resizeFillScreenElements()
+    }, 100);
   },
   props: {
     spells: Array

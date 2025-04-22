@@ -1,6 +1,18 @@
 <template>
   <div>
-    <eq-window>
+    <eq-window
+      v-if="viewingResults"
+      @mouseover.native="setViewingResults(false)"
+      @click.native="setViewingResults(false)"
+      class="text-center"
+    >
+      <span style="font-weight: bold">Hover or click this area to go back to filters</span>
+    </eq-window>
+
+    <eq-window
+      style="transition: all 1s ease;"
+
+      v-if="!viewingResults">
       <div class="row">
         <div class="col-1">
           <div
@@ -237,6 +249,7 @@
       :items="items"
       @reload-list="listItems"
       v-if="loaded && listType === 'table' && items"
+      @mouseover.native="setViewingResults(true)"
     />
 
     <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
@@ -268,6 +281,7 @@ import {Items} from "@/app/items";
 import ItemPopover from "@/components/ItemPopover.vue";
 import ContentArea from "@/components/layout/ContentArea.vue";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
+import {WindowManager} from "@/app/window";
 
 export default {
   components: {
@@ -304,6 +318,8 @@ export default {
       itemName: "",
       itemType: -1,
       spellEffect: "",
+
+      viewingResults: false,
 
       // when "only" option is set
       selectOnlyClassEnabled: false,
@@ -367,6 +383,13 @@ export default {
   },
 
   methods: {
+
+    setViewingResults(set) {
+      this.viewingResults = set
+      setTimeout(() => {
+        WindowManager.resizeFillScreenElements();
+      }, 10)
+    },
 
     handleDbColumnFilters(filters) {
       this.filters = filters
