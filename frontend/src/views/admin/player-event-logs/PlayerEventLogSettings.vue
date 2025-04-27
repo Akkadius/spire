@@ -49,7 +49,8 @@
           <thead class="eq-table-floating-header">
           <tr>
             <th class="text-right" style="width: 200px">(ID) Event Name</th>
-            <th style="width: 140px">Event Enabled</th>
+            <th style="width: 140px">Event<br>Enabled</th>
+            <th style="width: 140px">ETL<br>Enabled</th>
             <th style="width: 400px">
               Retention Days
               <small class="text-muted d-block">
@@ -86,6 +87,19 @@
                   :true-value="1"
                   :false-value="0"
                   v-model="s.event_enabled"
+                  @change="save(s)"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="d-inline-block mr-3">
+                <eq-checkbox
+                  label="Enabled"
+                  :fade-when-not-true="true"
+                  class="d-inline-block"
+                  :true-value="1"
+                  :false-value="0"
+                  v-model="s.etl_enabled"
                   @change="save(s)"
                 />
               </div>
