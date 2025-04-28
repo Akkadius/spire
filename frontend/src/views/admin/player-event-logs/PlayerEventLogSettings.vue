@@ -44,7 +44,6 @@
           </div>
         </div>
 
-
         <table class="eq-table eq-highlight-rows bordered log-settings minified-inputs">
           <thead class="eq-table-floating-header">
           <tr>
@@ -94,6 +93,7 @@
             <td>
               <div class="d-inline-block mr-3">
                 <eq-checkbox
+                  v-if="etlSettings[s.id]"
                   label="Enabled"
                   :fade-when-not-true="true"
                   class="d-inline-block"
@@ -174,6 +174,7 @@ export default {
 
       settings: [],
       discordWebhooks: [],
+      etlSettings: [],
 
       // notification / errors
       notification: "",
@@ -182,6 +183,7 @@ export default {
   },
   async mounted() {
     this.loadQueryState()
+    this.getEtlSettings()
 
     let r = await (new PlayerEventLogSettingApi(...SpireApi.cfg())).listPlayerEventLogSettings()
     if (r.status === 200) {
@@ -261,8 +263,25 @@ export default {
           this.error = e.response.data.error
         }
       }
+    },
 
+    async getEtlSettings() {
+      this.etlSettings = {}
 
+      try {
+        const r = await SpireApi.v1().get("eqemuserver/player-event-logs/etl-settings");
+        if (r.status === 200) {
+          const keyed = {};
+          for (const setting of r.data.etl_settings) {
+            keyed[setting.event_id] = setting;
+          }
+          this.etlSettings = keyed;
+        }
+      } catch (e) {
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error;
+        }
+      }
     }
   }
 }
