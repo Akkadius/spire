@@ -1510,7 +1510,7 @@ type EtlCommandResponse struct {
 func (a *Controller) getEtlSettings(c echo.Context) error {
 	worldBin := a.pathmgmt.GetWorldBinPath()
 	if _, err := os.Stat(worldBin); errors.Is(err, os.ErrNotExist) {
-		return errors.New("Failed to find World binary to fetch version")
+		return errors.New("Failed to find World binary to fetch ETL settings")
 	}
 
 	cmd := exec.Command(worldBin, "etl:settings")
