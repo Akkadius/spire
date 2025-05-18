@@ -1,3 +1,19 @@
+## [4.20.0] 5/18/2025
+
+* **Items** Auto hide search pane when mouse is not over it. (@Akkadius)
+* **Spell Editor** Add more spell constants (@JJ)
+* **Spell Editor** Adds a formula pane with known formulas (@JJ)
+* **Spell Editor** Change spell effect formula to number input (@JJ)
+* **Spell Editor** Fixes the `Resist Adjust` part of the NPC Spell Editor. Data type was set to `text` when it should have been `number` (@JJ)
+* **Spell Editor** Unresistable is part of the `resisttype` group (@JJ)
+* **Spire Admin** Add `etl_enabled` to Player Event Log Settings (@JJ)
+* **Spire Admin** Add support for custom database version in server update page (@JJ)
+* **Spire Model Relationship Explorer** Has been moved to dynamically resolve relationships versus baking static assets in the repository. (@Akkadius)
+* **Spire UI** Made many windows auto-resize to fit screen size. (@Akkadius)
+* **Spire UI** Made Spire more friendly to low resolutions. (@Akkadius)
+* **Spire** Fix compilation on MacOS and compatibility with Arm64 (@Akkadius)
+* **Task Editor** Add faction_amount (@JJ)
+
 ## [4.19.1] 4/8/2025
 
 * **Spire Admin** Fix Online/Offline status for Windows servers in the admin header.
