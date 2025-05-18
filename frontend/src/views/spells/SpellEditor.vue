@@ -1195,7 +1195,7 @@
                   @click="processClickInputTrigger(field.field)"
                 >
                   <!-- Modifier description -->
-                  <div v-if="['buffduration'].includes(field.field) && buffduration > 0" style="margin-top: 8px">
+                  <div v-if="['buffduration'].includes(field.field) && spell.buffduration > 0" style="margin-top: 8px">
                     {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)
                   </div>
                 </div>
