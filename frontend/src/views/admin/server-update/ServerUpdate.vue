@@ -29,6 +29,10 @@
               <td class="text-right font-weight-bold">Bots Database Version</td>
               <td>{{ version.bots_database_version }}</td>
             </tr>
+            <tr class="fade-in" v-if="version.custom_database_version">
+              <td class="text-right font-weight-bold">Custom Database Version</td>
+              <td>{{ version.custom_database_version }}</td>
+            </tr>
             </tbody>
           </table>
 

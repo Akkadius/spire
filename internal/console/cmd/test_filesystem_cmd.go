@@ -43,11 +43,12 @@ func NewTestFilesystemCommand(
 func (c *TestFilesystemCommand) Handle(_ *cobra.Command, args []string) {
 
 	type ServerVersionInfo struct {
-		BotsDatabaseVersion int    `json:"bots_database_version"`
-		CompileDate         string `json:"compile_date"`
-		CompileTime         string `json:"compile_time"`
-		DatabaseVersion     int    `json:"database_version"`
-		ServerVersion       string `json:"server_version"`
+		BotsDatabaseVersion   int    `json:"bots_database_version"`
+		CompileDate           string `json:"compile_date"`
+		CompileTime           string `json:"compile_time"`
+		CustomDatabaseVersion int    `json:"custom_database_version"`
+		DatabaseVersion       int    `json:"database_version"`
+		ServerVersion         string `json:"server_version"`
 	}
 
 	worldBin := c.pathmgmt.GetWorldBinPath()
