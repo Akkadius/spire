@@ -97745,6 +97745,9 @@
                 },
                 "retention_days": {
                     "type": "integer"
+                },
+                "etl_enabled": {
+                    "type": "integer"
                 }
             }
         },

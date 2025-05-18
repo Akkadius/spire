@@ -5089,6 +5089,8 @@ definitions:
         type: integer
       retention_days:
         type: integer
+      etl_enabled:
+        type: integer
     type: object
   models.PlayerTitleset:
     properties:

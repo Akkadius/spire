@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/md5"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/internal/auditlog"
@@ -109,6 +110,7 @@ func (a *Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/get-websocket-auth", a.getWebsocketAuth, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/server/process-kill/:pid", a.killProcess, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/system-all", a.getSystemAll, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/player-event-logs/etl-settings", a.getEtlSettings, nil),
 	}
 }
 
@@ -1489,4 +1491,63 @@ func (a *Controller) getSystemAll(c echo.Context) error {
 	systems = append(systems, all)
 
 	return c.JSON(http.StatusOK, systems)
+}
+
+type EtlSetting struct {
+	DiscordID  int    `json:"discord_id"`
+	Enabled    bool   `json:"enabled"`
+	EtlEnabled bool   `json:"etl_enabled"`
+	EventID    int    `json:"event_id"`
+	Retention  int    `json:"retention"`
+	TableName  string `json:"table_name"`
+}
+
+type EtlCommandResponse struct {
+	EtlSettings []EtlSetting `json:"etl_settings"`
+}
+
+// getEtlSettings returns player event log ETL settings
+func (a *Controller) getEtlSettings(c echo.Context) error {
+	worldBin := a.pathmgmt.GetWorldBinPath()
+	if _, err := os.Stat(worldBin); errors.Is(err, os.ErrNotExist) {
+		return errors.New("Failed to find World binary to fetch ETL settings")
+	}
+
+	cmd := exec.Command(worldBin, "etl:settings")
+	cmd.Dir = a.pathmgmt.GetEQEmuServerPath()
+	output, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+
+	o := string(output)
+	var n string
+	startWatch := false
+	for _, s := range strings.Split(o, "\n") {
+		if strings.Contains(s, "{") {
+			startWatch = true
+		}
+		if startWatch {
+			n += s
+		}
+	}
+
+	var r EtlCommandResponse
+	err = json.Unmarshal([]byte(n), &r)
+	if err != nil {
+		return err
+	}
+
+	// Filter out entries with empty TableName
+	filtered := make([]EtlSetting, 0, len(r.EtlSettings))
+	for _, setting := range r.EtlSettings {
+		if setting.TableName != "" {
+			filtered = append(filtered, setting)
+		}
+	}
+
+	// Update EtlSettings with the filtered slice
+	r.EtlSettings = filtered
+
+	return c.JSON(http.StatusOK, r)
 }
