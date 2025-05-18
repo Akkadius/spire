@@ -269,18 +269,13 @@
                     @click="processSpaFieldAction(i, spell['effectid_' + i], 'max')"
                   />
 
-                  <b-form-select
+                  <b-form-input
+		                :id="'formula_' + i"
+		                @mouseover.native="drawSpaFormulasPane()"
                     v-model.number="spell['formula_' + i]"
-                    :id="'formula_' + i"
-                  >
-                    <option
-                      v-for="(description, index) in BASE_VALUE_FORMULAS"
-                      :key="index"
-                      :value="parseInt(index)"
-                    >
-                      {{ index }}) {{ description }}
-                    </option>
-                  </b-form-select>
+		                :class="getSpaSpellHighlights(spell['effectid_' + i], 'formula')"
+		                @click="processSpaFieldAction(i, spell['effectid_' + i], 'formula')"
+                  />
 
                 </b-input-group>
 
@@ -1472,6 +1467,18 @@
 
         </eq-window>
 
+	      <!-- SPA Formula Pane -->
+	      <eq-window
+	        style=" martin-right: 10px; width: auto;"
+	        classs="fade-in"
+	        v-if="spaFormulasPaneActive"
+	        :title="'Spell Effect Formulas'"
+	      >
+
+	        <spell-spa-formulas-pane/>
+
+	      </eq-window>
+
         <!-- preview spell -->
         <eq-window
           style=" margin-right: 10px; width: auto;"
@@ -1692,6 +1699,7 @@ import SpellItemSelector              from "./components/SpellItemSelector";
 import {SpireQueryBuilder}            from "../../app/api/spire-query-builder";
 import {FreeIdFetcher}                from "../../app/free-id-fetcher";
 import ContentArea                    from "../../components/layout/ContentArea";
+import SpellSpaFormulasPane           from "./components/SpellSpaFormulasPane";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1726,7 +1734,8 @@ export default {
     EqTab,
     EqTabs,
     EqWindow,
-    EqWindowFancy
+    EqWindowFancy,
+    SpellSpaFormulasPane
   },
   data() {
     return {
@@ -1763,6 +1772,7 @@ export default {
       coneVisualizerActive: false,
       rangeVisualizerActive: false,
       teleportZoneSelectorActive: false,
+      spaFormulasPaneActive: false,
 
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
@@ -2109,6 +2119,9 @@ export default {
           if (field.includes("base")) {
             fieldId = "effect_base_value"
           }
+	  if (field.includes("formula")) {
+            fieldId = "formula"
+	  }
 
           this.drawItemSelector(fieldId + "_" + effectIndex)
         }
@@ -2290,6 +2303,7 @@ export default {
       this.coneVisualizerActive          = false;
       this.rangeVisualizerActive         = false;
       this.teleportZoneSelectorActive    = false;
+      this.spaFormulasPaneActive         = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -2422,6 +2436,12 @@ export default {
     },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType);
+    },
+    drawSpaFormulasPane() {
+      this.resetPreviewComponents()
+      this.lastResetTIme            = Date.now()
+      this.previewSpellActive       = false
+      this.spaFormulasPaneActive    = true
     },
   }
 }
