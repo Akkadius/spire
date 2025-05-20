@@ -1,3 +1,7 @@
+## [4.20.1] 5/19/2025
+
+* **Spells** Fix spell formulas pane from disappearing. (@joligario)
+
 ## [4.20.0] 5/18/2025
 
 * **Items** Auto hide search pane when mouse is not over it. (@Akkadius)
