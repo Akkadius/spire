@@ -31,7 +31,6 @@ export default {
   name: "SpellSpaFormulaPane",
   components: {
     EqDebug,
-    "v-runtime-template": () => import("v-runtime-template"),
     EqWindow,
   },
   data() {
