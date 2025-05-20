@@ -270,11 +270,11 @@
                   />
 
                   <b-form-input
-		                :id="'formula_' + i"
-		                @mouseover.native="drawSpaFormulasPane()"
+                    :id="'formula_' + i"
+                    @mouseover.native="drawSpaFormulasPane()"
                     v-model.number="spell['formula_' + i]"
-		                :class="getSpaSpellHighlights(spell['effectid_' + i], 'formula')"
-		                @click="processSpaFieldAction(i, spell['effectid_' + i], 'formula')"
+                    :class="getSpaSpellHighlights(spell['effectid_' + i], 'formula')"
+                    @click="processSpaFieldAction(i, spell['effectid_' + i], 'formula')"
                   />
 
                 </b-input-group>
@@ -2439,7 +2439,7 @@ export default {
     },
     drawSpaFormulasPane() {
       this.resetPreviewComponents()
-      this.lastResetTIme            = Date.now()
+      this.lastResetTime            = Date.now()
       this.previewSpellActive       = false
       this.spaFormulasPaneActive    = true
     },
