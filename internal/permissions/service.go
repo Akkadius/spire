@@ -79,6 +79,7 @@ func (s *Service) RegisterManualResources() map[string][]string {
 			"eqemuserver/server/process-kill",
 		},
 		"Spire Settings": {"spire/setting"},
+		"Server Player Event ETL Settings": {"eqemuserver/player-event-logs/etl-settings"},
 	}
 }
 
