@@ -1622,6 +1622,12 @@ export default {
     async cloneActivity() {
       this.saveFreeze = true
 
+      if (this.task.task_activities.length >= 20) {
+        this.notification = "You cannot clone; task already has 20 activities.";
+        this.saveFreeze = false
+        return;
+      }
+
       await this.saveIfModified()
       try {
         const r = await Tasks.cloneTaskActivity(this.getBackendFormattedTask(), this.selectedActivity)

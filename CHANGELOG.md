@@ -4,6 +4,7 @@
 * **Task Editor** Auto size the description field based on the contents. (@Akkadius)
 * **Task Editor** Description selector now updates 300ms after the last keystroke on top of "change" event which is when the user clicks off the field. This will prevent accidental work loss from moving cursor away to another preview pane. (@Akkadius)
 * **Task Editor** Add a new guard that prevents user from creating an amount of activities that exceeds the client maximum (20). (@Akkadius)
+* **Task Editor** Add a new guard that prevents user from cloning an activitiy when the an amount of activities that exceeds the client maximum (20). (@Akkadius)
 * **Task Editor** Expose the "enabled" checkbox to the task editor at the top of the page. (@Akkadius)
 
 ## [4.20.2] 5/19/2025
