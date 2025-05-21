@@ -32,6 +32,7 @@
               <b-form-input
                 v-if="field.fieldType === 'text' && field.activity"
                 v-model.number="activityDescriptions[field.index].multiKey"
+                @keyup="sendDescriptionToParentDebounce"
                 @change="sendDescriptionToParent"
                 class="m-0 mt-1"
               />
@@ -43,6 +44,7 @@
             v-if="field.fieldType === 'textarea' && field.activity && activityDescriptions[field.index]"
             v-model="activityDescriptions[field.index].description"
             class="m-0 mt-1"
+            @keyup="sendDescriptionToParentDebounce"
             @change="sendDescriptionToParent"
             rows="3"
             max-rows="6"
@@ -55,6 +57,7 @@
             v-if="field.fieldType === 'textarea' && !field.activity"
             v-model="globalDescription"
             class="m-0 mt-1"
+            @keyup="sendDescriptionToParentDebounce"
             @change="sendDescriptionToParent"
             rows="2"
             max-rows="6"
@@ -96,6 +99,7 @@
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
 import EqCheckbox     from "@/components/eq-ui/EQCheckbox";
 import {Tasks}        from "@/app/tasks";
+import {debounce} from "@/app/utility/debounce";
 
 export default {
   name: "TaskDescriptionSelector",
@@ -226,6 +230,10 @@ export default {
         },
       )
     },
+
+    sendDescriptionToParentDebounce: debounce(function () {
+      this.sendDescriptionToParent()
+    }, 500),
 
     sendDescriptionToParent() {
       let finalDescription = `${this.globalDescription}`

@@ -102,10 +102,10 @@ export class Tasks {
   }
 
   public static async createNewTaskActivity(task: any) {
-    let taskActivity        = this.getExampleActivity()
-    taskActivity.taskid     = task.id
+    let taskActivity = this.getExampleActivity()
+    taskActivity.taskid = task.id
     taskActivity.activityid = (task.task_activities ? this.getNextActivityId(task.task_activities) : 0)
-    taskActivity.step       = (task.task_activities ? this.getLatestStep(task.task_activities) : 1)
+    taskActivity.step = (task.task_activities ? this.getLatestStep(task.task_activities) : 1)
 
     // @ts-ignore
     return await this.getTaskActivitiesApi()
@@ -280,6 +280,7 @@ export class Tasks {
       "reward_ebon_crystals": "Number of ebon crystals rewarded",
       "reward_radiant_crystals": "Number of radiant crystals rewarded",
       "cash_reward": "Amount of coin rewarded in copper",
+      "enabled": "Determines if the task is enabled or not",
     }
   }
 

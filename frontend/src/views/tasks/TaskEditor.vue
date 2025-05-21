@@ -148,9 +148,16 @@
                          field: 'type',
                          fieldType: 'select',
                          itemIcon: '2275',
-                         col: 'col-6',
+                         col: 'col-4',
                          selectData: TASK_TYPES,
                          zeroValue: -1,
+                       },
+                       {
+                         description: 'Enabled',
+                         field: 'enabled',
+                         fieldType: 'checkbox',
+                         itemIcon: '6840',
+                         col: 'col-2',
                        },
                        {
                          description: 'Task Description',
@@ -350,7 +357,6 @@
                          itemIcon: '750',
                          col: 'col-6',
                        },
-
                      ]"
                       :class="field.col + ' mb-3 pl-1 pr-1'"
                     >
@@ -431,7 +437,6 @@
                         :id="field.field"
                         v-model="task[field.field]"
                         class="m-0 mt-1"
-                        style="max-height: 75px"
                         v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] === '' ? 'opacity: .5' : '') + ';'"
@@ -1129,7 +1134,7 @@
 
         <div v-if="previewTaskActive">
           <task-preview
-            :task="task"
+            :task-source="task"
             :selected-activity="selectedActivity"
           />
 
@@ -1198,6 +1203,7 @@ import AlternateCurrencySelector from "@/components/selectors/AlternateCurrencyS
 import DynamicZoneTemplateSelector from "@/components/selectors/DynamicZoneTemplateSelector.vue";
 import TaskReplayRequestGroupSelector from "@/views/tasks/components/TaskReplayRequestGroupSelector.vue";
 import TaskItemMatchListPreviewer from "@/views/tasks/components/TaskItemMatchListPreviewer.vue";
+import {debounce} from "@/app/utility/debounce";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
@@ -1272,6 +1278,7 @@ export default {
   },
 
   methods: {
+    debounce,
 
     async saveIfModified() {
       if (EditFormFieldUtil.anyFieldsHaveBeenEdited()) {
@@ -1691,6 +1698,12 @@ export default {
     async createActivity() {
       this.saveFreeze = true
 
+      if (this.task && this.task.task_activities && this.task.task_activities.length >= 20) {
+        this.notification = "You cannot create more than 20 activities in a task.";
+        this.saveFreeze = false
+        return;
+      }
+
       try {
         await this.saveIfModified()
         const r = await Tasks.createNewTaskActivity(this.task)
@@ -2094,7 +2107,18 @@ export default {
         EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
         EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
         this.setFieldHighlights()
+        this.resizeDescription()
       })
+    },
+
+    resizeDescription() {
+      // autosize textareas
+      let e = document.getElementById("description")
+      if (e) {
+        e.style.minHeight = "75px";
+        e.style.height = "auto";
+        e.style.height = (20 + e.scrollHeight) + "px";
+      }
     },
 
     updateQueryState() {
@@ -2154,6 +2178,7 @@ export default {
       this.$forceUpdate()
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(selector)
+      this.resizeDescription()
     }
   },
   async mounted() {

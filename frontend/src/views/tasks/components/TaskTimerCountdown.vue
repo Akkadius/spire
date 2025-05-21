@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import {debounce} from "@/app/utility/debounce";
+
 export default {
   name: "TaskTimerCountdown",
   data() {
@@ -27,7 +29,8 @@ export default {
     task: {
       deep: true,
       handler() {
-        this.load()
+        this.debouncedLoad()
+        console.log("task timer watch")
       }
     },
     selectedActivity: {
@@ -41,6 +44,10 @@ export default {
   },
   mounted() {
     this.load()
+
+    this.debouncedLoad = debounce(() => {
+      this.load();
+    }, 500);
   },
   methods: {
     load() {

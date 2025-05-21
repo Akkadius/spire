@@ -142,6 +142,7 @@ import EqCashDisplay      from "@/components/eq-ui/EqCashDisplay";
 import EqTabs             from "@/components/eq-ui/EQTabs";
 import EqTab              from "@/components/eq-ui/EQTab";
 import TaskTimerCountdown from "@/views/tasks/components/TaskTimerCountdown";
+import {debounce} from "@/app/utility/debounce";
 
 export default {
   name: "TaskPreview",
@@ -155,7 +156,7 @@ export default {
     "v-runtime-template": () => import("v-runtime-template")
   },
   props: {
-    task: Object,
+    taskSource: Object,
     selectedActivity: {
       type: Number,
       required: false
@@ -165,9 +166,9 @@ export default {
     return {
       debug: true,
 
-
       description: "",
       zones: {},
+      task: {},
 
       // item objects for rendering
       rewardItems: [],
@@ -176,16 +177,17 @@ export default {
   },
 
   watch: {
-    task: {
+    taskSource: {
       deep: true,
       handler() {
         clearInterval(this.taskTimer)
-        this.load()
+        this.debouncedLoad()
       }
     },
     selectedActivity: {
       handler() {
         this.description = this.getDescription()
+        console.log("selectedActivity")
       }
     },
   },
@@ -195,6 +197,11 @@ export default {
 
     // preload zones
     this.zones = await Zones.getZones()
+
+    this.debouncedLoad = debounce(() => {
+      this.load();
+      console.log("preview debounce");
+    }, 500);
   },
   methods: {
     truncate(string, length) {
@@ -218,7 +225,9 @@ export default {
     },
 
     async load() {
-
+      // copy from parent
+      // this is to debounce model update propagation and prevent lag
+      this.task = JSON.parse(JSON.stringify(this.taskSource))
 
       // bust cache if the reward is different when we redraw this component
       // console.log(this.previousRewardItems)
