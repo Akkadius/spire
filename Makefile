@@ -220,6 +220,7 @@ strip-extra-assets: ##@build Strips extra assets not needed to packet into binar
 	rm -rf frontend/public/eq-asset-preview-master/assets/item_icons
 
 build-frontend: ##@build Builds frontend to be packed into binary
+	cd frontend/vue2 && npm install && VUE_APP_BACKEND_BASE_URL= npm run build:umd && cp -r dist/* ../public/legacy
 	cd frontend && npm install && npm run build
 
 build-binary: ##@build Build and packs release binary
