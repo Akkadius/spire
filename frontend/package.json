@@ -1,64 +1,25 @@
 {
   "name": "spire",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS=--openssl-legacy-provider node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open --host=0.0.0.0",
-    "serve": "NODE_OPTIONS=--openssl-legacy-provider node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --host=0.0.0.0",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js build --nomaps",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@exuanbo/file-icons-js": "^3.3.0",
-    "@types/jquery": "^3.5.9",
-    "@types/leaflet": "^1.7.9",
-    "ansi-to-html": "^0.7.2",
-    "axios": "^0.18.0",
-    "bootstrap": "^4.6.1",
-    "bootstrap-vue": "^2.21.2",
-    "browserslist": "^4.24.3",
-    "caniuse-lite": "^1.0.30001690",
-    "cheerio": "^1.0.0-rc.10",
-    "core-js": "^2.6.12",
-    "dayjs": "^1.11.13",
-    "dot-object": "^2.1.4",
-    "fontawesome-4.7": "^4.7.0",
-    "highlight.js": "^9.18.3",
-    "jquery": "^3.6.0",
-    "leaflet": "^1.7.1",
-    "markdown-it": "^12.2.0",
-    "ninja-keys": "^1.2.2",
-    "qs": "^6.5.2",
-    "rpg-awesome": "^0.2.0",
-    "semver": "^5.7.0",
-    "slugify": "^1.6.3",
-    "superagent": "^6.1.0",
-    "toastify-js": "^1.12.0",
-    "v-runtime-template": "^1.10.0",
-    "vue": "^2.7.16",
-    "vue-backtotop": "^1.6.1",
-    "vue-class-component": "^7.2.6",
-    "vue-color": "^2.8.1",
-    "vue-property-decorator": "^8.5.1",
-    "vue-router": "^3.5.3",
-    "vue2-ace-editor": "^0.0.15",
-    "vue2-dropzone": "^3.6.0",
-    "vue2-leaflet": "^2.7.1",
-    "vuex": "^3.6.2"
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.6.0",
-    "@vue/cli-plugin-typescript": "^3.6.0",
-    "@vue/cli-service": "^3.6.0",
-    "@vue/eslint-config-typescript": "^4.0.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "sass": "^1.44.0",
-    "sass-loader": "^7.1.0",
-    "typescript": "^4.4.4",
-    "vue-template-compiler": "^2.6.14",
-    "webpack-cli": "^4.9.2"
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3"
   },
   "eslintConfig": {
     "root": true,
@@ -66,33 +27,18 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "@vue/standard",
-      "@vue/typescript"
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
     ],
-    "rules": {
-      "indent": "off",
-      "vue/script-indent": [
-        "warn",
-        2,
-        {
-          "baseIndent": 1
-        }
-      ],
-      "ignoreEOLComments": true
-    },
     "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not dead",
+    "not ie 11"
   ]
 }

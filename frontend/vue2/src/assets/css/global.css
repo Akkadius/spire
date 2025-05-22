@@ -451,12 +451,12 @@ th[role=columnheader]:hover:not(.no-sort):after {
 }
 
 .sidebar-normal {
-    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg) !important;
+    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url("~@/assets/img/eq-wallpaper-1.jpg") !important;
     opacity: 1;
 }
 
 .sidebar-admin {
-    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg) !important;
+    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url("~@/assets/img/eq-wallpaper-1.jpg") !important;
     opacity: 1;
 }
 
@@ -704,7 +704,7 @@ html, body{
     }
 
     .navbar {
-        background-image: radial-gradient(circle, transparent 0%, var(--color-v) 100%), linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url(/img/eq-wallpaper-1.b2319219.jpg) !important;
+        background-image: radial-gradient(circle, transparent 0%, var(--color-v) 100%), linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url("~@/assets/img/eq-wallpaper-1.jpg") !important;
     }
 
     .custom-control-label::before {
@@ -723,7 +723,7 @@ html, body{
 }
 
 .navbar-dark.navbar-vibrant {
-    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg);
+    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url("~@/assets/img/eq-wallpaper-1.jpg");
 }
 
 @media only screen and (max-device-width: 640px) {
