@@ -271,7 +271,7 @@
 
                   <b-form-input
                     :id="'formula_' + i"
-                    @mouseover.native="drawSpaFormulasPane()"
+                    @mouseover.native="drawSpaFormulasPane('formula_' + i)"
                     v-model.number="spell['formula_' + i]"
                     :class="getSpaSpellHighlights(spell['effectid_' + i], 'formula')"
                     @click="processSpaFieldAction(i, spell['effectid_' + i], 'formula')"
@@ -1467,17 +1467,12 @@
 
         </eq-window>
 
-	      <!-- SPA Formula Pane -->
-	      <eq-window
-	        style=" martin-right: 10px; width: auto;"
-	        classs="fade-in"
-	        v-if="spaFormulasPaneActive"
-	        :title="'Spell Effect Formulas'"
-	      >
-
-	        <spell-spa-formulas-pane/>
-
-	      </eq-window>
+        <!-- SPA Formulas Pane -->
+        <div v-if="spaFormulasPaneActive">
+          <spell-spa-formulas-pane
+            @input="spell[selectedFormulaSelectorField] = $event.formulaId; setFieldModifiedById(selectedFormulaSelectorField)"
+          />
+        </div>
 
         <!-- preview spell -->
         <eq-window
@@ -1787,6 +1782,7 @@ export default {
       activeRangeField: "",
       selectedTeleportZoneSelectorType: "",
       selectedItemSelectorField: "",
+      selectedFormulaSelectorField: "",
 
       // cache
       dbStrSelectData: {},
@@ -2119,9 +2115,9 @@ export default {
           if (field.includes("base")) {
             fieldId = "effect_base_value"
           }
-	  if (field.includes("formula")) {
+          if (field.includes("formula")) {
             fieldId = "formula"
-	  }
+          }
 
           this.drawItemSelector(fieldId + "_" + effectIndex)
         }
@@ -2382,6 +2378,9 @@ export default {
       if (field.includes("base")) {
         fieldId = "effect_base_value"
       }
+      if (field.includes("formula")) {
+        fieldId = "formula"
+      }
 
       this.selectedEffectColumn = fieldId
 
@@ -2437,11 +2436,13 @@ export default {
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType);
     },
-    drawSpaFormulasPane() {
+    drawSpaFormulasPane(field) {
       this.resetPreviewComponents()
-      this.lastResetTime            = Date.now()
-      this.previewSpellActive       = false
-      this.spaFormulasPaneActive    = true
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
+      this.lastResetTime                = Date.now()
+      this.previewSpellActive           = false
+      this.spaFormulasPaneActive        = true
+      this.selectedFormulaSelectorField = field
     },
   }
 }
