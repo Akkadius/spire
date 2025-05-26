@@ -278,7 +278,6 @@
     <div v-else-if="e.event_type_id === PLAYER_EVENT.GROUNDSPAWN_PICKUP">
       Picked up
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
-      ({{ event(e).charges }})
       from the ground!
     </div>
 
