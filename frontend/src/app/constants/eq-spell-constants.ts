@@ -1435,7 +1435,6 @@ export const SPA_EFFECT_FORMULAS = {
   "0":         "Base",
   "60":        "Base / 100",
   "70":        "Base / 100",
-  "1-99":      "Base + (Level * ID)",
   "100":       "Base",
   "101":       "Base + (Level / 2)",
   "102":       "Base + Level",
@@ -1478,6 +1477,7 @@ export const SPA_EFFECT_FORMULAS = {
   "144":       "Base + ((Level * 10) + (Level - 40) * 20)",
   "201":       "Max",
   "203":       "Max",
+  "1-99":      "Base + (Level * ID)",
   "1001-1999": "Base - (ID - 1000) * BuffCalc",
   "2000-2650": "Base * (Level * (ID - 2000) + 1)",
 };

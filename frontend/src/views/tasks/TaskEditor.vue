@@ -598,6 +598,15 @@
                              field: 'goalcount',
                              fieldType: 'number',
                              col: 'col-2',
+                             showIf: !isTouchActivityActive()
+                           },
+                           {
+                             description: 'DZ Switch ID',
+                             itemIcon: '3196',
+                             field: 'dz_switch_id',
+                             fieldType: 'number',
+                             col: 'col-2',
+                             showIf: isTouchActivityActive()
                            },
                            {
                              description: 'Quest Controlled',
@@ -1536,6 +1545,14 @@ export default {
     isGoalIdExploreActive() {
       return [
         TASK_ACTIVITY_TYPE.EXPLORE,
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isTouchActivityActive() {
+      return [
+        TASK_ACTIVITY_TYPE.TOUCH,
       ].includes(
         parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       )
