@@ -1,3 +1,10 @@
+## [4.22.0] 5/25/2025
+
+* **Spell Editor** Add ability to select spell formula from the preview pane. (@Joligaro)
+* **Task Editor** Show "DZ Switch ID" field when current activity type is touch. (@Joligaro)
+* **Player Event Logs** Fix groundspawn event log display. (@Joligaro)
+* **Spire Admin** Add config fields to support EQEmulater Server PR #4906 [[Quests] Support Multiple Quest, Plugin, and Lua Module Paths](https://github.com/EQEmu/Server/pull/4906)
+
 ## [4.21.0] 5/21/2025
 
 * **Task Editor** Improve performance of editing activity fields and rendering output realtime. (@Akkadius)

@@ -173,8 +173,17 @@ type EQEmuConfigJson struct {
 			MailOpcodes string `json:"mail_opcodes"`
 		} `json:"files"`
 		Directories struct {
-			Patches string `json:"patches"`
-			Opcodes string `json:"opcodes"`
+			Quests         string   `json:"quests,omitempty"`
+			Plugins        string   `json:"plugins,omitempty"`
+			Patches        string   `json:"patches,omitempty"`
+			LuaModules     string   `json:"lua_modules,omitempty"`
+			Maps           string   `json:"maps,omitempty"`
+			SharedMemory   string   `json:"shared_memory,omitempty"`
+			Logs           string   `json:"logs,omitempty"`
+			Opcodes        string   `json:"opcodes,omitempty"`
+			QuestPaths     []string `json:"quest_paths,omitempty"`
+			PluginPaths    []string `json:"plugin_paths,omitempty"`
+			LuaModulePaths []string `json:"lua_module_paths,omitempty"`
 		} `json:"directories"`
 	} `json:"server"`
 	WebAdmin *WebAdminConfig `json:"web-admin,omitempty"`
