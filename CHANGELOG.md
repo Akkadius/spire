@@ -1,4 +1,4 @@
-## [4.22.1] 6/9/2025
+## [4.22.2] 6/9/2025
 
 * **Item Preview** Add bag slots to item preview window. (@Akkadius)
 
