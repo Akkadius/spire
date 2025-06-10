@@ -1,4 +1,4 @@
-## [4.22.3] 6/10/2025
+## [4.22.4] 6/10/2025
 
 * **UI** Fix EQ UI modal scrolling issues when content is larger than the viewport. (@Akkadius)
 * **UI** Converted Login page to EQ UI. (@Akkadius)
