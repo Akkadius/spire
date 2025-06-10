@@ -318,6 +318,13 @@
       </div>
     </div>
 
+    <!-- Bag Slots -->
+    <div v-if="itemData.bagslots" class="mt-3 row">
+      <div class="col-12">
+        <span style="font-weight: bold" class="mr-1">Bag Slots</span> {{ itemData.bagslots }}%
+      </div>
+    </div>
+
     <!-- Lore -->
     <div v-if="itemData.lore" class="mt-3 row">
       <div class="col-12">

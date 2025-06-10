@@ -1,3 +1,7 @@
+## [4.22.1] 6/9/2025
+
+* **Item Preview** Add bag slots to item preview window. (@Akkadius)
+
 ## [4.22.0] 5/25/2025
 
 * **Spell Editor** Add ability to select spell formula from the preview pane. (@Joligaro)
