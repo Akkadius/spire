@@ -1,28 +1,20 @@
 <template>
-  <content-area class="text-center fade-in">
+  <content-area class="text-center login-center-container fade-in">
 
-    <div class="row justify-content-center mt-7">
+    <div class="row justify-content-center">
       <div class="col-lg-3 col-sm-12 col-md-12">
 
         <router-link class="ml-3 mt-3 mb-3" :to="ROUTE.HOME">
           <h1
             style="font-size: 100px"
-            class="text-center eq-header small-mobile mb-0"
+            class="text-center eq-header mb-0"
           >
             Spire
           </h1>
 
-          <h1
-            class="text-center eq-header small-mobile"
-            v-if="hasAuthOptions()"
-          >
-            Login
-          </h1>
-
         </router-link>
 
-        <div class="card fade-in" v-if="hasAuthOptions()">
-          <div class="card-body">
+        <eq-window class="fade-in login-box" v-if="hasAuthOptions()">
             <form
               class="m-0 p-0"
               style="top:50%;"
@@ -76,8 +68,6 @@
                   <i class="fe fe-lock"></i>
                   Spire Login
                 </button>
-
-                <hr>
               </div>
 
               <a
@@ -101,8 +91,7 @@
               @dismiss-notification="notification = ''"
               class="mt-3"
             />
-          </div>
-        </div>
+        </eq-window>
 
 
       </div>
@@ -118,10 +107,11 @@ import {SpireApi}      from "../app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import UserContext     from "@/app/user/UserContext";
 import axios           from "axios";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
 
 export default {
   name: 'Login.vue',
-  components: { InfoErrorBanner, ContentArea },
+  components: {EqWindow, InfoErrorBanner, ContentArea },
   data() {
     return {
 
@@ -279,4 +269,13 @@ body {
     font-size: 3.5rem;
   }
 }
+
+
+.login-center-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
 </style>

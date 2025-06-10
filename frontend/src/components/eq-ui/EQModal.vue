@@ -96,6 +96,10 @@ export default {
 }
 
 .eq-modal-body {
+  max-height: 90vh;
+  overflow-y: auto; /* Allows scrolling if content exceeds height */
+  text-align: left;
+  overflow-x: hidden;
 }
 
 .eq-modal-default-button {

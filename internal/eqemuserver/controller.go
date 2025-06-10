@@ -1054,7 +1054,7 @@ type PreflightCheck struct {
 
 func (a *Controller) preflight(c echo.Context) error {
 	checks := []PreflightCheck{
-		{process: "world", assertion: "listener started on port", timeout: 120},
+		{process: "world", assertion: "listener started on port", timeout: 600},
 		{process: "zone", assertion: "Zone bootup type", timeout: 5, args: []string{"soldungb"}},
 		{process: "shared_memory", assertion: "Loading base data", timeout: 5},
 		{process: "ucs", assertion: "LoadChatChannels", timeout: 5},

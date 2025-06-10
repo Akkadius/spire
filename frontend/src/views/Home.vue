@@ -155,11 +155,6 @@ export default {
 </script>
 
 <style>
-.changelog ul li {
-  list-style-type: disc;
-}
-.changelog {
-  font-family: "Cerebri Sans", sans-serif !important;
-}
+
 
 </style>

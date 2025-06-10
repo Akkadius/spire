@@ -1,3 +1,11 @@
+## [4.22.3] 6/10/2025
+
+* **UI** Fix EQ UI modal scrolling issues when content is larger than the viewport.
+* **UI** Converted Login page to EQ UI.
+* **UI** Converted Spire Update modal to EQ UI.
+* **Items** Fix issue where the item search filters would get reset when hovered into the list preview pane.
+* **Spire Admin** Fixed pre-flight World timeout issue where world would time out in 2 minutes. This is problematic for slower database migrations or slower database backups with large databases. The timeout has been increased to 10 minutes.
+
 ## [4.22.2] 6/9/2025
 
 * **Item Preview** Add bag slots to item preview window. (@Akkadius)

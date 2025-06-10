@@ -7,30 +7,35 @@
     />
     <keypress-commands-modal/>
     <router-view></router-view>
-    <app-update-modal :release="release" :current-version="currentVersion"/>
+    <app-update-modal
+      v-if="showUpdateModal"
+      :release="release"
+      @close="showUpdateModal = false"
+      :current-version="currentVersion"
+    />
   </div>
 </template>
 
 <script>
 
 import "ninja-keys";
-import * as util                from "util";
-import {App}                    from "@/constants/app";
-import {EventBus}               from "@/app/event-bus/event-bus";
-import {AppEnv}                 from "@/app/env/app-env";
+import * as util from "util";
+import {App} from "@/constants/app";
+import {EventBus} from "@/app/event-bus/event-bus";
+import {AppEnv} from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
-import {ROUTE}                  from "@/routes";
-import UserContext              from "@/app/user/UserContext";
-import KeypressCommandsModal    from "@/components/modals/KeypressCommandsModal.vue";
-import semver                   from "semver";
-import AppUpdateModal           from "@/components/modals/AppUpdateModal.vue";
-import {SpireWebsocket}         from "@/app/api/spire-websocket";
-import {Notify}                 from "@/app/Notify";
+import {ROUTE} from "@/routes";
+import UserContext from "@/app/user/UserContext";
+import KeypressCommandsModal from "@/components/modals/KeypressCommandsModal.vue";
+import semver from "semver";
+import AppUpdateModal from "@/components/modals/AppUpdateModal.vue";
+import {SpireWebsocket} from "@/app/api/spire-websocket";
+import {Notify} from "@/app/Notify";
 import {WindowManager} from "@/app/window";
 
 export default {
   name: "App",
-  components: { AppUpdateModal, KeypressCommandsModal },
+  components: {AppUpdateModal, KeypressCommandsModal},
   async beforeMount() {
     await AppEnv.init()
   },
@@ -39,6 +44,8 @@ export default {
     return {
       release: {},
       currentVersion: "",
+
+      showUpdateModal: false,
     }
   },
 
@@ -176,7 +183,7 @@ export default {
         }, 1)
       };
 
-      window.onblur  = () => {
+      window.onblur = () => {
         this.$bvModal.hide('keypress-commands-modal')
       }
       window.onfocus = () => {
@@ -204,10 +211,10 @@ export default {
             EventBus.$emit('HIDE_NAVBAR', true);
             break
           case 'b':
-            this.$router.push({ path: '/break' })
+            this.$router.push({path: '/break'})
             break
           case '`':
-            this.$router.push({ path: '/' })
+            this.$router.push({path: '/'})
             break
           case 'd':
             setTimeout(() => {
@@ -240,8 +247,8 @@ export default {
         backgrounds[Math.floor(Math.random() * backgrounds.length)].trim()
       )
 
-      let curImg    = new Image();
-      curImg.src    = background;
+      let curImg = new Image();
+      curImg.src = background;
       curImg.onload = function () {
         // do whatever here, add it to the background, append the image ect.
         document.body.style.setProperty("--image", "url(" + background + ")");
@@ -268,10 +275,10 @@ export default {
         return
       }
 
-      const current       = AppEnv.getVersion()
+      const current = AppEnv.getVersion()
       this.currentVersion = current
-      const last_checked  = LocalSettings.getLastCheckedUpdateTime()
-      const now           = new Date().getTime() / 1000
+      const last_checked = LocalSettings.getLastCheckedUpdateTime()
+      const now = new Date().getTime() / 1000
 
       // check if we've checked in the last 1 hour
       if (now - last_checked < 3600 && !force) {
@@ -287,14 +294,14 @@ export default {
       fetch(url)
         .then(response => response.json())
         .then(data => {
-          latest                     = data.tag_name.replace("v", "")
-          this.release               = data
+          latest = data.tag_name.replace("v", "")
+          this.release = data
           const ignoredUpdateVersion = LocalSettings.getIgnoredUpdateVersion()
 
           if (semver.gt(latest, current)) {
             console.log("update available")
             if (ignoredUpdateVersion !== latest) {
-              this.$bvModal.show('app-update-modal')
+              this.showUpdateModal = true;
             } else {
               console.log("update [%s] ignored", latest)
             }
@@ -321,19 +328,19 @@ export default {
     },
     loadCssFiles() {
       const cssFiles = [
-        { href: "item-icons.css" },
-        { href: "item-icons-sm.css" },
-        { href: "objects.css" },
-        { href: "race-models-sm.css" },
-        { href: "race-models.css" },
-        { href: "faces.css" },
-        { href: "client-versions.css" },
-        { href: "client-versions-med.css" },
-        { href: "client-versions-sm.css" },
-        { href: "spell-icons-12.css", id: "spell-icons-12" },
-        { href: "spell-icons-20.css", id: "spell-icons-20" },
-        { href: "spell-icons-30.css", id: "spell-icons-30" },
-        { href: "spell-icons-40.css", id: "spell-icons-40" },
+        {href: "item-icons.css"},
+        {href: "item-icons-sm.css"},
+        {href: "objects.css"},
+        {href: "race-models-sm.css"},
+        {href: "race-models.css"},
+        {href: "faces.css"},
+        {href: "client-versions.css"},
+        {href: "client-versions-med.css"},
+        {href: "client-versions-sm.css"},
+        {href: "spell-icons-12.css", id: "spell-icons-12"},
+        {href: "spell-icons-20.css", id: "spell-icons-20"},
+        {href: "spell-icons-30.css", id: "spell-icons-30"},
+        {href: "spell-icons-40.css", id: "spell-icons-40"},
       ];
 
       cssFiles.forEach(file => {

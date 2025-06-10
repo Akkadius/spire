@@ -388,6 +388,7 @@ export default {
       this.viewingResults = set
       setTimeout(() => {
         WindowManager.resizeFillScreenElements();
+        this.items = {}
       }, 10)
     },
 

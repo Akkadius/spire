@@ -619,6 +619,13 @@ html, body{
     margin-top:5px;
 }
 
+.changelog ul li {
+    list-style-type: disc;
+}
+.changelog {
+    font-family: "Cerebri Sans", sans-serif !important;
+}
+
 .dropdown-menu {
     z-index: 10000;
 }
