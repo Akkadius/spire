@@ -288,7 +288,11 @@
                          description: teleportZoneFieldName,
                          field: 'teleport_zone',
                          text: true,
-                         showIf: teleportZoneFieldName !== '' || spell['effectid_1'] == 83
+                         showIf: teleportZoneFieldName !== '' ||
+                                 spell['effectid_1'] == 83 ||
+                                 spell['effectid_1'] == 88 ||
+                                 spell['effectid_1'] == 104 ||
+                                 spell['effectid_1'] == 145
                        },
                      ]"
                 v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
