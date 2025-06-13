@@ -2238,6 +2238,16 @@ export default {
           }
         }
       });
+
+      if (this.spell["effectid_1"] == 83 ||
+          this.spell["effectid_1"] == 88 ||
+          this.spell["effectid_1"] == 104 ||
+          this.spell["effectid_1"] == 145) {
+
+          this.teleportZoneFieldName = "Select Zone"
+
+      }
+
     },
 
     load() {
