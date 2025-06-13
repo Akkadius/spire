@@ -2270,7 +2270,12 @@ export default {
 
           // visible slots effectid 1-12
           for (let i = 1; i <= 12; i++) {
-            if (this.spell["effectid_" + i] !== 254 || (this.spell["effectid_1"] == 83 && i <= 4)) {
+            if (this.spell["effectid_" + i] !== 254 ||
+               ((this.spell["effectid_1"] == 83 ||
+                this.spell["effectid_1"] == 88 ||
+                this.spell["effectid_1"] == 104 ||
+                this.spell["effectid_1"] == 145) &&
+                i <= 4)) {
               this.visibleEffectSlots[i] = true
             }
           }
