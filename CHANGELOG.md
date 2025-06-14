@@ -1,3 +1,7 @@
+## [4.23.0] 6/14/2025
+
+* **Spire Admin** Add support to send in game marquee (center of screen) messages to all players simultaneously with emote messages to bring attention to important events. This is useful for server announcements, events, or other important messages that need to be seen by all players in the game (timed reboots, shutdowns etc). (@Akkadius)
+
 ## [4.22.4] 6/10/2025
 
 * **UI** Fix EQ UI modal scrolling issues when content is larger than the viewport. (@Akkadius)

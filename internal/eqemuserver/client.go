@@ -291,12 +291,13 @@ func (c *Client) GetWorldUptime() (string, error) {
 }
 
 func (c *Client) MessageWorld(message string) error {
-	_, err := c.GetTelnetClient().Command(
+	_, _ = c.GetTelnetClient().Command(
 		telnet.CommandConfig{Command: "emote world 15 " + message},
 	)
-	if err != nil {
-		return err
-	}
+	message = strings.ReplaceAll(message, "[SERVER MESSAGE] ", "")
+	_, _ = c.GetTelnetClient().Command(
+		telnet.CommandConfig{Command: "wwmarquee 15 " + message},
+	)
 
 	return nil
 }
