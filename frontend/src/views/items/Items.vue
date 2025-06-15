@@ -11,7 +11,6 @@
 
     <eq-window
       style="transition: all 1s ease;"
-
       v-if="!viewingResults">
       <div class="row">
         <div class="col-1">
@@ -200,9 +199,11 @@
             </div>
           </div>
 
-          <div class="row mt-3">
+          <div
+            class="row mt-3">
             <div class="col-12 p-0">
               <db-column-filter
+                @click.native="setViewingResults(false)"
                 v-if="itemFields && filters"
                 :set-filters="filters"
                 @input="handleDbColumnFilters($event);"
@@ -385,10 +386,14 @@ export default {
   methods: {
 
     setViewingResults(set) {
+      console.log("[setViewingResults] set to [%s]", set)
       this.viewingResults = set
       setTimeout(() => {
         WindowManager.resizeFillScreenElements();
-        this.items = {}
+        if (!set) {
+          this.items = null
+          this.$forceUpdate()
+        }
       }, 10)
     },
 
