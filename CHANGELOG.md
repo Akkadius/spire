@@ -1,4 +1,4 @@
-## [4.23.1] 6/15/2025
+## [4.23.2] 6/15/2025
 
 * **Items** Minor UX functional adjustments to the item search page.
 
