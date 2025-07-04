@@ -121,7 +121,6 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 							)
 						}
 					} else if strings.Contains(l, "DispatchZoneControllerEvent") {
-						fmt.Printf("In [DispatchZoneControllerEvent] check")
 						if strings.Contains(l, "DispatchZoneControllerEvent") && strings.Contains(l, "EVENT_") {
 							entity := "NPC"
 							event := ""
