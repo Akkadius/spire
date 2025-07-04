@@ -122,7 +122,6 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 						}
 					} else if strings.Contains(l, "DispatchZoneControllerEvent") {
 						if strings.Contains(l, "DispatchZoneControllerEvent") && strings.Contains(l, "EVENT_") {
-							entity := "NPC"
 							event := ""
 
 							// @eg DispatchZoneControllerEvent(EVENT_DEATH_ZONE, owner_or_self, export_string, 0, &args);
@@ -137,7 +136,7 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 
 							eventEntityMappings = append(
 								eventEntityMappings, PerlEventEntityMapping{
-									Entity: entity,
+									Entity: "NPC",
 									Event:  event,
 								},
 							)
