@@ -120,6 +120,27 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 								},
 							)
 						}
+					} else if strings.Contains(l, "DispatchZoneControllerEvent") {
+						if strings.Contains(l, "DispatchZoneControllerEvent") && strings.Contains(l, "EVENT_") {
+							event := ""
+
+							// @eg DispatchZoneControllerEvent(EVENT_DEATH_ZONE, owner_or_self, export_string, 0, &args);
+							// @result EVENT_DEATH_ZONE
+							eventSplit := strings.Split(l, "(EVENT_")
+							if len(eventSplit) > 1 {
+								eventSplit2 := strings.Split(eventSplit[1], ",")
+								if len(eventSplit2) > 0 {
+									event = "EVENT_" + strings.TrimSpace(eventSplit2[0])
+								}
+							}
+
+							eventEntityMappings = append(
+								eventEntityMappings, PerlEventEntityMapping{
+									Entity: "NPC",
+									Event:  event,
+								},
+							)
+						}
 					}
 				}
 			}
