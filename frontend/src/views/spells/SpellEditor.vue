@@ -288,7 +288,11 @@
                          description: teleportZoneFieldName,
                          field: 'teleport_zone',
                          text: true,
-                         showIf: teleportZoneFieldName !== ''
+                         showIf: teleportZoneFieldName !== '' ||
+                                 spell['effectid_1'] == 83 ||
+                                 spell['effectid_1'] == 88 ||
+                                 spell['effectid_1'] == 104 ||
+                                 spell['effectid_1'] == 145
                        },
                      ]"
                 v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
@@ -1913,7 +1917,7 @@ export default {
           this.spell['teleport_zone'] = selectedZone.short_name
           EditFormFieldUtil.setFieldModifiedById("teleport_zone")
 
-          // make revelant slots visible when a zone is selected
+          // make relevant slots visible when a zone is selected
           for (let slot = effectIndex; slot < (effectIndex + 4); slot++) {
             this.visibleEffectSlots[slot] = true
             this.$forceUpdate()
@@ -2234,6 +2238,16 @@ export default {
           }
         }
       });
+
+      if (this.spell["effectid_1"] == 83 ||
+          this.spell["effectid_1"] == 88 ||
+          this.spell["effectid_1"] == 104 ||
+          this.spell["effectid_1"] == 145) {
+
+          this.teleportZoneFieldName = "Select Zone"
+
+      }
+
     },
 
     load() {
@@ -2270,7 +2284,12 @@ export default {
 
           // visible slots effectid 1-12
           for (let i = 1; i <= 12; i++) {
-            if (this.spell["effectid_" + i] !== 254) {
+            if (this.spell["effectid_" + i] !== 254 ||
+               ((this.spell["effectid_1"] == 83 ||
+                this.spell["effectid_1"] == 88 ||
+                this.spell["effectid_1"] == 104 ||
+                this.spell["effectid_1"] == 145) &&
+                i <= 4)) {
               this.visibleEffectSlots[i] = true
             }
           }
