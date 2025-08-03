@@ -1,17 +1,8 @@
 <template>
   <div>
     <eq-window
-      v-if="viewingResults"
-      @mouseover.native="setViewingResults(false)"
-      @click.native="setViewingResults(false)"
-      class="text-center"
-    >
-      <span style="font-weight: bold">Hover or click this area to go back to filters</span>
-    </eq-window>
-
-    <eq-window
       style="transition: all 1s ease;"
-      v-if="!viewingResults">
+    >
       <div class="row">
         <div class="col-1">
           <div
@@ -203,7 +194,6 @@
             class="row mt-3">
             <div class="col-12 p-0">
               <db-column-filter
-                @click.native="setViewingResults(false)"
                 v-if="itemFields && filters"
                 :set-filters="filters"
                 @input="handleDbColumnFilters($event);"
@@ -250,7 +240,6 @@
       :items="items"
       @reload-list="listItems"
       v-if="loaded && listType === 'table' && items"
-      @mouseover.native="setViewingResults(true)"
     />
 
     <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
@@ -261,7 +250,7 @@
 <script type="ts">
 import {ItemApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApi} from "../../app/api/spire-api";
+import {SpireApi} from "@/app/api/spire-api";
 import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
@@ -319,8 +308,6 @@ export default {
       itemName: "",
       itemType: -1,
       spellEffect: "",
-
-      viewingResults: false,
 
       // when "only" option is set
       selectOnlyClassEnabled: false,
@@ -384,18 +371,6 @@ export default {
   },
 
   methods: {
-
-    setViewingResults(set) {
-      console.log("[setViewingResults] set to [%s]", set)
-      this.viewingResults = set
-      setTimeout(() => {
-        WindowManager.resizeFillScreenElements();
-        if (!set) {
-          this.items = null
-          this.$forceUpdate()
-        }
-      }, 10)
-    },
 
     handleDbColumnFilters(filters) {
       this.filters = filters
@@ -612,19 +587,19 @@ export default {
     resetForm: function () {
       this.resetCheckboxFilters()
 
-      this.filters           = []
-      this.selectedClasses   = 0;
-      this.selectedRaces     = 0;
-      this.selectedSlots     = 0;
-      this.selectedDeities   = 0;
-      this.itemType          = -1;
-      this.itemName          = "";
-      this.spellEffect       = "";
-      this.selectedLevel     = 0;
-      this.limit             = 100;
+      this.filters = []
+      this.selectedClasses = 0;
+      this.selectedRaces = 0;
+      this.selectedSlots = 0;
+      this.selectedDeities = 0;
+      this.itemType = -1;
+      this.itemName = "";
+      this.spellEffect = "";
+      this.selectedLevel = 0;
+      this.limit = 100;
       this.selectedLevelType = 0;
-      this.items             = null;
-      this.listType          = "table"
+      this.items = null;
+      this.listType = "table"
       this.updateQueryState()
     },
 
@@ -715,9 +690,9 @@ export default {
     },
 
     listItems: async function () {
-      this.loaded   = false;
+      this.loaded = false;
       const builder = new SpireQueryBuilder()
-      const api     = (new ItemApi(...SpireApi.cfg()))
+      const api = (new ItemApi(...SpireApi.cfg()))
 
       // filter by class
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {
@@ -794,7 +769,7 @@ export default {
       }
 
       if (builder.getFilterCount() === 0) {
-        this.items  = null
+        this.items = null
         this.loaded = true
         return;
       }
@@ -807,7 +782,7 @@ export default {
         const r = await api.listItems(builder.get())
         if (r.status === 200) {
           // set items to be rendered
-          this.items  = r.data
+          this.items = r.data
           this.loaded = true;
         }
       } catch (e) {

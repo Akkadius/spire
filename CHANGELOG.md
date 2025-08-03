@@ -1,3 +1,7 @@
+## [4.23.3] 8/2/2025
+
+* **Items** Revert experimental UX changes to the item search page. The changes were not well received by the community and for lack of time to address the issues, we are reverting them for now. 
+
 ## [4.23.2] 6/15/2025
 
 * **Items** Minor UX functional adjustments to the item search page.
